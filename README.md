@@ -1,6 +1,6 @@
 # Scrolly - A Productivity Hub
 
-Welcome to Scrolly! 
+##  Welcome to Scrolly! 
 
 Are you exhausted by traditional "productivity" apps that feel like a demanding boss? Are you tired of corporate jargon, endless dropdown menus, and apps that make you feel guilty for leaving things undone? 
 
@@ -33,20 +33,30 @@ Scrolly separates your day into distinct, manageable phases so you never get ove
 
 ## Visual Tour
 
-`[Screenshot 1: The serene landing page showing the fogged UI and the 'Cultivate Your Focus' button]`
-*The initial state demands nothing from you but a single click to begin.*
+<p align="center">
+  <img src="assets/landing.png" alt="Scrolly Landing Page" width="400"><br>
+  <em>The initial state demands nothing from you but a single click to begin.</em>
+</p>
 
-`[Screenshot 2: The Phase 1 Brain Dump interface, showing the text area and the Horizon/Foundational Arts menus on the side]`
-*Frictionless entry: Dump your thoughts, or summon your chosen habits from the left.*
+<p align="center">
+  <img src="assets/phase1_dump.png" alt="Phase 1: Brain Dump Interface" width="400"><br>
+  <em>Frictionless entry: Dump your thoughts, or summon your chosen habits from the left.</em>
+</p>
 
-`[Screenshot 3: The Phase 2 Estimation interface showing the drag-and-drop handles and time inputs]`
-*Organize the chaos: Quickly drag your trials into order and guess how much essence they will take.*
+<p align="center">
+  <img src="assets/phase2_estimate.png" alt="Phase 2: Estimation and Reordering" width="400"><br>
+  <em>Organize the chaos: Quickly drag your trials into order and guess how much essence they will take.</em>
+</p>
 
-`[Screenshot 4: The main execution dashboard showing an active timer, the conquered list, and the analytics graphs]`
-*The Active Scroll: Focus entirely on your immediate trial while watching your streak and graphs climb.*
+<p align="center">
+  <img src="assets/dashboard.png" alt="Active Scroll Execution Dashboard" width="400"><br>
+  <em> Focus entirely on your immediate trial while watching your streak and graphs climb.</em>
+</p>
 
-`[Screenshot 5: The Grand Archives showing past days and completed tasks]`
-*Your legacy: A stress-free record of all your past triumphs.*
+<p align="center">
+  <img src="assets/archives.png" alt="The Grand Archives Historical Scroll" width="400"><br>
+  <em>Your legacy: A stress-free record of all your past triumphs.</em>
+</p>
 
 ## Installation & Setup (Alpha Version)
 
