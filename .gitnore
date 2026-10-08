@@ -1,0 +1,14 @@
+# Python environment and bytecode
+__pycache__/
+*.py[cod]
+venv/
+env/
+
+# Personal local state & databases
+data/
+*.json
+!requirements.txt
+
+# OS metadata
+.DS_Store
+Thumbs.db
