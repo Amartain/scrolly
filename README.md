@@ -8,7 +8,7 @@ Me too. That’s exactly why I built Scrolly.
 
 Scrolly isn't just a to-do list; it's a completely different mindset. It is a localized, gamified task manager heavily inspired by Wuxia/Xianxia aesthetics (think martial arts cultivation, scrolls, and inner peace). It is specifically engineered around psychology to protect your energy, bypass overwhelm, and actually make getting things done feel rewarding.
 
-## Why Scrolly is Different (The Psychology)
+## The Psychology behind Scrolly
 
 A lot of standard productivity features actually hurt our ability to get things done. Scrolly flips the script:
 
