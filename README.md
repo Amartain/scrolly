@@ -31,6 +31,16 @@ Scrolly separates your day into distinct, manageable phases so you never get ove
 4.  **The Grand Archives**
     Every night at 4:00 AM, the system wipes the slate clean. Conquered tasks are permanently etched into your beautiful, scrollable Grand Archives, while untouched tasks fade away like fallen leaves. Every day is a fresh start!
 
+## The 4 AM Wipe & Heavenly Mandates
+
+One of the biggest traps in standard productivity apps is the "snowball of guilt." When you do not finish a task on Tuesday, it automatically rolls over to Wednesday. By Friday, you are staring at a massive, impossible wall of overdue demands, which triggers immediate task paralysis and burnout.
+
+Scrolly prevents this completely by wiping the slate clean every single night. 
+
+* **Mortal Trials:** By default, every trial you write down is mortal. If you do not conquer it by the daily reset (4:00 AM), it does not roll over. It simply fades away into the Grand Archives. Every morning gives you a 100% fresh start with zero carried-over baggage.
+* **Heavenly Mandates:** What about things you absolutely *must* do eventually, like paying a utility bill or making a phone call? You can toggle these crucial items as Heavenly Mandates. 
+* **The Power of Postponing:** If you run out of energy and cannot finish a Heavenly Mandate today, hitting "Postpone" does not leave it sitting on your board to mock you. Instead, it sends the mandate safely back to **The Horizon** (your backlog). This instantly removes the demand from your active view so you can rest guilt-free, while keeping the trial secure for you to consciously summon on a day when your energy is restored.
+
 ## Visual Tour
 
 <p align="center">
