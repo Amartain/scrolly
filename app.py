@@ -8,11 +8,12 @@ DATA_DIR = "data"
 CURRENT_FILE = os.path.join(DATA_DIR, "current_day.json")
 HISTORY_FILE = os.path.join(DATA_DIR, "history.json")
 FUTURE_FILE = os.path.join(DATA_DIR, "future_trials.json")
-RITUALS_FILE = os.path.join(DATA_DIR, "rituals.json") # New Habit Database
+RITUALS_FILE = os.path.join(DATA_DIR, "rituals.json")
+RESTORATIONS_FILE = os.path.join(DATA_DIR, "restorations.json")
 
 def ensure_data():
     os.makedirs(DATA_DIR, exist_ok=True)
-    for file in [CURRENT_FILE, HISTORY_FILE, FUTURE_FILE, RITUALS_FILE]:
+    for file in [CURRENT_FILE, HISTORY_FILE, FUTURE_FILE, RITUALS_FILE, RESTORATIONS_FILE]:
         if not os.path.exists(file):
             with open(file, 'w', encoding='utf-8') as f:
                 json.dump([], f)
@@ -60,7 +61,8 @@ def get_state():
     with open(HISTORY_FILE, 'r', encoding='utf-8') as f: history = json.load(f)
     with open(FUTURE_FILE, 'r', encoding='utf-8') as f: future = json.load(f)
     with open(RITUALS_FILE, 'r', encoding='utf-8') as f: rituals = json.load(f)
-    return jsonify({"current": current, "history": history, "future": future, "rituals": rituals})
+    with open(RESTORATIONS_FILE, 'r', encoding='utf-8') as f: restorations = json.load(f)
+    return jsonify({"current": current, "history": history, "future": future, "rituals": rituals, "restorations": restorations})
 
 @app.route('/api/save', methods=['POST'])
 def save_state():
@@ -70,10 +72,12 @@ def save_state():
         current_data = data
         future_data = None
         rituals_data = None
+        restorations_data = None
     else:
         current_data = data.get('current', [])
         future_data = data.get('future', [])
         rituals_data = data.get('rituals', [])
+        restorations_data = data.get('restorations', [])
         
     with open(CURRENT_FILE, 'w', encoding='utf-8') as f:
         json.dump(current_data, f, indent=4)
@@ -86,6 +90,25 @@ def save_state():
         with open(RITUALS_FILE, 'w', encoding='utf-8') as f:
             json.dump(rituals_data, f, indent=4)
             
+    if restorations_data is not None:
+        with open(RESTORATIONS_FILE, 'w', encoding='utf-8') as f:
+            json.dump(restorations_data, f, indent=4)
+            
+    return jsonify({"status": "success"})
+
+@app.route('/api/import', methods=['POST'])
+def import_state():
+    data = request.json
+    if 'current' in data:
+        with open(CURRENT_FILE, 'w', encoding='utf-8') as f: json.dump(data['current'], f, indent=4)
+    if 'history' in data:
+        with open(HISTORY_FILE, 'w', encoding='utf-8') as f: json.dump(data['history'], f, indent=4)
+    if 'future' in data:
+        with open(FUTURE_FILE, 'w', encoding='utf-8') as f: json.dump(data['future'], f, indent=4)
+    if 'rituals' in data:
+        with open(RITUALS_FILE, 'w', encoding='utf-8') as f: json.dump(data['rituals'], f, indent=4)
+    if 'restorations' in data:
+        with open(RESTORATIONS_FILE, 'w', encoding='utf-8') as f: json.dump(data['restorations'], f, indent=4)
     return jsonify({"status": "success"})
 
 @app.route('/api/purge', methods=['POST'])
