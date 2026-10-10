@@ -1,9 +1,10 @@
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__)
+
 DATA_DIR = "data"
 CURRENT_FILE = os.path.join(DATA_DIR, "current_day.json")
 HISTORY_FILE = os.path.join(DATA_DIR, "history.json")
@@ -19,8 +20,10 @@ def ensure_data():
                 json.dump([], f)
 
 def get_logical_date(dt=None):
-    if dt is None: dt = datetime.now()
-    if dt.hour < 4: dt = dt - timedelta(days=1)
+    if dt is None: 
+        dt = datetime.now().astimezone()
+    if dt.hour < 4: 
+        dt = dt - timedelta(days=1)
     return dt.strftime("%Y-%m-%d")
 
 def perform_rollover():
@@ -30,15 +33,29 @@ def perform_rollover():
         except json.JSONDecodeError: current = []
         
     today_logical = get_logical_date()
-    active, archive = [], []
+    active, archive, mandates_to_horizon = [], [], []
     
     for q in current:
         if q.get("logical_date") != today_logical:
             if q.get("status") not in ["Done", "Cancelled"]:
-                q["status"] = "Cancelled"
+                if q.get("mandate"):
+                    q["status"] = "Remaining"
+                    q["logical_date"] = today_logical
+                    mandates_to_horizon.append(q)
+                    continue
+                else:
+                    q["status"] = "Cancelled"
             archive.append(q)
         else:
             active.append(q)
+            
+    if mandates_to_horizon:
+        with open(FUTURE_FILE, 'r', encoding='utf-8') as f:
+            try: future = json.load(f)
+            except json.JSONDecodeError: future = []
+        future = mandates_to_horizon + future
+        with open(FUTURE_FILE, 'w', encoding='utf-8') as f:
+            json.dump(future, f, indent=4)
             
     if archive:
         with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
@@ -47,12 +64,17 @@ def perform_rollover():
         history.extend(archive)
         with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
             json.dump(history, f, indent=4)
-        with open(CURRENT_FILE, 'w', encoding='utf-8') as f:
-            json.dump(active, f, indent=4)
+            
+    with open(CURRENT_FILE, 'w', encoding='utf-8') as f:
+        json.dump(active, f, indent=4)
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/dev-log')
+def dev_log():
+    return render_template('dev_log.html')
 
 @app.route('/api/state', methods=['GET'])
 def get_state():
@@ -67,7 +89,6 @@ def get_state():
 @app.route('/api/save', methods=['POST'])
 def save_state():
     data = request.json
-    
     if isinstance(data, list):
         current_data = data
         future_data = None

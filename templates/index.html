@@ -1,183 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Scrolly - Productivity Hub</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-cream: #F3EED0;
-            --dark-green: #2D4731;
-            --mid-green: #4A7C2B;
-            --light-green: #C4E1C1;
-            --gold: #D8B21C;
-            --alert-red: #A43425;
-            --dusk-blue: #2C5270;
-            --dusk-orange: #D48846;
-            --restore-bg: #E8F5E9;
-            --restore-border: #81C784;
-        }
-        
-        body {
-            background-color: var(--bg-cream);
-            color: var(--dark-green);
-            font-family: 'VT323', monospace;
-            font-size: 1.6rem;
-            margin: 0; padding: 20px;
-        }
-
-        h1, h2, h3 {
-            font-family: 'Press Start 2P', monospace;
-            color: var(--dark-green);
-            text-transform: uppercase;
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-
-        textarea, input {
-            background-color: #FAFAFA;
-            color: var(--dark-green);
-            border: 2px solid var(--light-green);
-            font-family: 'VT323', monospace;
-            font-size: 1.5rem;
-            padding: 10px;
-            width: 100%; box-sizing: border-box;
-            outline: none;
-        }
-        textarea:focus, input:focus { border-color: var(--mid-green); }
-
-        button {
-            background-color: var(--bg-cream);
-            color: var(--mid-green);
-            border: 2px solid var(--mid-green);
-            font-family: 'Press Start 2P', monospace;
-            font-size: 0.7rem;
-            padding: 10px 20px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        button:hover { background-color: var(--mid-green); color: var(--bg-cream); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; border-color: var(--light-green); color: var(--light-green); }
-
-        .btn-massive {
-            font-size: 1.2rem;
-            padding: 20px 40px;
-            background-color: var(--mid-green);
-            color: var(--bg-cream);
-            border: 4px solid var(--dark-green);
-            box-shadow: 6px 6px 0px var(--dark-green);
-        }
-        .btn-massive:hover { background-color: var(--gold); color: var(--dark-green); transform: translate(-2px, -2px); box-shadow: 8px 8px 0px var(--dark-green); }
-
-        .container { max-width: 1400px; margin: 0 auto; position: relative; }
-        .split-view { display: flex; gap: 40px; }
-        .col-main { flex: 1.5; }
-        .col-side { flex: 1; }
-
-        .box { border-bottom: 2px solid var(--light-green); padding-bottom: 20px; margin-bottom: 20px; }
-        .immediate-box { background: var(--light-green); padding: 15px; border-left: 5px solid var(--mid-green); color: var(--dark-green); }
-        
-        .code-block { background: var(--dark-green); color: var(--bg-cream); padding: 15px; font-size: 1.2rem; white-space: pre-wrap; overflow-x: auto; }
-        
-        .metric-row { display: flex; gap: 20px; margin-bottom: 20px; }
-        .stat-card {
-            flex: 1;
-            background: #FAFAFA;
-            padding: 20px;
-            border: 2px solid var(--dark-green);
-            box-shadow: 6px 6px 0px var(--mid-green);
-            text-align: center;
-        }
-        .stat-card .metric { font-size: 3.5rem; color: var(--gold); font-weight: bold; text-shadow: 2px 2px 0px var(--dark-green); line-height: 1; }
-        .stat-card .metric-label { font-size: 0.8rem; font-family: 'Press Start 2P', monospace; color: var(--dark-green); margin-bottom: 10px; }
-
-        .flex-row { display: flex; align-items: center; }
-        .list-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 5px; }
-        
-        .isolated-phase { max-width: 1200px; margin: 50px auto; background: #fff; padding: 40px; border: 2px solid var(--dark-green); box-shadow: 8px 8px 0px var(--dark-green); }
-        
-        .scroll-bg {
-            background-color: #E3DEC3 !important; 
-            background-image: repeating-linear-gradient(0deg, transparent, transparent 1px, #E3DEC3 1px, #DFD9BA 2px);
-            box-shadow: 10px 10px 0px var(--dark-green) !important;
-        }
-        .archive-day-card {
-            background: rgba(250, 250, 250, 0.4); 
-            padding: 20px; 
-            border: 2px solid var(--dark-green); 
-            box-shadow: 6px 6px 0px rgba(45, 71, 49, 0.2);
-        }
-        .cancelled-text { opacity: 0.6; text-decoration: line-through; }
-        
-        .fogged { opacity: 0.15; filter: blur(2px); pointer-events: none; user-select: none; }
-        .overlay-center { position: fixed; top: 45%; left: 50%; transform: translate(-50%, -50%); z-index: 100; text-align: center; }
-
-        .chart-container { position: relative; height: 220px; width: 100%; }
-        .timer-display { font-family: 'Press Start 2P', monospace; font-size: 1.4rem; color: var(--alert-red); margin: 10px 0; }
-        
-        .drag-row { cursor: grab; transition: background-color 0.2s; }
-        .drag-row:active { cursor: grabbing; }
-        .drag-row.drag-over { background-color: var(--light-green) !important; border: 2px dashed var(--mid-green) !important; }
-        .drag-handle { color: var(--mid-green); padding: 0 10px; font-size: 1.2rem; cursor: grab; user-select: none; }
-
-        .mandate-btn { background: transparent !important; border: none !important; font-size: 1.4rem !important; padding: 0 !important; min-width: 30px; box-shadow: none !important; cursor: pointer; }
-        .mandate-btn:hover { background: transparent !important; transform: scale(1.2); }
-        .mandate-text { color: var(--alert-red); font-weight: bold; }
-
-        .settings-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px; }
-        .settings-card { background: #FAFAFA; border: 1px solid var(--light-green); padding: 15px; }
-        .settings-card label { display: block; font-weight: bold; margin-bottom: 5px; color: var(--mid-green); font-size: 1.2rem; }
-
-        .toast-notification {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: var(--dark-green);
-            color: var(--bg-cream);
-            text-align: center;
-            padding: 16px;
-            position: fixed;
-            z-index: 1000;
-            left: 30px;
-            bottom: 30px;
-            font-size: 1rem;
-            font-family: 'Press Start 2P', monospace;
-            border: 2px solid var(--gold);
-            box-shadow: 4px 4px 0px var(--alert-red);
-            opacity: 0;
-            transition: opacity 0.3s, bottom 0.3s, visibility 0.3s;
-        }
-        .toast-notification.show { visibility: visible; opacity: 1; bottom: 50px; }
-
-        .horizon-box { background: linear-gradient(180deg, rgba(44, 82, 112, 0.1) 0%, rgba(212, 136, 70, 0.15) 100%); border: 2px solid var(--dark-green) !important; box-shadow: 6px 6px 0px var(--dark-green); padding: 20px; margin-bottom: 30px; }
-        .horizon-box h3 { color: var(--dark-green) !important; text-shadow: 1px 1px 0px var(--bg-cream); }
-        .horizon-border { border-bottom: 1px dotted var(--dark-green) !important; }
-
-        .ritual-box { background: linear-gradient(180deg, rgba(74, 124, 43, 0.1) 0%, rgba(196, 225, 193, 0.2) 100%); border: 2px solid var(--dark-green) !important; box-shadow: 6px 6px 0px var(--dark-green); padding: 20px; }
-        .ritual-box h3 { color: var(--dark-green) !important; text-shadow: 1px 1px 0px var(--bg-cream); }
-        
-        .restore-box { background: linear-gradient(180deg, rgba(129, 199, 132, 0.15) 0%, rgba(165, 214, 167, 0.25) 100%); border: 2px solid var(--dark-green) !important; box-shadow: 6px 6px 0px var(--dark-green); padding: 20px; }
-        .restore-box h3 { color: var(--dark-green) !important; text-shadow: 1px 1px 0px var(--bg-cream); }
-
-        .archive-box { background: linear-gradient(180deg, rgba(216, 178, 28, 0.1) 0%, rgba(45, 71, 49, 0.15) 100%); border: 2px solid var(--dark-green) !important; box-shadow: 6px 6px 0px var(--dark-green); padding: 20px; margin-bottom: 30px; }
-        .archive-box h3 { color: var(--dark-green) !important; text-shadow: 1px 1px 0px var(--bg-cream); }
-
-        .lore-scroll { background: var(--bg-cream); border: 2px dashed var(--gold); padding: 20px; margin-bottom: 20px; box-shadow: 4px 4px 0px rgba(216, 178, 28, 0.3); }
-        .lore-scroll h4 { font-family: 'Press Start 2P', monospace; font-size: 0.8rem; color: var(--gold); margin-top: 0; text-shadow: 1px 1px 0px var(--dark-green); }
-
-        .scrolling-box { overflow-y: auto; padding-right: 10px; }
-        .scrolling-box::-webkit-scrollbar { width: 6px; }
-        .scrolling-box::-webkit-scrollbar-track { background: transparent; }
-        .scrolling-box::-webkit-scrollbar-thumb { background: var(--mid-green); border-radius: 3px; }
-    </style>
+<meta charset="UTF-8">
+<title>Scrolly - Productivity Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg-cream: #F3EED0;
+        --dark-green: #2D4731;
+        --mid-green: #4A7C2B;
+        --light-green: #C4E1C1;
+        --gold: #D8B21C;
+        --alert-red: #A43425;
+        --dusk-blue: #2C5270;
+        --dusk-orange: #D48846;
+        --restore-bg: #E8F5E9;
+        --restore-border: #81C784;
+    }
+    body { background-color: var(--bg-cream); color: var(--dark-green); font-family: 'VT323', monospace; font-size: 1.6rem; margin: 0; padding: 20px; }
+    h1, h2, h3 { font-family: 'Press Start 2P', monospace; color: var(--dark-green); text-transform: uppercase; font-size: 1.1rem; margin-bottom: 15px; line-height: 1.4; }
+    textarea, input { background-color: #E3DEC3; color: var(--dark-green); border: 2px solid var(--light-green); font-family: 'VT323', monospace; font-size: 1.5rem; padding: 10px; width: 100%; box-sizing: border-box; outline: none; }
+    textarea:focus, input:focus { border-color: var(--mid-green); }
+    button { background-color: var(--bg-cream); color: var(--mid-green); border: 2px solid var(--mid-green); font-family: 'Press Start 2P', monospace; font-size: 0.7rem; padding: 10px 20px; cursor: pointer; transition: all 0.2s; }
+    button:hover { background-color: var(--mid-green); color: var(--bg-cream); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; border-color: var(--light-green); color: var(--light-green); }
+    .btn-massive { font-size: 1.2rem; padding: 20px 40px; background-color: var(--mid-green); color: var(--bg-cream); border: 4px solid var(--dark-green); box-shadow: 6px 6px 0px var(--dark-green); }
+    .btn-massive:hover { background-color: var(--gold); color: var(--dark-green); transform: translate(-2px, -2px); box-shadow: 8px 8px 0px var(--dark-green); }
+    .container { max-width: 1400px; margin: 0 auto; position: relative; }
+    .split-view { display: flex; gap: 40px; }
+    .col-main { flex: 1.5; }
+    .col-side { flex: 1; }
+    .box { border-bottom: 2px solid var(--light-green); padding-bottom: 20px; margin-bottom: 20px; }
+    .immediate-box { background: var(--light-green); padding: 15px; border-left: 5px solid var(--mid-green); color: var(--dark-green); }
+    .code-block { background: var(--dark-green); color: var(--bg-cream); padding: 15px; font-size: 1.2rem; white-space: pre-wrap; overflow-x: auto; }
+    .metric-row { display: flex; gap: 20px; margin-bottom: 20px; }
+    .stat-card { flex: 1; background: #FAFAFA; padding: 20px; border: 2px solid var(--dark-green); box-shadow: 6px 6px 0px var(--mid-green); text-align: center; }
+    .stat-card .metric { font-size: 3.5rem; color: var(--gold); font-weight: bold; text-shadow: 2px 2px 0px var(--dark-green); line-height: 1; }
+    .stat-card .metric-label { font-size: 0.8rem; font-family: 'Press Start 2P', monospace; color: var(--dark-green); margin-bottom: 10px; }
+    .flex-row { display: flex; align-items: center; }
+    .list-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 5px; }
+    .isolated-phase { max-width: 1200px; margin: 50px auto; background: var(--restore-bg); padding: 40px; border: 2px solid var(--dark-green); box-shadow: 8px 8px 0px var(--dark-green); }
+    .scroll-bg { background-color: #E3DEC3 !important; background-image: repeating-linear-gradient(0deg, transparent, transparent 1px, #E3DEC3 1px, #DFD9BA 2px); box-shadow: 10px 10px 0px var(--dark-green) !important; }
+    .archive-day-card { background: rgba(250, 250, 250, 0.4); padding: 20px; border: 2px solid var(--dark-green); box-shadow: 6px 6px 0px rgba(45, 71, 49, 0.2); }
+    .cancelled-text { opacity: 0.6; text-decoration: line-through; }
+    .fogged { opacity: 0.15; filter: blur(2px); pointer-events: none; user-select: none; }
+    .overlay-center { position: fixed; top: 45%; left: 50%; transform: translate(-50%, -50%); z-index: 100; text-align: center; }
+    .chart-container { position: relative; height: 220px; width: 100%; }
+    .timer-display { font-family: 'Press Start 2P', monospace; font-size: 1.4rem; color: var(--alert-red); margin: 10px 0; }
+    .drag-row { cursor: grab; transition: background-color 0.2s; }
+    .drag-row:active { cursor: grabbing; }
+    .drag-row.drag-over { background-color: var(--light-green) !important; border: 2px dashed var(--mid-green) !important; }
+    .drag-handle { color: var(--mid-green); padding: 0 10px; font-size: 1.2rem; cursor: grab; user-select: none; }
+    .mandate-btn { background: transparent !important; border: none !important; font-size: 1.4rem !important; padding: 0 !important; min-width: 30px; box-shadow: none !important; cursor: pointer; }
+    .mandate-btn:hover { background: transparent !important; transform: scale(1.2); }
+    .mandate-text { color: var(--alert-red); font-weight: bold; }
+    .settings-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+    .settings-card { background: #FAFAFA; border: 1px solid var(--light-green); padding: 15px; }
+    .settings-card label { display: block; font-weight: bold; margin-bottom: 5px; color: var(--mid-green); font-size: 1.2rem; }
+    .toast-notification { visibility: hidden; min-width: 250px; background-color: var(--dark-green); color: var(--bg-cream); text-align: center; padding: 16px; position: fixed; z-index: 1000; left: 30px; bottom: 30px; font-size: 1rem; font-family: 'Press Start 2P', monospace; border: 2px solid var(--gold); box-shadow: 4px 4px 0px var(--alert-red); opacity: 0; transition: opacity 0.3s, bottom 0.3s, visibility 0.3s; }
+    .toast-notification.show { visibility: visible; opacity: 1; bottom: 50px; }
+    .horizon-box { background: linear-gradient(180deg, rgba(44, 82, 112, 0.1) 0%, rgba(212, 136, 70, 0.15) 100%); border: 2px solid var(--dark-green) !important; box-shadow: 6px 6px 0px var(--dark-green); padding: 20px; margin-bottom: 30px; }
+    .horizon-box h3 { color: var(--dark-green) !important; text-shadow: 1px 1px 0px var(--bg-cream); }
+    .horizon-border { border-bottom: 1px dotted var(--dark-green) !important; }
+    .ritual-box { background: linear-gradient(180deg, rgba(74, 124, 43, 0.1) 0%, rgba(196, 225, 193, 0.2) 100%); border: 2px solid var(--dark-green) !important; box-shadow: 6px 6px 0px var(--dark-green); padding: 20px; }
+    .ritual-box h3 { color: var(--dark-green) !important; text-shadow: 1px 1px 0px var(--bg-cream); }
+    .restore-box { background: linear-gradient(180deg, rgba(129, 199, 132, 0.15) 0%, rgba(165, 214, 167, 0.25) 100%); border: 2px solid var(--dark-green) !important; box-shadow: 6px 6px 0px var(--dark-green); padding: 20px; }
+    .restore-box h3 { color: var(--dark-green) !important; text-shadow: 1px 1px 0px var(--bg-cream); }
+    .archive-box { background: linear-gradient(180deg, rgba(216, 178, 28, 0.1) 0%, rgba(45, 71, 49, 0.15) 100%); border: 2px solid var(--dark-green) !important; box-shadow: 6px 6px 0px var(--dark-green); padding: 20px; margin-bottom: 30px; }
+    .archive-box h3 { color: var(--dark-green) !important; text-shadow: 1px 1px 0px var(--bg-cream); }
+    .lore-scroll { background: var(--bg-cream); border: 2px dashed var(--gold); padding: 20px; margin-bottom: 20px; box-shadow: 4px 4px 0px rgba(216, 178, 28, 0.3); }
+    .lore-scroll h4 { font-family: 'Press Start 2P', monospace; font-size: 0.8rem; color: var(--gold); margin-top: 0; text-shadow: 1px 1px 0px var(--dark-green); }
+    .scrolling-box { overflow-y: auto; padding-right: 10px; }
+    .scrolling-box::-webkit-scrollbar { width: 6px; }
+    .scrolling-box::-webkit-scrollbar-track { background: transparent; }
+    .scrolling-box::-webkit-scrollbar-thumb { background: var(--mid-green); border-radius: 3px; }
+</style>
 </head>
 <body>
 {% raw %}
 <div id="app" class="container">
-
     <div :class="['toast-notification', { 'show': toast.show }]">
         {{ toast.message }}
     </div>
@@ -199,7 +103,6 @@
         <div class="split-view">
             <!-- Left Side: Horizon & Habits -->
             <div class="col-side" style="display: flex; flex-direction: column; gap: 20px;">
-                
                 <div class="horizon-box" style="margin: 0; flex: 1; max-height: 300px; display: flex; flex-direction: column;">
                     <h3 style="margin-top: 0;">🌅 The Horizon</h3>
                     <p style="font-size: 1rem; margin-top: 0;">Trials awaiting their time.</p>
@@ -213,11 +116,11 @@
                         </div>
                     </div>
                 </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; flex: 1; max-height: 300px;">
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; flex: 1; max-height: 450px;">
                     <div class="ritual-box" style="display: flex; flex-direction: column;">
                         <h3 style="margin-top: 0; font-size: 0.9rem;">📜 Foundational Arts</h3>
-                        <div class="scrolling-box" style="flex: 1;">
+                        <div class="scrolling-box" style="flex: 1; max-height: 150px;">
                             <div v-if="rituals.length === 0" style="color: var(--dark-green); font-size: 1rem;">No arts inscribed.</div>
                             <div v-for="(rt, index) in rituals" :key="rt.id" class="list-row" style="border-bottom: 1px dotted var(--dark-green); padding-bottom: 10px;">
                                 <div class="flex-row" style="flex: 1; gap: 10px;">
@@ -227,10 +130,9 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="restore-box" style="display: flex; flex-direction: column;">
-                        <h3 style="margin-top: 0; font-size: 0.9rem;">🌿 Restorative Plain</h3>
-                        <div class="scrolling-box" style="flex: 1;">
+                        <h3 style="margin-top: 0; font-size: 0.9rem;">🍵 Restorative Plain</h3>
+                        <div class="scrolling-box" style="flex: 1; max-height: 150px;">
                             <div v-if="restorations.length === 0" style="color: var(--dark-green); font-size: 1rem;">No restoratives.</div>
                             <div v-for="(rs, index) in restorations" :key="rs.id" class="list-row" style="border-bottom: 1px dotted var(--dark-green); padding-bottom: 10px;">
                                 <div class="flex-row" style="flex: 1; gap: 10px;">
@@ -241,12 +143,10 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             
             <!-- Right Side: Brain Dump -->
             <div class="col-main">
-                
                 <div v-if="tips.dump" class="lore-scroll">
                     <h4>Guidance Scroll</h4>
                     <p style="font-size: 1.2rem; margin-top: 0;">To bypass the mind's resistance, do not organize or estimate yet. Empty your thoughts below.</p>
@@ -256,14 +156,12 @@
                         <li><strong>Arts & Restoratives:</strong> Opt-in to habits and energy-recovery without the pressure of auto-adding.</li>
                     </ul>
                 </div>
-
                 <p>Empty your mind. Scribe every trial you must conquer today. <strong>One trial per line.</strong></p>
                 <textarea v-model="rawDump" rows="8" placeholder="Morning coffee + podcast...&#10;Nutritious breakfast...&#10;Read Chapter 1..."></textarea>
                 
                 <div v-if="stagedFromFuture.length > 0 || stagedFromRituals.length > 0 || stagedFromRestorations.length > 0" style="margin-top: 20px; background: var(--bg-cream); padding: 15px; border: 1px solid var(--mid-green);">
                     <h4 style="margin: 0 0 10px 0; color: var(--dark-green); font-family: 'Press Start 2P', monospace; font-size: 0.8rem;">Summoned to Scroll:</h4>
                     <div class="scrolling-box" style="max-height: 200px;">
-                        
                         <div v-for="(sq, sIdx) in stagedFromFuture" :key="'f_'+sq.id" class="list-row">
                             <div class="flex-row" style="flex: 1; gap: 10px;">
                                 <div>{{ sq.description }}</div>
@@ -271,7 +169,6 @@
                             </div>
                             <button @click="returnToHorizon(sIdx)" style="padding: 2px 5px; font-size: 0.6rem; color: var(--alert-red); border-color: var(--alert-red);">✖</button>
                         </div>
-
                         <div v-for="(rq, rIdx) in stagedFromRituals" :key="'r_'+rq.id" class="list-row">
                             <div class="flex-row" style="flex: 1; gap: 10px;">
                                 <span style="font-size: 1rem;">{{ settings.emojis.ritual_ui }}</span>
@@ -280,7 +177,6 @@
                             </div>
                             <button @click="returnRitualFromStaged(rIdx)" style="padding: 2px 5px; font-size: 0.6rem; color: var(--alert-red); border-color: var(--alert-red);">✖</button>
                         </div>
-
                         <div v-for="(rs, rIdx) in stagedFromRestorations" :key="'rs_'+rs.id" class="list-row">
                             <div class="flex-row" style="flex: 1; gap: 10px;">
                                 <span style="font-size: 1rem;">{{ settings.emojis.restore_ui }}</span>
@@ -289,10 +185,9 @@
                             </div>
                             <button @click="returnRestoreFromStaged(rIdx)" style="padding: 2px 5px; font-size: 0.6rem; color: var(--alert-red); border-color: var(--alert-red);">✖</button>
                         </div>
-
                     </div>
                 </div>
-
+                
                 <div style="margin-top: 20px; display: flex; justify-content: space-between;">
                     <button @click="cancelToDashboard" style="color: var(--alert-red); border-color: var(--alert-red);">Abandon</button>
                     <button @click="processDump">Proceed: Divine the Time</button>
@@ -308,7 +203,6 @@
             <button v-if="tips.estimate" @click="dismissTips('estimate')" style="border-color: var(--alert-red); color: var(--alert-red);">Minimize Guidance</button>
             <button v-else @click="tips.estimate = true" style="border-color: var(--gold); color: var(--gold);">? Guidance</button>
         </div>
-
         <div v-if="tips.estimate" class="lore-scroll">
             <h4>Guidance Scroll</h4>
             <p style="font-size: 1.2rem; margin-top: 0; margin-bottom: 5px;">Time blindness is conquered through practice. Divine the essence required (e.g. <strong>60m, 1.5h</strong>). If you forget an estimate, you can set it later.</p>
@@ -323,7 +217,7 @@
             <input v-model="newTrialDesc" placeholder="A forgotten trial emerges..." style="flex: 1;" @keyup.enter="addForgottenTrial">
             <button @click="addForgottenTrial">Add to Peak</button>
         </div>
-
+        
         <div v-for="(q, index) in quests" :key="q.id" class="list-row drag-row" 
              style="background: #FAFAFA; padding: 10px; border: 1px solid var(--light-green);"
              draggable="true" @dragstart="dragStart(q)" @dragover.prevent="dragOver($event)" @dragleave="dragLeave($event)" @drop="dropItem(q, $event)">
@@ -342,7 +236,6 @@
                 <input v-model="q.tempTime" placeholder="45m" style="width: 80px;">
                 <button @click="moveToTop(index)" style="padding: 5px;" title="Send to Top">⇈</button>
                 <button @click="moveToBottom(index)" style="padding: 5px;" title="Send to Bottom">⇊</button>
-                
                 <button v-if="!q.mandate" @click="abandonEstimate(index)" style="padding: 5px; color: var(--alert-red); border-color: var(--alert-red);" title="Abandon Trial">✖</button>
                 <button v-if="q.mandate" @click="postponeEstimate(index)" style="padding: 5px; color: var(--dark-green); border-color: var(--dark-green);" title="Postpone to Horizon">➔</button>
             </div>
@@ -399,8 +292,18 @@
                 <input v-model="settings.emojis.restore_ui" placeholder="UI Emoji (e.g. 🌿)" style="margin-bottom: 5px;">
                 <input v-model="settings.emojis.restore_md" placeholder="Discord Code (e.g. :herb:)">
             </div>
+            <div class="settings-card" style="grid-column: span 3; display: flex; gap: 40px; border-color: var(--mid-green);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" v-model="settings.dnd_mode" style="width: auto;">
+                    <label style="margin:0;">Discord DND Mode Header</label>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" v-model="settings.show_archives" style="width: auto;">
+                    <label style="margin:0;">Show Abandoned/Postponed in Clip</label>
+                </div>
+            </div>
         </div>
-
+        
         <div style="text-align: right;">
             <button class="btn-massive" @click="saveSettingsAndReturn" style="padding: 15px 30px; font-size: 1rem;">Save Configurations</button>
         </div>
@@ -412,15 +315,12 @@
             <h2 style="margin: 0; font-size: 2rem;">📜 The Grand Archives</h2>
             <button @click="phase = 'dashboard'" style="background: var(--dark-green); color: var(--bg-cream);">➔ Return to Peak</button>
         </div>
-        
         <p style="font-size: 1.2rem; margin-bottom: 30px;">A chronicle of past trials and triumphs.</p>
         
         <div class="scrolling-box" style="max-height: 60vh; padding-right: 15px;">
             <div v-if="groupedHistory.length === 0" style="color: var(--mid-green); font-size: 1.4rem;">The archives are empty. Your legend is yet to be written.</div>
-            
             <div v-for="group in groupedHistory" :key="group.date" class="archive-day-card" style="margin-bottom: 40px;">
                 <h3 style="color: var(--dark-green); border-bottom: 2px dashed var(--mid-green); padding-bottom: 10px; margin-top: 0;">{{ group.displayDate }}</h3>
-                
                 <div v-for="q in group.tasks" :key="q.id" class="list-row" style="border-bottom: 1px dotted var(--dark-green); padding: 10px 0;">
                     <div class="flex-row" style="flex: 1; gap: 15px;">
                         <span style="font-size: 1.4rem;">{{ q.status === 'Done' ? settings.emojis.done_ui : '🍂' }}</span>
@@ -444,7 +344,6 @@
 
     <!-- PHASE 3: DASHBOARD -->
     <div v-show="phase === 'dashboard'" class="split-view" :class="{'fogged': quests.length === 0}">
-        
         <!-- LEFT: ACTION HUB -->
         <div class="col-main">
             <!-- END OF DAY BANNER -->
@@ -453,9 +352,8 @@
                 <p style="margin: 0; font-size: 1.4rem; font-weight: bold;">"The highest mountain is climbed one step at a time."</p>
                 <p style="margin: 10px 0 0 0; font-size: 1.2rem;">You have fulfilled your heavenly destiny for today. Rest and restore your Qi.</p>
             </div>
-
-            <h2>Active Scroll</h2>
             
+            <h2>Active Scroll</h2>
             <div class="flex-row" style="justify-content: space-between; font-size: 1.4rem; border-bottom: 2px solid var(--dark-green); padding-bottom: 10px; margin-bottom: 20px;">
                 <div><strong>Essence Expended:</strong> <span style="color:var(--gold)">{{ formatTimeDisplay(totalActual) }} / {{ formatTimeDisplay(totalExpected) }}</span></div>
                 <div><strong>Remaining on Peak:</strong> <span style="color:var(--mid-green)">{{ formatTimeDisplay(remainingExpected) }}</span></div>
@@ -465,7 +363,6 @@
             <div class="box">
                 <h3>Conquered Today</h3>
                 <div v-if="currentDone.length === 0" style="color: var(--mid-green);"><em>Your path begins here...</em></div>
-                
                 <div class="scrolling-box" style="max-height: 380px;">
                     <div v-for="q in currentDone" :key="q.id" class="list-row" style="border-bottom: 1px dashed var(--light-green); margin-bottom: 5px; padding-bottom: 5px;">
                         <div class="flex-row" style="gap: 10px; flex: 1;">
@@ -509,7 +406,6 @@
                                 {{ timer.active ? '⏸ Pause Focus' : '▶ Channel Focus' }}
                             </button>
                             <button @click="zeroOutQuestTime" style="background: var(--alert-red); color: var(--bg-cream); border-color: var(--alert-red);">⟲ Zero</button>
-                            
                             <div class="timer-display" style="flex: 1; text-align: center;">{{ formattedTimer }}</div>
                             <button v-if="isTimeLogged" @click="applyTimerToInput">↓ Apply & Save</button>
                         </div>
@@ -518,7 +414,6 @@
                             <label style="flex: 1;">Actual Essence (Mins):</label>
                             <input type="number" v-model.number="nextQuest.actual_time_mins" style="flex: 1;">
                             <button @click="markDone(nextQuest)" style="background: var(--gold); color: var(--dark-green); border-color: var(--dark-green);">✔ Conquered!</button>
-                            
                             <button v-if="!nextQuest.mandate" @click="abandonQuest(nextQuest)">✖ Abandon</button>
                             <button v-else @click="postponeQuest(nextQuest)">➔ Postpone</button>
                         </div>
@@ -541,12 +436,11 @@
             <div class="box">
                 <h3>Remaining Trials ({{ remainingQuests.length }})</h3>
                 <div v-if="remainingQuests.length === 0" style="color: var(--mid-green);"><em>The peak is clear.</em></div>
-                
                 <div class="scrolling-box" style="max-height: 400px;">
                     <div v-for="q in remainingQuests" :key="q.id" class="list-row drag-row" 
                          style="border-bottom: 1px dotted var(--mid-green);"
                          draggable="true" @dragstart="dragStart(q)" @dragover.prevent="dragOver($event)" @dragleave="dragLeave($event)" @drop="dropItem(q, $event)">
-                         
+                        
                         <div class="flex-row" style="gap: 10px; flex: 1;">
                             <div class="drag-handle">☰</div>
                             <div>
@@ -563,13 +457,10 @@
                                 <input v-model="q.tempTime" placeholder="30m" style="width: 60px; font-size: 0.9rem; padding: 4px;" @keyup.enter="setLateEstimation(q)">
                                 <button @click="setLateEstimation(q)" style="padding: 4px; font-size: 0.7rem;">✔</button>
                             </div>
-                            
                             <button v-if="!q.is_ritual && !q.is_restorative" @click="toggleMandate(q)" class="mandate-btn" :title="q.mandate ? 'Heavenly Mandate' : 'Mortal Trial'">{{ q.mandate ? settings.emojis.mandate_ui : settings.emojis.mortal_ui }}</button>
                             <button @click="promoteToNext(q)" style="background: var(--gold); color: var(--dark-green); border-color: var(--dark-green); padding: 5px 10px;">Promote</button>
-                            
                             <button @click="moveToTopForQuest(q)" style="padding: 5px;" title="Send to Top">⇈</button>
                             <button @click="moveToBottomForQuest(q)" style="padding: 5px;" title="Send to Bottom">⇊</button>
-
                             <button v-if="!q.mandate" @click="abandonQuest(q)" style="padding: 5px; color: var(--alert-red); border-color: var(--alert-red);" title="Abandon Trial">✖</button>
                             <button v-if="q.mandate" @click="postponeQuest(q)" style="padding: 5px; color: var(--dark-green); border-color: var(--dark-green);" title="Postpone to Horizon">➔</button>
                         </div>
@@ -611,9 +502,7 @@
 
         <!-- RIGHT: ANALYTICS HUB & HORIZON -->
         <div class="col-side">
-            
             <h2>Cultivation Path</h2>
-            
             <div class="metric-row">
                 <div class="stat-card">
                     <div class="metric-label">Lifetime Conquered</div>
@@ -632,7 +521,6 @@
                     <canvas id="chartCum"></canvas>
                 </div>
             </div>
-
             <div class="box">
                 <h3>7-Day Rhythm</h3>
                 <div class="chart-container">
@@ -650,7 +538,6 @@
                 </div>
                 <div class="scrolling-box" style="max-height: 250px;">
                     <div v-if="futureTrials.length === 0" class="horizon-empty" style="font-size: 1.2rem;">No future trials pending.</div>
-                    
                     <div v-for="(fq, index) in futureTrials" :key="fq.id" class="list-row horizon-border" style="padding-bottom: 10px;">
                         <div class="flex-row" style="flex: 1; gap: 10px;">
                             <div style="font-size: 1.2rem;" :class="{'mandate-text': fq.mandate}">{{ fq.description }}</div>
@@ -666,7 +553,7 @@
             <!-- FOUNDATIONAL & RESTORATIVE -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
                 <div class="ritual-box" style="display: flex; flex-direction: column; padding: 15px;">
-                    <h3 style="margin-top: 0; font-size: 0.9rem;">📜 Foundational Arts </h3>
+                    <h3 style="margin-top: 0; font-size: 0.9rem;">📜 Foundational Arts</h3>
                     <div class="flex-row" style="margin-bottom: 10px; gap: 5px;">
                         <input v-model="newRitualDesc" placeholder="Add..." style="flex: 1; font-size: 1rem; padding: 4px;" @keyup.enter="addRitual">
                         <button @click="addRitual" style="padding: 4px; border-color: var(--dark-green); color: var(--dark-green);">Add</button>
@@ -682,9 +569,9 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="restore-box" style="display: flex; flex-direction: column; padding: 15px;">
-                    <h3 style="margin-top: 0; font-size: 0.9rem;">🍃 Restorative Plain </h3>
+                    <h3 style="margin-top: 0; font-size: 0.9rem;">🍵 Restorative Plain</h3>
                     <div class="flex-row" style="margin-bottom: 10px; gap: 5px;">
                         <input v-model="newRestoreDesc" placeholder="Add..." style="flex: 1; font-size: 1rem; padding: 4px;" @keyup.enter="addRestore">
                         <button @click="addRestore" style="padding: 4px; border-color: var(--dark-green); color: var(--dark-green);">Add</button>
@@ -709,7 +596,8 @@
                 <button @click="phase = 'archive'" style="width: 100%; font-size: 1rem; padding: 10px; border-color: var(--dark-green); color: var(--dark-green);">Unroll the Archives</button>
             </div>
 
-            <div class="box" style="border-bottom: none;">
+            <!-- SYSTEM FUNCTIONS -->
+            <div class="box">
                 <h3>System Functions</h3>
                 <div class="flex-row" style="margin-bottom: 10px; gap: 10px;">
                     <button @click="phase = 'settings'" style="background: var(--dark-green); color: var(--bg-cream); border-color: var(--dark-green); flex: 1;">⚙️ Configurations</button>
@@ -719,8 +607,27 @@
                 </div>
                 <button @click="purgeScroll" style="color: var(--alert-red); border-color: var(--alert-red); width: 100%;">Purge Today's Scroll (Reset Board)</button>
             </div>
-        </div>
 
+            <!-- FEEDBACK HUB -->
+            <div class="box" style="border-bottom: none;">
+                <h3>Provide Feedback</h3>
+                <div class="flex-row" style="gap: 10px; margin-bottom: 10px;">
+                    <a href="https://forms.gle/fsEJDygF3FCKrstu7" target="_blank" style="flex: 1; text-decoration: none;">
+                        <button style="width: 100%; background: var(--alert-red); color: var(--bg-cream); border-color: var(--alert-red); padding: 8px 5px;">🐞 Bug/Issue</button>
+                    </a>
+                    <a href="https://forms.gle/BbMjJ7xN1BJtFb7q9" target="_blank" style="flex: 1; text-decoration: none;">
+                        <button style="width: 100%; background: var(--gold); color: var(--dark-green); border-color: var(--gold); padding: 8px 5px;">💭 General</button>
+                    </a>
+                    <a href="https://forms.gle/haR4N5k7npJTWMLi9" target="_blank" style="flex: 1; text-decoration: none;">
+                        <button style="width: 100%; background: var(--dusk-blue); color: var(--bg-cream); border-color: var(--dusk-blue); padding: 8px 5px;">🛠️ Developer</button>
+                    </a>
+                </div>
+                <a href="/dev-log" target="_blank" style="text-decoration: none; display: block;">
+                    <button style="width: 100%; background: var(--bg-cream); color: var(--dark-green); border-color: var(--dark-green);">📖 View Developer Log</button>
+                </a>
+            </div>
+
+        </div>
     </div>
 </div>
 {% endraw %}
@@ -733,41 +640,19 @@ createApp({
         return {
             phase: 'dashboard',
             rawDump: '',
-            newTrialDesc: '',
-            quickAddDesc: '',
-            quickAddTime: '',
-            newFutureDesc: '',
-            newFutureTime: '',
-            newRitualDesc: '',
-            newRitualTime: '',
-            newRestoreDesc: '',
-            newRestoreTime: '',
-            quests: [],
-            history: [],
-            futureTrials: [],
-            rituals: [],
-            restorations: [],
-            stagedFromFuture: [],
-            stagedFromRituals: [],
-            stagedFromRestorations: [],
-            chartsObj: {},
-            dragItem: null,
-            timer: {
-                active: false,
-                accumulated: 0,
-                lastTick: null,
-                displaySeconds: 0,
-                interval: null
-            },
-            toast: {
-                show: false,
-                message: ''
-            },
-            tips: {
-                dump: true,
-                estimate: true
-            },
+            newTrialDesc: '', quickAddDesc: '', quickAddTime: '',
+            newFutureDesc: '', newFutureTime: '',
+            newRitualDesc: '', newRitualTime: '',
+            newRestoreDesc: '', newRestoreTime: '',
+            quests: [], history: [], futureTrials: [], rituals: [], restorations: [],
+            stagedFromFuture: [], stagedFromRituals: [], stagedFromRestorations: [],
+            chartsObj: {}, dragItem: null,
+            timer: { active: false, accumulated: 0, lastTick: null, displaySeconds: 0, interval: null },
+            toast: { show: false, message: '' },
+            tips: { dump: true, estimate: true },
             settings: {
+                dnd_mode: true,
+                show_archives: true,
                 emojis: {
                     done_ui: "🍏", done_md: ":green_apple:",
                     next_ui: "🍎", next_md: ":apple:",
@@ -782,51 +667,22 @@ createApp({
         }
     },
     computed: {
-        currentDone() { 
-            return this.quests
-                .filter(q => q.status === 'Done')
-                .sort((a, b) => (a.completed_at || 0) - (b.completed_at || 0)); 
-        },
+        currentDone() { return this.quests.filter(q => q.status === 'Done').sort((a, b) => (a.completed_at || 0) - (b.completed_at || 0)); },
         remainingQuests() { return this.quests.filter(q => q.status === 'Remaining'); },
         postponedQuests() { return this.quests.filter(q => q.status === 'Postponed'); },
         abandonedQuests() { return this.quests.filter(q => q.status === 'Cancelled'); },
         nextQuest() { return this.quests.find(q => q.status === 'Next'); },
-        
         isDayComplete() { return this.quests.length > 0 && !this.nextQuest && this.remainingQuests.length === 0; },
-
         totalExpected() { return this.quests.reduce((sum, q) => sum + Number(q.expected_time_mins || 0), 0); },
-        totalActual() { 
-            return this.quests.reduce((sum, q) => {
-                if (q.status === 'Done') return sum + Number(q.actual_time_mins || 0);
-                return sum;
-            }, 0); 
-        },
-        remainingExpected() {
-            return this.quests.reduce((sum, q) => {
-                if (q.status === 'Remaining' || q.status === 'Next') {
-                    return sum + Number(q.expected_time_mins || 0);
-                }
-                return sum;
-            }, 0);
-        },
-        
+        totalActual() { return this.quests.reduce((sum, q) => { if (q.status === 'Done') return sum + Number(q.actual_time_mins || 0); return sum; }, 0); },
+        remainingExpected() { return this.quests.reduce((sum, q) => { if (q.status === 'Remaining' || q.status === 'Next') { return sum + Number(q.expected_time_mins || 0); } return sum; }, 0); },
         formattedTimer() {
             let secs = 0;
-            if (this.timer.active) {
-                secs = this.timer.displaySeconds;
-            } else if (this.nextQuest) {
-                secs = this.nextQuest.spent_time_secs || 0;
-            }
-            
-            let h = Math.floor(secs / 3600);
-            let m = Math.floor((secs % 3600) / 60);
-            let s = secs % 60;
+            if (this.timer.active) { secs = this.timer.displaySeconds; } else if (this.nextQuest) { secs = this.nextQuest.spent_time_secs || 0; }
+            let h = Math.floor(secs / 3600); let m = Math.floor((secs % 3600) / 60); let s = secs % 60;
             return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
         },
-        isTimeLogged() {
-            return (this.timer.active ? this.timer.displaySeconds : (this.nextQuest?.spent_time_secs || 0)) > 0;
-        },
-
+        isTimeLogged() { return (this.timer.active ? this.timer.displaySeconds : (this.nextQuest?.spent_time_secs || 0)) > 0; },
         groupedHistory() {
             let groups = {};
             this.history.forEach(q => {
@@ -847,7 +703,6 @@ createApp({
                 return { date: d, displayDate, tasks };
             });
         },
-
         analytics() {
             let allDone = [...this.history.filter(q => q.status === 'Done'), ...this.currentDone];
             let today = new Date();
@@ -857,85 +712,60 @@ createApp({
                 let dStr = d.toISOString().split('T')[0];
                 days7.push(dStr); days7Map[dStr] = 0;
             }
-            
-            let dateCounts = {};
-            let streakDates = new Set();
-
+            let dateCounts = {}; let streakDates = new Set();
             allDone.forEach(q => {
                 if(!q.logical_date) return;
                 dateCounts[q.logical_date] = (dateCounts[q.logical_date] || 0) + 1;
                 streakDates.add(q.logical_date);
                 if(days7Map[q.logical_date] !== undefined) days7Map[q.logical_date]++;
             });
-
             let runningTotal = 0;
-            Object.keys(dateCounts).forEach(d => {
-                if (d < days7[0]) runningTotal += dateCounts[d];
-            });
-
+            Object.keys(dateCounts).forEach(d => { if (d < days7[0]) runningTotal += dateCounts[d]; });
             let cumLabels = [], cumValues = [];
-            days7.forEach(d => {
-                runningTotal += (dateCounts[d] || 0);
-                cumLabels.push(d.substring(5)); cumValues.push(runningTotal);
-            });
-
-            let streak = 0;
-            let checkDate = new Date(today);
-            let checkStr = checkDate.toISOString().split('T')[0];
-            
-            if(streakDates.has(checkStr)) {
-                streak++; checkDate.setDate(checkDate.getDate() - 1); checkStr = checkDate.toISOString().split('T')[0];
-            }
-            while(streakDates.has(checkStr)) {
-                streak++; checkDate.setDate(checkDate.getDate() - 1); checkStr = checkDate.toISOString().split('T')[0];
-            }
-
-            return {
-                total: allDone.length, streak: streak, labels7: days7.map(d => d.substring(5)),
-                data7: days7.map(d => days7Map[d]), cumLabels: cumLabels, cumData: cumValues
-            };
+            days7.forEach(d => { runningTotal += (dateCounts[d] || 0); cumLabels.push(d.substring(5)); cumValues.push(runningTotal); });
+            let streak = 0; let checkDate = new Date(today); let checkStr = checkDate.toISOString().split('T')[0];
+            if(streakDates.has(checkStr)) { streak++; checkDate.setDate(checkDate.getDate() - 1); checkStr = checkDate.toISOString().split('T')[0]; }
+            while(streakDates.has(checkStr)) { streak++; checkDate.setDate(checkDate.getDate() - 1); checkStr = checkDate.toISOString().split('T')[0]; }
+            return { total: allDone.length, streak: streak, labels7: days7.map(d => d.substring(5)), data7: days7.map(d => days7Map[d]), cumLabels: cumLabels, cumData: cumValues };
         },
-
         discordText() {
             let today = new Date().toLocaleDateString('en-GB');
-            let md = `# Quest Board  \n${today}\n ----- NO CHECK IN DND :crescent_moon:  -----\n`;
-            md += `EXPECTED: ${this.formatTimeDisplay(this.totalExpected)}\nTOTAL: :white_square_button: \nPROGRESS: ${this.formatTimeDisplay(this.totalActual)} / ${this.formatTimeDisplay(this.totalExpected)}\n## Done\n`;
+            let md = `# Quest Board  \n${today}\n`;
             
+            if (this.settings.dnd_mode) { md += ` ----- NO CHECK IN DND :crescent_moon:  -----\n`; }
+            
+            md += `EXPECTED: ${this.formatTimeDisplay(this.totalExpected)}\nPROGRESS: ${this.formatTimeDisplay(this.totalActual)} / ${this.formatTimeDisplay(this.totalExpected)}\n## Done\n`;
             this.currentDone.forEach(q => {
                 let mandateMarker = q.mandate ? this.settings.emojis.mandate_md : this.settings.emojis.mortal_md;
                 let text = q.is_ritual ? `${this.settings.emojis.ritual_md} ${q.description}` : q.is_restorative ? `${this.settings.emojis.restore_md} ${q.description}` : `${mandateMarker} ${q.description}`;
                 md += `${this.settings.emojis.done_md} ${text} (${this.formatTimeDisplay(q.expected_time_mins)}) >> ${this.formatTimeDisplay(q.actual_time_mins)}\n`;
             });
-            
             md += `## Next \n`;
             if(this.nextQuest) {
                 let mandateMarker = this.nextQuest.mandate ? this.settings.emojis.mandate_md : this.settings.emojis.mortal_md;
                 let text = this.nextQuest.is_ritual ? `${this.settings.emojis.ritual_md} ${this.nextQuest.description}` : this.nextQuest.is_restorative ? `${this.settings.emojis.restore_md} ${this.nextQuest.description}` : `${mandateMarker} ${this.nextQuest.description}`;
                 md += `${this.settings.emojis.next_md} ${text} (${this.formatTimeDisplay(this.nextQuest.expected_time_mins)})\n`;
             }
-            
             md += `## Remaining\n`;
             this.remainingQuests.forEach(q => {
                 let mandateMarker = q.mandate ? this.settings.emojis.mandate_md : this.settings.emojis.mortal_md;
                 let text = q.is_ritual ? `${this.settings.emojis.ritual_md} ${q.description}` : q.is_restorative ? `${this.settings.emojis.restore_md} ${q.description}` : `${mandateMarker} ${q.description}`;
                 md += `${this.settings.emojis.rem_md} ${text} (${this.formatTimeDisplay(q.expected_time_mins)})\n`;
             });
+            md += `${this.settings.emojis.rem_md}  :zzz: \n${this.settings.emojis.rem_md} ENDE\n`;
             
-            md += `${this.settings.emojis.rem_md}  :zzz: \n${this.settings.emojis.rem_md} ENDE\n\nPostponed:         `;
-            this.postponedQuests.forEach(q => {
-                let mandateMarker = q.mandate ? this.settings.emojis.mandate_md : this.settings.emojis.mortal_md;
-                let text = q.is_ritual ? `${this.settings.emojis.ritual_md} ${q.description}` : q.is_restorative ? `${this.settings.emojis.restore_md} ${q.description}` : `${mandateMarker} ${q.description}`;
-                md += `:arrow_forward: ${text} `;
-            });
+            if (this.settings.show_archives) {
+                if (this.postponedQuests.length > 0) {
+                    let pTexts = this.postponedQuests.map(q => q.description);
+                    md += `\nPostponed:         ${pTexts.join(', ')}`;
+                }
+                if (this.abandonedQuests.length > 0) {
+                    let aTexts = this.abandonedQuests.map(q => q.description);
+                    md += `\nAbandoned:         ${aTexts.join(', ')}`;
+                }
+            }
             
-            md += `\nAbandoned:         `;
-            this.abandonedQuests.forEach(q => {
-                let mandateMarker = q.mandate ? this.settings.emojis.mandate_md : this.settings.emojis.mortal_md;
-                let text = q.is_ritual ? `${this.settings.emojis.ritual_md} ${q.description}` : q.is_restorative ? `${this.settings.emojis.restore_md} ${q.description}` : `${mandateMarker} ${q.description}`;
-                md += `✖ ${text} `;
-            });
-            
-            md += `\n\n ----- NO CHECK IN DND :crescent_moon:  ----- `;
+            if (this.settings.dnd_mode) { md += `\n\n ----- NO CHECK IN DND :crescent_moon:  ----- `; }
             return md;
         }
     },
@@ -952,21 +782,17 @@ createApp({
             const [moved] = this.quests.splice(fromIdx, 1);
             const newToIdx = this.quests.findIndex(q => q.id === targetQuest.id);
             this.quests.splice(newToIdx, 0, moved);
-            this.dragItem = null;
-            this.saveState();
+            this.dragItem = null; this.saveState();
         },
-
         moveToTop(idx) {
             let q = this.quests.splice(idx, 1)[0];
             let insertIdx = this.quests.findIndex(item => item.status === 'Remaining');
             if (insertIdx === -1) insertIdx = this.quests.length;
-            this.quests.splice(insertIdx, 0, q);
-            this.saveState();
+            this.quests.splice(insertIdx, 0, q); this.saveState();
         },
         moveToBottom(idx) {
             let q = this.quests.splice(idx, 1)[0];
-            this.quests.push(q);
-            this.saveState();
+            this.quests.push(q); this.saveState();
         },
         moveToTopForQuest(q) {
             let idx = this.quests.findIndex(item => item.id === q.id);
@@ -976,7 +802,6 @@ createApp({
             let idx = this.quests.findIndex(item => item.id === q.id);
             if (idx !== -1) this.moveToBottom(idx);
         },
-
         formatTimeDisplay(m) {
             let val = Number(m || 0);
             if (val === 0) return '0m';
@@ -1000,34 +825,28 @@ createApp({
             if(q.tempTime) {
                 q.expected_time_mins = this.parseTime(q.tempTime);
                 q.actual_time_mins = q.expected_time_mins;
-                this.saveState();
-                this.showToastMessage("Estimation secured!");
+                this.saveState(); this.showToastMessage("Estimation secured!");
             }
         },
-
         getCurrentLogicalDate() {
             let now = new Date();
             let logical = now.getHours() < 4 ? new Date(now.getTime() - 86400000) : now;
             return logical.toISOString().split('T')[0];
         },
-
         showToastMessage(msg) {
-            this.toast.message = msg;
-            this.toast.show = true;
+            this.toast.message = msg; this.toast.show = true;
             setTimeout(() => { this.toast.show = false; }, 3000);
         },
-
         loadSettings() {
             let saved = localStorage.getItem('adventurerSettings');
             if(saved) {
                 let parsed = JSON.parse(saved);
                 if (parsed.emojis) this.settings.emojis = Object.assign({}, this.settings.emojis, parsed.emojis);
+                if (parsed.dnd_mode !== undefined) this.settings.dnd_mode = parsed.dnd_mode;
+                if (parsed.show_archives !== undefined) this.settings.show_archives = parsed.show_archives;
             }
             let tipsSeen = localStorage.getItem('scrollyTipsSeen');
-            if(tipsSeen) {
-                this.tips.dump = false;
-                this.tips.estimate = false;
-            }
+            if(tipsSeen) { this.tips.dump = false; this.tips.estimate = false; }
         },
         saveSettingsAndReturn() {
             localStorage.setItem('adventurerSettings', JSON.stringify(this.settings));
@@ -1038,7 +857,6 @@ createApp({
             this.tips[phase] = false;
             localStorage.setItem('scrollyTipsSeen', 'true');
         },
-
         async fetchState() {
             let res = await fetch('/api/state');
             let data = await res.json();
@@ -1049,26 +867,18 @@ createApp({
             this.restorations = data.restorations || [];
             this.enforceNextQuest();
         },
-        async saveState() { 
-            await fetch('/api/save', { 
-                method: 'POST', 
-                headers: {'Content-Type': 'application/json'}, 
-                body: JSON.stringify({ 
-                    current: this.quests, 
-                    future: this.futureTrials,
-                    rituals: this.rituals,
-                    restorations: this.restorations
-                }) 
-            }); 
+        async saveState() {
+            await fetch('/api/save', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ current: this.quests, future: this.futureTrials, rituals: this.rituals, restorations: this.restorations })
+            });
         },
-        async purgeScroll() { 
-            await fetch('/api/purge', { method: 'POST' }); 
+        async purgeScroll() {
+            await fetch('/api/purge', { method: 'POST' });
             this.quests = []; this.phase = 'dashboard'; this.zeroTimer();
         },
-        
-        triggerImport() {
-            this.$refs.fileInput.click();
-        },
+        triggerImport() { this.$refs.fileInput.click(); },
         importData(event) {
             let file = event.target.files[0];
             if(!file) return;
@@ -1076,16 +886,10 @@ createApp({
             reader.onload = async (e) => {
                 try {
                     let data = JSON.parse(e.target.result);
-                    await fetch('/api/import', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify(data)
-                    });
+                    await fetch('/api/import', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
                     this.showToastMessage("Scroll restored successfully!");
                     this.fetchState();
-                } catch(err) {
-                    alert("Invalid scroll data.");
-                }
+                } catch(err) { alert("Invalid scroll data."); }
             };
             reader.readAsText(file);
         },
@@ -1095,41 +899,31 @@ createApp({
             let blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
             let url = URL.createObjectURL(blob);
             let a = document.createElement('a');
-            a.href = url;
-            a.download = `scrolly_backup_${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
+            a.href = url; a.download = `scrolly_backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click(); URL.revokeObjectURL(url);
         },
-        
-        startBrainDump() { 
-            this.phase = 'dump'; this.rawDump = ''; 
+        startBrainDump() {
+            this.phase = 'dump'; this.rawDump = '';
             this.stagedFromFuture = []; this.stagedFromRituals = []; this.stagedFromRestorations = [];
         },
         cancelToDashboard() {
             this.futureTrials.push(...this.stagedFromFuture);
-            this.stagedFromFuture = []; this.stagedFromRituals = []; this.stagedFromRestorations = []; 
+            this.stagedFromFuture = []; this.stagedFromRituals = []; this.stagedFromRestorations = [];
             this.phase = 'dashboard';
             if(this.quests.length > 0) setTimeout(() => this.renderCharts(), 100);
         },
-        
         createQuestObj(desc) {
             return {
                 id: 'q_' + Math.random().toString(36).substr(2, 9),
-                description: desc, status: 'Remaining',
-                expected_time_mins: 0, actual_time_mins: 0, spent_time_secs: 0, completed_at: 0, 
+                description: desc, status: 'Remaining', expected_time_mins: 0, actual_time_mins: 0, spent_time_secs: 0, completed_at: 0,
                 logical_date: this.getCurrentLogicalDate(), tempTime: '', mandate: false, is_ritual: false, is_restorative: false
             };
         },
-        
         toggleMandate(q) { q.mandate = !q.mandate; this.saveState(); },
-        
         addFutureTrial() {
             if(this.newFutureDesc.trim()) {
                 let q = this.createQuestObj(this.newFutureDesc.trim());
-                if (this.newFutureTime.trim()) {
-                    q.expected_time_mins = this.parseTime(this.newFutureTime);
-                    q.actual_time_mins = q.expected_time_mins;
-                }
+                if (this.newFutureTime.trim()) { q.expected_time_mins = this.parseTime(this.newFutureTime); q.actual_time_mins = q.expected_time_mins; }
                 this.futureTrials.push(q);
                 this.newFutureDesc = ''; this.newFutureTime = '';
                 this.saveState();
@@ -1139,13 +933,12 @@ createApp({
         returnToHorizon(index) { this.futureTrials.push(this.stagedFromFuture.splice(index, 1)[0]); },
         summonToActive(index) {
             let q = this.futureTrials.splice(index, 1)[0];
-            q.logical_date = this.getCurrentLogicalDate(); 
+            q.logical_date = this.getCurrentLogicalDate();
             let insertIdx = 0;
             while(insertIdx < this.quests.length && ['Done', 'Next'].includes(this.quests[insertIdx].status)) { insertIdx++; }
             this.quests.splice(insertIdx, 0, q);
             this.enforceNextQuest(); this.saveState(); this.showToastMessage("Trial Summoned!");
         },
-
         addRitual() {
             if(this.newRitualDesc.trim()) {
                 let r = { id: 'r_' + Math.random().toString(36).substr(2, 9), description: this.newRitualDesc.trim(), expected_time_mins: 0, mandate: false };
@@ -1168,7 +961,6 @@ createApp({
             this.quests.splice(insertIdx, 0, q);
             this.enforceNextQuest(); this.saveState(); this.showToastMessage("Art Summoned!");
         },
-
         addRestore() {
             if(this.newRestoreDesc.trim()) {
                 let rs = { id: 'rs_' + Math.random().toString(36).substr(2, 9), description: this.newRestoreDesc.trim(), expected_time_mins: 0, mandate: false };
@@ -1191,28 +983,23 @@ createApp({
             this.quests.splice(insertIdx, 0, q);
             this.enforceNextQuest(); this.saveState(); this.showToastMessage("Restorative Summoned!");
         },
-
         processDump() {
             let lines = this.rawDump.split('\n').filter(l => l.trim());
             lines.forEach(l => this.quests.push(this.createQuestObj(l.trim())));
-            
             this.stagedFromFuture.forEach(q => { q.logical_date = this.getCurrentLogicalDate(); this.quests.push(q); });
             this.stagedFromFuture = [];
             this.stagedFromRituals.forEach(q => { this.quests.push(q); });
             this.stagedFromRituals = [];
             this.stagedFromRestorations.forEach(q => { this.quests.push(q); });
             this.stagedFromRestorations = [];
-            
             this.phase = this.quests.length > 0 ? 'estimate' : 'dashboard';
         },
-        
         addForgottenTrial() {
             if(this.newTrialDesc.trim()) {
                 this.quests.unshift(this.createQuestObj(this.newTrialDesc.trim()));
                 this.newTrialDesc = '';
             }
         },
-
         quickAdd() {
             if(this.quickAddDesc.trim()) {
                 let q = this.createQuestObj(this.quickAddDesc.trim());
@@ -1227,7 +1014,6 @@ createApp({
                 this.enforceNextQuest(); this.saveState();
             }
         },
-
         promoteToNext(q) {
             if(this.timer.active && this.nextQuest) this.nextQuest.spent_time_secs = this.timer.displaySeconds;
             this.resetTimerUI();
@@ -1236,7 +1022,6 @@ createApp({
             q.status = 'Next';
             this.saveState();
         },
-        
         sealScroll() {
             this.quests.forEach(q => {
                 if(q.tempTime) q.expected_time_mins = this.parseTime(q.tempTime);
@@ -1245,18 +1030,16 @@ createApp({
             this.enforceNextQuest(); this.saveState(); this.phase = 'dashboard';
             setTimeout(() => this.renderCharts(), 100);
         },
-
         enforceNextQuest() {
             if(!this.quests.find(q => q.status === 'Next')) {
                 let nextTarget = this.quests.find(q => q.status === 'Remaining');
                 if(nextTarget) nextTarget.status = 'Next';
             }
         },
-
         toggleTimer() {
             if (this.timer.active) {
                 if (this.nextQuest) this.nextQuest.spent_time_secs = this.timer.displaySeconds;
-                clearInterval(this.timer.interval); this.timer.active = false; this.saveState(); 
+                clearInterval(this.timer.interval); this.timer.active = false; this.saveState();
             } else {
                 this.timer.lastTick = Date.now(); this.timer.active = true;
                 this.timer.accumulated = this.nextQuest ? (this.nextQuest.spent_time_secs || 0) : 0;
@@ -1265,51 +1048,40 @@ createApp({
                     let diff = Math.floor((Date.now() - this.timer.lastTick) / 1000);
                     this.timer.displaySeconds = this.timer.accumulated + diff;
                     if (diff > 0 && diff % 30 === 0 && this.nextQuest) {
-                        this.nextQuest.spent_time_secs = this.timer.displaySeconds; this.saveState(); 
+                        this.nextQuest.spent_time_secs = this.timer.displaySeconds; this.saveState();
                     }
-                }, 500); 
+                }, 500);
             }
         },
         zeroOutQuestTime() {
             if(this.nextQuest) { this.nextQuest.spent_time_secs = 0; this.saveState(); }
             this.resetTimerUI();
         },
-        resetTimerUI() {
-            clearInterval(this.timer.interval); this.timer.active = false; this.timer.accumulated = 0; this.timer.displaySeconds = 0;
-        },
+        resetTimerUI() { clearInterval(this.timer.interval); this.timer.active = false; this.timer.accumulated = 0; this.timer.displaySeconds = 0; },
         applyTimerToInput() {
             if(this.nextQuest) {
                 let currentSecs = this.timer.active ? this.timer.accumulated + Math.floor((Date.now() - this.timer.lastTick) / 1000) : (this.nextQuest.spent_time_secs || 0);
-                this.nextQuest.spent_time_secs = currentSecs; 
-                this.nextQuest.actual_time_mins = Math.max(1, Math.floor(currentSecs / 60)); 
+                this.nextQuest.spent_time_secs = currentSecs;
+                this.nextQuest.actual_time_mins = Math.max(1, Math.floor(currentSecs / 60));
                 this.saveState(); this.showToastMessage("Focus Applied & Saved!");
             }
         },
-
-        markDone(q) { 
+        markDone(q) {
             if(this.timer.active && this.nextQuest) this.nextQuest.spent_time_secs = this.timer.displaySeconds;
-            q.status = 'Done'; q.completed_at = Date.now(); 
-            this.resetTimerUI(); this.enforceNextQuest(); this.saveState(); this.renderCharts(); 
+            q.status = 'Done'; q.completed_at = Date.now();
+            this.resetTimerUI(); this.enforceNextQuest(); this.saveState(); this.renderCharts();
         },
-        
-        abandonEstimate(idx) {
-            this.quests.splice(idx, 1);
-            this.saveState();
-        },
+        abandonEstimate(idx) { this.quests.splice(idx, 1); this.saveState(); },
         postponeEstimate(idx) {
             let q = this.quests.splice(idx, 1)[0];
             q.status = 'Remaining';
             this.futureTrials.unshift(q);
-            this.saveState();
-            this.showToastMessage("Mandate returned to Horizon!");
+            this.saveState(); this.showToastMessage("Mandate returned to Horizon!");
         },
-
         abandonQuest(q) {
             if(this.timer.active && this.nextQuest && this.nextQuest.id === q.id) this.nextQuest.spent_time_secs = this.timer.displaySeconds;
             q.status = 'Cancelled';
-            this.saveState();
-            this.resetTimerUI();
-            this.enforceNextQuest();
+            this.saveState(); this.resetTimerUI(); this.enforceNextQuest();
             this.showToastMessage("Trial Abandoned.");
         },
         postponeQuest(q) {
@@ -1323,26 +1095,20 @@ createApp({
                 tempTime: '', mandate: q.mandate, is_ritual: q.is_ritual, is_restorative: q.is_restorative
             };
             this.futureTrials.unshift(clone);
-            this.saveState();
-            this.resetTimerUI();
-            this.enforceNextQuest();
+            this.saveState(); this.resetTimerUI(); this.enforceNextQuest();
             this.showToastMessage("Mandate returned to Horizon!");
         },
-        reviveTrial(q) {
-            q.status = 'Remaining'; this.enforceNextQuest(); this.saveState(); this.renderCharts();
-        },
-
+        reviveTrial(q) { q.status = 'Remaining'; this.enforceNextQuest(); this.saveState(); this.renderCharts(); },
         copyToDiscord() {
             let text = document.getElementById('discord-block').innerText;
             navigator.clipboard.writeText(text).then(() => { this.showToastMessage("Scroll logic clipped to clipboard!"); });
         },
-
         renderCharts() {
             if(this.phase !== 'dashboard' || this.quests.length === 0) return;
             Chart.defaults.color = '#2D4731'; Chart.defaults.font.family = "'VT323', monospace"; Chart.defaults.font.size = 16;
             if(this.chartsObj.cum) this.chartsObj.cum.destroy();
             if(this.chartsObj.d7) this.chartsObj.d7.destroy();
-
+            
             const ctxCum = document.getElementById('chartCum');
             if(ctxCum) {
                 this.chartsObj.cum = new Chart(ctxCum, {
@@ -1350,7 +1116,6 @@ createApp({
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#C4E1C1' } }, x: { grid: { display: false } } } }
                 });
             }
-
             const ctx7d = document.getElementById('chart7d');
             if(ctx7d) {
                 this.chartsObj.d7 = new Chart(ctx7d, {
@@ -1362,8 +1127,8 @@ createApp({
     },
     mounted() {
         this.loadSettings();
-        this.fetchState().then(() => { 
-            if(this.phase === 'dashboard' && this.quests.length > 0) setTimeout(() => this.renderCharts(), 100); 
+        this.fetchState().then(() => {
+            if(this.phase === 'dashboard' && this.quests.length > 0) setTimeout(() => this.renderCharts(), 100);
         });
     }
 }).mount('#app')

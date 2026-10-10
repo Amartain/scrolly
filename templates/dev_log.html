@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Scrolly - Developer Log</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg-cream: #F3EED0;
+        --dark-green: #2D4731;
+        --mid-green: #4A7C2B;
+        --light-green: #C4E1C1;
+        --gold: #D8B21C;
+        --alert-red: #A43425;
+        --restore-bg: #E8F5E9;
+    }
+    body { 
+        background-color: var(--bg-cream); 
+        color: var(--dark-green); 
+        font-family: 'VT323', monospace; 
+        font-size: 1.6rem; 
+        margin: 0; 
+        padding: 40px 20px; 
+    }
+    h1, h2, h3, h4 { 
+        font-family: 'Press Start 2P', monospace; 
+        color: var(--dark-green); 
+        line-height: 1.4; 
+    }
+    h1 { font-size: 1.8rem; text-align: center; border-bottom: 4px solid var(--dark-green); padding-bottom: 20px; margin-bottom: 40px; }
+    h2 { font-size: 1.3rem; margin-top: 0; color: var(--gold); text-shadow: 2px 2px 0px var(--dark-green); }
+    h3 { font-size: 1rem; margin-top: 25px; border-bottom: 2px dashed var(--light-green); padding-bottom: 5px; }
+    
+    .container { 
+        max-width: 900px; 
+        margin: 0 auto; 
+    }
+    .log-entry { 
+        background: var(--restore-bg); 
+        padding: 40px; 
+        border: 2px solid var(--dark-green); 
+        box-shadow: 8px 8px 0px var(--dark-green); 
+        margin-bottom: 40px; 
+    }
+    .date-badge {
+        display: inline-block;
+        background: var(--dark-green);
+        color: var(--bg-cream);
+        font-family: 'Press Start 2P', monospace;
+        font-size: 0.7rem;
+        padding: 8px 12px;
+        margin-bottom: 20px;
+    }
+    ul { padding-left: 25px; line-height: 1.6; }
+    li { margin-bottom: 12px; }
+    strong { color: var(--mid-green); }
+    .code-block { 
+        background: #FAFAFA; 
+        border: 1px solid var(--light-green); 
+        border-left: 5px solid var(--mid-green); 
+        padding: 15px; 
+        font-family: monospace; 
+        font-size: 1.2rem;
+        white-space: pre-wrap;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📖 The Developer's Scroll</h1>
+    
+    <!-- LATEST UPDATE -->
+    <div class="log-entry">
+        <div class="date-badge">October 10, 2026</div>
+        <h2>v0.1.1: The Harmonious UI & Feedback Update</h2>
+        <p>This update focuses on resolving visual friction, stabilizing backend edge-cases, and integrating a robust user feedback loop.</p>
+        
+        <h3>✨ Aesthetics & UI Formatting</h3>
+        <ul>
+            <li><strong>Sensory Contrast Adjustments:</strong> The harsh white backgrounds in isolated phases have been replaced with the soothing <code>--restore-bg</code> green. Text entry areas now utilize a muted cream color to drastically reduce eye strain for sensitive users.</li>
+            <li><strong>Phase 1 Overflow Fix:</strong> The Foundational Arts and Restorative Plain boxes in Phase 1 now have proper scroll constraints (150px max-height) and the overall grid height was extended to prevent UI spillage.</li>
+        </ul>
+
+        <h3>🛠️ Core Logic & Bug Fixes</h3>
+        <ul>
+            <li><strong>Timezone Desync Resolved:</strong> Fixed a critical bug where Chrome users in specific timezones experienced task wipes at 4 PM instead of 4 AM. The Python backend now explicitly processes datetime objects using local system timezones rather than defaulting to UTC.</li>
+            <li><strong>Heavenly Mandate Persistence:</strong> Heavenly Mandates that remain incomplete at the 4 AM wipe are no longer incorrectly flagged as cancelled. They are now automatically intercepted, updated to the new logical date, and safely swept into The Horizon.</li>
+        </ul>
+
+        <h3>💬 Discord Dispatch & Feedback</h3>
+        <ul>
+            <li><strong>Clip Formatting:</strong> Removed the redundant square emoji from the Discord output total.</li>
+            <li><strong>New Settings Toggles:</strong> Added boolean toggles to the settings panel to optionally hide/show the "DND Mode" header and the Abandoned/Postponed lists in the generated Discord text.</li>
+            <li><strong>Vertical Clutter Reduction:</strong> Abandoned and Postponed tasks are now dynamically flattened into comma-separated strings to drastically reduce visual noise in Discord channels.</li>
+            <li><strong>Feedback Hub:</strong> Added direct linkages to structured Google Forms (Bug/Issue, General, and Developer Feedback) directly within the dashboard.</li>
+        </ul>
+    </div>
+
+    <!-- PREVIOUS UPDATE -->
+    <div class="log-entry">
+        <div class="date-badge">October 9, 2026</div>
+        <h2>v0.1.0: The Restorative Update</h2>
+        <p>Welcome to the first official Alpha release of Scrolly! Thank you to everyone helping to test this tool. This update brings major workflow refinements designed to further bypass task paralysis and make your daily cultivation (productivity) as frictionless as possible.</p>
+        
+        <h3>✨ New Features</h3>
+        <ul>
+            <li><strong>🍵 The Restorative Plain:</strong> Not all habits drain your energy. You can now add restorative activities (like lunch, meditation, or fika) alongside your Foundational Arts. They use a calming leaf icon (🌿) so you can visually balance your energy expenditure.</li>
+            <li><strong>🔮 Late Time Divination:</strong> Forgot to estimate how long a trial would take during Phase 2? No problem. If a trial has no estimated time, you can now seamlessly add it directly from the Active Scroll (Dashboard) whenever you are ready.</li>
+            <li><strong>📥 Scroll Backup & Restoration:</strong> You can now easily export all your trials, history, and habits into a single backup JSON file and restore it at any time. Perfect for moving your data between devices!</li>
+        </ul>
+
+        <h3>🧠 Workflow & Psychology Upgrades</h3>
+        <p>We have completely reworked how tasks are delayed or dropped to align with PDA (Pathological Demand Avoidance) friendly psychology:</p>
+        <ul>
+            <li><strong>✖️ Abandoning Mortal Trials:</strong> You can now instantly "Abandon" standard Mortal Trials (regular tasks). They will be crossed out in your dispatch, and will permanently fade away at the 4:00 AM daily wipe. Let it go without guilt.</li>
+            <li><strong>➔ Postponing Heavenly Mandates:</strong> Crucial tasks (Heavenly Mandates) can only be "Postponed." Doing so instantly removes them from your active view to protect your peace, while safely sending a copy back to The Horizon (your backlog) for tomorrow.</li>
+            <li><strong>⚡ Instant Prioritization:</strong> Drag-and-drop can be clunky. We've added instant ⇈ (Send to Top) and ⇊ (Send to Bottom) buttons during the Estimation phase and on the main dashboard for frictionless sorting.</li>
+            <li><strong>📜 Guidance Scrolls:</strong> Added lore-friendly, auto-collapsing guidance panels to the Brain Dump and Estimation phases. These explain the Wuxia terminology and the psychology behind the app for new users, but can be permanently minimized once you know the ropes.</li>
+        </ul>
+
+        <h3>🎨 Quality of Life / Aesthetics</h3>
+        <ul>
+            <li><strong>Soothing Archives:</strong> The Grand Archives (your history page) no longer use a blinding white background. It has been updated to a textured, sensory-friendly bamboo/parchment tone.</li>
+            <li><strong>Discord Dispatch Upgrades:</strong> Abandoned and Postponed trials are now properly categorized and formatted when you click "Clip to Scroll" for your accountability check-ins.</li>
+            <li><strong>Analytics Restored:</strong> The Cumulative Essence and 7-Day Rhythm charts are locked in and beautifully tracking your victories.</li>
+            <li><strong>Anchored UI:</strong> The initial "Cultivate Your Focus" button is now perfectly centered and anchored to the screen so it no longer shifts around.</li>
+        </ul>
+
+        <h3>💻 Installation</h3>
+        <div class="code-block">Download the latest source code from the repo, ensure you have run 'pip install Flask', and run 'python app.py'. Your existing local data/ folder will automatically be read by the new version!
+
+(For non-technical users: Standalone one-click .exe and .app executables are being packaged tomorrow!)</div>
+    </div>
+
+</div>
+</body>
+</html>
