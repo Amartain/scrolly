@@ -1,0 +1,78 @@
+/* Theme-independent tokens. Every size is a rem multiple of 0.25 (design drawn at 1440x900 = 16px root). */
+:root {
+  --font-display: 'Silkscreen', monospace;
+  --font-body: 'VT323', monospace;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+
+  --text-display-sm: 0.75rem;
+  --text-display-md: 1rem;
+  --text-display-lg: 1.5rem;
+  --text-display-xl: 2rem;
+  --text-body-sm: 1rem;
+  --text-body-md: 1.25rem;
+  --text-body-lg: 1.5rem;
+  --text-body-xl: 2rem;
+  --tracking-display: 0.0625em;
+
+  --size-header: 11.25rem;
+  --size-fold: 3rem;
+  --size-gutter: var(--space-6);
+  --size-row: 2.5rem;
+  --size-icon-button: 3.5rem;
+  --size-immediate: 16rem;
+  --size-short-panel: 6rem;
+  --shadow-room: var(--space-3);
+
+  --canvas-fill: var(--surface-canvas);
+  --icon-highlight: rgba(255, 255, 255, 0.6);
+
+  --shadow-panel:
+    var(--shadow-offset) var(--shadow-offset) 0 var(--shadow),
+    inset 0 var(--space-1) 0 var(--highlight);
+  --shadow-card: var(--lift) var(--lift) 0 var(--shadow), inset 0 var(--space-1) 0 var(--highlight);
+  --shadow-button: var(--shadow-offset) var(--shadow-offset) 0 var(--shadow);
+  --shadow-sunken: inset var(--space-1) var(--space-1) 0 var(--inset);
+
+  --motion-fast: 150ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+  }
+}
+
+/* Structure: Serene softens, Pavilion turns it up. Same layout. */
+:root[data-theme='serene'] {
+  --border-width: 0.125rem;
+  --shadow-offset: 0.25rem;
+  --lift: 0.4375rem;
+}
+
+:root[data-theme='pavilion'] {
+  --border-width: 0.1875rem;
+  --shadow-offset: 0.375rem;
+  --lift: 0.625rem;
+}
+
+/* Golden hour: day canvas warms towards #EFE2BA (Serene) or a lighter canvas (Pavilion). */
+:root[data-theme='serene'][data-phase='golden'] {
+  --canvas-fill: linear-gradient(180deg, var(--surface-canvas), #efe2ba);
+}
+
+:root[data-theme='pavilion'][data-phase='golden'] {
+  --canvas-fill: linear-gradient(
+    180deg,
+    var(--surface-canvas),
+    color-mix(in srgb, var(--surface-canvas) 85%, white)
+  );
+}

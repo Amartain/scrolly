@@ -1,0 +1,88 @@
+<script lang="ts">
+  import type { Snippet } from 'svelte';
+
+  type Tone = 'neutral' | 'horizon' | 'foundational' | 'restorative';
+
+  let {
+    title,
+    tone = 'neutral',
+    empty = 'Nothing here yet.',
+    children,
+  }: { title: string; tone?: Tone; empty?: string; children?: Snippet } = $props();
+</script>
+
+<section class="panel {tone}" aria-label={title}>
+  <h2 class="head display">{title}</h2>
+  <div class="body">
+    {#if children}
+      {@render children()}
+    {:else}
+      <p class="empty">{empty}</p>
+    {/if}
+  </div>
+</section>
+
+<style>
+  .panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: var(--surface-panel);
+    background-image: var(--gloss-faint);
+    border: var(--border-width) solid var(--line);
+    box-shadow: var(--shadow-panel);
+  }
+
+  .head {
+    margin: 0;
+    padding: var(--space-2) var(--space-4);
+    background: var(--head-bg);
+    color: var(--head-ink);
+    border-bottom: var(--border-width) solid var(--line);
+    font-size: var(--text-display-md);
+  }
+
+  .body {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  .empty {
+    margin: 0;
+    padding: var(--space-4);
+    color: var(--ink-muted);
+  }
+
+  .horizon,
+  .foundational,
+  .restorative {
+    color: var(--card-ink);
+    box-shadow: var(--shadow-card);
+  }
+
+  .horizon {
+    background: linear-gradient(160deg, var(--card-horizon-a), var(--card-horizon-b));
+  }
+
+  .foundational {
+    background: linear-gradient(160deg, var(--card-foundational-a), var(--card-foundational-b));
+  }
+
+  .restorative {
+    background: linear-gradient(160deg, var(--card-restorative-a), var(--card-restorative-b));
+  }
+
+  .horizon .head,
+  .foundational .head,
+  .restorative .head {
+    background: var(--card-head);
+    color: var(--card-ink);
+  }
+
+  .horizon .empty,
+  .foundational .empty,
+  .restorative .empty {
+    color: var(--card-ink);
+  }
+</style>

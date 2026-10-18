@@ -1,0 +1,15 @@
+docs
+CLAUDE.md
+.claude
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+src/scrolly/static/
+dist/
+test-results/
+playwright-report/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.hypothesis/

@@ -1,0 +1,82 @@
+/* serene-dusk: values from docs/art-direction.md and the dashboard mockup. */
+:root[data-theme='serene'][data-phase='dusk'] {
+  --surface-canvas: #3b4f5e;
+  --surface-panel: #2c3646;
+  --surface-stripe: #323e51;
+  --surface-raised: #222a38;
+  --inset: #171d27;
+  --btn: #3b4f5e;
+  --ink: #f3eed0;
+  --ink-muted: #c9ccc4;
+  --ink-faint: #98a2ab;
+  --line: #4a5d78;
+  --shadow: #1b222c;
+  --grid: #3b475c;
+  --icon-line: #141a22;
+  --head-bg: #2c3646;
+  --head-ink: #f3eed0;
+  --growth: #9cc47a;
+  --on-growth: #1b222c;
+  --growth-text: #9cc47a;
+  --gold: #ecd452;
+  --on-gold: #1b222c;
+  --num: #ecd452;
+  --num-shadow: #1b222c;
+  --num-text: #ecd452;
+  --strong: #1e293b;
+  --on-strong: #ecd452;
+  --mandate: #e38b7a;
+  --postponed: #9fb4c9;
+  --icon-cloud: #d9e0e6;
+  --icon-leaf: #9cc47a;
+  --icon-sprig: #7fc4bd;
+  --icon-paper: #e8e0c4;
+  --icon-wood: #b07a45;
+  --highlight: rgba(255, 255, 255, 0.12);
+  --icon-shadow: rgba(0, 0, 0, 0.6);
+  --promote-bg: #4a6078;
+  --promote-ink: #f3eed0;
+  --gloss: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.05) 48%,
+    rgba(0, 0, 0, 0.08) 52%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  --gloss-side: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.05) 45%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  --gloss-faint: linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0) 60%);
+  --gloss-btn: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0) 55%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  --card-ink: #f3eed0;
+  --card-head: rgba(0, 0, 0, 0.25);
+  --card-row-a: rgba(0, 0, 0, 0.1);
+  --card-row-b: rgba(0, 0, 0, 0.22);
+  --card-horizon-a: #7a4b3c;
+  --card-horizon-b: #4b3f62;
+  --card-horizon-action-bg: #5e6f8a;
+  --card-horizon-action-ink: #f3eed0;
+  --card-foundational-a: #6e5f2e;
+  --card-foundational-b: #7a5232;
+  --card-foundational-action-bg: #4f6380;
+  --card-foundational-action-ink: #f3eed0;
+  --card-restorative-a: #2f5853;
+  --card-restorative-b: #3e6a64;
+  --card-restorative-action-bg: #5e5480;
+  --card-restorative-action-ink: #f3eed0;
+  --entry-archives-bg: #9fb4c9;
+  --entry-archives-ink: #1b222c;
+  --entry-dispatch-bg: #b9a0d9;
+  --entry-dispatch-ink: #1b222c;
+  --entry-settings-bg: #9cc47a;
+  --entry-settings-ink: #1b222c;
+  --header-image: url('../../assets/headers/serene-dusk.webp');
+}

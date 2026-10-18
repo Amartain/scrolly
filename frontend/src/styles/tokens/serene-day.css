@@ -1,0 +1,82 @@
+/* serene-day: values from docs/art-direction.md and the dashboard mockup. */
+:root[data-theme='serene']:not([data-phase='dusk']) {
+  --surface-canvas: #f3eed0;
+  --surface-panel: #e3dec3;
+  --surface-stripe: #dad3b4;
+  --surface-raised: #fbf7ee;
+  --inset: #cbc4a4;
+  --btn: #f3eed0;
+  --ink: #2d4731;
+  --ink-muted: #4e6148;
+  --ink-faint: #56634f;
+  --line: #2d4731;
+  --shadow: #2d4731;
+  --grid: #cfc8a8;
+  --icon-line: #2d4731;
+  --head-bg: #e3dec3;
+  --head-ink: #2d4731;
+  --growth: #3f6b24;
+  --on-growth: #f3eed0;
+  --growth-text: #3f6b24;
+  --gold: #d8b21c;
+  --on-gold: #2d4731;
+  --num: #d8b21c;
+  --num-shadow: #2d4731;
+  --num-text: #6f5700;
+  --strong: #2d4731;
+  --on-strong: #f3eed0;
+  --mandate: #a43425;
+  --postponed: #46607a;
+  --icon-cloud: #fbf7ee;
+  --icon-leaf: #6fa04a;
+  --icon-sprig: #3e9a84;
+  --icon-paper: #fbf3d9;
+  --icon-wood: #8a5a2b;
+  --highlight: rgba(255, 255, 255, 0.7);
+  --icon-shadow: rgba(45, 71, 49, 0.45);
+  --promote-bg: #d3dfc6;
+  --promote-ink: #2d4731;
+  --gloss: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.14) 48%,
+    rgba(0, 0, 0, 0.03) 52%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  --gloss-side: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.1) 45%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  --gloss-faint: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 60%);
+  --gloss-btn: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0) 55%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  --card-ink: #2d4731;
+  --card-head: rgba(255, 255, 255, 0.35);
+  --card-row-a: rgba(255, 255, 255, 0.22);
+  --card-row-b: rgba(255, 255, 255, 0.42);
+  --card-horizon-a: #fbddb0;
+  --card-horizon-b: #f2bba6;
+  --card-horizon-action-bg: #d3dfc6;
+  --card-horizon-action-ink: #2d4731;
+  --card-foundational-a: #f6e7aa;
+  --card-foundational-b: #edcc8a;
+  --card-foundational-action-bg: #d3dfc6;
+  --card-foundational-action-ink: #2d4731;
+  --card-restorative-a: #d9eee0;
+  --card-restorative-b: #b7dbd0;
+  --card-restorative-action-bg: #efe0b8;
+  --card-restorative-action-ink: #2d4731;
+  --entry-archives-bg: #46607a;
+  --entry-archives-ink: #f3eed0;
+  --entry-dispatch-bg: #7b5c9d;
+  --entry-dispatch-ink: #f3eed0;
+  --entry-settings-bg: #3f6b24;
+  --entry-settings-ink: #f3eed0;
+  --header-image: url('../../assets/headers/serene-day.webp');
+}

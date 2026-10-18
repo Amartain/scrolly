@@ -1,0 +1,100 @@
+[project]
+name = "scrolly"
+version = "0.2.0.dev0"
+description = "Local, offline, neurodivergent-friendly task manager."
+readme = "README.md"
+requires-python = ">=3.12"
+license-files = ["LICENSE"]
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+    "sqlalchemy>=2.0",
+    "alembic>=1.13",
+    "python-multipart>=0.0.9",
+]
+
+[project.scripts]
+scrolly = "scrolly.cli:main"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "pytest>=8",
+    "hypothesis>=6.100",
+    "import-linter>=2.0",
+    "poethepoet>=0.29",
+    "httpx>=0.27",
+    "pillow>=10",
+    "build>=1.2",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/scrolly"]
+artifacts = ["src/scrolly/static/**"]
+
+[tool.ruff]
+extend-exclude = ["prototype", "docs", "frontend/node_modules"]
+line-length = 100
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+strict = true
+files = ["src", "tests", "scripts"]
+mypy_path = "src"
+exclude = ["migrations", "prototype"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.importlinter]
+root_package = "scrolly"
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "domain is pure"
+type = "forbidden"
+source_modules = ["scrolly.domain"]
+forbidden_modules = [
+    "scrolly.services", "scrolly.storage", "scrolly.api", "scrolly.io",
+    "scrolly.ports", "scrolly.clock", "scrolly.config", "sqlalchemy", "fastapi",
+]
+
+[[tool.importlinter.contracts]]
+name = "services stay below api and storage"
+type = "forbidden"
+source_modules = ["scrolly.services"]
+forbidden_modules = ["scrolly.api", "scrolly.storage", "scrolly.io", "sqlalchemy", "fastapi"]
+
+[[tool.importlinter.contracts]]
+name = "api reaches storage only through the composition root"
+type = "forbidden"
+source_modules = ["scrolly.api.routes", "scrolly.api.schemas", "scrolly.api.deps"]
+forbidden_modules = ["scrolly.storage", "sqlalchemy"]
+
+[tool.poe.tasks]
+dev = "python scripts/dev.py"
+test = "pytest"
+types = "python scripts/gen_types.py"
+build = "python scripts/build.py"
+
+[tool.poe.tasks.check]
+sequence = [
+    { cmd = "ruff check ." },
+    { cmd = "ruff format --check ." },
+    { cmd = "mypy" },
+    { cmd = "lint-imports" },
+    { cmd = "pytest" },
+    { cmd = "python scripts/check_tokens.py" },
+    { cmd = "python scripts/check_file_length.py" },
+    { cmd = "python scripts/gen_types.py --check" },
+    { cmd = "python scripts/frontend_check.py" },
+]

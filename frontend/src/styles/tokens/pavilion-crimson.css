@@ -1,0 +1,82 @@
+/* pavilion-crimson: values from docs/art-direction.md and the dashboard mockup. */
+:root[data-theme='pavilion'][data-day-variant='crimson']:not([data-phase='dusk']) {
+  --surface-canvas: #8e001d;
+  --surface-panel: #66001a;
+  --surface-stripe: #730019;
+  --surface-raised: #4e0012;
+  --inset: #33000b;
+  --btn: #8e001d;
+  --ink: #f2ede2;
+  --ink-muted: #f0c9cd;
+  --ink-faint: #d3a0a6;
+  --line: #141414;
+  --shadow: #141414;
+  --grid: #80102a;
+  --icon-line: #141414;
+  --head-bg: #141414;
+  --head-ink: #e1c227;
+  --growth: #006b61;
+  --on-growth: #f2ede2;
+  --growth-text: #a5f4bc;
+  --gold: #e1c227;
+  --on-gold: #141414;
+  --num: #e1c227;
+  --num-shadow: #141414;
+  --num-text: #e1c227;
+  --strong: #141414;
+  --on-strong: #e1c227;
+  --mandate: #e1c227;
+  --postponed: #d2bfea;
+  --icon-cloud: #f2ede2;
+  --icon-leaf: #a5f4bc;
+  --icon-sprig: #a5f4bc;
+  --icon-paper: #f2ede2;
+  --icon-wood: #006b61;
+  --highlight: rgba(255, 255, 255, 0.22);
+  --icon-shadow: rgba(0, 0, 0, 0.7);
+  --promote-bg: #e1c227;
+  --promote-ink: #141414;
+  --gloss: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.1) 48%,
+    rgba(0, 0, 0, 0.08) 52%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  --gloss-side: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.08) 45%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  --gloss-faint: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 60%);
+  --gloss-btn: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0) 55%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  --card-ink: #f2ede2;
+  --card-head: rgba(20, 20, 20, 0.55);
+  --card-row-a: rgba(20, 20, 20, 0.4);
+  --card-row-b: rgba(20, 20, 20, 0.52);
+  --card-horizon-a: #ff7e00;
+  --card-horizon-b: #7b5c9d;
+  --card-horizon-action-bg: #a5f4bc;
+  --card-horizon-action-ink: #141414;
+  --card-foundational-a: #e1c227;
+  --card-foundational-b: #ff7e00;
+  --card-foundational-action-bg: #006b61;
+  --card-foundational-action-ink: #f2ede2;
+  --card-restorative-a: #a5f4bc;
+  --card-restorative-b: #006b61;
+  --card-restorative-action-bg: #7b5c9d;
+  --card-restorative-action-ink: #f2ede2;
+  --entry-archives-bg: #7b5c9d;
+  --entry-archives-ink: #f2ede2;
+  --entry-dispatch-bg: #ff7e00;
+  --entry-dispatch-ink: #141414;
+  --entry-settings-bg: #e1c227;
+  --entry-settings-ink: #141414;
+  --header-image: url('../../assets/headers/pavilion.webp');
+}

@@ -1,0 +1,42 @@
+/* One scale knob: 16px at 1440x900, following the smaller of width/height, whole pixels, 12px floor. */
+html {
+  font-size: clamp(12px, min(1.111vw, 1.778vh), 32px);
+  font-size: round(down, clamp(12px, min(1.111vw, 1.778vh), 32px), 1px);
+}
+
+body {
+  margin: 0;
+  background: var(--canvas-fill);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--text-body-md);
+  line-height: 1.2;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: var(--border-width) solid var(--gold);
+  outline-offset: var(--space-1);
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+}
+
+.digits {
+  font-variant-numeric: tabular-nums;
+}
