@@ -1,5 +1,5 @@
-import { expect, test } from '@playwright/test';
-import { panelBoxes, resetTheme } from './helpers';
+import { expect, test } from './fixtures';
+import { panelBoxes, sealDay } from './helpers';
 
 const SIZES = [
   { width: 1280, height: 720 },
@@ -11,7 +11,7 @@ const SIZES = [
   { width: 3440, height: 1440 },
 ];
 
-test.beforeEach(async ({ page }) => resetTheme(page));
+test.beforeEach(async ({ page }) => sealDay(page));
 
 for (const size of SIZES) {
   test(`same layout at ${size.width}x${size.height}`, async ({ page }, info) => {

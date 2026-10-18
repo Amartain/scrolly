@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'node:url';
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 const fixture = (name: string) =>
   fileURLToPath(new URL(`../../tests/fixtures/${name}`, import.meta.url));

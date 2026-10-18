@@ -1,7 +1,7 @@
 from collections.abc import Sequence
 from datetime import date, datetime
 
-from sqlalchemy import ColumnElement, select
+from sqlalchemy import ColumnElement, delete, select
 from sqlalchemy.orm import Session
 
 from scrolly.config import REALM_DEFAULT
@@ -30,6 +30,13 @@ class SqlTrials:
         open_states = [TrialState.IMMEDIATE.value, TrialState.REMAINING.value]
         rows = self._rows(TrialRow.state.in_(open_states), TrialRow.logical_day < day.isoformat())
         return [trial_from_row(row) for row in rows]
+
+    def list_for_day(self, day: date) -> list[Trial]:
+        return [trial_from_row(row) for row in self._rows(TrialRow.logical_day == day.isoformat())]
+
+    def delete(self, ids: Sequence[str]) -> None:
+        self._session.execute(delete(TrialRow).where(TrialRow.id.in_(list(ids))))
+        self._session.flush()
 
     def save(self, trials: Sequence[Trial], now: datetime) -> None:
         for trial in trials:

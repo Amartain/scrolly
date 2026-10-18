@@ -2,13 +2,19 @@
   import { onScreenTwo, showScreen } from './lib/screens';
   import { view } from './lib/view.svelte';
   import Header from './screens/Header.svelte';
+  import Phase1 from './screens/Phase1.svelte';
+  import Phase2 from './screens/Phase2.svelte';
   import Screen1 from './screens/Screen1.svelte';
   import Screen2 from './screens/Screen2.svelte';
   import Settings from './screens/Settings.svelte';
+  import ZeroState from './screens/ZeroState.svelte';
 
   let mode = $state<'dashboard' | 'settings'>('dashboard');
 
   $effect(() => view.start());
+
+  const status = $derived(view.planning?.status);
+  const onDashboard = $derived(mode === 'dashboard' && status === 'active');
 
   const toggleSettings = () => (mode = mode === 'settings' ? 'dashboard' : 'settings');
 
@@ -20,13 +26,7 @@
 
   function onkeydown(event: KeyboardEvent) {
     if (event.key === 'Escape' && mode === 'settings') mode = 'dashboard';
-    if (
-      mode !== 'dashboard' ||
-      typing(event.target) ||
-      event.altKey ||
-      event.ctrlKey ||
-      event.metaKey
-    )
+    if (!onDashboard || typing(event.target) || event.altKey || event.ctrlKey || event.metaKey)
       return;
     const down = event.key === 'ArrowDown' && !onScreenTwo();
     const up = event.key === 'ArrowUp' && onScreenTwo();
@@ -43,11 +43,17 @@
   <Header settingsOpen={mode === 'settings'} onsettings={toggleSettings} />
   {#if mode === 'settings'}
     <Settings onback={() => (mode = 'dashboard')} />
-  {:else}
+  {:else if status === 'zero'}
+    <ZeroState />
+  {:else if status === 'inscribe'}
+    <Phase1 />
+  {:else if status === 'estimate'}
+    <Phase2 />
+  {:else if status === 'active'}
     <Screen1 />
   {/if}
 </div>
-{#if mode === 'dashboard'}
+{#if onDashboard}
   <Screen2 />
 {/if}
 

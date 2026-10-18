@@ -1,5 +1,5 @@
-import { expect, test } from '@playwright/test';
-import { resetTheme } from './helpers';
+import { expect, test } from './fixtures';
+import { sealDay } from './helpers';
 
 const SIZES = [
   { width: 1280, height: 720 },
@@ -29,7 +29,7 @@ const LISTS = [
   'The Horizon',
 ];
 
-test.afterEach(async ({ page }) => resetTheme(page));
+test.beforeEach(async ({ page }) => sealDay(page));
 
 for (const size of SIZES) {
   for (const choice of THEMES) {

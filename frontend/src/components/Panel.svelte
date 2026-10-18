@@ -31,6 +31,8 @@
 
 <style>
   .panel {
+    --row-a: transparent;
+    --row-b: var(--surface-stripe);
     display: flex;
     flex-direction: column;
     min-height: 0;
@@ -71,6 +73,8 @@
   .horizon,
   .foundational,
   .restorative {
+    --row-a: var(--card-row-a);
+    --row-b: var(--card-row-b);
     color: var(--card-ink);
     box-shadow: var(--shadow-card);
   }

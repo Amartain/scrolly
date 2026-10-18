@@ -1,12 +1,26 @@
 <script lang="ts">
   import Panel from '../components/Panel.svelte';
+  import RowList from '../components/RowList.svelte';
+  import TrialLine from '../components/TrialLine.svelte';
+  import type { PlanTrial } from '../lib/api';
   import { SCREEN_TWO_ID } from '../lib/screens';
+  import { view } from '../lib/view.svelte';
+
+  const remaining = $derived(
+    (view.planning?.trials ?? []).filter((trial) => trial.state === 'remaining'),
+  );
 </script>
+
+{#snippet row(trial: PlanTrial)}
+  <TrialLine {trial} />
+{/snippet}
 
 <div class="screen" id={SCREEN_TWO_ID}>
   <div class="column left">
     <Panel title="Scribe Trial" empty="Write a trial here." />
-    <Panel title="Remaining Trials" empty="No trials waiting." scroll />
+    <Panel title="Remaining Trials" scroll>
+      <RowList items={remaining} {row} empty="No trials waiting." />
+    </Panel>
     <div class="pair">
       <Panel title="Postponed Today" empty="None." />
       <Panel title="Fallen Leaves" empty="None." />

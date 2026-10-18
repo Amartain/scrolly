@@ -74,3 +74,24 @@ class Day:
     rolled_over_at: datetime | None = None
     dusk_override: str | None = None
     advisor_silenced: bool = False
+
+
+class PlanPhase(StrEnum):
+    INSCRIBE = "inscribe"
+    ESTIMATE = "estimate"
+
+
+class PlanStatus(StrEnum):
+    ZERO = "zero"
+    INSCRIBE = "inscribe"
+    ESTIMATE = "estimate"
+    ACTIVE = "active"
+
+
+@dataclass(frozen=True)
+class PlanningDraft:
+    """Planning in progress for one logical day: which phase, and the Phase 1 text."""
+
+    logical_day: date
+    phase: PlanPhase = PlanPhase.INSCRIBE
+    text: str = ""

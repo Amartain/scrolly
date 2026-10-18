@@ -79,3 +79,12 @@ class DayRow(_Audited, Base):
     rolled_over_at: Mapped[str | None] = mapped_column(String(40), default=None)
     dusk_override: Mapped[str | None] = mapped_column(String(20), default=None)
     advisor_silenced: Mapped[bool] = mapped_column(Boolean, default=False)
+
+
+class PlanningDraftRow(_Audited, Base):
+    __tablename__ = "planning_draft"
+    __table_args__ = (UniqueConstraint("realm_id"),)
+
+    logical_day: Mapped[str] = mapped_column(String(10))
+    phase: Mapped[str] = mapped_column(String(20))
+    text: Mapped[str] = mapped_column(Text, default="")

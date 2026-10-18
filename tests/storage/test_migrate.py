@@ -46,3 +46,13 @@ def test_upgrading_from_the_first_revision_keeps_settings(tmp_path: Path) -> Non
         tables = {row[0] for row in connection.execute(text("SELECT name FROM sqlite_master"))}
     assert {"trial", "horizon_item", "art", "day"} <= tables
     engine.dispose()
+
+
+def test_the_planning_draft_table_exists_after_upgrading(tmp_path: Path) -> None:
+    db_file = tmp_path / "scrolly.db"
+    upgrade_to_head(db_file, tmp_path / "backups")
+    engine = create_engine(f"sqlite:///{db_file}")
+    with engine.connect() as connection:
+        tables = {row[0] for row in connection.execute(text("SELECT name FROM sqlite_master"))}
+    engine.dispose()
+    assert "planning_draft" in tables

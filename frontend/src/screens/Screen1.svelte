@@ -1,13 +1,27 @@
 <script lang="ts">
   import Panel from '../components/Panel.svelte';
+  import RowList from '../components/RowList.svelte';
+  import TrialLine from '../components/TrialLine.svelte';
+  import type { PlanTrial } from '../lib/api';
   import { showScreen } from '../lib/screens';
+  import { view } from '../lib/view.svelte';
+
+  const immediate = $derived(
+    (view.planning?.trials ?? []).filter((trial) => trial.state === 'immediate'),
+  );
 </script>
+
+{#snippet row(trial: PlanTrial)}
+  <TrialLine {trial} />
+{/snippet}
 
 <div class="grid">
   <div class="column left">
     <Panel title="Essence" empty="No trials on the scroll." />
     <div class="immediate">
-      <Panel title="The Immediate Trial" empty="Nothing is underway." scroll />
+      <Panel title="The Immediate Trial" scroll>
+        <RowList items={immediate} {row} empty="Nothing is underway." />
+      </Panel>
     </div>
     <Panel title="Conquered Today" empty="Nothing conquered yet." scroll />
   </div>

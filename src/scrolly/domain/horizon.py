@@ -25,7 +25,7 @@ def return_to_horizon(items: Sequence[HorizonItem], trial: Trial) -> list[Horizo
     kept = [item for item in items if key not in (item.id, item.origin_id)]
     previous = next((item for item in items if key in (item.id, item.origin_id)), None)
     returned = HorizonItem(
-        id=previous.id if previous else trial.id,
+        id=previous.id if previous else key,
         title=trial.title,
         is_mandate=trial.is_mandate,
         essence_expected_min=trial.essence_expected_min,

@@ -1,8 +1,7 @@
-import { expect, test } from '@playwright/test';
-import { canvasColor, panelBoxes, resetTheme } from './helpers';
+import { expect, test } from './fixtures';
+import { canvasColor, panelBoxes, sealDay } from './helpers';
 
 test.use({ viewport: { width: 1440, height: 900 } });
-test.beforeEach(async ({ page }) => resetTheme(page));
 
 const CANVAS = {
   'serene-day': '#F3EED0',
@@ -37,6 +36,7 @@ test('all five token sets resolve to the art-direction canvas colors', async ({ 
 });
 
 test('theme changes in Settings re-paint without moving any panel', async ({ page }) => {
+  await sealDay(page);
   await page.goto('/');
   const before = await panelBoxes(page);
   const serene = await canvasColor(page);

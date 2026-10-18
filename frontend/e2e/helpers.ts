@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
 export interface Box {
   name: string;
@@ -8,9 +8,21 @@ export interface Box {
   height: number;
 }
 
-/** Put the app back to Serene Peak so tests do not depend on each other. */
-export async function resetTheme(page: Page) {
-  await page.request.put('/api/appearance', { data: { theme: 'serene', day_variant: 'teal' } });
+/** Plan and seal a day through the API, so a test can start on the dashboard. */
+export async function sealDay(page: Page, ...titles: string[]) {
+  const lines = titles.length > 0 ? titles : ['Write the report', 'Tidy the desk'];
+  const steps: [string, string, object?][] = [
+    ['post', 'start'],
+    ['put', 'text', { text: lines.join('\n') }],
+    ['post', 'proceed'],
+    ['post', 'seal'],
+  ];
+  for (const [method, path, data] of steps) {
+    const url = `/api/planning/${path}`;
+    const reply =
+      method === 'put' ? await page.request.put(url, { data }) : await page.request.post(url);
+    expect(reply.ok(), `${method} ${url}`).toBeTruthy();
+  }
 }
 
 /** Bounding box of every panel, keyed by its accessible name. */

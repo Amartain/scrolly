@@ -28,6 +28,12 @@
   --size-gutter: var(--space-6);
   --size-row: 2.5rem;
   --size-icon-button: 3.5rem;
+  --size-icon: 1.5rem;
+  --size-glyph: 1.25rem;
+  --size-glyph-button: 2rem;
+  --size-staged: 10rem;
+  --size-field: 2.5rem;
+  --size-estimate: 4.5rem;
   --size-immediate: 16rem;
   --size-short-panel: 6rem;
   --shadow-room: var(--space-3);
@@ -43,6 +49,7 @@
     inset 0 var(--space-1) 0 var(--highlight);
   --shadow-card: var(--lift) var(--lift) 0 var(--shadow), inset 0 var(--space-1) 0 var(--highlight);
   --shadow-button: var(--shadow-offset) var(--shadow-offset) 0 var(--shadow);
+  --icon-drop: drop-shadow(0.0625rem 0.0625rem 0 var(--icon-shadow));
   --shadow-sunken: inset var(--space-1) var(--space-1) 0 var(--inset);
 
   --motion-fast: 150ms;
