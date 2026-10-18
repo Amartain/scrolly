@@ -18,3 +18,18 @@ export const putAppearance = (theme: Theme, dayVariant: DayVariant | null) =>
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ theme, day_variant: dayVariant }),
   });
+
+export type ImportResult = components['schemas']['ImportOut'];
+
+export async function importFile(file: File): Promise<ImportResult> {
+  const body = new FormData();
+  body.append('file', file);
+  const reply = await fetch('/api/import', { method: 'POST', body });
+  if (!reply.ok) {
+    const problem = (await reply.json().catch(() => null)) as { detail?: unknown } | null;
+    throw new Error(
+      typeof problem?.detail === 'string' ? problem.detail : `Restore failed (${reply.status})`,
+    );
+  }
+  return (await reply.json()) as ImportResult;
+}

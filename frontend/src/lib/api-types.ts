@@ -38,6 +38,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Import File */
+        post: operations["import_file_api_import_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/view": {
         parameters: {
             query?: never;
@@ -70,6 +87,11 @@ export interface components {
             phase: components["schemas"]["Phase"];
             theme: components["schemas"]["Theme"];
         };
+        /** Body_import_file_api_import_post */
+        Body_import_file_api_import_post: {
+            /** File */
+            file: string;
+        };
         /**
          * DayVariant
          * @enum {string}
@@ -87,6 +109,20 @@ export interface components {
              * @default scrolly
              */
             app: string;
+        };
+        /** ImportOut */
+        ImportOut: {
+            /** Added */
+            added: number;
+            /** Arts Added */
+            arts_added: number;
+            /** Horizon Added */
+            horizon_added: number;
+            /** Skipped */
+            skipped: number;
+            /** Trials Added */
+            trials_added: number;
+            view: components["schemas"]["ViewOut"];
         };
         /**
          * Phase
@@ -183,6 +219,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthOut"];
+                };
+            };
+        };
+    };
+    import_file_api_import_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_import_file_api_import_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

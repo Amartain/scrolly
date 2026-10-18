@@ -75,6 +75,15 @@ source_modules = ["scrolly.services"]
 forbidden_modules = ["scrolly.api", "scrolly.storage", "scrolly.io", "sqlalchemy", "fastapi"]
 
 [[tool.importlinter.contracts]]
+name = "io parses files into domain types only"
+type = "forbidden"
+source_modules = ["scrolly.io"]
+forbidden_modules = [
+    "scrolly.api", "scrolly.services", "scrolly.storage", "scrolly.ports",
+    "sqlalchemy", "fastapi",
+]
+
+[[tool.importlinter.contracts]]
 name = "api reaches storage only through the composition root"
 type = "forbidden"
 source_modules = ["scrolly.api.routes", "scrolly.api.schemas", "scrolly.api.deps"]

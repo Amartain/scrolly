@@ -1,0 +1,73 @@
+{
+    "current": [
+        {
+            "id": "q_aaaaaaaa1", "description": "Morning stretch", "status": "Done",
+            "expected_time_mins": 15, "actual_time_mins": 20, "spent_time_secs": 1187,
+            "completed_at": 1792323198021, "logical_date": "2026-10-18", "tempTime": "",
+            "mandate": false, "is_ritual": true, "is_restorative": false
+        },
+        {
+            "id": "q_aaaaaaaa2", "description": "Write report", "status": "Next",
+            "expected_time_mins": 45, "actual_time_mins": 45, "spent_time_secs": 0,
+            "completed_at": 0, "logical_date": "2026-10-18", "tempTime": "45m",
+            "mandate": true, "is_ritual": false, "is_restorative": false
+        },
+        {
+            "id": "q_aaaaaaaa3", "description": "Tidy desk", "status": "Remaining",
+            "expected_time_mins": 0, "actual_time_mins": 0, "spent_time_secs": 0,
+            "completed_at": 0, "logical_date": "2026-10-18", "tempTime": "",
+            "mandate": false, "is_ritual": false, "is_restorative": false
+        }
+    ],
+    "history": [
+        {
+            "id": "q_bbbbbbbb1", "description": "Feed the cat", "status": "Done",
+            "expected_time_mins": 10, "actual_time_mins": 10,
+            "logical_date": "2026-10-07", "tempTime": "10m"
+        },
+        {
+            "id": "q_bbbbbbbb2", "description": "Skipped errand", "status": "Cancelled",
+            "expected_time_mins": 20, "actual_time_mins": 20,
+            "logical_date": "2026-10-07", "tempTime": "20m"
+        },
+        {
+            "id": "q_bbbbbbbb3", "description": "Call plumber", "status": "Postponed",
+            "expected_time_mins": 5, "actual_time_mins": 5, "spent_time_secs": 0,
+            "completed_at": 0, "logical_date": "2026-10-08", "tempTime": "5m",
+            "mandate": false, "is_ritual": false, "is_restorative": false
+        },
+        {
+            "id": "q_bbbbbbbb4", "description": "Afternoon tea", "status": "Done",
+            "expected_time_mins": 0, "actual_time_mins": 0, "spent_time_secs": 2564,
+            "completed_at": 1791500000000, "logical_date": "2026-10-08", "tempTime": "",
+            "mandate": false, "is_ritual": false, "is_restorative": true
+        }
+    ],
+    "future": [
+        {
+            "id": "q_cccccccc1", "description": "Plan the garden", "status": "Remaining",
+            "expected_time_mins": 45, "actual_time_mins": 45, "spent_time_secs": 0,
+            "completed_at": 0, "logical_date": "2026-10-18", "tempTime": "45m",
+            "mandate": true, "is_ritual": false, "is_restorative": false
+        },
+        {
+            "id": "q_cccccccc2", "description": "  plan the GARDEN ", "status": "Remaining",
+            "expected_time_mins": 45, "actual_time_mins": 45, "spent_time_secs": 0,
+            "completed_at": 0, "logical_date": "2026-10-17", "tempTime": "45m",
+            "mandate": true, "is_ritual": false, "is_restorative": false
+        },
+        {
+            "id": "q_cccccccc3", "description": "Read a book", "status": "Remaining",
+            "expected_time_mins": 30, "actual_time_mins": 30, "spent_time_secs": 0,
+            "completed_at": 0, "logical_date": "2026-10-16", "tempTime": "30m",
+            "mandate": false, "is_ritual": false, "is_restorative": false
+        }
+    ],
+    "rituals": [
+        {"id": "r_dddddddd1", "description": "Callisthenics", "expected_time_mins": 40, "mandate": false},
+        {"id": "r_dddddddd2", "description": "Morning pages", "expected_time_mins": 15, "mandate": false}
+    ],
+    "restorations": [
+        {"id": "rs_eeeeeeee1", "description": "Meditation", "expected_time_mins": 60, "mandate": false}
+    ]
+}

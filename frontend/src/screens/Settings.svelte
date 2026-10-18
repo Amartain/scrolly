@@ -1,5 +1,6 @@
 <script lang="ts">
   import Button from '../components/Button.svelte';
+  import DataPanel from './DataPanel.svelte';
   import Panel from '../components/Panel.svelte';
   import type { DayVariant, Theme } from '../lib/api';
   import { view } from '../lib/view.svelte';
@@ -59,6 +60,7 @@
         </fieldset>
       </div>
     </Panel>
+    <DataPanel />
   </div>
 </div>
 

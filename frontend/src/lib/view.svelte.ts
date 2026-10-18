@@ -1,4 +1,12 @@
-import { getView, putAppearance, type DayVariant, type Theme, type View } from './api';
+import {
+  getView,
+  importFile,
+  putAppearance,
+  type DayVariant,
+  type ImportResult,
+  type Theme,
+  type View,
+} from './api';
 
 const REFRESH_MS = 60_000;
 
@@ -25,6 +33,12 @@ class ViewStore {
 
   async choose(theme: Theme, dayVariant: DayVariant | null) {
     this.apply(await putAppearance(theme, dayVariant));
+  }
+
+  async restore(file: File): Promise<ImportResult> {
+    const result = await importFile(file);
+    this.apply(result.view);
+    return result;
   }
 
   start() {

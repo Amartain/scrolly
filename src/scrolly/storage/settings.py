@@ -1,6 +1,6 @@
 import json
 import uuid
-from datetime import UTC, datetime
+from datetime import datetime
 from typing import Any
 
 from sqlalchemy import select
@@ -8,10 +8,7 @@ from sqlalchemy.orm import Session
 
 from scrolly.config import REALM_DEFAULT
 from scrolly.storage.tables import SettingRow
-
-
-def _utc_iso(moment: datetime) -> str:
-    return moment.astimezone(UTC).isoformat()
+from scrolly.storage.timestamps import utc_iso
 
 
 class SqlSettings:
@@ -35,9 +32,9 @@ class SqlSettings:
                 id=str(uuid.uuid4()),
                 realm_id=REALM_DEFAULT,
                 key=key,
-                created_at=_utc_iso(now),
+                created_at=utc_iso(now),
             )
             self._session.add(row)
         row.value_json = json.dumps(value)
-        row.updated_at = _utc_iso(now)
+        row.updated_at = utc_iso(now)
         self._session.flush()
