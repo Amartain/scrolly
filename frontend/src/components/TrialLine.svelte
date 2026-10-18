@@ -8,7 +8,7 @@
 </script>
 
 <TrialMark {trial} />
-<span class="title">{trial.title}</span>
+<span class="title read">{trial.title}</span>
 <span class="estimate digits">{trial.expected_text}</span>
 
 <style>

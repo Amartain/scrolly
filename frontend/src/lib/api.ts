@@ -3,10 +3,13 @@ import type { components } from './api-types';
 export type View = components['schemas']['ViewOut'];
 export type Planning = components['schemas']['PlanningOut'];
 export type PlanTrial = components['schemas']['PlanTrialOut'];
+export type Budget = components['schemas']['BudgetOut'];
+export type Qi = components['schemas']['QiOut'];
 export type HorizonItem = components['schemas']['HorizonItemOut'];
 export type Art = components['schemas']['ArtOut'];
 export type Theme = components['schemas']['AppearanceIn']['theme'];
 export type DayVariant = NonNullable<components['schemas']['AppearanceIn']['day_variant']>;
+export type ReadingFont = components['schemas']['ReadingFontIn']['font'];
 export type ImportResult = components['schemas']['ImportOut'];
 
 /** The server's own plain-language reason, ready to show. */
@@ -33,11 +36,18 @@ export const getView = () => send<View>('/api/view');
 export const putAppearance = (theme: Theme, dayVariant: DayVariant | null) =>
   send<View>('/api/appearance', json('PUT', { theme, day_variant: dayVariant }));
 
+export const putReadingFont = (font: ReadingFont) =>
+  send<View>('/api/reading-font', json('PUT', { font }));
+
 export async function importFile(file: File): Promise<ImportResult> {
   const body = new FormData();
   body.append('file', file);
   return send<ImportResult>('/api/import', { method: 'POST', body });
 }
+
+export const goldenCore = {
+  set: (enabled: boolean) => send<View>('/api/golden-core', json('PUT', { enabled })),
+};
 
 const plan = (path: string, init: RequestInit) => send<View>(`/api/planning/${path}`, init);
 
@@ -50,8 +60,9 @@ export const planning = {
   seal: () => plan('seal', json('POST')),
   summon: (source: 'horizon' | 'art', id: string) => plan('summon', json('POST', { source, id })),
   add: (title: string) => plan('trials', json('POST', { title })),
-  update: (id: string, patch: { estimate?: string; is_mandate?: boolean }) =>
+  update: (id: string, patch: { estimate?: string; is_mandate?: boolean; qi?: string }) =>
     plan(`trials/${id}`, json('PATCH', patch)),
+  qiStart: (value: number) => plan('qi-start', json('PUT', { value })),
   unstage: (id: string) => plan(`trials/${id}/unstage`, json('POST')),
   dismiss: (id: string) => plan(`trials/${id}/dismiss`, json('POST')),
   reorder: (ids: string[]) => plan('order', json('PUT', { ids })),

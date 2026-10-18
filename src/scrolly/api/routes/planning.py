@@ -3,7 +3,14 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from scrolly.api.deps import get_clock, get_store
-from scrolly.api.schemas.planning import OrderIn, SummonIn, TextIn, TrialIn, TrialPatchIn
+from scrolly.api.schemas.planning import (
+    OrderIn,
+    QiStartIn,
+    SummonIn,
+    TextIn,
+    TrialIn,
+    TrialPatchIn,
+)
 from scrolly.api.schemas.view import ViewOut
 from scrolly.ports import Clock, Store
 from scrolly.services.day import DayService
@@ -65,6 +72,12 @@ def abandon(planning: PlanningDep, store: StoreDep, clock: ClockDep) -> ViewOut:
     return _view(store, clock)
 
 
+@router.put("/qi-start")
+def qi_start(body: QiStartIn, planning: PlanningDep, store: StoreDep, clock: ClockDep) -> ViewOut:
+    planning.set_qi_start(body.value)
+    return _view(store, clock)
+
+
 @router.post("/seal")
 def seal(planning: PlanningDep, store: StoreDep, clock: ClockDep) -> ViewOut:
     planning.seal()
@@ -87,7 +100,7 @@ def add_trial(body: TrialIn, scroll: ScrollDep, store: StoreDep, clock: ClockDep
 def update_trial(
     trial_id: str, body: TrialPatchIn, scroll: ScrollDep, store: StoreDep, clock: ClockDep
 ) -> ViewOut:
-    scroll.update(trial_id, body.estimate, body.is_mandate)
+    scroll.update(trial_id, body.estimate, body.is_mandate, body.qi)
     return _view(store, clock)
 
 

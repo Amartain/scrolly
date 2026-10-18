@@ -1,23 +1,47 @@
-<!-- The Heavenly Mandate lotus. The only component that may use --mandate (crimson). -->
-<script lang="ts"></script>
+<!-- Everything that means "Heavenly Mandate" in crimson: the lotus, its word and its bar segment.
+     The only component that may use --mandate. -->
+<script lang="ts">
+  import type { Snippet } from 'svelte';
 
-<svg class="mark" viewBox="0 0 24 24" role="img" aria-label="Heavenly Mandate">
-  <path
-    d="M12 21C7 21 3 18.5 2 14.5c4 0 7.5 1.5 10 6.5zM12 21c5 0 9-2.5 10-6.5-4 0-7.5 1.5-10 6.5zM12 20c-3-3.5-3-9 0-15 3 6 3 11.5 0 15zM12 20c-2.5-1.5-6-4-6.5-9 3 .8 5.5 3.5 6.5 9zM12 20c2.5-1.5 6-4 6.5-9-3 .8-5.5 3.5-6.5 9z"
-    fill="var(--mandate)"
-  />
-  <path
-    d="M12 18.5V8.5M8.3 13.5c1 1.5 2.3 3.3 3.2 5M15.7 13.5c-1 1.5-2.3 3.3-3.2 5"
-    fill="none"
-    stroke="var(--icon-line)"
-    stroke-width="1.2"
-    stroke-linecap="round"
-  />
-  <path
-    d="M11.2 8.8c.2-1.1.5-2 .8-2.8.2.6.4 1.4.5 2.1-.5.1-.9.3-1.3.7z"
-    fill="var(--icon-highlight)"
-  />
-</svg>
+  let {
+    kind = 'icon',
+    share = 0,
+    children,
+  }: { kind?: 'icon' | 'bar' | 'term'; share?: number; children?: Snippet } = $props();
+</script>
+
+{#if kind === 'bar'}
+  <span class="segment" style:width="{share}%" aria-hidden="true"></span>
+{:else if kind === 'term'}
+  <span class="term">{@render children?.()}</span>
+{:else}
+  <!-- A pointed brush-painted lotus. Original drawing. -->
+  <svg class="mark" viewBox="0 0 24 24" role="img" aria-label="Heavenly Mandate">
+    <g
+      fill="var(--lotus-ink, var(--mandate))"
+      stroke="var(--icon-line)"
+      stroke-width="1.5"
+      stroke-linejoin="round"
+    >
+      <path d="M10.4 17.6C6.6 19 3 17.6 1.6 13.8c3.4-.6 6.8.6 8.8 3.8z" />
+      <path d="M13.6 17.6c3.8 1.4 7.4 0 8.8-3.8-3.4-.6-6.8.6-8.8 3.8z" />
+      <path d="M10.8 16.8C6.8 15.6 4.4 12 4.2 8c3.4.6 6.2 3.6 6.6 8.8z" />
+      <path d="M13.2 16.8c4-1.2 6.4-4.8 6.6-8.8-3.4.6-6.2 3.6-6.6 8.8z" />
+      <path d="M12 2.8C9.2 6 8.8 10.8 12 17c3.2-6.2 2.8-11 0-14.2z" />
+    </g>
+    <path
+      d="M3 21c3.2 1.2 14.8 1.2 18 0"
+      fill="none"
+      stroke="var(--icon-line)"
+      stroke-width="1.5"
+      stroke-linecap="round"
+    />
+    <path
+      d="M11.2 7.2c.2-1 .5-1.8.8-2.4.3.7.5 1.6.5 2.6-.5-.1-.9-.2-1.3-.2z"
+      fill="var(--icon-highlight)"
+    />
+  </svg>
+{/if}
 
 <style>
   .mark {
@@ -25,5 +49,16 @@
     width: var(--size-icon);
     height: var(--size-icon);
     filter: var(--icon-drop);
+  }
+
+  .term {
+    color: var(--lotus-ink, var(--mandate));
+    font-weight: 700;
+  }
+
+  .segment {
+    display: block;
+    height: 100%;
+    background: var(--lotus-ink, var(--mandate));
   }
 </style>

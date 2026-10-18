@@ -73,34 +73,49 @@
   .horizon,
   .foundational,
   .restorative {
-    --row-a: var(--card-row-a);
-    --row-b: var(--card-row-b);
+    --row-a: var(--card-ink-row-a);
+    --row-b: var(--card-ink-row-b);
     color: var(--card-ink);
     box-shadow: var(--shadow-card);
   }
 
   .horizon {
+    --card-ink: var(--card-horizon-ink);
+    --card-ink-head: var(--card-horizon-head);
+    --card-ink-row-a: var(--card-horizon-row-a);
+    --card-ink-row-b: var(--card-horizon-row-b);
+    --lotus-ink: var(--card-horizon-mandate);
     background: linear-gradient(160deg, var(--card-horizon-a), var(--card-horizon-b));
   }
 
   .foundational {
+    --card-ink: var(--card-foundational-ink);
+    --card-ink-head: var(--card-foundational-head);
+    --card-ink-row-a: var(--card-foundational-row-a);
+    --card-ink-row-b: var(--card-foundational-row-b);
     background: linear-gradient(160deg, var(--card-foundational-a), var(--card-foundational-b));
   }
 
   .restorative {
+    --card-ink: var(--card-restorative-ink);
+    --card-ink-head: var(--card-restorative-head);
+    --card-ink-row-a: var(--card-restorative-row-a);
+    --card-ink-row-b: var(--card-restorative-row-b);
     background: linear-gradient(160deg, var(--card-restorative-a), var(--card-restorative-b));
   }
 
   .horizon .head,
   .foundational .head,
   .restorative .head {
-    background: var(--card-head);
+    background: var(--card-ink-head);
     color: var(--card-ink);
   }
 
+  /* Empty text sits on the first row band, never on the bare gradient. */
   .horizon .empty,
   .foundational .empty,
   .restorative .empty {
+    background: var(--card-ink-row-a);
     color: var(--card-ink);
   }
 </style>

@@ -36,6 +36,7 @@
     border: var(--border-width) solid var(--line);
     box-shadow: var(--shadow-button);
     font-size: var(--text-display-sm);
+    white-space: nowrap;
   }
 
   .button[data-tone='primary'] {

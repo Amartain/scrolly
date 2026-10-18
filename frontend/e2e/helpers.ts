@@ -25,6 +25,35 @@ export async function sealDay(page: Page, ...titles: string[]) {
   }
 }
 
+export const section = (page: Page, name: string) => page.locator(`section[aria-label="${name}"]`);
+
+/** An Art in the prototype's JSON format, for importing. */
+export const art = { id: 'r_a1', description: 'Stretch', expected_time_mins: 15, mandate: false };
+
+/** From the zero state into Phase 1. */
+export async function begin(page: Page) {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Cultivate Your Focus' }).click();
+  await expect(page.getByRole('heading', { name: 'Inscribe the Scroll' })).toBeVisible();
+}
+
+/** From the zero state into Phase 2 with one trial per given title. */
+export async function toEstimate(page: Page, ...lines: string[]) {
+  await begin(page);
+  await page.locator('#dump').fill(lines.join('\n'));
+  await page.getByRole('button', { name: 'Proceed: Divine the Time' }).click();
+  await expect(page.getByRole('heading', { name: 'Estimate the Journey' })).toBeVisible();
+}
+
+export async function importFile(page: Page, name: string, content: object) {
+  const reply = await page.request.post('/api/import', {
+    multipart: {
+      file: { name, mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(content)) },
+    },
+  });
+  expect(reply.ok()).toBeTruthy();
+}
+
 /** Bounding box of every panel, keyed by its accessible name. */
 export async function panelBoxes(page: Page): Promise<Box[]> {
   return page.locator('section.panel').evaluateAll((panels) =>

@@ -5,9 +5,10 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from scrolly.api.routes import imports, planning, view
+from scrolly.api.routes import golden_core, imports, planning, view
 from scrolly.domain.duration import DurationError
 from scrolly.domain.planning import PlanningError
+from scrolly.domain.qi import QiError
 from scrolly.ports import Clock, StoreFactory
 
 
@@ -28,7 +29,9 @@ def create_app(
     # Domain errors become HTTP errors only here.
     app.add_exception_handler(PlanningError, _refuse(409))
     app.add_exception_handler(DurationError, _refuse(422))
+    app.add_exception_handler(QiError, _refuse(422))
     app.include_router(view.router)
+    app.include_router(golden_core.router)
     app.include_router(imports.router)
     app.include_router(planning.router)
     if static_dir is not None and static_dir.is_dir():

@@ -32,9 +32,15 @@ input {
 
 .display {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: var(--tracking-display);
   text-transform: uppercase;
+}
+
+/* Text the user saved (trial titles, Horizon items, Arts). The face follows the Reading font setting. */
+.read {
+  font-family: var(--font-read);
+  font-size: var(--text-read-md);
 }
 
 .digits {

@@ -18,22 +18,28 @@
     if (!accepted) input.value = trial.expected_text;
   }
 
+  // The icon is the control: the cloud becomes a lotus and back. Python decides what is allowed.
   const toggleMandate = () =>
     view.act(() => planning.update(trial.id, { is_mandate: !trial.is_mandate }));
   const dismiss = () => view.act(() => planning.dismiss(trial.id));
 </script>
 
-<TrialMark {trial} />
-<span class="title">{trial.title}</span>
-{#if !isArt}
+{#if isArt}
+  <TrialMark {trial} />
+{:else}
   <button
-    class="toggle display"
+    class="mark-toggle"
     type="button"
     aria-pressed={trial.is_mandate}
-    aria-label="Heavenly Mandate for {trial.title}"
-    onclick={toggleMandate}>Mandate?</button
+    aria-label={trial.is_mandate
+      ? `Make ${trial.title} a Mortal Trial`
+      : `Make ${trial.title} a Heavenly Mandate`}
+    onclick={toggleMandate}
   >
+    <TrialMark {trial} />
+  </button>
 {/if}
+<span class="title read">{trial.title}</span>
 <input
   class="estimate digits"
   value={trial.expected_text}
@@ -57,25 +63,13 @@
     white-space: nowrap;
   }
 
-  .toggle {
+  .mark-toggle {
     flex: none;
-    height: var(--size-glyph-button);
-    padding-inline: var(--space-3);
+    display: flex;
+    padding: 0;
     cursor: pointer;
-    background: var(--btn);
-    background-image: var(--gloss-btn);
-    color: var(--ink);
-    border: var(--border-width) solid var(--line);
-    box-shadow: var(--shadow-button);
-    font-size: var(--text-display-sm);
-  }
-
-  .toggle[aria-pressed='true'] {
-    background: var(--strong);
-    background-image: none;
-    color: var(--on-strong);
-    box-shadow: none;
-    transform: translate(var(--shadow-offset), var(--shadow-offset));
+    background: none;
+    border: 0;
   }
 
   .estimate {

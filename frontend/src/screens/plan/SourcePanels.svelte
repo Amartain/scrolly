@@ -18,7 +18,7 @@
 
 {#snippet horizonRow(item: HorizonItem)}
   <TrialMark trial={{ is_mandate: item.is_mandate, origin_type: 'horizon' }} />
-  <span class="title">{item.title}</span>
+  <span class="title read">{item.title}</span>
   <span class="estimate digits">{item.expected_text}</span>
   <Button
     label="Summon"
@@ -30,7 +30,7 @@
 
 {#snippet foundationalRow(art: Art)}
   <TrialMark trial={{ is_mandate: false, origin_type: 'foundational_art' }} />
-  <span class="title">{art.title}</span>
+  <span class="title read">{art.title}</span>
   <span class="estimate digits">{art.expected_text}</span>
   <GlyphButton label="Summon {art.title}" onclick={() => summon('art', art.id)}>
     <GlyphIcon name="plus" />
@@ -39,7 +39,7 @@
 
 {#snippet restorativeRow(art: Art)}
   <TrialMark trial={{ is_mandate: false, origin_type: 'restorative_art' }} />
-  <span class="title">{art.title}</span>
+  <span class="title read">{art.title}</span>
   <span class="estimate digits">{art.expected_text}</span>
   <GlyphButton label="Summon {art.title}" onclick={() => summon('art', art.id)}>
     <GlyphIcon name="plus" />

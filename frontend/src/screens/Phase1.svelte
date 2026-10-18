@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import Button from '../components/Button.svelte';
+  import ScrollSheet from '../components/ScrollSheet.svelte';
   import { planning } from '../lib/api';
   import { view } from '../lib/view.svelte';
   import Guidance from './plan/Guidance.svelte';
@@ -47,32 +48,33 @@
   }
 </script>
 
-<div class="phase">
-  <SourcePanels />
-  <div class="column">
-    <h1 class="display heading">Inscribe the Scroll</h1>
-    <Guidance />
-    <div class="write">
-      <label class="prompt" for="dump">
-        Empty your mind. Scribe every trial you must conquer today. <strong
-          >One trial per line.</strong
-        >
-      </label>
-      <textarea
-        id="dump"
-        bind:value={text}
-        oninput={edit}
-        placeholder={'Morning coffee + podcast\nNutritious breakfast\nRead chapter 1'}
-      ></textarea>
-    </div>
-    <div class="staged"><OnScroll /></div>
-    <Notice />
-    <div class="actions">
-      <Button label="Abandon" onclick={abandon} />
-      <Button label="Proceed: Divine the Time" tone="primary" onclick={proceed} />
+<ScrollSheet title="Inscribe the Scroll">
+  <div class="phase">
+    <SourcePanels />
+    <div class="column">
+      <Guidance />
+      <div class="write">
+        <label class="prompt" for="dump">
+          Empty your mind. Scribe every trial you must conquer today. <strong
+            >One trial per line.</strong
+          >
+        </label>
+        <textarea
+          id="dump"
+          bind:value={text}
+          oninput={edit}
+          placeholder={'Morning coffee + podcast\nNutritious breakfast\nRead chapter 1'}
+        ></textarea>
+      </div>
+      <div class="staged"><OnScroll /></div>
+      <Notice />
+      <div class="actions">
+        <Button label="Abandon" onclick={abandon} />
+        <Button label="Proceed: Divine the Time" tone="primary" onclick={proceed} />
+      </div>
     </div>
   </div>
-</div>
+</ScrollSheet>
 
 <style>
   .phase {
@@ -81,21 +83,15 @@
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
     gap: var(--space-5);
-    padding: var(--space-4) var(--size-gutter);
   }
 
   .column {
     display: grid;
-    grid-template-rows: auto auto minmax(0, 1fr) var(--size-staged) auto auto;
+    grid-template-rows: auto minmax(0, 1fr) var(--size-staged) auto auto;
     gap: var(--space-3);
     min-height: 0;
     padding-right: var(--shadow-room);
     padding-bottom: var(--shadow-room);
-  }
-
-  .heading {
-    margin: 0;
-    font-size: var(--text-display-lg);
   }
 
   .write {

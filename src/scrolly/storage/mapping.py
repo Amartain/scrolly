@@ -36,6 +36,7 @@ def trial_from_row(row: TrialRow) -> Trial:
         timer_started_at=from_iso(row.timer_started_at),
         timer_paused_at=from_iso(row.timer_paused_at),
         timer_accumulated_s=row.timer_accumulated_s,
+        qi_expected=row.qi_expected,
     )
 
 
@@ -54,6 +55,7 @@ def apply_trial(row: TrialRow, trial: Trial) -> None:
     row.timer_started_at = _iso(trial.timer_started_at)
     row.timer_paused_at = _iso(trial.timer_paused_at)
     row.timer_accumulated_s = trial.timer_accumulated_s
+    row.qi_expected = trial.qi_expected
 
 
 def horizon_from_row(row: HorizonItemRow) -> HorizonItem:
@@ -65,6 +67,7 @@ def horizon_from_row(row: HorizonItemRow) -> HorizonItem:
         note=row.note,
         origin_type=OriginType(row.origin_type),
         origin_id=row.origin_id,
+        qi_expected=row.qi_expected,
     )
 
 
@@ -76,6 +79,7 @@ def apply_horizon(row: HorizonItemRow, item: HorizonItem, position: int) -> None
     row.position = position
     row.origin_type = item.origin_type.value
     row.origin_id = item.origin_id
+    row.qi_expected = item.qi_expected
 
 
 def art_from_row(row: ArtRow) -> Art:
@@ -85,6 +89,7 @@ def art_from_row(row: ArtRow) -> Art:
         title=row.title,
         essence_expected_min=row.essence_expected_min,
         note=row.note,
+        qi_expected=row.qi_expected,
     )
 
 
@@ -94,6 +99,7 @@ def apply_art(row: ArtRow, art: Art, position: int) -> None:
     row.essence_expected_min = art.essence_expected_min
     row.note = art.note
     row.position = position
+    row.qi_expected = art.qi_expected
 
 
 def day_from_row(row: DayRow) -> Day:
@@ -103,6 +109,7 @@ def day_from_row(row: DayRow) -> Day:
         rolled_over_at=from_iso(row.rolled_over_at),
         dusk_override=row.dusk_override,
         advisor_silenced=row.advisor_silenced,
+        qi_start=row.qi_start,
     )
 
 
@@ -112,3 +119,4 @@ def apply_day(row: DayRow, day: Day) -> None:
     row.rolled_over_at = _iso(day.rolled_over_at)
     row.dusk_override = day.dusk_override
     row.advisor_silenced = day.advisor_silenced
+    row.qi_start = day.qi_start

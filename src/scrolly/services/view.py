@@ -2,10 +2,13 @@ from dataclasses import dataclass
 from datetime import date, datetime
 
 from scrolly.domain.appearance import Appearance, resolve_appearance
+from scrolly.domain.day_budget import DayBudget
 from scrolly.domain.logical_day import logical_day
 from scrolly.ports import Clock, Store
 from scrolly.services.appearance import AppearanceService
 from scrolly.services.day import DayService
+from scrolly.services.day_budget import build_budget
+from scrolly.services.golden_core import QiView, build_qi_view
 from scrolly.services.planning_view import PlanningView, build_planning_view
 
 
@@ -15,6 +18,8 @@ class ViewData:
     logical_day: date
     appearance: Appearance
     planning: PlanningView
+    budget: DayBudget
+    qi: QiView
 
 
 def build_view(store: Store, clock: Clock) -> ViewData:
@@ -28,4 +33,6 @@ def build_view(store: Store, clock: Clock) -> ViewData:
         logical_day=today,
         appearance=resolve_appearance(prefs, now),
         planning=build_planning_view(store, today),
+        budget=build_budget(store, now),
+        qi=build_qi_view(store, now),
     )

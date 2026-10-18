@@ -1,32 +1,10 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { art, begin, importFile, section, toEstimate } from './helpers';
 
 const trialRows = (page: Page) =>
   page.getByRole('list', { name: 'Trials on the scroll' }).getByRole('listitem');
 const titles = (page: Page) => trialRows(page).locator('.title').allTextContents();
-const section = (page: Page, name: string) => page.locator(`section[aria-label="${name}"]`);
-
-async function begin(page: Page) {
-  await page.goto('/');
-  await page.getByRole('button', { name: 'Cultivate Your Focus' }).click();
-  await expect(page.getByRole('heading', { name: 'Inscribe the Scroll' })).toBeVisible();
-}
-
-async function toEstimate(page: Page, ...lines: string[]) {
-  await begin(page);
-  await page.locator('#dump').fill(lines.join('\n'));
-  await page.getByRole('button', { name: 'Proceed: Divine the Time' }).click();
-  await expect(page.getByRole('heading', { name: 'Estimate the Journey' })).toBeVisible();
-}
-
-async function importFile(page: Page, name: string, content: object) {
-  const reply = await page.request.post('/api/import', {
-    multipart: {
-      file: { name, mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(content)) },
-    },
-  });
-  expect(reply.ok()).toBeTruthy();
-}
 
 const horizonItem = {
   id: 'q_h1',
@@ -36,7 +14,6 @@ const horizonItem = {
   expected_time_mins: 45,
   mandate: true,
 };
-const art = { id: 'r_a1', description: 'Stretch', expected_time_mins: 15, mandate: false };
 
 test('a day with nothing on the scroll starts in the quiet zero state', async ({ page }) => {
   await page.goto('/');
@@ -55,9 +32,11 @@ test('plan a day from the first click to the sealed dashboard', async ({ page })
   await estimate.fill('1h15m');
   await estimate.press('Enter');
   await expect(estimate).toHaveValue('1h15m');
-  const mandate = page.getByRole('button', { name: 'Heavenly Mandate for Write report' });
+  const mandate = page.getByRole('button', { name: 'Make Write report a Heavenly Mandate' });
   await mandate.click();
-  await expect(mandate).toHaveAttribute('aria-pressed', 'true');
+  await expect(
+    page.getByRole('button', { name: 'Make Write report a Mortal Trial' }),
+  ).toHaveAttribute('aria-pressed', 'true');
 
   await trialRows(page).first().focus();
   await page.keyboard.press('Alt+ArrowDown');
@@ -106,7 +85,7 @@ test('a forgotten trial can be added, and a mandate can be postponed to the Hori
   await page.getByLabel('A forgotten trial').fill('Call mum');
   await page.getByLabel('A forgotten trial').press('Enter');
   await expect.poll(() => titles(page)).toEqual(['Taxes', 'Call mum']);
-  await page.getByRole('button', { name: 'Heavenly Mandate for Taxes' }).click();
+  await page.getByRole('button', { name: 'Make Taxes a Heavenly Mandate' }).click();
   await page.getByRole('button', { name: 'Postpone Taxes to the Horizon' }).click();
   await expect.poll(() => titles(page)).toEqual(['Call mum']);
   await page.getByRole('button', { name: '◀ Back to Inscribing' }).click();
@@ -177,15 +156,4 @@ test('a reload in the middle of planning loses nothing', async ({ page }) => {
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Estimate the Journey' })).toBeVisible();
   await expect(estimate).toHaveValue('20m');
-});
-
-test('Settings stays reachable during planning and the text survives the trip', async ({
-  page,
-}) => {
-  await begin(page);
-  await page.locator('#dump').fill('Still here');
-  await page.getByRole('button', { name: 'Settings' }).click();
-  await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible();
-  await page.keyboard.press('Escape');
-  await expect(page.locator('#dump')).toHaveValue('Still here');
 });

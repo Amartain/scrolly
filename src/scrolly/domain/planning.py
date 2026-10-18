@@ -17,6 +17,7 @@ from scrolly.domain.models import (
     Trial,
     TrialState,
 )
+from scrolly.domain.qi import parse_qi
 
 
 class PlanningError(ValueError):
@@ -61,6 +62,7 @@ def trial_from_horizon(trial_id: str, item: HorizonItem, day: date, position: in
         position=position,
         essence_expected_min=item.essence_expected_min,
         note=item.note,
+        qi_expected=item.qi_expected,
     )
 
 
@@ -80,6 +82,7 @@ def trial_from_art(trial_id: str, art: Art, day: date, position: int) -> Trial:
         position=position,
         essence_expected_min=art.essence_expected_min,
         note=art.note,
+        qi_expected=art.qi_expected,
     )
 
 
@@ -113,6 +116,10 @@ def set_estimate(trial: Trial, text: str) -> Trial:
     return replace(trial, essence_expected_min=parse_duration(text))
 
 
+def set_qi(trial: Trial, text: str) -> Trial:
+    return replace(trial, qi_expected=parse_qi(text))
+
+
 def set_mandate(trial: Trial, is_mandate: bool) -> Trial:
     if is_mandate and is_art_copy(trial):
         raise PlanningError("Arts cannot be Heavenly Mandates")
@@ -127,12 +134,17 @@ def reorder(trials: Sequence[Trial], ids: Sequence[str]) -> list[Trial]:
     return [replace(by_id[trial_id], position=i) for i, trial_id in enumerate(ids)]
 
 
-def seal(trials: Sequence[Trial], day: Day, now: datetime) -> tuple[Trial, Day]:
-    """Start the day: the first trial becomes Immediate. Only the first seal of a day counts."""
+def seal(
+    trials: Sequence[Trial], day: Day, now: datetime, qi_start: int | None = None
+) -> tuple[Trial, Day]:
+    """Start the day: the first trial becomes Immediate. Only the first seal of a day counts.
+
+    `qi_start` is the Golden Core's chosen start (None when the Golden Core is off).
+    """
     waiting = sorted(
         (t for t in trials if t.state is TrialState.REMAINING), key=lambda t: t.position
     )
     if not waiting:
         raise PlanningError("Put at least one trial on the scroll before sealing it")
     first = replace(waiting[0], state=TrialState.IMMEDIATE)
-    return first, replace(day, first_sealed_at=day.first_sealed_at or now)
+    return first, replace(day, first_sealed_at=day.first_sealed_at or now, qi_start=qi_start)

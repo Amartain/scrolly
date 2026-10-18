@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from scrolly.api.deps import get_clock, get_store
-from scrolly.api.schemas.view import AppearanceIn, HealthOut, ViewOut
+from scrolly.api.schemas.view import AppearanceIn, HealthOut, ReadingFontIn, ViewOut
 from scrolly.ports import Clock, Store
 from scrolly.services.appearance import AppearanceService
 from scrolly.services.view import build_view
@@ -27,4 +27,10 @@ def view(store: StoreDep, clock: ClockDep) -> ViewOut:
 @router.put("/appearance")
 def choose_appearance(body: AppearanceIn, store: StoreDep, clock: ClockDep) -> ViewOut:
     AppearanceService(store, clock).choose(body.theme, body.day_variant)
+    return ViewOut.from_data(build_view(store, clock))
+
+
+@router.put("/reading-font")
+def choose_reading_font(body: ReadingFontIn, store: StoreDep, clock: ClockDep) -> ViewOut:
+    AppearanceService(store, clock).choose_reading_font(body.font)
     return ViewOut.from_data(build_view(store, clock))

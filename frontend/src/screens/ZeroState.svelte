@@ -2,11 +2,15 @@
   import Button from '../components/Button.svelte';
   import { planning } from '../lib/api';
   import { view } from '../lib/view.svelte';
+  import Header from './Header.svelte';
   import Screen1 from './Screen1.svelte';
 </script>
 
 <div class="zero">
-  <div class="fogged" inert><Screen1 /></div>
+  <div class="fogged" inert>
+    <Header settingsOpen={false} onsettings={() => {}} />
+    <Screen1 />
+  </div>
   <div class="veil">
     <section class="message" aria-label="The Peak is Serene">
       <h1 class="display title">The Peak is Serene</h1>

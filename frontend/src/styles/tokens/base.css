@@ -1,7 +1,10 @@
 /* Theme-independent tokens. Every size is a rem multiple of 0.25 (design drawn at 1440x900 = 16px root). */
 :root {
-  --font-display: 'Silkscreen', monospace;
+  --font-display: 'VT323', monospace;
   --font-body: 'VT323', monospace;
+  --font-atkinson: 'Atkinson Hyperlegible Next', sans-serif;
+  --font-opendyslexic: 'OpenDyslexic', sans-serif;
+  --font-read: var(--font-atkinson);
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -13,14 +16,16 @@
   --space-10: 2.5rem;
   --space-12: 3rem;
 
-  --text-display-sm: 0.75rem;
-  --text-display-md: 1rem;
-  --text-display-lg: 1.5rem;
-  --text-display-xl: 2rem;
-  --text-body-sm: 1rem;
-  --text-body-md: 1.25rem;
-  --text-body-lg: 1.5rem;
-  --text-body-xl: 2rem;
+  --text-display-sm: 1.25rem;
+  --text-display-md: 1.5rem;
+  --text-display-lg: 2rem;
+  --text-display-xl: 3rem;
+  --text-body-sm: 1.25rem;
+  --text-body-md: 1.5rem;
+  --text-body-lg: 2rem;
+  --text-body-xl: 2.5rem;
+  --text-read-md: 1.25rem;
+  --text-read-lg: 1.75rem;
   --tracking-display: 0.0625em;
 
   --size-header: 11.25rem;
@@ -28,14 +33,21 @@
   --size-gutter: var(--space-6);
   --size-row: 2.5rem;
   --size-icon-button: 3.5rem;
-  --size-icon: 1.5rem;
+  --size-icon: 2rem;
+  --size-icon-guidance: 2.25rem;
   --size-glyph: 1.25rem;
+  --size-sheet-width: 84rem;
+  --size-sheet-height: 52rem;
+  --size-gauge: 2rem;
+  --size-slider-thumb: 1.5rem;
+  --size-qi-field: 4rem;
   --size-glyph-button: 2rem;
   --size-staged: 10rem;
   --size-field: 2.5rem;
   --size-estimate: 4.5rem;
   --size-immediate: 16rem;
-  --size-short-panel: 6rem;
+  --size-short-panel: 6.5rem;
+  --size-orb: 2rem;
   --shadow-room: var(--space-3);
 
   --scrollbar-thumb: var(--line);
@@ -53,6 +65,11 @@
   --shadow-sunken: inset var(--space-1) var(--space-1) 0 var(--inset);
 
   --motion-fast: 150ms;
+
+  /* The three theme orbs show every theme at once, so these do not follow the active theme. */
+  --swatch-serene: #f3eed0;
+  --swatch-teal: #007a6f;
+  --swatch-crimson: #8e001d;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -85,4 +102,8 @@
     var(--surface-canvas),
     color-mix(in srgb, var(--surface-canvas) 85%, white)
   );
+}
+
+:root[data-reading-font='opendyslexic'] {
+  --font-read: var(--font-opendyslexic);
 }

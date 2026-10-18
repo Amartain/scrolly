@@ -46,6 +46,7 @@ class TrialRow(_Audited, Base):
     timer_started_at: Mapped[str | None] = mapped_column(String(40), default=None)
     timer_paused_at: Mapped[str | None] = mapped_column(String(40), default=None)
     timer_accumulated_s: Mapped[int] = mapped_column(Integer, default=0)
+    qi_expected: Mapped[int | None] = mapped_column(Integer, default=None)
 
 
 class HorizonItemRow(_Audited, Base):
@@ -58,6 +59,7 @@ class HorizonItemRow(_Audited, Base):
     position: Mapped[int] = mapped_column(Integer, default=0)
     origin_type: Mapped[str] = mapped_column(String(20))
     origin_id: Mapped[str | None] = mapped_column(String(36), default=None)
+    qi_expected: Mapped[int | None] = mapped_column(Integer, default=None)
 
 
 class ArtRow(_Audited, Base):
@@ -68,6 +70,7 @@ class ArtRow(_Audited, Base):
     essence_expected_min: Mapped[int | None] = mapped_column(Integer, default=None)
     note: Mapped[str] = mapped_column(Text, default="")
     position: Mapped[int] = mapped_column(Integer, default=0)
+    qi_expected: Mapped[int | None] = mapped_column(Integer, default=None)
 
 
 class DayRow(_Audited, Base):
@@ -79,6 +82,7 @@ class DayRow(_Audited, Base):
     rolled_over_at: Mapped[str | None] = mapped_column(String(40), default=None)
     dusk_override: Mapped[str | None] = mapped_column(String(20), default=None)
     advisor_silenced: Mapped[bool] = mapped_column(Boolean, default=False)
+    qi_start: Mapped[int | None] = mapped_column(Integer, default=None)
 
 
 class PlanningDraftRow(_Audited, Base):
@@ -88,3 +92,4 @@ class PlanningDraftRow(_Audited, Base):
     logical_day: Mapped[str] = mapped_column(String(10))
     phase: Mapped[str] = mapped_column(String(20))
     text: Mapped[str] = mapped_column(Text, default="")
+    qi_start: Mapped[int | None] = mapped_column(Integer, default=None)

@@ -63,6 +63,7 @@ test('theme changes in Settings re-paint without moving any panel', async ({ pag
 });
 
 test('the choice is kept after a reload', async ({ page }) => {
+  await sealDay(page);
   await page.goto('/');
   await page.getByRole('button', { name: 'Settings' }).click();
   await page.getByText('Hidden Pavilion').click();
@@ -71,6 +72,7 @@ test('the choice is kept after a reload', async ({ page }) => {
 });
 
 test('theme can be changed with the keyboard alone, and Escape goes back', async ({ page }) => {
+  await sealDay(page);
   await page.goto('/');
   await page.getByRole('button', { name: 'Settings' }).focus();
   await page.keyboard.press('Enter');
@@ -83,6 +85,7 @@ test('theme can be changed with the keyboard alone, and Escape goes back', async
 });
 
 test('settings stay reachable and the theme editable in both themes', async ({ page }) => {
+  await sealDay(page);
   await page.goto('/');
   for (const theme of ['Hidden Pavilion', 'Serene Peak']) {
     await page.getByRole('button', { name: 'Settings' }).click();
@@ -100,11 +103,15 @@ test('nothing leaves localhost and fonts are bundled', async ({ page }) => {
       external.push(request.url());
     }
   });
+  await sealDay(page);
   await page.goto('/');
+  // Fonts load when text first uses them, so wait for a saved title (reading face) to draw.
+  await expect(page.locator('.title.read').first()).toBeVisible();
   await page.evaluate(() => document.fonts.ready);
   const fonts = await page.evaluate(() =>
     [...document.fonts].filter((font) => font.status === 'loaded').map((font) => font.family),
   );
-  expect(fonts.join(' ')).toContain('Silkscreen');
+  expect(fonts.join(' ')).toContain('VT323');
+  expect(fonts.join(' ')).toContain('Atkinson Hyperlegible Next');
   expect(external).toEqual([]);
 });

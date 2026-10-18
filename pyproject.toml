@@ -4,7 +4,7 @@ version = "0.2.0.dev0"
 description = "Local, offline, neurodivergent-friendly task manager."
 readme = "README.md"
 requires-python = ">=3.12"
-license-files = ["LICENSE"]
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
 dependencies = [
     "fastapi>=0.115",
     "uvicorn>=0.30",
@@ -103,6 +103,7 @@ sequence = [
     { cmd = "lint-imports" },
     { cmd = "pytest" },
     { cmd = "python scripts/check_tokens.py" },
+    { cmd = "python scripts/check_contrast.py" },
     { cmd = "python scripts/check_file_length.py" },
     { cmd = "python scripts/gen_types.py --check" },
     { cmd = "python scripts/frontend_check.py" },

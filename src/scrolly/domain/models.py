@@ -45,6 +45,7 @@ class Trial:
     timer_started_at: datetime | None = None
     timer_paused_at: datetime | None = None
     timer_accumulated_s: int = 0
+    qi_expected: int | None = None
 
 
 @dataclass(frozen=True)
@@ -56,6 +57,7 @@ class HorizonItem:
     note: str = ""
     origin_type: OriginType = OriginType.BRAIN_DUMP
     origin_id: str | None = None
+    qi_expected: int | None = None
 
 
 @dataclass(frozen=True)
@@ -65,6 +67,7 @@ class Art:
     title: str
     essence_expected_min: int | None = None
     note: str = ""
+    qi_expected: int | None = None
 
 
 @dataclass(frozen=True)
@@ -74,24 +77,28 @@ class Day:
     rolled_over_at: datetime | None = None
     dusk_override: str | None = None
     advisor_silenced: bool = False
+    qi_start: int | None = None
 
 
 class PlanPhase(StrEnum):
     INSCRIBE = "inscribe"
     ESTIMATE = "estimate"
+    WEIGH = "weigh"
 
 
 class PlanStatus(StrEnum):
     ZERO = "zero"
     INSCRIBE = "inscribe"
     ESTIMATE = "estimate"
+    WEIGH = "weigh"
     ACTIVE = "active"
 
 
 @dataclass(frozen=True)
 class PlanningDraft:
-    """Planning in progress for one logical day: which phase, and the Phase 1 text."""
+    """Planning in progress for one logical day: phase, Phase 1 text and the chosen Qi start."""
 
     logical_day: date
     phase: PlanPhase = PlanPhase.INSCRIBE
     text: str = ""
+    qi_start: int | None = None

@@ -1,8 +1,9 @@
 <script lang="ts">
   import Button from '../components/Button.svelte';
   import DataPanel from './DataPanel.svelte';
+  import GoldenCorePanel from './GoldenCorePanel.svelte';
   import Panel from '../components/Panel.svelte';
-  import type { DayVariant, Theme } from '../lib/api';
+  import type { DayVariant, ReadingFont, Theme } from '../lib/api';
   import { view } from '../lib/view.svelte';
 
   let { onback }: { onback: () => void } = $props();
@@ -14,6 +15,11 @@
   const variants: { value: DayVariant; label: string }[] = [
     { value: 'teal', label: 'Teal' },
     { value: 'crimson', label: 'Crimson' },
+  ];
+
+  const fonts: { value: ReadingFont; label: string }[] = [
+    { value: 'atkinson', label: 'Atkinson' },
+    { value: 'opendyslexic', label: 'OpenDyslexic' },
   ];
 
   const appearance = $derived(view.current?.appearance);
@@ -58,8 +64,24 @@
             </label>
           {/each}
         </fieldset>
+        <fieldset class="group">
+          <legend class="display">Reading font</legend>
+          {#each fonts as font (font.value)}
+            <label class="choice font-{font.value}">
+              <input
+                type="radio"
+                name="reading-font"
+                value={font.value}
+                checked={appearance?.reading_font === font.value}
+                onchange={() => view.chooseReadingFont(font.value)}
+              />
+              {font.label}
+            </label>
+          {/each}
+        </fieldset>
       </div>
     </Panel>
+    <GoldenCorePanel />
     <DataPanel />
   </div>
 </div>
@@ -129,6 +151,16 @@
     border: var(--border-width) solid var(--line);
     box-shadow: var(--shadow-button);
     font-size: var(--text-display-sm);
+  }
+
+  .font-atkinson {
+    font-family: var(--font-atkinson);
+    font-size: var(--text-read-md);
+  }
+
+  .font-opendyslexic {
+    font-family: var(--font-opendyslexic);
+    font-size: var(--text-read-md);
   }
 
   .choice input {

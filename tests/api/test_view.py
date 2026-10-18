@@ -4,7 +4,12 @@ from fastapi.testclient import TestClient
 def test_view_shape(client: TestClient) -> None:
     body = client.get("/api/view").json()
     assert body["logical_day"] == "2026-10-18"
-    assert body["appearance"] == {"theme": "serene", "day_variant": None, "phase": "day"}
+    assert body["appearance"] == {
+        "theme": "serene",
+        "day_variant": None,
+        "phase": "day",
+        "reading_font": "atkinson",
+    }
 
 
 def test_choosing_a_theme_is_returned_and_kept(client: TestClient) -> None:
@@ -15,6 +20,16 @@ def test_choosing_a_theme_is_returned_and_kept(client: TestClient) -> None:
 
 def test_unknown_theme_is_rejected(client: TestClient) -> None:
     assert client.put("/api/appearance", json={"theme": "neon"}).status_code == 422
+
+
+def test_choosing_a_reading_font_is_returned_and_kept(client: TestClient) -> None:
+    reply = client.put("/api/reading-font", json={"font": "opendyslexic"})
+    assert reply.json()["appearance"]["reading_font"] == "opendyslexic"
+    assert client.get("/api/view").json()["appearance"]["reading_font"] == "opendyslexic"
+
+
+def test_unknown_reading_font_is_rejected(client: TestClient) -> None:
+    assert client.put("/api/reading-font", json={"font": "comic"}).status_code == 422
 
 
 def test_health_names_the_app(client: TestClient) -> None:

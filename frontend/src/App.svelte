@@ -4,8 +4,10 @@
   import Header from './screens/Header.svelte';
   import Phase1 from './screens/Phase1.svelte';
   import Phase2 from './screens/Phase2.svelte';
+  import Phase3 from './screens/Phase3.svelte';
   import Screen1 from './screens/Screen1.svelte';
   import Screen2 from './screens/Screen2.svelte';
+  import ThemeOrbs from './components/ThemeOrbs.svelte';
   import Settings from './screens/Settings.svelte';
   import ZeroState from './screens/ZeroState.svelte';
 
@@ -14,6 +16,10 @@
   $effect(() => view.start());
 
   const status = $derived(view.planning?.status);
+  const onboarding = $derived(
+    mode === 'dashboard' &&
+      (status === 'zero' || status === 'inscribe' || status === 'estimate' || status === 'weigh'),
+  );
   const onDashboard = $derived(mode === 'dashboard' && status === 'active');
 
   const toggleSettings = () => (mode = mode === 'settings' ? 'dashboard' : 'settings');
@@ -39,9 +45,10 @@
 
 <svelte:window {onkeydown} />
 
+<!-- The header belongs to the dashboard (and sits under the zero-state fog). Planning has none. -->
 <div class="screen">
-  <Header settingsOpen={mode === 'settings'} onsettings={toggleSettings} />
   {#if mode === 'settings'}
+    <Header settingsOpen onsettings={toggleSettings} />
     <Settings onback={() => (mode = 'dashboard')} />
   {:else if status === 'zero'}
     <ZeroState />
@@ -49,12 +56,18 @@
     <Phase1 />
   {:else if status === 'estimate'}
     <Phase2 />
+  {:else if status === 'weigh'}
+    <Phase3 />
   {:else if status === 'active'}
+    <Header settingsOpen={false} onsettings={toggleSettings} />
     <Screen1 />
   {/if}
 </div>
 {#if onDashboard}
   <Screen2 />
+{/if}
+{#if onboarding}
+  <ThemeOrbs />
 {/if}
 
 <style>

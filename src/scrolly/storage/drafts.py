@@ -26,6 +26,7 @@ class SqlDrafts:
             logical_day=date.fromisoformat(row.logical_day),
             phase=PlanPhase(row.phase),
             text=row.text,
+            qi_start=row.qi_start,
         )
 
     def save(self, draft: PlanningDraft, now: datetime) -> None:
@@ -38,6 +39,7 @@ class SqlDrafts:
         row.logical_day = draft.logical_day.isoformat()
         row.phase = draft.phase.value
         row.text = draft.text
+        row.qi_start = draft.qi_start
         row.updated_at = utc_iso(now)
         if is_new:
             self._session.add(row)

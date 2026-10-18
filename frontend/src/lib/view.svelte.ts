@@ -2,9 +2,11 @@ import {
   getView,
   importFile,
   putAppearance,
+  putReadingFont,
   type DayVariant,
   type ImportResult,
   type Planning,
+  type ReadingFont,
   type Theme,
   type View,
 } from './api';
@@ -25,6 +27,7 @@ class ViewStore {
     const root = document.documentElement;
     root.dataset.theme = view.appearance.theme;
     root.dataset.phase = view.appearance.phase;
+    root.dataset.readingFont = view.appearance.reading_font;
     if (view.appearance.day_variant) root.dataset.dayVariant = view.appearance.day_variant;
     else delete root.dataset.dayVariant;
     this.current = view;
@@ -57,6 +60,10 @@ class ViewStore {
 
   async choose(theme: Theme, dayVariant: DayVariant | null) {
     this.apply(await putAppearance(theme, dayVariant));
+  }
+
+  async chooseReadingFont(font: ReadingFont) {
+    this.apply(await putReadingFont(font));
   }
 
   async restore(file: File): Promise<ImportResult> {

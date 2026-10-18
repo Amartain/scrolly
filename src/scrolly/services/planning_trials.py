@@ -11,6 +11,7 @@ from scrolly.domain.planning import (
     reorder,
     set_estimate,
     set_mandate,
+    set_qi,
     trial_from_art,
     trial_from_horizon,
     trial_from_line,
@@ -83,12 +84,20 @@ class PlanningTrialsService:
         trial = trial_from_line(str(uuid.uuid4()), cleaned, self._today, self._position())
         self._store.trials.save([trial], self._now)
 
-    def update(self, trial_id: str, estimate: str | None, is_mandate: bool | None) -> None:
+    def update(
+        self,
+        trial_id: str,
+        estimate: str | None,
+        is_mandate: bool | None,
+        qi: str | None = None,
+    ) -> None:
         trial = self._trial(trial_id)
         if is_mandate is not None:
             trial = set_mandate(trial, is_mandate)
         if estimate is not None:
             trial = set_estimate(trial, estimate)
+        if qi is not None:
+            trial = set_qi(trial, qi)
         self._store.trials.save([trial], self._now)
 
     def dismiss(self, trial_id: str) -> None:

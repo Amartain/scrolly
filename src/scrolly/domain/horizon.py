@@ -32,5 +32,6 @@ def return_to_horizon(items: Sequence[HorizonItem], trial: Trial) -> list[Horizo
         note=trial.note,
         origin_type=trial.origin_type,
         origin_id=key,
+        qi_expected=trial.qi_expected,
     )
     return [returned, *kept]

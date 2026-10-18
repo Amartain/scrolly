@@ -21,6 +21,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/golden-core": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set Enabled
+         * @description Awaken or put away the Golden Core. Either answer retires the invitation.
+         */
+        put: operations["set_enabled_api_golden_core_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -117,6 +137,23 @@ export interface paths {
         put?: never;
         /** Proceed */
         post: operations["proceed_api_planning_proceed_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/planning/qi-start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Qi Start */
+        put: operations["qi_start_api_planning_qi_start_put"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -259,6 +296,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/reading-font": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Choose Reading Font */
+        put: operations["choose_reading_font_api_reading_font_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/view": {
         parameters: {
             query?: never;
@@ -289,6 +343,7 @@ export interface components {
         AppearanceOut: {
             day_variant: components["schemas"]["DayVariant"] | null;
             phase: components["schemas"]["Phase"];
+            reading_font: components["schemas"]["ReadingFont"];
             theme: components["schemas"]["Theme"];
         };
         /** ArtOut */
@@ -306,10 +361,37 @@ export interface components {
             file: string;
         };
         /**
+         * BudgetOut
+         * @description The Day Summary. Bar widths are shares of its span: the light left, or the plan if larger.
+         */
+        BudgetOut: {
+            /** Beyond Text */
+            beyond_text: string | null;
+            /** Light Pct */
+            light_pct: number;
+            /** Light Text */
+            light_text: string | null;
+            /** Mandate Pct */
+            mandate_pct: number;
+            /** Mortal Pct */
+            mortal_pct: number;
+            /** Planned Text */
+            planned_text: string;
+            /** Trial Count */
+            trial_count: number;
+            /** Unestimated Count */
+            unestimated_count: number;
+        };
+        /**
          * DayVariant
          * @enum {string}
          */
         DayVariant: "teal" | "crimson";
+        /** GoldenCoreIn */
+        GoldenCoreIn: {
+            /** Enabled */
+            enabled: boolean;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -367,7 +449,7 @@ export interface components {
          * PlanStatus
          * @enum {string}
          */
-        PlanStatus: "zero" | "inscribe" | "estimate" | "active";
+        PlanStatus: "zero" | "inscribe" | "estimate" | "weigh" | "active";
         /** PlanTrialOut */
         PlanTrialOut: {
             /** Expected Text */
@@ -377,16 +459,20 @@ export interface components {
             /** Is Mandate */
             is_mandate: boolean;
             origin_type: components["schemas"]["OriginType"];
+            /** Qi Text */
+            qi_text: string;
             state: components["schemas"]["TrialState"];
             /** Title */
             title: string;
         };
         /** PlanningOut */
         PlanningOut: {
+            budget: components["schemas"]["BudgetOut"];
             /** Foundational */
             foundational: components["schemas"]["ArtOut"][];
             /** Horizon */
             horizon: components["schemas"]["HorizonItemOut"][];
+            qi: components["schemas"]["QiOut"];
             /** Restorative */
             restorative: components["schemas"]["ArtOut"][];
             status: components["schemas"]["PlanStatus"];
@@ -394,6 +480,58 @@ export interface components {
             text: string;
             /** Trials */
             trials: components["schemas"]["PlanTrialOut"][];
+        };
+        /**
+         * QiOut
+         * @description The Golden Core. Gauge shares are of the redline, the top of today's gauge.
+         *
+         *     The zones are calm (up to the start), surge (the next stretch) and redline (the rest).
+         *     `*_end_pct` are where the first two end; `fill_*_pct` are how much of each zone is filled.
+         */
+        QiOut: {
+            /** Calm End Pct */
+            calm_end_pct: number;
+            /** Enabled */
+            enabled: boolean;
+            /** Fill Calm Pct */
+            fill_calm_pct: number;
+            /** Fill Redline Pct */
+            fill_redline_pct: number;
+            /** Fill Surge Pct */
+            fill_surge_pct: number;
+            /** High */
+            high: number;
+            /** Invited */
+            invited: boolean;
+            /** Low */
+            low: number;
+            /** Planned */
+            planned: number;
+            /** Redline */
+            redline: number;
+            /** Start */
+            start: number;
+            /** Surge End */
+            surge_end: number;
+            /** Surge End Pct */
+            surge_end_pct: number;
+            /** Tomorrow Start */
+            tomorrow_start: number;
+        };
+        /** QiStartIn */
+        QiStartIn: {
+            /** Value */
+            value: number;
+        };
+        /**
+         * ReadingFont
+         * @description The face for text the user wrote. Atkinson Hyperlegible Next is the default.
+         * @enum {string}
+         */
+        ReadingFont: "atkinson" | "opendyslexic";
+        /** ReadingFontIn */
+        ReadingFontIn: {
+            font: components["schemas"]["ReadingFont"];
         };
         /** SummonIn */
         SummonIn: {
@@ -429,6 +567,8 @@ export interface components {
             estimate?: string | null;
             /** Is Mandate */
             is_mandate?: boolean | null;
+            /** Qi */
+            qi?: string | null;
         };
         /**
          * TrialState
@@ -482,6 +622,39 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["AppearanceIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    set_enabled_api_golden_core_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GoldenCoreIn"];
             };
         };
         responses: {
@@ -647,6 +820,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+        };
+    };
+    qi_start_api_planning_qi_start_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QiStartIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -866,6 +1072,39 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    choose_reading_font_api_reading_font_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReadingFontIn"];
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {

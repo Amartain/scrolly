@@ -14,7 +14,7 @@
 
 {#snippet row(trial: PlanTrial)}
   <TrialMark {trial} />
-  <span class="title">{trial.title}</span>
+  <span class="title read">{trial.title}</span>
   <span class="estimate digits">{trial.expected_text}</span>
   <GlyphButton
     label={trial.origin_type === 'horizon'

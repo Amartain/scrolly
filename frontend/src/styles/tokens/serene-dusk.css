@@ -26,6 +26,9 @@
   --strong: #1e293b;
   --on-strong: #ecd452;
   --mandate: #e38b7a;
+  --qi-calm: #ecd452;
+  --qi-surge: #e0a030;
+  --qi-redline: #d27a2a;
   --postponed: #9fb4c9;
   --icon-cloud: #d9e0e6;
   --icon-leaf: #9cc47a;
@@ -56,10 +59,19 @@
     rgba(255, 255, 255, 0) 55%,
     rgba(0, 0, 0, 0.1) 100%
   );
-  --card-ink: #f3eed0;
-  --card-head: rgba(0, 0, 0, 0.25);
-  --card-row-a: rgba(0, 0, 0, 0.1);
-  --card-row-b: rgba(0, 0, 0, 0.22);
+  --card-horizon-ink: #f3eed0;
+  --card-horizon-head: rgba(0, 0, 0, 0.25);
+  --card-horizon-row-a: rgba(0, 0, 0, 0.1);
+  --card-horizon-row-b: rgba(0, 0, 0, 0.22);
+  --card-horizon-mandate: #f5b5a8;
+  --card-foundational-ink: #f3eed0;
+  --card-foundational-head: rgba(0, 0, 0, 0.25);
+  --card-foundational-row-a: rgba(0, 0, 0, 0.1);
+  --card-foundational-row-b: rgba(0, 0, 0, 0.22);
+  --card-restorative-ink: #f3eed0;
+  --card-restorative-head: rgba(0, 0, 0, 0.25);
+  --card-restorative-row-a: rgba(0, 0, 0, 0.1);
+  --card-restorative-row-b: rgba(0, 0, 0, 0.22);
   --card-horizon-a: #7a4b3c;
   --card-horizon-b: #4b3f62;
   --card-horizon-action-bg: #5e6f8a;
