@@ -1,25 +1,28 @@
 <script lang="ts">
   import Panel from '../components/Panel.svelte';
+  import { showScreen } from '../lib/screens';
 </script>
 
 <div class="grid">
   <div class="column left">
     <Panel title="Essence" empty="No trials on the scroll." />
     <div class="immediate">
-      <Panel title="The Immediate Trial" empty="Nothing is underway." />
+      <Panel title="The Immediate Trial" empty="Nothing is underway." scroll />
     </div>
-    <Panel title="Conquered Today" empty="Nothing conquered yet." />
+    <Panel title="Conquered Today" empty="Nothing conquered yet." scroll />
   </div>
   <div class="column right">
     <div class="stats">
       <Panel title="Lifetime Conquered" empty="0" />
-      <Panel title="Total Days Used" empty="0" />
+      <Panel title="Heavenly Cycles" empty="0" />
     </div>
     <Panel title="Cumulative Momentum" empty="Your momentum appears here." />
-    <Panel title="7-Day Rhythm" empty="Your rhythm appears here." />
+    <Panel title="Rhythm" empty="Your rhythm appears here." />
   </div>
 </div>
-<div class="fold display">One scroll down · the planning peak</div>
+<button class="fold display" type="button" onclick={() => showScreen('two')}>
+  The planning peak <kbd>↓</kbd>
+</button>
 
 <style>
   .grid {
@@ -62,10 +65,27 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: var(--space-4);
-    background: var(--surface-stripe);
+    gap: var(--space-3);
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    border: 0;
     border-top: var(--border-width) solid var(--line);
+    background: var(--surface-stripe);
     color: var(--ink-muted);
     font-size: var(--text-display-sm);
+    cursor: pointer;
+  }
+
+  .fold:hover {
+    color: var(--ink);
+  }
+
+  kbd {
+    padding-inline: var(--space-2);
+    background: var(--surface-raised);
+    border: var(--border-width) solid var(--line);
+    box-shadow: var(--shadow-button);
+    color: var(--ink);
+    font: inherit;
   }
 </style>

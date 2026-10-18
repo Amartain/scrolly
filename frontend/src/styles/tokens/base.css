@@ -32,6 +32,9 @@
   --size-short-panel: 6rem;
   --shadow-room: var(--space-3);
 
+  --scrollbar-thumb: var(--line);
+  --scrollbar-track: var(--inset);
+
   --canvas-fill: var(--surface-canvas);
   --icon-highlight: rgba(255, 255, 255, 0.6);
 

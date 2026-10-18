@@ -1,22 +1,23 @@
 <script lang="ts">
   import Panel from '../components/Panel.svelte';
+  import { SCREEN_TWO_ID } from '../lib/screens';
 </script>
 
-<div class="screen">
+<div class="screen" id={SCREEN_TWO_ID}>
   <div class="column left">
     <Panel title="Scribe Trial" empty="Write a trial here." />
-    <Panel title="Remaining Trials" empty="No trials waiting." />
+    <Panel title="Remaining Trials" empty="No trials waiting." scroll />
     <div class="pair">
       <Panel title="Postponed Today" empty="None." />
       <Panel title="Fallen Leaves" empty="None." />
     </div>
     <div class="pair">
-      <Panel title="Foundational Arts" tone="foundational" empty="No Arts yet." />
-      <Panel title="Restorative Arts" tone="restorative" empty="No Arts yet." />
+      <Panel title="Foundational Arts" tone="foundational" empty="No Arts yet." scroll />
+      <Panel title="Restorative Arts" tone="restorative" empty="No Arts yet." scroll />
     </div>
   </div>
   <div class="column right">
-    <Panel title="The Horizon" tone="horizon" empty="The Horizon is clear." />
+    <Panel title="The Horizon" tone="horizon" empty="The Horizon is clear." scroll />
   </div>
 </div>
 

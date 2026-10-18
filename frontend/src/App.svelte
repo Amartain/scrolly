@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onScreenTwo, showScreen } from './lib/screens';
   import { view } from './lib/view.svelte';
   import Header from './screens/Header.svelte';
   import Screen1 from './screens/Screen1.svelte';
@@ -11,8 +12,28 @@
 
   const toggleSettings = () => (mode = mode === 'settings' ? 'dashboard' : 'settings');
 
+  function typing(target: EventTarget | null): boolean {
+    return (
+      target instanceof HTMLElement && target.matches('input, textarea, select, [contenteditable]')
+    );
+  }
+
   function onkeydown(event: KeyboardEvent) {
     if (event.key === 'Escape' && mode === 'settings') mode = 'dashboard';
+    if (
+      mode !== 'dashboard' ||
+      typing(event.target) ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.metaKey
+    )
+      return;
+    const down = event.key === 'ArrowDown' && !onScreenTwo();
+    const up = event.key === 'ArrowUp' && onScreenTwo();
+    if (down || up) {
+      event.preventDefault();
+      showScreen(down ? 'two' : 'one');
+    }
   }
 </script>
 

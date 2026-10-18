@@ -7,13 +7,20 @@
     title,
     tone = 'neutral',
     empty = 'Nothing here yet.',
+    scroll = false,
     children,
-  }: { title: string; tone?: Tone; empty?: string; children?: Snippet } = $props();
+  }: {
+    title: string;
+    tone?: Tone;
+    empty?: string;
+    scroll?: boolean;
+    children?: Snippet;
+  } = $props();
 </script>
 
 <section class="panel {tone}" aria-label={title}>
   <h2 class="head display">{title}</h2>
-  <div class="body">
+  <div class="body" class:scroll>
     {#if children}
       {@render children()}
     {:else}
@@ -45,12 +52,19 @@
   .body {
     flex: 1;
     min-height: 0;
-    overflow: auto;
+    overflow: hidden;
+  }
+
+  .body.scroll {
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   }
 
   .empty {
     margin: 0;
-    padding: var(--space-4);
+    padding: var(--space-2) var(--space-4);
     color: var(--ink-muted);
   }
 
