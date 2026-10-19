@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from dataclasses import asdict
 from pathlib import Path
 
 from fastapi import FastAPI, Request
@@ -24,6 +25,13 @@ def _refuse(status: int) -> Callable[[Request, Exception], JSONResponse]:
     return handler
 
 
+def _refuse_title(request: Request, error: Exception) -> JSONResponse:
+    """A taken title: the plain message, plus the facts so the interface can word it."""
+    assert isinstance(error, DuplicateTitleError)
+    body = {"detail": str(error), "refusal": asdict(error.refusal)}
+    return JSONResponse(body, status_code=409)
+
+
 def create_app(
     clock: Clock, store_factory: StoreFactory, static_dir: Path | None = None
 ) -> FastAPI:
@@ -37,7 +45,7 @@ def create_app(
     app.add_exception_handler(HorizonError, _refuse(409))
     app.add_exception_handler(OrderError, _refuse(409))
     app.add_exception_handler(ArtError, _refuse(409))
-    app.add_exception_handler(DuplicateTitleError, _refuse(409))
+    app.add_exception_handler(DuplicateTitleError, _refuse_title)
     app.add_exception_handler(DurationError, _refuse(422))
     app.add_exception_handler(QiError, _refuse(422))
     app.include_router(view.router)

@@ -6,7 +6,7 @@ test('Scribe refuses a title that is already on the scroll', async ({ page }) =>
   await page.goto('/');
   await page.getByLabel('Trial to scribe').fill('second');
   await page.getByRole('button', { name: 'Inscribe' }).click();
-  await expect(page.getByRole('status').first()).toContainText("Already on today's scroll");
+  await expect(page.getByRole('status').first()).toContainText('Already on this scroll: second');
   await expect(section(page, 'Remaining Trials').getByLabel('Estimate for Second')).toHaveCount(1);
 });
 
@@ -59,4 +59,18 @@ test('Scribe and the Horizon take an Art name again and again', async ({ page })
     await horizon.getByLabel('A future trial').press('Enter');
   }
   await expect(horizon.getByRole('img', { name: 'Foundational Art' })).toHaveCount(2);
+});
+
+test('Scribe a Horizon title: the note says where it is and offers a way out', async ({ page }) => {
+  await sealDay(page, 'First');
+  await page.goto('/');
+  const horizon = section(page, 'The Horizon');
+  await horizon.getByLabel('A future trial').fill('Brew Tea');
+  await horizon.getByLabel('A future trial').press('Enter');
+  await page.getByLabel('Trial to scribe').fill('brew tea');
+  await page.getByLabel('Trial to scribe').press('Enter');
+  const note = section(page, 'Remaining Trials').getByRole('status');
+  await expect(note).toContainText('Already on the Horizon: brew tea. Trials are one-time.');
+  await expect(note).toContainText('like brew tea, Second Pot.');
+  await expect(note.locator('em')).toHaveCount(2);
 });

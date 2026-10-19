@@ -4,7 +4,9 @@ from scrolly.domain.models import Art, ArtKind, TrialState
 from scrolly.domain.uniqueness import (
     DuplicateTitleError,
     Place,
+    Refusal,
     art_title_taken,
+    require_free_art_title,
     require_free_dump,
     require_free_trial_title,
     trial_title_taken,
@@ -87,3 +89,23 @@ def test_a_dump_names_every_repeat_and_every_existing_title() -> None:
 
 def test_a_clean_dump_passes() -> None:
     require_free_dump(["A", "B"], HORIZON, [make_trial("C")])
+
+
+def test_a_refusal_carries_the_facts_for_the_interface() -> None:
+    with pytest.raises(DuplicateTitleError) as caught:
+        require_free_trial_title(" taxes ", HORIZON, [])
+    assert caught.value.refusal == Refusal(horizon=["taxes"])
+    with pytest.raises(DuplicateTitleError) as caught:
+        require_free_trial_title("Walk", [], [make_trial("Walk")])
+    assert caught.value.refusal == Refusal(today=["Walk"])
+
+
+def test_an_art_refusal_and_a_dump_refusal_carry_their_titles() -> None:
+    arts = [Art(id="a1", kind=ArtKind.FOUNDATIONAL, title="Stretch")]
+    with pytest.raises(DuplicateTitleError) as caught:
+        require_free_art_title("stretch", arts, ArtKind.FOUNDATIONAL)
+    assert caught.value.refusal == Refusal(art=["stretch"])
+    lines = ["Taxes", "Walk", "walk", "Read"]
+    with pytest.raises(DuplicateTitleError) as caught:
+        require_free_dump(lines, HORIZON, [make_trial("Read")])
+    assert caught.value.refusal == Refusal(repeated=["walk"], horizon=["Taxes"], today=["Read"])

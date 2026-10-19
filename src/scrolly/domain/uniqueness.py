@@ -7,6 +7,7 @@ Titles match trimmed and case-insensitive.
 """
 
 from collections.abc import Sequence
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from scrolly.domain.art_match import art_kind_for
@@ -16,8 +17,22 @@ from scrolly.domain.models import Art, ArtKind, HorizonItem, Trial, TrialState
 _ON_THE_SCROLL = frozenset({TrialState.IMMEDIATE, TrialState.REMAINING, TrialState.DONE})
 
 
+@dataclass(frozen=True)
+class Refusal:
+    """Which titles were refused and why. The interface words it; Python only reports the facts."""
+
+    repeated: list[str] = field(default_factory=list)
+    horizon: list[str] = field(default_factory=list)
+    today: list[str] = field(default_factory=list)
+    art: list[str] = field(default_factory=list)
+
+
 class DuplicateTitleError(ValueError):
-    """A title that is already taken. The message is shown to the user."""
+    """A title that is already taken. `str(error)` is a plain fallback; `refusal` has the facts."""
+
+    def __init__(self, message: str, refusal: Refusal) -> None:
+        super().__init__(message)
+        self.refusal = refusal
 
 
 class Place(StrEnum):
@@ -63,14 +78,19 @@ def require_free_trial_title(
 ) -> None:
     place = trial_title_taken(title, horizon, today_trials, arts, except_id=except_id)
     if place is not None:
-        raise DuplicateTitleError(f"Already on {place.value}: {title.strip()}")
+        cleaned = title.strip()
+        where = Refusal(horizon=[cleaned]) if place is Place.HORIZON else Refusal(today=[cleaned])
+        raise DuplicateTitleError(f"Already on {place.value}: {cleaned}", where)
 
 
 def require_free_art_title(
     title: str, arts: Sequence[Art], kind: ArtKind, *, except_id: str | None = None
 ) -> None:
     if art_title_taken(title, arts, kind, except_id=except_id):
-        raise DuplicateTitleError(f"That Art is already in this list: {title.strip()}")
+        cleaned = title.strip()
+        raise DuplicateTitleError(
+            f"That Art is already in this list: {cleaned}", Refusal(art=[cleaned])
+        )
 
 
 def require_free_dump(
@@ -89,9 +109,11 @@ def require_free_dump(
             repeated.append(line)
         seen.add(key)
     notes = [f"Written twice: {', '.join(repeated)}"] if repeated else []
+    found: dict[Place, list[str]] = {}
     for place in Place:
-        taken = [x for x in plain if trial_title_taken(x, horizon, today_trials) is place]
-        if taken:
-            notes.append(f"Already on {place.value}: {', '.join(taken)}")
+        found[place] = [x for x in plain if trial_title_taken(x, horizon, today_trials) is place]
+        if found[place]:
+            notes.append(f"Already on {place.value}: {', '.join(found[place])}")
     if notes:
-        raise DuplicateTitleError(". ".join(notes))
+        refusal = Refusal(repeated=repeated, horizon=found[Place.HORIZON], today=found[Place.TODAY])
+        raise DuplicateTitleError(". ".join(notes), refusal)

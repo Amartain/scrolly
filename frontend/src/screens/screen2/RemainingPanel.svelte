@@ -1,4 +1,5 @@
 <script lang="ts">
+  import NoticeText from '../../components/NoticeText.svelte';
   import Panel from '../../components/Panel.svelte';
   import ReorderList from '../../components/ReorderList.svelte';
   import { EMPTY } from '../../lib/copy';
@@ -27,7 +28,7 @@
   scroll
   striped
 >
-  {#if view.notice}<p class="notice" role="status">{view.notice}</p>{/if}
+  {#if view.notice}<p class="notice" role="status"><NoticeText /></p>{/if}
   {#if remaining.length === 0}
     <p class="empty">{EMPTY.remaining}</p>
   {:else}

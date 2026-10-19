@@ -184,3 +184,12 @@ def test_a_horizon_item_switches_between_mandate_and_mortal(client: TestClient) 
     assert item["type"] == "mortal"
     reply = client.patch(f"/api/horizon/{item['id']}", json={"is_mandate": True})
     assert reply.json()["planning"]["horizon"][0]["type"] == "mandate"
+
+
+def test_a_taken_title_is_refused_with_the_facts_beside_the_message(client: TestClient) -> None:
+    client.post("/api/horizon", json={"title": "Taxes"})
+    reply = client.post("/api/horizon", json={"title": "taxes"})
+    assert reply.status_code == 409
+    body = reply.json()
+    assert body["detail"] == "Already on the Horizon: taxes"
+    assert body["refusal"] == {"repeated": [], "horizon": ["taxes"], "today": [], "art": []}

@@ -8,16 +8,27 @@ import {
   type Planning,
   type ReadingFont,
   type Theme,
+  TitleRefused,
   type View,
 } from './api';
+import { refusalNote, type Segment } from './copy';
 
 const REFRESH_MS = 60_000;
 
 /** The latest server view. Also the only place the theme attributes on <html> are set. */
 class ViewStore {
   current = $state<View | null>(null);
-  /** The server's last plain-language refusal (for example a bad estimate), or ''. */
-  notice = $state('');
+  /** The last refusal (for example a bad estimate) as lines of text; empty when there is none. */
+  noticeParts = $state<Segment[]>([]);
+
+  /** The same refusal as plain text. Assigning plain text replaces it; '' clears it. */
+  get notice(): string {
+    return this.noticeParts.map((part) => part.text).join('');
+  }
+
+  set notice(text: string) {
+    this.noticeParts = text ? [{ text }] : [];
+  }
   /** `performance.now()` when `current` arrived. Only the ticking display reads it. */
   receivedAt = $state(0);
 
@@ -56,7 +67,8 @@ class ViewStore {
       this.notice = '';
       return true;
     } catch (error) {
-      this.notice = error instanceof Error ? error.message : 'Something went wrong.';
+      if (error instanceof TitleRefused) this.noticeParts = refusalNote(error.refusal);
+      else this.notice = error instanceof Error ? error.message : 'Something went wrong.';
       return false;
     }
   }

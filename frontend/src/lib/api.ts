@@ -1,4 +1,5 @@
 import type { components } from './api-types';
+import type { TitleRefusal } from './copy';
 
 export type View = components['schemas']['ViewOut'];
 export type Planning = components['schemas']['PlanningOut'];
@@ -19,10 +20,24 @@ export type DayVariant = NonNullable<components['schemas']['AppearanceIn']['day_
 export type ReadingFont = components['schemas']['ReadingFontIn']['font'];
 export type ImportResult = components['schemas']['ImportOut'];
 
+/** A refused title: the server's plain message plus the facts the notes are made from. */
+export class TitleRefused extends Error {
+  constructor(
+    message: string,
+    readonly refusal: TitleRefusal,
+  ) {
+    super(message);
+  }
+}
+
 /** The server's own plain-language reason, ready to show. */
 async function failure(reply: Response, path: string): Promise<Error> {
-  const problem = (await reply.json().catch(() => null)) as { detail?: unknown } | null;
+  const problem = (await reply.json().catch(() => null)) as {
+    detail?: unknown;
+    refusal?: TitleRefusal;
+  } | null;
   const detail = typeof problem?.detail === 'string' ? problem.detail : null;
+  if (detail && problem?.refusal) return new TitleRefused(detail, problem.refusal);
   return new Error(detail ?? `${path}: ${reply.status}`);
 }
 
