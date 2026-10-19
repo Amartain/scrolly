@@ -5,6 +5,7 @@ decides how tomorrow begins (see docs/features.md, "The Golden Core Equilibrium"
 """
 
 import math
+import re
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import date, timedelta
@@ -54,7 +55,7 @@ def parse_qi(text: str) -> int | None:
     cleaned = text.strip()
     if not cleaned:
         return None
-    if not cleaned.isdigit() or int(cleaned) > QI_PER_TRIAL_MAX:
+    if not re.fullmatch(r"[0-9]+", cleaned) or int(cleaned) > QI_PER_TRIAL_MAX:
         raise QiError(f"Qi is a whole number from 0 to {QI_PER_TRIAL_MAX}")
     return int(cleaned)
 

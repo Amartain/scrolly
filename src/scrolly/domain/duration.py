@@ -1,24 +1,33 @@
 import re
 
-_HOURS_MINUTES = re.compile(r"(?:(\d+(?:\.\d+)?)h)?(?:(\d+)m)?")
+MAX_MINUTES = 16 * 60
+HINT = "Use 45m, 2h or 1h30m"
+
+_HOURS_MINUTES = re.compile(r"(?:([0-9]+)h)?(?:([0-9]+)m)?")
 
 
 class DurationError(ValueError):
-    pass
+    """A time that cannot be used. The message is the hint shown to the user."""
 
 
 def parse_duration(text: str) -> int | None:
-    """Minutes from "45m", "1h", "1.5h", "1h15m", "90" (minutes) or blank (None)."""
+    """Minutes from "45m", "2h" or "1h30m" (spaces and case ignored), or blank (None).
+
+    The units are required, minutes are 0-59 next to hours, and the total is 1 minute to 16 hours.
+    """
     cleaned = "".join(text.split()).lower()
     if not cleaned:
         return None
-    if cleaned.isdigit():
-        return int(cleaned)
     match = _HOURS_MINUTES.fullmatch(cleaned)
     if match is None or not any(match.groups()):
-        raise DurationError(f"Not a duration: {text!r}")
+        raise DurationError(HINT)
     hours, minutes = match.groups()
-    return round(float(hours or 0) * 60) + int(minutes or 0)
+    if hours is not None and minutes is not None and int(minutes) > 59:
+        raise DurationError(HINT)
+    total = int(hours or 0) * 60 + int(minutes or 0)
+    if not 1 <= total <= MAX_MINUTES:
+        raise DurationError(HINT)
+    return total
 
 
 def format_duration(minutes: int) -> str:

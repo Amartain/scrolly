@@ -143,13 +143,6 @@
     background: linear-gradient(160deg, var(--card-restorative-a), var(--card-restorative-b));
   }
 
-  .horizon .head,
-  .foundational .head,
-  .restorative .head {
-    background: var(--card-ink-head);
-    color: var(--card-ink);
-  }
-
   /* Empty text sits on the first row band, never on the bare gradient. */
   .horizon .empty,
   .foundational .empty,

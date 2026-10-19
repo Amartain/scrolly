@@ -37,7 +37,7 @@ test('the recorded minutes can be corrected, and a bad figure is explained', asy
   await edit().click();
   await conquered(page).getByLabel('Minutes for Write report').fill('soon');
   await page.keyboard.press('Enter');
-  await expect(conquered(page).getByRole('status')).toContainText('Not a duration');
+  await expect(conquered(page).getByRole('status')).toContainText('Use 45m, 2h or 1h30m');
   await expect(edit()).toHaveText('45m');
   await edit().click();
   await conquered(page).getByLabel('Minutes for Write report').fill('1h15m');

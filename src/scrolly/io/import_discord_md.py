@@ -5,7 +5,6 @@ Only Done lines carry time, so only they are read."""
 import re
 from datetime import date
 
-from scrolly.domain.duration import DurationError, parse_duration
 from scrolly.domain.merge import ImportBatch
 from scrolly.domain.models import OriginType, Trial, TrialState
 from scrolly.io.errors import ImportFormatError
@@ -28,6 +27,21 @@ _BOARD = re.compile(
 _DATE = re.compile(r"(\d{1,2})/(\d{1,2})/(\d{4})")
 _SHORTCODE = re.compile(r":(\w+):\s*(.*)")
 _DONE_LINE = re.compile(r"(.+?)\s*\(([^()]*)\)\s*>>\s*(\S+)")
+# Old boards wrote "45m", "1h", "1.5h", "1h15m" or bare minutes; imports read more than the form.
+_OLD_TIME = re.compile(r"(?:([0-9]+(?:\.[0-9]+)?)h)?(?:([0-9]+)m)?")
+
+
+def _minutes(text: str) -> int | None:
+    cleaned = "".join(text.split()).lower()
+    if not cleaned:
+        return None
+    if re.fullmatch(r"[0-9]+", cleaned):
+        return int(cleaned)
+    match = _OLD_TIME.fullmatch(cleaned)
+    if match is None or not any(match.groups()):
+        raise ValueError(text)
+    hours, minutes = match.groups()
+    return round(float(hours or 0) * 60) + int(minutes or 0)
 
 
 def _done_lines(block: str) -> list[str]:
@@ -56,8 +70,8 @@ def _trial(line: str, day: date, position: int) -> Trial | None:
         return None
     title, expected, actual = parts.groups()
     try:
-        expected_min, actual_min = parse_duration(expected), parse_duration(actual)
-    except DurationError:
+        expected_min, actual_min = _minutes(expected), _minutes(actual)
+    except ValueError:
         return None
     return Trial(
         id=stable_id("discord", f"{day}:{position}:{title.casefold()}"),

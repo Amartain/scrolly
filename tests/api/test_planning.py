@@ -86,7 +86,7 @@ def test_a_bad_estimate_is_a_422(client: TestClient) -> None:
     _plan(client, "Walk")
     trial = _planning(client)["trials"][0]["id"]
     reply = client.patch(f"/api/planning/trials/{trial}", json={"estimate": "soon"})
-    assert reply.status_code == 422 and "soon" in reply.json()["detail"]
+    assert reply.status_code == 422 and "45m" in reply.json()["detail"]
 
 
 def test_a_failed_step_changes_nothing(client: TestClient) -> None:

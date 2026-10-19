@@ -37,7 +37,7 @@ def test_a_scribed_trial_is_immediate_when_nothing_is_underway() -> None:
 def test_scribing_needs_a_title_and_a_valid_estimate() -> None:
     with pytest.raises(TrialError):
         scribe("n", "   ", "", "", DAY, [])
-    with pytest.raises(ValueError, match="duration"):
+    with pytest.raises(ValueError, match="45m"):
         scribe("n", "x", "soon", "", DAY, [])
 
 

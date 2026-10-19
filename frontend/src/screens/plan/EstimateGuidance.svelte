@@ -7,8 +7,8 @@
 <Panel title="Guidance">
   <div class="copy">
     <p>
-      Time blindness is conquered through practice. Divine the essence each trial needs (60m, 1.5h).
-      A forgotten estimate can be set later.
+      Time blindness is conquered through practice. Divine the essence each trial needs (45m, 2h,
+      1h30m). A forgotten estimate can be set later.
     </p>
     <p>
       Watch the light: a plan that fills every minute leaves no room for the unexpected. Drag a row,

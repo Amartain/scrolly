@@ -69,13 +69,15 @@ test('a row can be dragged to a new place with the mouse', async ({ page }) => {
   await expect.poll(() => titles(page)).toEqual(['Two', 'Three', 'One']);
 });
 
-test('a bad estimate is explained quietly and the field goes back', async ({ page }) => {
+test('a bad estimate shows the format and the field goes back', async ({ page }) => {
   await toEstimate(page, 'Walk');
   const estimate = page.getByLabel('Estimate for Walk');
-  await estimate.fill('soon');
-  await estimate.press('Enter');
-  await expect(page.getByRole('status')).toContainText('soon');
-  await expect(estimate).toHaveValue('');
+  for (const bad of ['90', '1.5h', '0m', '17h', '1h75m', '²', 'soon']) {
+    await estimate.fill(bad);
+    await estimate.press('Enter');
+    await expect(page.getByRole('status')).toContainText('Use 45m, 2h or 1h30m');
+    await expect(estimate).toHaveValue('');
+  }
 });
 
 test('a forgotten trial can be added, and a mandate can be postponed to the Horizon', async ({

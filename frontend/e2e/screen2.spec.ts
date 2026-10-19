@@ -84,8 +84,7 @@ test('conquered trials read in the order they were conquered, under counters', a
   await page.goto('/');
   await page.getByRole('button', { name: 'Conquer A' }).click();
   await page.getByRole('button', { name: 'Conquer B' }).click();
-  const names = await section(page, 'Conquered Today').locator('li .read').allTextContents();
-  expect(names).toEqual(['A', 'B']);
+  await expect(section(page, 'Conquered Today').locator('li .read')).toHaveText(['A', 'B']);
   await expect(section(page, 'Lifetime Conquered')).toContainText('2');
   await expect(section(page, 'Heavenly Cycles')).toContainText('1');
 });

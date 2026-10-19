@@ -1,6 +1,8 @@
-from datetime import date, timedelta
+﻿from datetime import date, timedelta
 
 import pytest
+from hypothesis import given
+from hypothesis import strategies as st
 
 from scrolly.domain.models import OriginType, TrialState
 from scrolly.domain.qi import (
@@ -178,3 +180,18 @@ def test_the_gauge_stops_filling_at_the_redline() -> None:
 
 def test_the_gauge_follows_a_lower_start() -> None:
     assert gauge_fill(60, 40) == GaugeFill(calm=40, surge=20, redline=0)
+
+
+@given(st.text())
+def test_any_qi_text_gives_a_number_or_a_qi_error(text: str) -> None:
+    try:
+        result = parse_qi(text)
+    except QiError:
+        return
+    assert result is None or 0 <= result <= 100
+
+
+def test_qi_text_takes_ascii_digits_only() -> None:
+    for bad in ("\u00b2", "\u0663", "\uff14"):
+        with pytest.raises(QiError):
+            parse_qi(bad)
