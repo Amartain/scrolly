@@ -13,6 +13,8 @@ const CANVAS = {
 
 test('all five token sets resolve to the art-direction canvas colors', async ({ page }) => {
   await page.goto('/');
+  // The first view re-applies the theme attributes; wait for it so it cannot undo the ones set below.
+  await expect(page.locator('html')).toHaveAttribute('data-reading-font', /.+/);
   const attributes: Record<string, [string, string | null, string]> = {
     'serene-day': ['serene', null, 'day'],
     'serene-dusk': ['serene', null, 'dusk'],
@@ -106,7 +108,7 @@ test('nothing leaves localhost and fonts are bundled', async ({ page }) => {
   await sealDay(page);
   await page.goto('/');
   // Fonts load when text first uses them, so wait for a saved title (reading face) to draw.
-  await expect(page.locator('.title.read').first()).toBeVisible();
+  await expect(page.locator('.read').first()).toBeVisible();
   await page.evaluate(() => document.fonts.ready);
   const fonts = await page.evaluate(() =>
     [...document.fonts].filter((font) => font.status === 'loaded').map((font) => font.family),

@@ -27,7 +27,7 @@
 <ScrollSheet title="Weigh the Qi">
   <div class="phase">
     <div class="column">
-      <Panel title="The Scroll" scroll>
+      <Panel title="The Scroll" scroll striped>
         <RowList items={trials} {row} />
       </Panel>
       <Notice />
@@ -44,7 +44,7 @@
       {#if qi}
         <Panel title="The Golden Core">
           <div class="core">
-            <QiGauge {qi} value={qi.planned} caption="planned today" />
+            <QiGauge {qi} value={qi.planned} fill={qi.planned_fill} caption="planned today" />
             <CoreSlider {qi} />
             <p class="tomorrow">
               If today goes as planned, tomorrow's core begins at

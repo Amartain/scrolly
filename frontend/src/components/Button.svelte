@@ -1,5 +1,5 @@
 <script lang="ts">
-  type Tone = 'default' | 'primary' | 'horizon' | 'foundational' | 'restorative';
+  type Tone = 'default' | 'primary' | 'gold' | 'horizon' | 'foundational' | 'restorative';
 
   let {
     label,
@@ -42,6 +42,12 @@
   .button[data-tone='primary'] {
     --tone-bg: var(--growth);
     --tone-ink: var(--on-growth);
+    background-image: none;
+  }
+
+  .button[data-tone='gold'] {
+    --tone-bg: var(--gold);
+    --tone-ink: var(--on-gold);
     background-image: none;
   }
 

@@ -18,6 +18,8 @@
   --growth: #9cc47a;
   --on-growth: #1b222c;
   --growth-text: #9cc47a;
+  --conquered-row-a: #2e473f;
+  --conquered-row-b: #365246;
   --gold: #ecd452;
   --on-gold: #1b222c;
   --num: #ecd452;
@@ -30,9 +32,6 @@
   --qi-surge: #e0a030;
   --qi-redline: #d27a2a;
   --postponed: #9fb4c9;
-  --icon-cloud: #d9e0e6;
-  --icon-leaf: #9cc47a;
-  --icon-sprig: #7fc4bd;
   --icon-paper: #e8e0c4;
   --icon-wood: #b07a45;
   --highlight: rgba(255, 255, 255, 0.12);

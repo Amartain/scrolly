@@ -59,6 +59,15 @@ def parse_qi(text: str) -> int | None:
     return int(cleaned)
 
 
+@dataclass(frozen=True)
+class GaugeFill:
+    """Qi in each zone of the gauge: calm (to the start), surge (next stretch), redline (rest)."""
+
+    calm: int
+    surge: int
+    redline: int
+
+
 def redline(start: int) -> int:
     return start + REDLINE_SPAN
 
@@ -76,9 +85,16 @@ def strain_for(spent: int, start: int) -> int:
     return round(MAX_STRAIN - (MAX_STRAIN - LINEAR_SPAN) * math.exp(-_STEEPNESS * gap))
 
 
+def effective_qi(trial: Trial) -> int:
+    """Qi a trial counts for: what was recorded when it was conquered, else the estimate."""
+    if trial.state is TrialState.DONE and trial.qi_actual is not None:
+        return trial.qi_actual
+    return trial.qi_expected or 0
+
+
 def _value(trial: Trial) -> int:
     """Qi a trial costs, or minus what a Restorative Art restores."""
-    qi = trial.qi_expected or 0
+    qi = effective_qi(trial)
     return -qi if trial.origin_type is OriginType.RESTORATIVE_ART else qi
 
 
@@ -87,7 +103,7 @@ def _net(trials: Sequence[Trial], states: frozenset[TrialState]) -> int:
 
 
 def spent(trials: Sequence[Trial]) -> int:
-    """Qi really used: conquered trials only."""
+    """Qi really used: conquered trials only, at the Qi recorded for each."""
     return _net(trials, frozenset({TrialState.DONE}))
 
 
@@ -133,3 +149,13 @@ def choose_start(value: int, available: QiOutlook) -> int:
     if not available.low <= value <= available.high:
         raise QiError(f"Today's core can begin between {available.low} and {available.high} Qi")
     return value
+
+
+def gauge_fill(value: int, start: int) -> GaugeFill:
+    """How a Qi value fills the three zones of a day that begins at `start`."""
+    surge_end = start + LINEAR_SPAN
+    return GaugeFill(
+        calm=min(value, start),
+        surge=max(0, min(value, surge_end) - start),
+        redline=max(0, min(value, redline(start)) - surge_end),
+    )

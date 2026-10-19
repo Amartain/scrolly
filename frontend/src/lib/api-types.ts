@@ -21,6 +21,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/arts/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Reorder Arts */
+        put: operations["reorder_arts_api_arts_order_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/golden-core": {
         parameters: {
             query?: never;
@@ -56,6 +73,58 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/horizon": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add */
+        post: operations["add_api_horizon_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/horizon/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Reorder */
+        put: operations["reorder_api_horizon_order_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/horizon/{item_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Discard */
+        delete: operations["discard_api_horizon__item_id__delete"];
+        options?: never;
+        head?: never;
+        /** Edit */
+        patch: operations["edit_api_horizon__item_id__patch"];
         trace?: never;
     };
     "/api/import": {
@@ -313,6 +382,210 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/trials": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Scribe */
+        post: operations["scribe_api_trials_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/trials/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Reorder */
+        put: operations["reorder_api_trials_order_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/trials/summon": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Summon */
+        post: operations["summon_api_trials_summon_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/trials/{trial_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update */
+        patch: operations["update_api_trials__trial_id__patch"];
+        trace?: never;
+    };
+    "/api/trials/{trial_id}/abandon": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Abandon */
+        post: operations["abandon_api_trials__trial_id__abandon_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/trials/{trial_id}/conquer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Conquer */
+        post: operations["conquer_api_trials__trial_id__conquer_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/trials/{trial_id}/postpone": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Postpone */
+        post: operations["postpone_api_trials__trial_id__postpone_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/trials/{trial_id}/promote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Promote */
+        post: operations["promote_api_trials__trial_id__promote_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/trials/{trial_id}/revive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revive */
+        post: operations["revive_api_trials__trial_id__revive_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/trials/{trial_id}/timer/pause": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pause Timer */
+        post: operations["pause_timer_api_trials__trial_id__timer_pause_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/trials/{trial_id}/timer/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reset Timer */
+        post: operations["reset_timer_api_trials__trial_id__timer_reset_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/trials/{trial_id}/timer/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start Timer */
+        post: operations["start_timer_api_trials__trial_id__timer_start_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/view": {
         parameters: {
             query?: never;
@@ -345,6 +618,17 @@ export interface components {
             phase: components["schemas"]["Phase"];
             reading_font: components["schemas"]["ReadingFont"];
             theme: components["schemas"]["Theme"];
+        };
+        /**
+         * ArtKind
+         * @enum {string}
+         */
+        ArtKind: "foundational" | "restorative";
+        /** ArtOrderIn */
+        ArtOrderIn: {
+            /** Ids */
+            ids: string[];
+            kind: components["schemas"]["ArtKind"];
         };
         /** ArtOut */
         ArtOut: {
@@ -382,11 +666,54 @@ export interface components {
             /** Unestimated Count */
             unestimated_count: number;
         };
+        /** ConqueredOut */
+        ConqueredOut: {
+            /** Actual Text */
+            actual_text: string;
+            /** Id */
+            id: string;
+            /** Is Mandate */
+            is_mandate: boolean;
+            origin_type: components["schemas"]["OriginType"];
+            /** Qi Text */
+            qi_text: string;
+            /** Title */
+            title: string;
+            type: components["schemas"]["TrialType"];
+        };
+        /** DashboardOut */
+        DashboardOut: {
+            /** Conquered */
+            conquered: components["schemas"]["ConqueredOut"][];
+            essence: components["schemas"]["EssenceOut"];
+            /** Heavenly Cycles */
+            heavenly_cycles: number;
+            immediate: components["schemas"]["ImmediateOut"] | null;
+            /** Lifetime Conquered */
+            lifetime_conquered: number;
+            /** Lost */
+            lost: components["schemas"]["LetGoOut"][];
+            /** Postponed */
+            postponed: components["schemas"]["LetGoOut"][];
+            /** Victory */
+            victory: boolean;
+        };
         /**
          * DayVariant
          * @enum {string}
          */
         DayVariant: "teal" | "crimson";
+        /** EssenceOut */
+        EssenceOut: {
+            /** Actual Text */
+            actual_text: string;
+            /** Expected Text */
+            expected_text: string;
+            /** Meter Pct */
+            meter_pct: number;
+            /** Remaining Text */
+            remaining_text: string;
+        };
         /** GoldenCoreIn */
         GoldenCoreIn: {
             /** Enabled */
@@ -405,6 +732,11 @@ export interface components {
              */
             app: string;
         };
+        /** HorizonAddIn */
+        HorizonAddIn: {
+            /** Title */
+            title: string;
+        };
         /** HorizonItemOut */
         HorizonItemOut: {
             /** Expected Text */
@@ -415,6 +747,37 @@ export interface components {
             is_mandate: boolean;
             /** Title */
             title: string;
+            type: components["schemas"]["TrialType"];
+        };
+        /**
+         * HorizonPatchIn
+         * @description Only the fields that are sent change. An empty estimate clears it.
+         */
+        HorizonPatchIn: {
+            /** Estimate */
+            estimate?: string | null;
+            /** Is Mandate */
+            is_mandate?: boolean | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** ImmediateOut */
+        ImmediateOut: {
+            /** Expected Text */
+            expected_text: string;
+            /** Has Note */
+            has_note: boolean;
+            /** Id */
+            id: string;
+            /** Is Mandate */
+            is_mandate: boolean;
+            origin_type: components["schemas"]["OriginType"];
+            /** Qi Text */
+            qi_text: string;
+            timer: components["schemas"]["TimerOut"];
+            /** Title */
+            title: string;
+            type: components["schemas"]["TrialType"];
         };
         /** ImportOut */
         ImportOut: {
@@ -429,6 +792,31 @@ export interface components {
             /** Trials Added */
             trials_added: number;
             view: components["schemas"]["ViewOut"];
+        };
+        /**
+         * LegendOut
+         * @description Keyed by trial state (`immediate`, `done`, ...) and by trial type (`mandate`, ...).
+         */
+        LegendOut: {
+            /** States */
+            states: {
+                [key: string]: components["schemas"]["SymbolOut"];
+            };
+            /** Types */
+            types: {
+                [key: string]: components["schemas"]["SymbolOut"];
+            };
+        };
+        /**
+         * LetGoOut
+         * @description A trial sent to the Horizon today (`postponed`) or let go (`lost`).
+         */
+        LetGoOut: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            type: components["schemas"]["TrialType"];
         };
         /** OrderIn */
         OrderIn: {
@@ -464,6 +852,7 @@ export interface components {
             state: components["schemas"]["TrialState"];
             /** Title */
             title: string;
+            type: components["schemas"]["TrialType"];
         };
         /** PlanningOut */
         PlanningOut: {
@@ -482,23 +871,30 @@ export interface components {
             trials: components["schemas"]["PlanTrialOut"][];
         };
         /**
+         * QiFillOut
+         * @description How much of each gauge zone a Qi value fills, as shares of the redline.
+         */
+        QiFillOut: {
+            /** Calm Pct */
+            calm_pct: number;
+            /** Redline Pct */
+            redline_pct: number;
+            /** Surge Pct */
+            surge_pct: number;
+        };
+        /**
          * QiOut
          * @description The Golden Core. Gauge shares are of the redline, the top of today's gauge.
          *
          *     The zones are calm (up to the start), surge (the next stretch) and redline (the rest).
-         *     `*_end_pct` are where the first two end; `fill_*_pct` are how much of each zone is filled.
+         *     `*_end_pct` are where the first two end. Planning shows `planned_fill`, the dashboard
+         *     `spent_fill` (conquered Qi only).
          */
         QiOut: {
             /** Calm End Pct */
             calm_end_pct: number;
             /** Enabled */
             enabled: boolean;
-            /** Fill Calm Pct */
-            fill_calm_pct: number;
-            /** Fill Redline Pct */
-            fill_redline_pct: number;
-            /** Fill Surge Pct */
-            fill_surge_pct: number;
             /** High */
             high: number;
             /** Invited */
@@ -507,8 +903,12 @@ export interface components {
             low: number;
             /** Planned */
             planned: number;
+            planned_fill: components["schemas"]["QiFillOut"];
             /** Redline */
             redline: number;
+            /** Spent */
+            spent: number;
+            spent_fill: components["schemas"]["QiFillOut"];
             /** Start */
             start: number;
             /** Surge End */
@@ -533,6 +933,21 @@ export interface components {
         ReadingFontIn: {
             font: components["schemas"]["ReadingFont"];
         };
+        /** ScribeIn */
+        ScribeIn: {
+            /**
+             * Estimate
+             * @default
+             */
+            estimate: string;
+            /**
+             * Qi
+             * @default
+             */
+            qi: string;
+            /** Title */
+            title: string;
+        };
         /** SummonIn */
         SummonIn: {
             /** Id */
@@ -542,6 +957,15 @@ export interface components {
              * @enum {string}
              */
             source: "horizon" | "art";
+        };
+        /** SymbolOut */
+        SymbolOut: {
+            /** Emoji */
+            emoji: string;
+            /** Label */
+            label: string;
+            /** Shortcode */
+            shortcode: string;
         };
         /** TextIn */
         TextIn: {
@@ -553,28 +977,33 @@ export interface components {
          * @enum {string}
          */
         Theme: "serene" | "pavilion";
+        /**
+         * TimerOut
+         * @description The timer as of this view: the browser animates the seconds until the next one.
+         */
+        TimerOut: {
+            /** Elapsed S */
+            elapsed_s: number;
+            /** Expected S */
+            expected_s: number | null;
+            /** Running */
+            running: boolean;
+        };
         /** TrialIn */
         TrialIn: {
             /** Title */
             title: string;
         };
         /**
-         * TrialPatchIn
-         * @description Only the fields that are sent change. An empty estimate clears it.
-         */
-        TrialPatchIn: {
-            /** Estimate */
-            estimate?: string | null;
-            /** Is Mandate */
-            is_mandate?: boolean | null;
-            /** Qi */
-            qi?: string | null;
-        };
-        /**
          * TrialState
          * @enum {string}
          */
         TrialState: "immediate" | "remaining" | "done" | "postponed" | "lost" | "returned";
+        /**
+         * TrialType
+         * @enum {string}
+         */
+        TrialType: "mandate" | "mortal" | "foundational" | "restorative";
         /** ValidationError */
         ValidationError: {
             /** Context */
@@ -591,6 +1020,8 @@ export interface components {
         /** ViewOut */
         ViewOut: {
             appearance: components["schemas"]["AppearanceOut"];
+            dashboard: components["schemas"]["DashboardOut"];
+            legend: components["schemas"]["LegendOut"];
             /**
              * Logical Day
              * Format: date
@@ -602,6 +1033,36 @@ export interface components {
              */
             now: string;
             planning: components["schemas"]["PlanningOut"];
+        };
+        /**
+         * TrialPatchIn
+         * @description Only the fields that are sent change. `actual` corrects a conquered trial's minutes.
+         */
+        scrolly__api__schemas__dashboard__TrialPatchIn: {
+            /** Actual */
+            actual?: string | null;
+            /** Actual Qi */
+            actual_qi?: string | null;
+            /** Estimate */
+            estimate?: string | null;
+            /** Is Mandate */
+            is_mandate?: boolean | null;
+            /** Qi */
+            qi?: string | null;
+            /** Title */
+            title?: string | null;
+        };
+        /**
+         * TrialPatchIn
+         * @description Only the fields that are sent change. An empty estimate clears it.
+         */
+        scrolly__api__schemas__planning__TrialPatchIn: {
+            /** Estimate */
+            estimate?: string | null;
+            /** Is Mandate */
+            is_mandate?: boolean | null;
+            /** Qi */
+            qi?: string | null;
         };
     };
     responses: never;
@@ -622,6 +1083,39 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["AppearanceIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reorder_arts_api_arts_order_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ArtOrderIn"];
             };
         };
         responses: {
@@ -694,6 +1188,138 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthOut"];
+                };
+            };
+        };
+    };
+    add_api_horizon_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HorizonAddIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reorder_api_horizon_order_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrderIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    discard_api_horizon__item_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                item_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    edit_api_horizon__item_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                item_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HorizonPatchIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -1007,7 +1633,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["TrialPatchIn"];
+                "application/json": components["schemas"]["scrolly__api__schemas__planning__TrialPatchIn"];
             };
         };
         responses: {
@@ -1105,6 +1731,388 @@ export interface operations {
                 "application/json": components["schemas"]["ReadingFontIn"];
             };
         };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    scribe_api_trials_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScribeIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reorder_api_trials_order_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrderIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    summon_api_trials_summon_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SummonIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_api_trials__trial_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trial_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["scrolly__api__schemas__dashboard__TrialPatchIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    abandon_api_trials__trial_id__abandon_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trial_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    conquer_api_trials__trial_id__conquer_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trial_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    postpone_api_trials__trial_id__postpone_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trial_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    promote_api_trials__trial_id__promote_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trial_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    revive_api_trials__trial_id__revive_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trial_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    pause_timer_api_trials__trial_id__timer_pause_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trial_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reset_timer_api_trials__trial_id__timer_reset_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trial_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    start_timer_api_trials__trial_id__timer_start_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trial_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {

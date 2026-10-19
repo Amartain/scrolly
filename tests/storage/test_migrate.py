@@ -56,3 +56,24 @@ def test_the_planning_draft_table_exists_after_upgrading(tmp_path: Path) -> None
         tables = {row[0] for row in connection.execute(text("SELECT name FROM sqlite_master"))}
     engine.dispose()
     assert "planning_draft" in tables
+
+
+def test_qi_actual_is_added_to_trials_without_touching_existing_rows(tmp_path: Path) -> None:
+    db_file = tmp_path / "scrolly.db"
+    command.upgrade(_config(db_file), "0004")
+    engine = create_engine(f"sqlite:///{db_file}")
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                "INSERT INTO trial (id, realm_id, created_at, updated_at, logical_day, title,"
+                " state,"
+                " is_mandate, origin_type, position, note, timer_accumulated_s, qi_expected)"
+                " VALUES ('t1', 'daily', 'now', 'now', '2026-10-18', 'Old', 'done', 0,"
+                " 'brain_dump', 0, '', 0, 40)"
+            )
+        )
+    upgrade_to_head(db_file, tmp_path / "backups")
+    with engine.connect() as connection:
+        row = connection.execute(text("SELECT qi_expected, qi_actual FROM trial")).one()
+    engine.dispose()
+    assert tuple(row) == (40, None)

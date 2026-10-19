@@ -54,7 +54,7 @@
         <Button label="Add" onclick={() => add()} />
       </form>
       <div class="list">
-        <Panel title="The Scroll" scroll>
+        <Panel title="The Scroll" scroll striped>
           <ReorderList items={shown} label="Trials on the scroll" onreorder={reorder} {row} />
         </Panel>
       </div>

@@ -1,0 +1,62 @@
+<script lang="ts">
+  import Panel from '../../components/Panel.svelte';
+  import StateMark from '../../components/StateMark.svelte';
+  import { EMPTY } from '../../lib/copy';
+  import type { LetGo } from '../../lib/api';
+  import { view } from '../../lib/view.svelte';
+
+  const postponed = $derived(view.current?.dashboard.postponed ?? []);
+  const lost = $derived(view.current?.dashboard.lost ?? []);
+</script>
+
+{#snippet line(items: LetGo[], state: string, empty: string)}
+  {#if items.length === 0}
+    <p class="empty">{empty}</p>
+  {:else}
+    <p class="line read">
+      <StateMark {state} />
+      <span class="names">{items.map((item) => item.title).join(', ')}</span>
+    </p>
+  {/if}
+{/snippet}
+
+<div class="pair">
+  <Panel title="Postponed Today" count={postponed.length}>
+    {@render line(postponed, 'postponed', EMPTY.postponed)}
+  </Panel>
+  <Panel title="Fallen Leaves" count={lost.length}>
+    {@render line(lost, 'lost', EMPTY.fallen)}
+  </Panel>
+</div>
+
+<style>
+  .pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-5);
+    min-height: 0;
+  }
+
+  .empty,
+  .line {
+    margin: 0;
+    padding: var(--space-2) var(--space-4);
+  }
+
+  .empty {
+    color: var(--ink-muted);
+  }
+
+  .line {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .names {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>

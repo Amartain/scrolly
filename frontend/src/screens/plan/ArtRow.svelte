@@ -1,0 +1,34 @@
+<!-- An Art template: title, default duration, its type mark, and + to summon a copy. -->
+<script lang="ts">
+  import GlyphButton from '../../components/GlyphButton.svelte';
+  import TypeMark from '../../components/TypeMark.svelte';
+  import GlyphIcon from '../../icons/GlyphIcon.svelte';
+  import type { Art } from '../../lib/api';
+
+  let {
+    art,
+    kind,
+    onsummon,
+  }: { art: Art; kind: 'foundational' | 'restorative'; onsummon: () => void } = $props();
+</script>
+
+<span class="title read">{art.title}</span>
+<span class="figure digits">{art.expected_text}</span>
+<TypeMark type={kind} />
+<GlyphButton label="Summon {art.title}" onclick={onsummon}>
+  <GlyphIcon name="plus" />
+</GlyphButton>
+
+<style>
+  .title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .figure {
+    color: var(--ink-muted);
+  }
+</style>

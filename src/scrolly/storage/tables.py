@@ -47,6 +47,7 @@ class TrialRow(_Audited, Base):
     timer_paused_at: Mapped[str | None] = mapped_column(String(40), default=None)
     timer_accumulated_s: Mapped[int] = mapped_column(Integer, default=0)
     qi_expected: Mapped[int | None] = mapped_column(Integer, default=None)
+    qi_actual: Mapped[int | None] = mapped_column(Integer, default=None)
 
 
 class HorizonItemRow(_Audited, Base):

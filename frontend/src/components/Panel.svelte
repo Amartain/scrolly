@@ -1,26 +1,37 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
 
-  type Tone = 'neutral' | 'horizon' | 'foundational' | 'restorative';
+  type Tone = 'neutral' | 'horizon' | 'foundational' | 'restorative' | 'conquered';
 
   let {
     title,
     tone = 'neutral',
     empty = 'Nothing here yet.',
     scroll = false,
+    striped = false,
+    count,
+    hint,
     children,
   }: {
     title: string;
     tone?: Tone;
     empty?: string;
     scroll?: boolean;
+    /** Alternate row bands that fill the whole body, even below the last row. */
+    striped?: boolean;
+    count?: number;
+    /** A short line in the header, for example how to reorder. */
+    hint?: string;
     children?: Snippet;
   } = $props();
 </script>
 
 <section class="panel {tone}" aria-label={title}>
-  <h2 class="head display">{title}</h2>
-  <div class="body" class:scroll>
+  <div class="head">
+    <h2 class="display">{title}{count === undefined ? '' : ` · ${count}`}</h2>
+    {#if hint}<span class="hint">{hint}</span>{/if}
+  </div>
+  <div class="body" class:scroll class:striped>
     {#if children}
       {@render children()}
     {:else}
@@ -43,18 +54,41 @@
   }
 
   .head {
-    margin: 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
     padding: var(--space-2) var(--space-4);
     background: var(--head-bg);
     color: var(--head-ink);
     border-bottom: var(--border-width) solid var(--line);
+  }
+
+  .head h2 {
+    margin: 0;
     font-size: var(--text-display-md);
+  }
+
+  .hint {
+    font-size: var(--text-body-sm);
+    opacity: 0.8;
   }
 
   .body {
     flex: 1;
     min-height: 0;
     overflow: hidden;
+  }
+
+  .body.striped {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      var(--row-a) 0,
+      var(--row-a) var(--size-row),
+      var(--row-b) var(--size-row),
+      var(--row-b) calc(var(--size-row) * 2)
+    );
+    background-attachment: local;
   }
 
   .body.scroll {
@@ -68,6 +102,11 @@
     margin: 0;
     padding: var(--space-2) var(--space-4);
     color: var(--ink-muted);
+  }
+
+  .conquered {
+    --row-a: var(--conquered-row-a);
+    --row-b: var(--conquered-row-b);
   }
 
   .horizon,

@@ -6,6 +6,7 @@ from scrolly.domain.day_budget import DayBudget
 from scrolly.domain.logical_day import logical_day
 from scrolly.ports import Clock, Store
 from scrolly.services.appearance import AppearanceService
+from scrolly.services.dashboard_view import DashboardView, build_dashboard_view
 from scrolly.services.day import DayService
 from scrolly.services.day_budget import build_budget
 from scrolly.services.golden_core import QiView, build_qi_view
@@ -20,6 +21,7 @@ class ViewData:
     planning: PlanningView
     budget: DayBudget
     qi: QiView
+    dashboard: DashboardView
 
 
 def build_view(store: Store, clock: Clock) -> ViewData:
@@ -35,4 +37,5 @@ def build_view(store: Store, clock: Clock) -> ViewData:
         planning=build_planning_view(store, today),
         budget=build_budget(store, now),
         qi=build_qi_view(store, now),
+        dashboard=build_dashboard_view(store, now),
     )

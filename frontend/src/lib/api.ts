@@ -5,8 +5,15 @@ export type Planning = components['schemas']['PlanningOut'];
 export type PlanTrial = components['schemas']['PlanTrialOut'];
 export type Budget = components['schemas']['BudgetOut'];
 export type Qi = components['schemas']['QiOut'];
+export type QiFill = components['schemas']['QiFillOut'];
+export type Dashboard = components['schemas']['DashboardOut'];
+export type Immediate = components['schemas']['ImmediateOut'];
+export type Timer = components['schemas']['TimerOut'];
+export type Conquered = components['schemas']['ConqueredOut'];
 export type HorizonItem = components['schemas']['HorizonItemOut'];
 export type Art = components['schemas']['ArtOut'];
+export type LetGo = components['schemas']['LetGoOut'];
+export type ArtKind = components['schemas']['ArtOrderIn']['kind'];
 export type Theme = components['schemas']['AppearanceIn']['theme'];
 export type DayVariant = NonNullable<components['schemas']['AppearanceIn']['day_variant']>;
 export type ReadingFont = components['schemas']['ReadingFontIn']['font'];
@@ -66,4 +73,46 @@ export const planning = {
   unstage: (id: string) => plan(`trials/${id}/unstage`, json('POST')),
   dismiss: (id: string) => plan(`trials/${id}/dismiss`, json('POST')),
   reorder: (ids: string[]) => plan('order', json('PUT', { ids })),
+};
+
+const trial = (id: string, action: string) =>
+  send<View>(`/api/trials/${id}/${action}`, json('POST'));
+
+/** What the user does to the trials of a sealed day. Python decides what is allowed. */
+export const today = {
+  startTimer: (id: string) => trial(id, 'timer/start'),
+  pauseTimer: (id: string) => trial(id, 'timer/pause'),
+  resetTimer: (id: string) => trial(id, 'timer/reset'),
+  conquer: (id: string) => trial(id, 'conquer'),
+  postpone: (id: string) => trial(id, 'postpone'),
+  abandon: (id: string) => trial(id, 'abandon'),
+  revive: (id: string) => trial(id, 'revive'),
+  promote: (id: string) => trial(id, 'promote'),
+  update: (
+    id: string,
+    patch: {
+      title?: string;
+      is_mandate?: boolean;
+      actual?: string;
+      estimate?: string;
+      qi?: string;
+      actual_qi?: string;
+    },
+  ) => send<View>(`/api/trials/${id}`, json('PATCH', patch)),
+  scribe: (title: string, estimate: string, qi: string) =>
+    send<View>('/api/trials', json('POST', { title, estimate, qi })),
+  summon: (source: 'horizon' | 'art', id: string) =>
+    send<View>('/api/trials/summon', json('POST', { source, id })),
+  reorder: (ids: string[]) => send<View>('/api/trials/order', json('PUT', { ids })),
+};
+
+/** The user's backlog and the order of their Arts. */
+export const horizon = {
+  add: (title: string) => send<View>('/api/horizon', json('POST', { title })),
+  edit: (id: string, patch: { title?: string; estimate?: string; is_mandate?: boolean }) =>
+    send<View>(`/api/horizon/${id}`, json('PATCH', patch)),
+  discard: (id: string) => send<View>(`/api/horizon/${id}`, json('DELETE')),
+  reorder: (ids: string[]) => send<View>('/api/horizon/order', json('PUT', { ids })),
+  reorderArts: (kind: ArtKind, ids: string[]) =>
+    send<View>('/api/arts/order', json('PUT', { kind, ids })),
 };

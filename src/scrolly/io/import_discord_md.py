@@ -1,4 +1,6 @@
-"""Discord Dispatch "Quest Board" markdown. Only Done lines carry time, so only they are read."""
+"""Discord Dispatch markdown (the Scroll of Heavenly Tribulations, formerly the Quest Board).
+
+Only Done lines carry time, so only they are read."""
 
 import re
 from datetime import date
@@ -16,8 +18,13 @@ _TYPES = {
     "scroll": (False, OriginType.FOUNDATIONAL_ART),
     "herb": (False, OriginType.RESTORATIVE_ART),
 }
-# A stray character before "# Quest Board" (a BOM, a pasted "=") is tolerated.
-_BOARD = re.compile(r"(?m)^[^\w\r\n]*#\s*Quest Board[^\n]*$")
+# A stray character before the title (a BOM, a pasted "=") is tolerated. The title is the current
+# "Scroll of Heavenly Tribulations and Ascendent Trials" (a shortcode may come first), or the old
+# "Quest Board".
+_BOARD = re.compile(
+    r"(?m)^[^\w\r\n]*#\s*(?::\w+:\s*)?"
+    r"(?:Quest Board|Scroll of Heavenly Tribulations and Ascend[ea]nt Trials)[^\n]*$"
+)
 _DATE = re.compile(r"(\d{1,2})/(\d{1,2})/(\d{4})")
 _SHORTCODE = re.compile(r":(\w+):\s*(.*)")
 _DONE_LINE = re.compile(r"(.+?)\s*\(([^()]*)\)\s*>>\s*(\S+)")
@@ -79,7 +86,7 @@ def _board_day(block: str) -> date | None:
 def parse_discord_md(text: str, name: str = "") -> ImportBatch:
     blocks = _BOARD.split(text)[1:]
     if not blocks:
-        raise ImportFormatError("No '# Quest Board' found in this file")
+        raise ImportFormatError("No Scroll of Heavenly Tribulations (or Quest Board) in this file")
     trials: list[Trial] = []
     for block in blocks:
         day = _board_day(block)

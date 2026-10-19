@@ -11,7 +11,12 @@
   });
 
   const resting = $derived(qi.low === qi.high);
-  const commit = () => view.act(() => planning.qiStart(shown));
+  // One save at a time, in order, so a quick key repeat cannot leave an older value last.
+  let saving: Promise<unknown> = Promise.resolve();
+  function commit() {
+    const value = shown;
+    saving = saving.then(() => view.act(() => planning.qiStart(value)));
+  }
 </script>
 
 <div class="slider">

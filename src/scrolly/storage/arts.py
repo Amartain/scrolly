@@ -36,3 +36,12 @@ class SqlArts:
             if is_new:
                 self._session.add(row)
         self._session.flush()
+
+    def set_order(self, ids: Sequence[str], now: datetime) -> None:
+        """Put the Arts in exactly this order."""
+        for position, art_id in enumerate(ids):
+            row = self._session.get(ArtRow, art_id)
+            if row is not None:
+                row.position = position
+                row.updated_at = utc_iso(now)
+        self._session.flush()

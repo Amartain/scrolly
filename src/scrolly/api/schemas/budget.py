@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 from scrolly.domain.day_budget import DayBudget
 from scrolly.domain.duration import format_duration
-from scrolly.domain.qi import LINEAR_SPAN
+from scrolly.domain.qi import LINEAR_SPAN, gauge_fill
 from scrolly.services.golden_core import QiView
 
 
@@ -40,16 +40,35 @@ class BudgetOut(BaseModel):
         )
 
 
+class QiFillOut(BaseModel):
+    """How much of each gauge zone a Qi value fills, as shares of the redline."""
+
+    calm_pct: int
+    surge_pct: int
+    redline_pct: int
+
+    @classmethod
+    def of(cls, value: int, start: int, redline: int) -> "QiFillOut":
+        fill = gauge_fill(value, start)
+        return cls(
+            calm_pct=_pct(fill.calm, redline),
+            surge_pct=_pct(fill.surge, redline),
+            redline_pct=_pct(fill.redline, redline),
+        )
+
+
 class QiOut(BaseModel):
     """The Golden Core. Gauge shares are of the redline, the top of today's gauge.
 
     The zones are calm (up to the start), surge (the next stretch) and redline (the rest).
-    `*_end_pct` are where the first two end; `fill_*_pct` are how much of each zone is filled.
+    `*_end_pct` are where the first two end. Planning shows `planned_fill`, the dashboard
+    `spent_fill` (conquered Qi only).
     """
 
     enabled: bool
     invited: bool
     planned: int
+    spent: int
     start: int
     low: int
     high: int
@@ -58,20 +77,17 @@ class QiOut(BaseModel):
     tomorrow_start: int
     calm_end_pct: int
     surge_end_pct: int
-    fill_calm_pct: int
-    fill_surge_pct: int
-    fill_redline_pct: int
+    planned_fill: QiFillOut
+    spent_fill: QiFillOut
 
     @classmethod
     def from_view(cls, view: QiView) -> "QiOut":
         surge_end = view.start + LINEAR_SPAN
-        in_calm = min(view.planned, view.start)
-        in_surge = max(0, min(view.planned, surge_end) - view.start)
-        in_redline = max(0, min(view.planned, view.redline) - surge_end)
         return cls(
             enabled=view.enabled,
             invited=view.invited,
             planned=view.planned,
+            spent=view.spent,
             start=view.start,
             low=view.low,
             high=view.high,
@@ -80,7 +96,6 @@ class QiOut(BaseModel):
             tomorrow_start=view.tomorrow_start,
             calm_end_pct=_pct(view.start, view.redline),
             surge_end_pct=_pct(surge_end, view.redline),
-            fill_calm_pct=_pct(in_calm, view.redline),
-            fill_surge_pct=_pct(in_surge, view.redline),
-            fill_redline_pct=_pct(in_redline, view.redline),
+            planned_fill=QiFillOut.of(view.planned, view.start, view.redline),
+            spent_fill=QiFillOut.of(view.spent, view.start, view.redline),
         )

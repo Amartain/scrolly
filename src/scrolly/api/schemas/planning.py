@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from scrolly.api.schemas.budget import BudgetOut, QiOut
 from scrolly.domain.day_budget import DayBudget
 from scrolly.domain.duration import format_duration
+from scrolly.domain.legend import TrialType, type_of
 from scrolly.domain.models import Art, HorizonItem, OriginType, PlanStatus, Trial, TrialState
 from scrolly.services.golden_core import QiView
 from scrolly.services.planning_view import PlanningView
@@ -20,6 +21,7 @@ class PlanTrialOut(BaseModel):
     state: TrialState
     is_mandate: bool
     origin_type: OriginType
+    type: TrialType
     expected_text: str
     qi_text: str
 
@@ -31,6 +33,7 @@ class PlanTrialOut(BaseModel):
             state=trial.state,
             is_mandate=trial.is_mandate,
             origin_type=trial.origin_type,
+            type=type_of(trial.is_mandate, trial.origin_type),
             expected_text=_estimate(trial.essence_expected_min),
             qi_text="" if trial.qi_expected is None else str(trial.qi_expected),
         )
@@ -40,6 +43,7 @@ class HorizonItemOut(BaseModel):
     id: str
     title: str
     is_mandate: bool
+    type: TrialType
     expected_text: str
 
     @classmethod
@@ -48,6 +52,7 @@ class HorizonItemOut(BaseModel):
             id=item.id,
             title=item.title,
             is_mandate=item.is_mandate,
+            type=type_of(item.is_mandate, item.origin_type),
             expected_text=_estimate(item.essence_expected_min),
         )
 

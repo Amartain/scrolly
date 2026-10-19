@@ -12,8 +12,6 @@ const THEMES = [
 
 const QUIET = [
   'Essence',
-  'Lifetime Conquered',
-  'Heavenly Cycles',
   'Cumulative Momentum',
   'Rhythm',
   'Scribe Trial',

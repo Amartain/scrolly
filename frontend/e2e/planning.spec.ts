@@ -45,7 +45,7 @@ test('plan a day from the first click to the sealed dashboard', async ({ page })
   await page.getByRole('button', { name: 'Seal Scroll and Commence' }).click();
   await expect(section(page, 'The Immediate Trial')).toContainText('Tidy desk');
   await expect(section(page, 'Remaining Trials')).toContainText('Write report');
-  await expect(section(page, 'Remaining Trials')).toContainText('1h15m');
+  await expect(page.getByLabel('Estimate for Write report')).toHaveValue('1h15m');
 });
 
 test('Alt+Home and Alt+End move a trial to either end', async ({ page }) => {

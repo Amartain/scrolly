@@ -1,7 +1,7 @@
 <script lang="ts">
   import MandateMark from '../../components/MandateMark.svelte';
   import Panel from '../../components/Panel.svelte';
-  import CloudIcon from '../../icons/CloudIcon.svelte';
+  import TypeMark from '../../components/TypeMark.svelte';
 </script>
 
 <Panel title="Guidance">
@@ -15,17 +15,17 @@
       or press Alt with the arrow keys, to set the order.
     </p>
     <p class="term">
-      <CloudIcon />
+      <TypeMark type="mortal" />
       <span><strong>Mortal Trials:</strong> let them go freely, they fade at 4 AM.</span>
     </p>
     <p class="term">
-      <MandateMark />
+      <TypeMark type="mandate" />
       <span>
         <MandateMark kind="term">Heavenly Mandates:</MandateMark> postponing sends a copy back to the
         Horizon.
       </span>
     </p>
-    <p>Click a trial's icon to switch it between the two.</p>
+    <p>Click a trial's mark to switch it between the two.</p>
   </div>
 </Panel>
 

@@ -1,37 +1,54 @@
 <script lang="ts">
   import Panel from '../components/Panel.svelte';
-  import RowList from '../components/RowList.svelte';
-  import TrialLine from '../components/TrialLine.svelte';
-  import type { PlanTrial } from '../lib/api';
-  import { showScreen } from '../lib/screens';
+  import { EMPTY } from '../lib/copy';
+  import { conquer, toggleTimer } from '../lib/immediate';
+  import { onControl, typing } from '../lib/keys';
+  import { onScreenTwo, showScreen } from '../lib/screens';
   import { view } from '../lib/view.svelte';
+  import ConqueredList from './dashboard/ConqueredList.svelte';
+  import EssencePanel from './dashboard/EssencePanel.svelte';
+  import ImmediateCard from './dashboard/ImmediateCard.svelte';
+  import StatCard from './dashboard/StatCard.svelte';
+  import VictoryBanner from './dashboard/VictoryBanner.svelte';
 
-  const immediate = $derived(
-    (view.planning?.trials ?? []).filter((trial) => trial.state === 'immediate'),
-  );
+  const dashboard = $derived(view.current?.dashboard);
+
+  // Space starts or pauses the timer, Enter conquers. A focused button already does both itself.
+  function onkeydown(event: KeyboardEvent) {
+    const trial = dashboard?.immediate;
+    const modified = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
+    if (!trial || modified || typing(event.target) || onControl(event.target) || onScreenTwo())
+      return;
+    if (event.key === ' ') toggleTimer(trial);
+    else if (event.key === 'Enter') conquer(trial);
+    else return;
+    event.preventDefault();
+  }
 </script>
 
-{#snippet row(trial: PlanTrial)}
-  <TrialLine {trial} />
-{/snippet}
+<svelte:window {onkeydown} />
 
 <div class="grid">
   <div class="column left">
-    <Panel title="Essence" empty="No trials on the scroll." />
+    <EssencePanel />
     <div class="immediate">
-      <Panel title="The Immediate Trial" scroll>
-        <RowList items={immediate} {row} empty="Nothing is underway." />
-      </Panel>
+      {#if dashboard?.victory}
+        <VictoryBanner />
+      {:else if dashboard?.immediate}
+        <ImmediateCard trial={dashboard.immediate} />
+      {:else}
+        <Panel title="The Immediate Trial" empty={EMPTY.immediate} />
+      {/if}
     </div>
-    <Panel title="Conquered Today" empty="Nothing conquered yet." scroll />
+    <ConqueredList />
   </div>
   <div class="column right">
     <div class="stats">
-      <Panel title="Lifetime Conquered" empty="0" />
-      <Panel title="Heavenly Cycles" empty="0" />
+      <StatCard title="Lifetime Conquered" value={dashboard?.lifetime_conquered ?? 0} />
+      <StatCard title="Heavenly Cycles" value={dashboard?.heavenly_cycles ?? 0} />
     </div>
-    <Panel title="Cumulative Momentum" empty="Your momentum appears here." />
-    <Panel title="Rhythm" empty="Your rhythm appears here." />
+    <Panel title="Cumulative Momentum" empty={EMPTY.momentum} />
+    <Panel title="Rhythm" empty={EMPTY.rhythm} />
   </div>
 </div>
 <button class="fold display" type="button" onclick={() => showScreen('two')}>
@@ -50,6 +67,7 @@
 
   .column {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-4);
     min-height: 0;
   }
@@ -59,11 +77,12 @@
   }
 
   .right {
-    grid-template-rows: var(--size-short-panel) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: var(--size-stat) minmax(0, 1fr) minmax(0, 1fr);
   }
 
   .immediate {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     min-height: 0;
   }
 

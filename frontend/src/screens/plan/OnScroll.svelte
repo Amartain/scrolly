@@ -2,9 +2,10 @@
   import GlyphButton from '../../components/GlyphButton.svelte';
   import Panel from '../../components/Panel.svelte';
   import RowList from '../../components/RowList.svelte';
-  import TrialMark from '../../components/TrialMark.svelte';
+  import TypeMark from '../../components/TypeMark.svelte';
   import GlyphIcon from '../../icons/GlyphIcon.svelte';
   import { planning, type PlanTrial } from '../../lib/api';
+  import { EMPTY } from '../../lib/copy';
   import { view } from '../../lib/view.svelte';
 
   const trials = $derived(view.planning?.trials ?? []);
@@ -13,9 +14,9 @@
 </script>
 
 {#snippet row(trial: PlanTrial)}
-  <TrialMark {trial} />
   <span class="title read">{trial.title}</span>
   <span class="estimate digits">{trial.expected_text}</span>
+  <TypeMark type={trial.type} />
   <GlyphButton
     label={trial.origin_type === 'horizon'
       ? `Return ${trial.title} to the Horizon`
@@ -26,8 +27,8 @@
   </GlyphButton>
 {/snippet}
 
-<Panel title="On the Scroll" scroll>
-  <RowList items={trials} {row} empty="Nothing summoned or scribed yet." />
+<Panel title="On the Scroll" scroll striped>
+  <RowList items={trials} {row} empty={EMPTY.onScroll} />
 </Panel>
 
 <style>

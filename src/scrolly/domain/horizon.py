@@ -1,5 +1,7 @@
 from collections.abc import Sequence
+from dataclasses import replace
 
+from scrolly.domain.duration import parse_duration
 from scrolly.domain.models import HorizonItem, OriginType, Trial
 
 
@@ -35,3 +37,50 @@ def return_to_horizon(items: Sequence[HorizonItem], trial: Trial) -> list[Horizo
         qi_expected=trial.qi_expected,
     )
     return [returned, *kept]
+
+
+class HorizonError(ValueError):
+    """A change to the Horizon that cannot be made. The message is shown to the user."""
+
+
+def _title(text: str) -> str:
+    cleaned = text.strip()
+    if not cleaned:
+        raise HorizonError("A trial needs a title")
+    return cleaned
+
+
+def add_item(items: Sequence[HorizonItem], item_id: str, title: str) -> list[HorizonItem]:
+    """A new idea goes on top of the Horizon."""
+    return [HorizonItem(id=item_id, title=_title(title)), *items]
+
+
+def edit_item(
+    items: Sequence[HorizonItem],
+    item_id: str,
+    title: str | None = None,
+    estimate: str | None = None,
+    is_mandate: bool | None = None,
+) -> list[HorizonItem]:
+    """Change the title, estimate and/or type of one item. A blank estimate clears it."""
+    if not any(item.id == item_id for item in items):
+        raise HorizonError("That item is no longer on the Horizon")
+    return [
+        replace(
+            item,
+            title=item.title if title is None else _title(title),
+            essence_expected_min=(
+                item.essence_expected_min if estimate is None else parse_duration(estimate)
+            ),
+            is_mandate=item.is_mandate if is_mandate is None else is_mandate,
+        )
+        if item.id == item_id
+        else item
+        for item in items
+    ]
+
+
+def remove_item(items: Sequence[HorizonItem], item_id: str) -> list[HorizonItem]:
+    if not any(item.id == item_id for item in items):
+        raise HorizonError("That item is no longer on the Horizon")
+    return [item for item in items if item.id != item_id]

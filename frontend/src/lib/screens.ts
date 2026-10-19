@@ -11,3 +11,9 @@ export function showScreen(which: 'one' | 'two'): void {
 export function onScreenTwo(): boolean {
   return window.scrollY >= window.innerHeight / 2;
 }
+
+/** N: go to the Scribe Trial form on Screen 2 and focus its title. */
+export function focusScribe(): void {
+  showScreen('two');
+  document.getElementById('scribe-title')?.focus({ preventScroll: true });
+}

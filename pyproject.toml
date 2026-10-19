@@ -94,6 +94,8 @@ dev = "python scripts/dev.py"
 test = "pytest"
 types = "python scripts/gen_types.py"
 build = "python scripts/build.py"
+try-mine = "python scripts/try_instance.py mine"
+try-blank = "python scripts/try_instance.py blank"
 
 [tool.poe.tasks.check]
 sequence = [

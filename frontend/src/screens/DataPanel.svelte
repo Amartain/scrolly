@@ -3,7 +3,7 @@
   import Panel from '../components/Panel.svelte';
   import { view } from '../lib/view.svelte';
 
-  const HINT = 'Reads an old Scrolly backup (.json) or a Discord Quest Board (.md).';
+  const HINT = 'Reads an old Scrolly backup (.json) or a Discord Dispatch (.md).';
 
   let picker: HTMLInputElement;
   let message = $state(HINT);

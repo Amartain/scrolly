@@ -4,9 +4,11 @@ import pytest
 
 from scrolly.domain.models import OriginType, TrialState
 from scrolly.domain.qi import (
+    GaugeFill,
     QiDay,
     QiError,
     choose_start,
+    gauge_fill,
     next_start,
     outlook,
     parse_qi,
@@ -162,3 +164,17 @@ def test_net_qi_never_goes_below_zero_and_blank_counts_as_zero() -> None:
         "r", qi_expected=50, state=TrialState.DONE, origin_type=OriginType.RESTORATIVE_ART
     )
     assert spent([rest, make_trial("x", state=TrialState.DONE)]) == 0
+
+
+def test_the_gauge_fills_calm_first_then_surge_then_redline() -> None:
+    assert gauge_fill(60, 100) == GaugeFill(calm=60, surge=0, redline=0)
+    assert gauge_fill(120, 100) == GaugeFill(calm=100, surge=20, redline=0)
+    assert gauge_fill(150, 100) == GaugeFill(calm=100, surge=30, redline=20)
+
+
+def test_the_gauge_stops_filling_at_the_redline() -> None:
+    assert gauge_fill(500, 100) == GaugeFill(calm=100, surge=30, redline=70)
+
+
+def test_the_gauge_follows_a_lower_start() -> None:
+    assert gauge_fill(60, 40) == GaugeFill(calm=40, surge=20, redline=0)

@@ -127,14 +127,6 @@
     cursor: grab;
   }
 
-  .row:nth-child(odd) {
-    background: var(--row-a);
-  }
-
-  .row:nth-child(even) {
-    background: var(--row-b);
-  }
-
   .row.dragging {
     opacity: 0.6;
     cursor: grabbing;

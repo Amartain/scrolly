@@ -34,3 +34,14 @@ def test_unknown_reading_font_is_rejected(client: TestClient) -> None:
 
 def test_health_names_the_app(client: TestClient) -> None:
     assert client.get("/api/health").json() == {"app": "scrolly"}
+
+
+def test_the_view_carries_the_legend_and_each_trial_its_type(client: TestClient) -> None:
+    client.post("/api/planning/start")
+    client.put("/api/planning/text", json={"text": "Write"})
+    client.post("/api/planning/proceed")
+    body = client.post("/api/planning/seal").json()
+    assert body["legend"]["states"]["remaining"]["shortcode"] == ":cloud:"
+    assert body["legend"]["types"]["mortal"]["shortcode"] == ":white_circle:"
+    assert body["dashboard"]["immediate"]["type"] == "mortal"
+    assert body["planning"]["trials"][0]["type"] == "mortal"

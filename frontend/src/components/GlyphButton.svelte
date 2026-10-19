@@ -21,7 +21,7 @@
     cursor: pointer;
     background: var(--btn);
     background-image: var(--gloss-btn);
-    color: var(--ink);
+    color: var(--glyph-ink, var(--ink));
     border: var(--border-width) solid var(--line);
     box-shadow: var(--shadow-button);
   }

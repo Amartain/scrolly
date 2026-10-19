@@ -46,6 +46,8 @@ class Trial:
     timer_paused_at: datetime | None = None
     timer_accumulated_s: int = 0
     qi_expected: int | None = None
+    # Set when the trial is conquered; blank means it cost what was estimated.
+    qi_actual: int | None = None
 
 
 @dataclass(frozen=True)

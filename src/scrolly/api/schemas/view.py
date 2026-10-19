@@ -2,6 +2,8 @@ from datetime import date, datetime
 
 from pydantic import BaseModel
 
+from scrolly.api.schemas.dashboard import DashboardOut
+from scrolly.api.schemas.legend import LegendOut
 from scrolly.api.schemas.planning import PlanningOut
 from scrolly.domain.appearance import DayVariant, Phase, ReadingFont, Theme
 from scrolly.services.view import ViewData
@@ -18,7 +20,9 @@ class ViewOut(BaseModel):
     now: datetime
     logical_day: date
     appearance: AppearanceOut
+    legend: LegendOut
     planning: PlanningOut
+    dashboard: DashboardOut
 
     @classmethod
     def from_data(cls, data: ViewData) -> "ViewOut":
@@ -32,7 +36,9 @@ class ViewOut(BaseModel):
                 phase=a.phase,
                 reading_font=a.reading_font,
             ),
+            legend=LegendOut.build(),
             planning=PlanningOut.from_data(data.planning, data.budget, data.qi),
+            dashboard=DashboardOut.from_data(data.dashboard),
         )
 
 

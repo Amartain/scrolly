@@ -20,6 +20,7 @@
   --text-display-md: 1.5rem;
   --text-display-lg: 2rem;
   --text-display-xl: 3rem;
+  --text-numeral: 3.5rem;
   --text-body-sm: 1.25rem;
   --text-body-md: 1.5rem;
   --text-body-lg: 2rem;
@@ -35,18 +36,21 @@
   --size-icon-button: 3.5rem;
   --size-icon: 2rem;
   --size-icon-guidance: 2.25rem;
+  --size-icon-large: 3rem;
   --size-glyph: 1.25rem;
   --size-sheet-width: 84rem;
   --size-sheet-height: 52rem;
   --size-gauge: 2rem;
+  --size-qi-gauge: 12rem;
   --size-slider-thumb: 1.5rem;
   --size-qi-field: 4rem;
   --size-glyph-button: 2rem;
   --size-staged: 10rem;
   --size-field: 2.5rem;
   --size-estimate: 4.5rem;
-  --size-immediate: 16rem;
-  --size-short-panel: 6.5rem;
+  --size-immediate: 12.5rem;
+  --size-short-panel: 7rem;
+  --size-stat: 7rem;
   --size-orb: 2rem;
   --shadow-room: var(--space-3);
 
@@ -106,4 +110,7 @@
 
 :root[data-reading-font='opendyslexic'] {
   --font-read: var(--font-opendyslexic);
+  /* OpenDyslexic is wider and taller than Atkinson at the same size, so saved text is set smaller. */
+  --text-read-md: 1rem;
+  --text-read-lg: 1.4rem;
 }

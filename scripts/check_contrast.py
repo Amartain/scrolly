@@ -18,6 +18,8 @@ TOKENS = Path(__file__).resolve().parent.parent / "frontend" / "src" / "styles" 
 SURFACES = ("--surface-panel", "--surface-raised")
 TEXT = ("--ink", "--ink-muted", "--mandate", "--growth-text")
 GAUGE = ("--qi-calm", "--qi-surge", "--qi-redline")
+CONQUERED_ROWS = ("--conquered-row-a", "--conquered-row-b")
+CONQUERED_TEXT = ("--ink", "--ink-muted")
 DECLARATION = re.compile(r"(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{6})\s*;")
 OVERLAY = re.compile(r"(--[\w-]+)\s*:\s*rgba\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)\s*;")
 FIRST_RGBA = re.compile(r"rgba\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)")
@@ -79,6 +81,7 @@ def ratio(first: str, second: str) -> float:
 def contrast_problems(name: str, values: dict[str, str]) -> list[str]:
     found = []
     pairs = [(t, s, 4.5) for t in TEXT for s in SURFACES] + [(g, "--inset", 3.0) for g in GAUGE]
+    pairs += [(t, s, 4.5) for t in CONQUERED_TEXT for s in CONQUERED_ROWS]
     for token, surface, needed in pairs:
         if token not in values or surface not in values:
             found.append(f"{name}: {token} or {surface} is missing")

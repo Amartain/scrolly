@@ -30,14 +30,6 @@
     font-size: var(--text-body-md);
   }
 
-  .row:nth-child(odd) {
-    background: var(--row-a);
-  }
-
-  .row:nth-child(even) {
-    background: var(--row-b);
-  }
-
   .empty {
     margin: 0;
     padding: var(--space-2) var(--space-4);

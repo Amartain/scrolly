@@ -37,6 +37,7 @@ def trial_from_row(row: TrialRow) -> Trial:
         timer_paused_at=from_iso(row.timer_paused_at),
         timer_accumulated_s=row.timer_accumulated_s,
         qi_expected=row.qi_expected,
+        qi_actual=row.qi_actual,
     )
 
 
@@ -56,6 +57,7 @@ def apply_trial(row: TrialRow, trial: Trial) -> None:
     row.timer_paused_at = _iso(trial.timer_paused_at)
     row.timer_accumulated_s = trial.timer_accumulated_s
     row.qi_expected = trial.qi_expected
+    row.qi_actual = trial.qi_actual
 
 
 def horizon_from_row(row: HorizonItemRow) -> HorizonItem:

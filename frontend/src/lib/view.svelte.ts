@@ -18,6 +18,8 @@ class ViewStore {
   current = $state<View | null>(null);
   /** The server's last plain-language refusal (for example a bad estimate), or ''. */
   notice = $state('');
+  /** `performance.now()` when `current` arrived. Only the ticking display reads it. */
+  receivedAt = $state(0);
 
   get planning(): Planning | null {
     return this.current?.planning ?? null;
@@ -31,6 +33,7 @@ class ViewStore {
     if (view.appearance.day_variant) root.dataset.dayVariant = view.appearance.day_variant;
     else delete root.dataset.dayVariant;
     this.current = view;
+    this.receivedAt = performance.now();
   }
 
   /** Keep typed planning text in the local view while its save is on the way. */

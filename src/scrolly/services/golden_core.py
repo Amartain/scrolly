@@ -21,6 +21,7 @@ class QiView:
     enabled: bool
     invited: bool
     planned: int
+    spent: int
     start: int
     low: int
     high: int
@@ -66,11 +67,13 @@ def build_qi_view(store: Store, now: datetime) -> QiView:
         start = day.qi_start
     else:
         start = chosen_start(store, store.drafts.get(), today)
-    planned = qi.planned(store.trials.list_for_day(today))
+    trials = store.trials.list_for_day(today)
+    planned = qi.planned(trials)
     return QiView(
         enabled=setting.enabled,
         invited=setting.invited,
         planned=planned,
+        spent=qi.spent(trials),
         start=start,
         low=available.low,
         high=available.high,
