@@ -33,7 +33,7 @@ class PlanTrialOut(BaseModel):
             state=trial.state,
             is_mandate=trial.is_mandate,
             origin_type=trial.origin_type,
-            type=type_of(trial.is_mandate, trial.origin_type),
+            type=type_of(trial.is_mandate, trial.art_kind),
             expected_text=_estimate(trial.essence_expected_min),
             qi_text="" if trial.qi_expected is None else str(trial.qi_expected),
         )
@@ -52,7 +52,7 @@ class HorizonItemOut(BaseModel):
             id=item.id,
             title=item.title,
             is_mandate=item.is_mandate,
-            type=type_of(item.is_mandate, item.origin_type),
+            type=type_of(item.is_mandate, item.art_kind),
             expected_text=_estimate(item.essence_expected_min),
         )
 

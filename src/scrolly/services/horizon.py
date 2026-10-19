@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 
+from scrolly.domain.art_match import art_kind_for, with_title
 from scrolly.domain.horizon import add_item, edit_item, remove_item
 from scrolly.domain.logical_day import logical_day
 from scrolly.domain.models import ArtKind, HorizonItem
@@ -24,12 +25,14 @@ class HorizonService:
         self, title: str, items: list[HorizonItem], except_id: str | None = None
     ) -> None:
         today = self._store.trials.list_for_day(logical_day(self._now))
-        require_free_trial_title(title, items, today, except_id=except_id)
+        arts = self._store.arts.list_all()
+        require_free_trial_title(title, items, today, arts, except_id=except_id)
 
     def add(self, title: str, estimate: str = "") -> None:
         current = self._store.horizon.list_all()
         self._require_free(title, current)
-        items = add_item(current, str(uuid.uuid4()), title, estimate)
+        kind = art_kind_for(title, self._store.arts.list_all())
+        items = add_item(current, str(uuid.uuid4()), title, estimate, kind)
         self._store.horizon.replace_all(items, self._now)
 
     def edit(
@@ -43,6 +46,9 @@ class HorizonService:
         if title is not None:
             self._require_free(title, current, item_id)
         items = edit_item(current, item_id, title, estimate, is_mandate)
+        if title is not None:
+            arts = self._store.arts.list_all()
+            items = [with_title(i, i.title, arts) if i.id == item_id else i for i in items]
         self._store.horizon.replace_all(items, self._now)
 
     def discard(self, item_id: str) -> None:

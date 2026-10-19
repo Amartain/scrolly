@@ -4,6 +4,7 @@ import json
 from datetime import UTC, date, datetime
 from typing import Any
 
+from scrolly.domain.art_match import kind_of_origin
 from scrolly.domain.merge import ImportBatch
 from scrolly.domain.models import (
     Art,
@@ -59,6 +60,7 @@ def _trial(raw: dict[str, Any], position: int) -> Trial:
         state=state,
         is_mandate=bool(raw.get("mandate")),
         origin_type=_origin(raw),
+        art_kind=kind_of_origin(_origin(raw)),
         position=position,
         essence_expected_min=_minutes(raw.get("expected_time_mins")),
         essence_actual_min=actual if done else None,
@@ -74,6 +76,7 @@ def _horizon_item(raw: dict[str, Any]) -> HorizonItem:
         is_mandate=bool(raw.get("mandate")),
         essence_expected_min=_minutes(raw.get("expected_time_mins")),
         origin_type=_origin(raw),
+        art_kind=kind_of_origin(_origin(raw)),
     )
 
 

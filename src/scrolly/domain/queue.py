@@ -4,9 +4,10 @@ from collections.abc import Sequence
 from dataclasses import replace
 from datetime import date, datetime
 
+from scrolly.domain.art_match import art_kind_for
 from scrolly.domain.day_flow import TrialError, immediate_of
 from scrolly.domain.duration import parse_duration
-from scrolly.domain.models import Trial, TrialState
+from scrolly.domain.models import Art, Trial, TrialState
 from scrolly.domain.planning import next_position, trial_from_line
 from scrolly.domain.qi import parse_qi
 from scrolly.domain.timer import pause
@@ -19,15 +20,18 @@ def scribe(
     qi: str,
     day: date,
     trials: Sequence[Trial],
+    arts: Sequence[Art] = (),
 ) -> Trial:
     """A new trial for a sealed day: Immediate if nothing is underway, else on top of Remaining.
 
     A sudden trial is the next thing to do, so it goes ahead of the ones already waiting.
+    A title that names an Art makes an instance of it.
     """
     cleaned = title.strip()
     if not cleaned:
         raise TrialError("A trial needs a title")
-    line = trial_from_line(trial_id, cleaned, day, next_position(trials))
+    kind = art_kind_for(cleaned, arts)
+    line = trial_from_line(trial_id, cleaned, day, next_position(trials), kind)
     state = TrialState.REMAINING if immediate_of(trials) else TrialState.IMMEDIATE
     waiting = [t.position for t in trials if t.state is TrialState.REMAINING]
     return replace(

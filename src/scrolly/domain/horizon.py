@@ -2,7 +2,7 @@ from collections.abc import Sequence
 from dataclasses import replace
 
 from scrolly.domain.duration import parse_duration
-from scrolly.domain.models import HorizonItem, OriginType, Trial
+from scrolly.domain.models import ArtKind, HorizonItem, OriginType, Trial
 
 
 def same_title(left: str, right: str) -> bool:
@@ -35,6 +35,7 @@ def return_to_horizon(items: Sequence[HorizonItem], trial: Trial) -> list[Horizo
         origin_type=trial.origin_type,
         origin_id=key,
         qi_expected=trial.qi_expected,
+        art_kind=trial.art_kind,
     )
     return [returned, *kept]
 
@@ -51,11 +52,18 @@ def _title(text: str) -> str:
 
 
 def add_item(
-    items: Sequence[HorizonItem], item_id: str, title: str, estimate: str = ""
+    items: Sequence[HorizonItem],
+    item_id: str,
+    title: str,
+    estimate: str = "",
+    art_kind: ArtKind | None = None,
 ) -> list[HorizonItem]:
     """A new idea goes on top of the Horizon. A blank estimate means none."""
     item = HorizonItem(
-        id=item_id, title=_title(title), essence_expected_min=parse_duration(estimate)
+        id=item_id,
+        title=_title(title),
+        essence_expected_min=parse_duration(estimate),
+        art_kind=art_kind,
     )
     return [item, *items]
 
@@ -68,8 +76,11 @@ def edit_item(
     is_mandate: bool | None = None,
 ) -> list[HorizonItem]:
     """Change the title, estimate and/or type of one item. A blank estimate clears it."""
-    if not any(item.id == item_id for item in items):
+    target = next((item for item in items if item.id == item_id), None)
+    if target is None:
         raise HorizonError("That item is no longer on the Horizon")
+    if is_mandate and target.art_kind is not None:
+        raise HorizonError("Arts cannot be Heavenly Mandates")
     return [
         replace(
             item,

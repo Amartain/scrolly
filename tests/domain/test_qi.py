@@ -4,7 +4,7 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from scrolly.domain.models import OriginType, TrialState
+from scrolly.domain.models import ArtKind, TrialState
 from scrolly.domain.qi import (
     GaugeFill,
     QiDay,
@@ -152,9 +152,7 @@ def test_qi_text_is_blank_or_a_whole_number_up_to_100() -> None:
 def test_restorative_arts_give_qi_back() -> None:
     trials = [
         make_trial("a", qi_expected=40, state=TrialState.DONE),
-        make_trial(
-            "b", qi_expected=15, state=TrialState.DONE, origin_type=OriginType.RESTORATIVE_ART
-        ),
+        make_trial("b", qi_expected=15, state=TrialState.DONE, art_kind=ArtKind.RESTORATIVE),
         make_trial("c", qi_expected=30),
     ]
     assert spent(trials) == 25
@@ -162,9 +160,7 @@ def test_restorative_arts_give_qi_back() -> None:
 
 
 def test_net_qi_never_goes_below_zero_and_blank_counts_as_zero() -> None:
-    rest = make_trial(
-        "r", qi_expected=50, state=TrialState.DONE, origin_type=OriginType.RESTORATIVE_ART
-    )
+    rest = make_trial("r", qi_expected=50, state=TrialState.DONE, art_kind=ArtKind.RESTORATIVE)
     assert spent([rest, make_trial("x", state=TrialState.DONE)]) == 0
 
 

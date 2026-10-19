@@ -19,6 +19,14 @@ def _iso(moment: datetime | None) -> str | None:
     return None if moment is None else utc_iso(moment)
 
 
+def _kind(value: str | None) -> ArtKind | None:
+    return None if value is None else ArtKind(value)
+
+
+def _kind_value(kind: ArtKind | None) -> str | None:
+    return None if kind is None else kind.value
+
+
 def trial_from_row(row: TrialRow) -> Trial:
     return Trial(
         id=row.id,
@@ -38,6 +46,7 @@ def trial_from_row(row: TrialRow) -> Trial:
         timer_accumulated_s=row.timer_accumulated_s,
         qi_expected=row.qi_expected,
         qi_actual=row.qi_actual,
+        art_kind=_kind(row.art_kind),
     )
 
 
@@ -58,6 +67,7 @@ def apply_trial(row: TrialRow, trial: Trial) -> None:
     row.timer_accumulated_s = trial.timer_accumulated_s
     row.qi_expected = trial.qi_expected
     row.qi_actual = trial.qi_actual
+    row.art_kind = _kind_value(trial.art_kind)
 
 
 def horizon_from_row(row: HorizonItemRow) -> HorizonItem:
@@ -70,6 +80,7 @@ def horizon_from_row(row: HorizonItemRow) -> HorizonItem:
         origin_type=OriginType(row.origin_type),
         origin_id=row.origin_id,
         qi_expected=row.qi_expected,
+        art_kind=_kind(row.art_kind),
     )
 
 
@@ -82,6 +93,7 @@ def apply_horizon(row: HorizonItemRow, item: HorizonItem, position: int) -> None
     row.origin_type = item.origin_type.value
     row.origin_id = item.origin_id
     row.qi_expected = item.qi_expected
+    row.art_kind = _kind_value(item.art_kind)
 
 
 def art_from_row(row: ArtRow) -> Art:

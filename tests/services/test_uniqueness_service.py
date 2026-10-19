@@ -5,6 +5,7 @@ from scrolly.domain.models import Art, ArtKind, OriginType
 from scrolly.domain.uniqueness import DuplicateTitleError
 from scrolly.ports import Store
 from scrolly.services.horizon import HorizonService
+from scrolly.services.today import TodayService
 from tests.factories import DAY, make_item
 from tests.services.flow import Flow, by_title, seal_day
 
@@ -95,4 +96,83 @@ def test_an_art_can_be_summoned_again_and_again(store: Store, clock: FixedClock)
         t for t in store.trials.list_for_day(DAY) if t.origin_type is OriginType.FOUNDATIONAL_ART
     ]
     assert [t.title for t in copies] == ["Stretch", "Stretch"]
-    today.scribe("Stretch")  # an Art copy does not block a new trial
+
+
+def _arts(store: Store, clock: FixedClock) -> None:
+    arts = [
+        Art(id="a1", kind=ArtKind.FOUNDATIONAL, title="Carry Water"),
+        Art(id="a2", kind=ArtKind.RESTORATIVE, title="Nap"),
+    ]
+    store.arts.save(arts, clock.now())
+
+
+def test_a_dump_line_naming_an_art_is_an_instance_and_may_repeat(
+    store: Store, clock: FixedClock
+) -> None:
+    _arts(store, clock)
+    flow = Flow(store, clock)
+    flow.planning.start()
+    flow.planning.save_text("carry water\nCarry Water\nNap\nWalk")
+    flow.planning.proceed()
+    kinds = {t.title: t.art_kind for t in store.trials.list_for_day(DAY)}
+    assert kinds == {
+        "carry water": ArtKind.FOUNDATIONAL,
+        "Carry Water": ArtKind.FOUNDATIONAL,
+        "Nap": ArtKind.RESTORATIVE,
+        "Walk": None,
+    }
+
+
+def test_phase_two_scribe_and_horizon_make_art_instances(store: Store, clock: FixedClock) -> None:
+    _arts(store, clock)
+    flow = Flow(store, clock)
+    flow.planning.start()
+    flow.planning.save_text("Walk")
+    flow.planning.proceed()
+    flow.scroll.add("Carry Water")
+    flow.scroll.add("Carry Water")
+    flow.planning.seal()
+    today = TodayService(store, clock)
+    today.scribe("nap")
+    today.scribe("nap")
+    HorizonService(store, clock).add("Carry Water")
+    HorizonService(store, clock).add("Carry Water")
+    marked = [t.art_kind for t in store.trials.list_for_day(DAY) if t.title != "Walk"]
+    assert marked == [ArtKind.RESTORATIVE] * 2 + [ArtKind.FOUNDATIONAL] * 2
+    assert [i.art_kind for i in store.horizon.list_all()] == [ArtKind.FOUNDATIONAL] * 2
+
+
+def test_a_plain_title_is_still_refused_next_to_art_instances(
+    store: Store, clock: FixedClock
+) -> None:
+    _arts(store, clock)
+    today = seal_day(store, clock, "Walk")
+    today.scribe("Carry Water")
+    with pytest.raises(DuplicateTitleError):
+        today.scribe("walk")
+
+
+def test_renaming_into_and_out_of_an_art(store: Store, clock: FixedClock) -> None:
+    _arts(store, clock)
+    today = seal_day(store, clock, "Walk", "Read")
+    walk = by_title(store)["Walk"]
+    today.update(walk.id, is_mandate=True)
+    today.update(walk.id, title="Nap")
+    renamed = by_title(store)["Nap"]
+    assert (renamed.art_kind, renamed.is_mandate) == (ArtKind.RESTORATIVE, False)
+    today.update(renamed.id, title="Siesta")
+    assert by_title(store)["Siesta"].art_kind is None
+
+
+def test_a_horizon_art_instance_returns_when_unstaged(store: Store, clock: FixedClock) -> None:
+    _arts(store, clock)
+    HorizonService(store, clock).add("Nap")
+    flow = Flow(store, clock)
+    flow.planning.start()
+    flow.scroll.summon("horizon", store.horizon.list_all()[0].id)
+    staged = store.trials.list_for_day(DAY)[0]
+    assert staged.art_kind is ArtKind.RESTORATIVE
+    flow.scroll.unstage(staged.id)
+    assert [(i.title, i.art_kind) for i in store.horizon.list_all()] == [
+        ("Nap", ArtKind.RESTORATIVE)
+    ]

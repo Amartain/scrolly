@@ -10,7 +10,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import date, timedelta
 
-from scrolly.domain.models import OPEN_STATES, OriginType, Trial, TrialState
+from scrolly.domain.models import OPEN_STATES, ArtKind, Trial, TrialState
 
 BASE_START = 100
 FLOOR_START = 10
@@ -96,7 +96,7 @@ def effective_qi(trial: Trial) -> int:
 def _value(trial: Trial) -> int:
     """Qi a trial costs, or minus what a Restorative Art restores."""
     qi = effective_qi(trial)
-    return -qi if trial.origin_type is OriginType.RESTORATIVE_ART else qi
+    return -qi if trial.art_kind is ArtKind.RESTORATIVE else qi
 
 
 def _net(trials: Sequence[Trial], states: frozenset[TrialState]) -> int:

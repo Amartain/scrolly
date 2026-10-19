@@ -48,6 +48,8 @@ class Trial:
     qi_expected: int | None = None
     # Set when the trial is conquered; blank means it cost what was estimated.
     qi_actual: int | None = None
+    # An instance of an Art (its title matches one). Apart from `origin_type`: where it came from.
+    art_kind: ArtKind | None = None
 
 
 @dataclass(frozen=True)
@@ -60,6 +62,7 @@ class HorizonItem:
     origin_type: OriginType = OriginType.BRAIN_DUMP
     origin_id: str | None = None
     qi_expected: int | None = None
+    art_kind: ArtKind | None = None
 
 
 @dataclass(frozen=True)

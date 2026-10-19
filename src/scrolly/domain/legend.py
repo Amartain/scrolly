@@ -7,7 +7,7 @@ One source for the app's icons now and the Discord Dispatch later. Emoji are the
 from dataclasses import dataclass
 from enum import StrEnum
 
-from scrolly.domain.models import OriginType, TrialState
+from scrolly.domain.models import ArtKind, TrialState
 
 
 class TrialType(StrEnum):
@@ -40,10 +40,10 @@ TYPE_SYMBOLS: dict[TrialType, Symbol] = {
 }
 
 
-def type_of(is_mandate: bool, origin_type: OriginType) -> TrialType:
-    """An Art's type comes from where it was summoned; else Mandate or Mortal."""
-    if origin_type is OriginType.FOUNDATIONAL_ART:
+def type_of(is_mandate: bool, art_kind: ArtKind | None) -> TrialType:
+    """An instance of an Art takes the Art's type; else Mandate or Mortal."""
+    if art_kind is ArtKind.FOUNDATIONAL:
         return TrialType.FOUNDATIONAL
-    if origin_type is OriginType.RESTORATIVE_ART:
+    if art_kind is ArtKind.RESTORATIVE:
         return TrialType.RESTORATIVE
     return TrialType.MANDATE if is_mandate else TrialType.MORTAL

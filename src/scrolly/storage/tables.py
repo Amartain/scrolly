@@ -48,6 +48,7 @@ class TrialRow(_Audited, Base):
     timer_accumulated_s: Mapped[int] = mapped_column(Integer, default=0)
     qi_expected: Mapped[int | None] = mapped_column(Integer, default=None)
     qi_actual: Mapped[int | None] = mapped_column(Integer, default=None)
+    art_kind: Mapped[str | None] = mapped_column(String(20), default=None)
 
 
 class HorizonItemRow(_Audited, Base):
@@ -61,6 +62,7 @@ class HorizonItemRow(_Audited, Base):
     origin_type: Mapped[str] = mapped_column(String(20))
     origin_id: Mapped[str | None] = mapped_column(String(36), default=None)
     qi_expected: Mapped[int | None] = mapped_column(Integer, default=None)
+    art_kind: Mapped[str | None] = mapped_column(String(20), default=None)
 
 
 class ArtRow(_Audited, Base):

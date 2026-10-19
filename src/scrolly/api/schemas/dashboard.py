@@ -44,7 +44,7 @@ class ImmediateOut(BaseModel):
             title=trial.title,
             is_mandate=trial.is_mandate,
             origin_type=trial.origin_type,
-            type=type_of(trial.is_mandate, trial.origin_type),
+            type=type_of(trial.is_mandate, trial.art_kind),
             expected_text=_minutes(trial.essence_expected_min),
             qi_text=_qi(trial.qi_expected),
             timer=TimerOut.from_view(timer),
@@ -67,7 +67,7 @@ class ConqueredOut(BaseModel):
             title=trial.title,
             is_mandate=trial.is_mandate,
             origin_type=trial.origin_type,
-            type=type_of(trial.is_mandate, trial.origin_type),
+            type=type_of(trial.is_mandate, trial.art_kind),
             actual_text=_minutes(trial.essence_actual_min),
             qi_text=_qi(trial.qi_actual if trial.qi_actual is not None else trial.qi_expected),
         )
@@ -98,9 +98,7 @@ class LetGoOut(BaseModel):
 
     @classmethod
     def from_trial(cls, trial: Trial) -> "LetGoOut":
-        return cls(
-            id=trial.id, title=trial.title, type=type_of(trial.is_mandate, trial.origin_type)
-        )
+        return cls(id=trial.id, title=trial.title, type=type_of(trial.is_mandate, trial.art_kind))
 
 
 class DashboardOut(BaseModel):

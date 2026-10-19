@@ -5,6 +5,7 @@ Only Done lines carry time, so only they are read."""
 import re
 from datetime import date
 
+from scrolly.domain.art_match import kind_of_origin
 from scrolly.domain.merge import ImportBatch
 from scrolly.domain.models import OriginType, Trial, TrialState
 from scrolly.io.errors import ImportFormatError
@@ -80,6 +81,7 @@ def _trial(line: str, day: date, position: int) -> Trial | None:
         state=TrialState.DONE,
         is_mandate=is_mandate,
         origin_type=origin,
+        art_kind=kind_of_origin(origin),
         position=position,
         essence_expected_min=expected_min,
         essence_actual_min=actual_min,

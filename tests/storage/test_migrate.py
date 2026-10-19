@@ -77,3 +77,27 @@ def test_qi_actual_is_added_to_trials_without_touching_existing_rows(tmp_path: P
         row = connection.execute(text("SELECT qi_expected, qi_actual FROM trial")).one()
     engine.dispose()
     assert tuple(row) == (40, None)
+
+
+def test_art_kind_is_backfilled_for_rows_that_came_from_an_art(tmp_path: Path) -> None:
+    db_file = tmp_path / "scrolly.db"
+    command.upgrade(_config(db_file), "0005")
+    engine = create_engine(f"sqlite:///{db_file}")
+    insert = (
+        "INSERT INTO trial (id, realm_id, created_at, updated_at, logical_day, title, state,"
+        " is_mandate, origin_type, position, note, timer_accumulated_s)"
+        " VALUES ('{id}', 'daily', 'now', 'now', '2026-10-18', 'T', 'done', 0,"
+        " '{origin}', 0, '', 0)"
+    )
+    with engine.begin() as connection:
+        for trial_id, origin in (
+            ("a", "foundational_art"),
+            ("b", "restorative_art"),
+            ("c", "horizon"),
+        ):
+            connection.execute(text(insert.format(id=trial_id, origin=origin)))
+    upgrade_to_head(db_file, tmp_path / "backups")
+    with engine.connect() as connection:
+        rows = connection.execute(text("SELECT id, art_kind FROM trial ORDER BY id")).all()
+    engine.dispose()
+    assert [tuple(r) for r in rows] == [("a", "foundational"), ("b", "restorative"), ("c", None)]

@@ -96,7 +96,7 @@ class TodayService:
         day_flow.require_editable(trial)
         if title is not None:
             self._require_free(title, trial.id)
-            trial = day_flow.rename(trial, title)
+            trial = day_flow.rename(trial, title, self._store.arts.list_all())
         if is_mandate is not None:
             trial = set_mandate(trial, is_mandate)
         if estimate is not None:
@@ -107,11 +107,15 @@ class TodayService:
 
     def _require_free(self, title: str, except_id: str | None = None) -> None:
         horizon = self._store.horizon.list_all()
-        require_free_trial_title(title, horizon, self._trials(), except_id=except_id)
+        arts = self._store.arts.list_all()
+        require_free_trial_title(title, horizon, self._trials(), arts, except_id=except_id)
 
     def scribe(self, title: str, estimate: str = "", qi: str = "") -> None:
         self._require_free(title)
-        trial = queue.scribe(str(uuid.uuid4()), title, estimate, qi, self._today, self._trials())
+        arts = self._store.arts.list_all()
+        trial = queue.scribe(
+            str(uuid.uuid4()), title, estimate, qi, self._today, self._trials(), arts
+        )
         self._store.trials.save([trial], self._now)
 
     def promote(self, trial_id: str) -> None:

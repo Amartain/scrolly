@@ -1,23 +1,21 @@
 import pytest
 
 from scrolly.domain.legend import STATE_SYMBOLS, TYPE_SYMBOLS, TrialType, type_of
-from scrolly.domain.models import OriginType, TrialState
+from scrolly.domain.models import ArtKind, TrialState
 
 
 @pytest.mark.parametrize(
-    ("is_mandate", "origin", "expected"),
+    ("is_mandate", "art_kind", "expected"),
     [
-        (True, OriginType.BRAIN_DUMP, TrialType.MANDATE),
-        (False, OriginType.BRAIN_DUMP, TrialType.MORTAL),
-        (True, OriginType.HORIZON, TrialType.MANDATE),
-        (False, OriginType.QUICK_ADD, TrialType.MORTAL),
-        (False, OriginType.FOUNDATIONAL_ART, TrialType.FOUNDATIONAL),
-        (False, OriginType.RESTORATIVE_ART, TrialType.RESTORATIVE),
-        (True, OriginType.FOUNDATIONAL_ART, TrialType.FOUNDATIONAL),
+        (True, None, TrialType.MANDATE),
+        (False, None, TrialType.MORTAL),
+        (False, ArtKind.FOUNDATIONAL, TrialType.FOUNDATIONAL),
+        (False, ArtKind.RESTORATIVE, TrialType.RESTORATIVE),
+        (True, ArtKind.FOUNDATIONAL, TrialType.FOUNDATIONAL),
     ],
 )
-def test_type_of(is_mandate: bool, origin: OriginType, expected: TrialType) -> None:
-    assert type_of(is_mandate, origin) is expected
+def test_type_of(is_mandate: bool, art_kind: ArtKind | None, expected: TrialType) -> None:
+    assert type_of(is_mandate, art_kind) is expected
 
 
 def test_the_legend_of_the_scrolls() -> None:

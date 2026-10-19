@@ -39,7 +39,10 @@ def next_position(trials: Sequence[Trial]) -> int:
     return max((t.position for t in trials), default=-1) + 1
 
 
-def trial_from_line(trial_id: str, title: str, day: date, position: int) -> Trial:
+def trial_from_line(
+    trial_id: str, title: str, day: date, position: int, art_kind: ArtKind | None = None
+) -> Trial:
+    """A typed line. `art_kind` is set when the title names an Art (see `art_match`)."""
     return Trial(
         id=trial_id,
         logical_day=day,
@@ -47,6 +50,7 @@ def trial_from_line(trial_id: str, title: str, day: date, position: int) -> Tria
         state=TrialState.REMAINING,
         origin_type=OriginType.BRAIN_DUMP,
         position=position,
+        art_kind=art_kind,
     )
 
 
@@ -63,6 +67,7 @@ def trial_from_horizon(trial_id: str, item: HorizonItem, day: date, position: in
         essence_expected_min=item.essence_expected_min,
         note=item.note,
         qi_expected=item.qi_expected,
+        art_kind=item.art_kind,
     )
 
 
@@ -83,11 +88,13 @@ def trial_from_art(trial_id: str, art: Art, day: date, position: int) -> Trial:
         essence_expected_min=art.essence_expected_min,
         note=art.note,
         qi_expected=art.qi_expected,
+        art_kind=art.kind,
     )
 
 
 def is_art_copy(trial: Trial) -> bool:
-    return trial.origin_type in (OriginType.FOUNDATIONAL_ART, OriginType.RESTORATIVE_ART)
+    """An instance of an Art: summoned from one, or typed with a title that names one."""
+    return trial.art_kind is not None
 
 
 def unstage(trial: Trial, horizon: Sequence[HorizonItem]) -> list[HorizonItem]:

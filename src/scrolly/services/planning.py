@@ -2,6 +2,7 @@ import uuid
 from dataclasses import replace
 from datetime import date, datetime
 
+from scrolly.domain.art_match import art_kind_for
 from scrolly.domain.logical_day import logical_day
 from scrolly.domain.models import Day, PlanningDraft, PlanPhase, Trial, TrialState
 from scrolly.domain.planning import (
@@ -82,12 +83,18 @@ class PlanningService:
         lines = dump_lines(draft.text)
         if not lines and not scroll:
             raise PlanningError("Scribe or summon at least one trial first")
+        arts = self._store.arts.list_all()
         require_free_dump(
-            lines, self._store.horizon.list_all(), self._store.trials.list_for_day(self._today)
+            lines,
+            self._store.horizon.list_all(),
+            self._store.trials.list_for_day(self._today),
+            arts,
         )
         position = next_position(scroll)
         added = [
-            trial_from_line(str(uuid.uuid4()), line, self._today, position + i)
+            trial_from_line(
+                str(uuid.uuid4()), line, self._today, position + i, art_kind_for(line, arts)
+            )
             for i, line in enumerate(lines)
         ]
         self._store.trials.save(added, self._now)

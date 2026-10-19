@@ -10,7 +10,7 @@ from scrolly.domain.day_flow import (
     revive,
     set_estimated_qi,
 )
-from scrolly.domain.models import OriginType, Trial, TrialState
+from scrolly.domain.models import ArtKind, Trial, TrialState
 from scrolly.domain.qi import QiError, effective_qi, spent
 from tests.factories import make_trial
 
@@ -46,7 +46,7 @@ def test_open_trials_count_at_their_estimate_even_if_an_actual_is_set() -> None:
 
 def test_a_restorative_art_restores_its_recorded_qi() -> None:
     art = conquer(
-        _immediate(qi_expected=20, origin_type=OriginType.RESTORATIVE_ART),
+        _immediate(qi_expected=20, art_kind=ArtKind.RESTORATIVE),
         NOW,
     )
     work = replace(conquer(_immediate(qi_expected=10), NOW), qi_actual=50)

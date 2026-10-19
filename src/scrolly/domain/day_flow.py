@@ -4,9 +4,10 @@ from collections.abc import Sequence
 from dataclasses import replace
 from datetime import datetime
 
+from scrolly.domain.art_match import with_title
 from scrolly.domain.duration import parse_duration
 from scrolly.domain.horizon import return_to_horizon
-from scrolly.domain.models import OPEN_STATES, Day, HorizonItem, Trial, TrialState
+from scrolly.domain.models import OPEN_STATES, Art, Day, HorizonItem, Trial, TrialState
 from scrolly.domain.qi import parse_qi
 from scrolly.domain.timer import actual_minutes, pause
 
@@ -102,11 +103,12 @@ def set_estimated_qi(trial: Trial, text: str) -> Trial:
     return replace(trial, qi_expected=parse_qi(text))
 
 
-def rename(trial: Trial, title: str) -> Trial:
+def rename(trial: Trial, title: str, arts: Sequence[Art] = ()) -> Trial:
+    """A new title. Naming an Art makes the trial an instance of it; leaving the name ends that."""
     cleaned = title.strip()
     if not cleaned:
         raise TrialError("A trial needs a title")
-    return replace(trial, title=cleaned)
+    return with_title(trial, cleaned, arts)
 
 
 def is_victory(day: Day | None, trials: Sequence[Trial]) -> bool:

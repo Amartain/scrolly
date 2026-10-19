@@ -2,6 +2,7 @@ import uuid
 from datetime import date, datetime
 from typing import Literal
 
+from scrolly.domain.art_match import art_kind_for
 from scrolly.domain.logical_day import logical_day
 from scrolly.domain.models import PlanningDraft, Trial
 from scrolly.domain.planning import (
@@ -82,10 +83,16 @@ class PlanningTrialsService:
         cleaned = title.strip()
         if not cleaned:
             raise PlanningError("A trial needs a title")
+        arts = self._store.arts.list_all()
         require_free_trial_title(
-            cleaned, self._store.horizon.list_all(), self._store.trials.list_for_day(self._today)
+            cleaned,
+            self._store.horizon.list_all(),
+            self._store.trials.list_for_day(self._today),
+            arts,
         )
-        trial = trial_from_line(str(uuid.uuid4()), cleaned, self._today, self._position())
+        trial = trial_from_line(
+            str(uuid.uuid4()), cleaned, self._today, self._position(), art_kind_for(cleaned, arts)
+        )
         self._store.trials.save([trial], self._now)
 
     def update(

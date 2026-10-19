@@ -1,6 +1,6 @@
 import pytest
 
-from scrolly.domain.models import Art, ArtKind, OriginType, TrialState
+from scrolly.domain.models import Art, ArtKind, TrialState
 from scrolly.domain.uniqueness import (
     DuplicateTitleError,
     Place,
@@ -33,9 +33,27 @@ def test_an_earlier_day_does_not_block_a_title() -> None:
     assert trial_title_taken("Walk", [], []) is None
 
 
-@pytest.mark.parametrize("origin", [OriginType.FOUNDATIONAL_ART, OriginType.RESTORATIVE_ART])
-def test_art_copies_never_block_a_title(origin: OriginType) -> None:
-    assert trial_title_taken("Stretch", [], [make_trial("Stretch", origin_type=origin)]) is None
+@pytest.mark.parametrize("kind", list(ArtKind))
+def test_art_instances_never_block_a_title(kind: ArtKind) -> None:
+    on_scroll = [make_trial("Stretch", art_kind=kind)]
+    on_horizon = [make_item("Stretch", art_kind=kind)]
+    assert trial_title_taken("Stretch", [], on_scroll) is None
+    assert trial_title_taken("Stretch", on_horizon, []) is None
+
+
+def test_a_title_naming_an_art_is_never_taken() -> None:
+    arts = [Art(id="a1", kind=ArtKind.FOUNDATIONAL, title="Walk")]
+    assert trial_title_taken("walk", HORIZON, [make_trial("Walk")], arts) is None
+    require_free_trial_title(" WALK ", HORIZON, [make_trial("Walk")], arts)
+
+
+def test_a_dump_may_repeat_art_lines_but_nothing_else() -> None:
+    arts = [Art(id="a1", kind=ArtKind.FOUNDATIONAL, title="Carry Water")]
+    require_free_dump(
+        ["Carry Water", "carry water", "Walk"], HORIZON, [make_trial("Carry Water")], arts
+    )
+    with pytest.raises(DuplicateTitleError, match="Written twice: walk"):
+        require_free_dump(["Carry Water", "Walk", "walk"], HORIZON, [], arts)
 
 
 def test_renaming_ignores_the_item_itself() -> None:
