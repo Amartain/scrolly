@@ -13,6 +13,7 @@ from scrolly.domain.planning import (
     trial_from_art,
     trial_from_horizon,
 )
+from scrolly.domain.uniqueness import require_free_trial_title
 from scrolly.ports import Clock, Store
 
 
@@ -95,6 +96,7 @@ class TodayService:
         """Only the fields that are given change."""
         trial = self._trial(trial_id)
         if title is not None:
+            self._require_free(title, trial.id)
             trial = day_flow.rename(trial, title)
         if is_mandate is not None:
             trial = set_mandate(trial, is_mandate)
@@ -108,7 +110,12 @@ class TodayService:
             trial = day_flow.set_actual_qi(trial, actual_qi)
         self._store.trials.save([trial], self._now)
 
+    def _require_free(self, title: str, except_id: str | None = None) -> None:
+        horizon = self._store.horizon.list_all()
+        require_free_trial_title(title, horizon, self._trials(), except_id=except_id)
+
     def scribe(self, title: str, estimate: str = "", qi: str = "") -> None:
+        self._require_free(title)
         trial = queue.scribe(str(uuid.uuid4()), title, estimate, qi, self._today, self._trials())
         self._store.trials.save([trial], self._now)
 

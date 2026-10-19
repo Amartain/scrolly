@@ -2,8 +2,10 @@ import uuid
 from datetime import datetime
 
 from scrolly.domain.horizon import add_item, edit_item, remove_item
-from scrolly.domain.models import ArtKind
+from scrolly.domain.logical_day import logical_day
+from scrolly.domain.models import ArtKind, HorizonItem
 from scrolly.domain.ordering import OrderError, reorder_by_ids
+from scrolly.domain.uniqueness import require_free_trial_title
 from scrolly.ports import Clock, Store
 
 
@@ -18,8 +20,16 @@ class HorizonService:
     def _now(self) -> datetime:
         return self._clock.now()
 
+    def _require_free(
+        self, title: str, items: list[HorizonItem], except_id: str | None = None
+    ) -> None:
+        today = self._store.trials.list_for_day(logical_day(self._now))
+        require_free_trial_title(title, items, today, except_id=except_id)
+
     def add(self, title: str) -> None:
-        items = add_item(self._store.horizon.list_all(), str(uuid.uuid4()), title)
+        current = self._store.horizon.list_all()
+        self._require_free(title, current)
+        items = add_item(current, str(uuid.uuid4()), title)
         self._store.horizon.replace_all(items, self._now)
 
     def edit(
@@ -29,7 +39,10 @@ class HorizonService:
         estimate: str | None = None,
         is_mandate: bool | None = None,
     ) -> None:
-        items = edit_item(self._store.horizon.list_all(), item_id, title, estimate, is_mandate)
+        current = self._store.horizon.list_all()
+        if title is not None:
+            self._require_free(title, current, item_id)
+        items = edit_item(current, item_id, title, estimate, is_mandate)
         self._store.horizon.replace_all(items, self._now)
 
     def discard(self, item_id: str) -> None:

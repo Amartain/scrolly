@@ -17,6 +17,7 @@ from scrolly.domain.planning import (
     trial_from_line,
     unstage,
 )
+from scrolly.domain.uniqueness import require_free_trial_title
 from scrolly.ports import Clock, Store
 from scrolly.services.planning import planning_trials
 
@@ -81,6 +82,9 @@ class PlanningTrialsService:
         cleaned = title.strip()
         if not cleaned:
             raise PlanningError("A trial needs a title")
+        require_free_trial_title(
+            cleaned, self._store.horizon.list_all(), self._store.trials.list_for_day(self._today)
+        )
         trial = trial_from_line(str(uuid.uuid4()), cleaned, self._today, self._position())
         self._store.trials.save([trial], self._now)
 

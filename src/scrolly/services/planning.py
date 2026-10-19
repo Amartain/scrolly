@@ -13,6 +13,7 @@ from scrolly.domain.planning import (
     trial_from_line,
 )
 from scrolly.domain.qi import choose_start
+from scrolly.domain.uniqueness import require_free_dump
 from scrolly.ports import Clock, Store
 from scrolly.services.golden_core import chosen_start, read_setting, todays_outlook
 
@@ -81,6 +82,9 @@ class PlanningService:
         lines = dump_lines(draft.text)
         if not lines and not scroll:
             raise PlanningError("Scribe or summon at least one trial first")
+        require_free_dump(
+            lines, self._store.horizon.list_all(), self._store.trials.list_for_day(self._today)
+        )
         position = next_position(scroll)
         added = [
             trial_from_line(str(uuid.uuid4()), line, self._today, position + i)
