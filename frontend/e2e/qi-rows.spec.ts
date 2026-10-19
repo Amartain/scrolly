@@ -1,9 +1,7 @@
 import { expect, test } from './fixtures';
 import { sealDay, section } from './helpers';
 
-test('Qi is edited on the Immediate card and recorded as the actual when conquered', async ({
-  page,
-}) => {
+test('Qi is set on the Immediate card and shown as plain text once conquered', async ({ page }) => {
   await sealDay(page, 'Write report');
   await page.request.put('/api/golden-core', { data: { enabled: true } });
   await page.goto('/');
@@ -12,12 +10,10 @@ test('Qi is edited on the Immediate card and recorded as the actual when conquer
   await field.press('Enter');
   await expect(field).toHaveValue('35');
   await page.getByRole('button', { name: 'Conquer Write report' }).click();
-  const actual = section(page, 'Conquered Today').getByLabel('Qi spent on Write report');
-  await expect(actual).toHaveValue('35');
-  await actual.fill('60');
-  await actual.press('Enter');
-  await expect(actual).toHaveValue('60');
-  await expect(section(page, 'Essence')).toContainText('60');
+  const row = section(page, 'Conquered Today').getByRole('listitem');
+  await expect(row).toContainText('35 Qi');
+  await expect(row.getByRole('textbox')).toHaveCount(0);
+  await expect(section(page, 'Essence')).toContainText('35');
 });
 
 test('Qi fields stay hidden while the Golden Core is off', async ({ page }) => {

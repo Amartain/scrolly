@@ -93,10 +93,8 @@ export const today = {
     patch: {
       title?: string;
       is_mandate?: boolean;
-      actual?: string;
       estimate?: string;
       qi?: string;
-      actual_qi?: string;
     },
   ) => send<View>(`/api/trials/${id}`, json('PATCH', patch)),
   scribe: (title: string, estimate: string, qi: string) =>

@@ -27,7 +27,7 @@ test('states lead the row and the type mark sits at the end', async ({ page }) =
   expect(mark.x).toBeGreaterThan(title.x);
 });
 
-test('clicking a type mark switches Mandate and Mortal, and a conquered row keeps its leaf', async ({
+test('clicking a type mark switches Mandate and Mortal, and a conquered row keeps its leaf but no switch', async ({
   page,
 }) => {
   await seal(page);
@@ -40,7 +40,6 @@ test('clicking a type mark switches Mandate and Mortal, and a conquered row keep
   await page.getByRole('button', { name: 'Conquer Write report' }).click();
   const conquered = section(page, 'Conquered Today');
   await expect(conquered.getByRole('img', { name: 'Conquered' })).toHaveText('🍃');
-  await expect(
-    conquered.getByRole('button', { name: 'Make Write report a Heavenly Mandate' }),
-  ).toHaveText('⚪');
+  await expect(conquered.getByText('⚪')).toBeVisible();
+  await expect(conquered.getByRole('button', { name: /Heavenly Mandate/ })).toHaveCount(0);
 });

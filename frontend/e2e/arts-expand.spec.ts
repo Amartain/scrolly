@@ -35,6 +35,7 @@ test('the expanded Arts add, edit and delete by keyboard, and the main panel has
   await expect(dialog.getByText('Warm up')).toBeVisible();
 
   await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
   await expect(main).toContainText('Warm up');
   await expect(main.getByRole('textbox')).toHaveCount(0);
   await expect(main.getByRole('button', { name: 'Summon Warm up' })).toBeVisible();

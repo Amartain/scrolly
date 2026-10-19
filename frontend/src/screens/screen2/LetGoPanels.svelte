@@ -1,12 +1,15 @@
 <script lang="ts">
+  import ExpandButton from '../../components/ExpandButton.svelte';
   import Panel from '../../components/Panel.svelte';
   import StateMark from '../../components/StateMark.svelte';
   import { EMPTY } from '../../lib/copy';
   import type { LetGo } from '../../lib/api';
   import { view } from '../../lib/view.svelte';
+  import LetGoList from './LetGoList.svelte';
 
   const postponed = $derived(view.current?.dashboard.postponed ?? []);
   const lost = $derived(view.current?.dashboard.lost ?? []);
+  let open = $state<'postponed' | 'lost' | null>(null);
 </script>
 
 {#snippet line(items: LetGo[], state: string, empty: string)}
@@ -22,12 +25,36 @@
 
 <div class="pair">
   <Panel title="Postponed Today" count={postponed.length}>
+    {#snippet actions()}
+      <ExpandButton label="Expand Postponed Today" onclick={() => (open = 'postponed')} />
+    {/snippet}
     {@render line(postponed, 'postponed', EMPTY.postponed)}
   </Panel>
   <Panel title="Fallen Leaves" count={lost.length}>
+    {#snippet actions()}
+      <ExpandButton label="Expand Fallen Leaves" onclick={() => (open = 'lost')} />
+    {/snippet}
     {@render line(lost, 'lost', EMPTY.fallen)}
   </Panel>
 </div>
+
+{#if open === 'postponed'}
+  <LetGoList
+    title="Postponed Today"
+    items={postponed}
+    state="postponed"
+    empty={EMPTY.postponed}
+    onclose={() => (open = null)}
+  />
+{:else if open === 'lost'}
+  <LetGoList
+    title="Fallen Leaves"
+    items={lost}
+    state="lost"
+    empty={EMPTY.fallen}
+    onclose={() => (open = null)}
+  />
+{/if}
 
 <style>
   .pair {

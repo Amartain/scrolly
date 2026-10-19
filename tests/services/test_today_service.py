@@ -107,12 +107,14 @@ def test_reviving_with_another_underway_goes_to_the_top_of_the_queue(
     assert [t.title for t in waiting] == ["A", "C"]
 
 
-def test_a_conquered_minutes_figure_can_be_corrected(store: Store, clock: FixedClock) -> None:
+def test_a_conquered_trial_cannot_be_edited(store: Store, clock: FixedClock) -> None:
     today = seal_day(store, clock, "A", "B")
     a = by_title(store)["A"]
     today.conquer(a.id)
-    today.update(a.id, actual="1h15m")
-    assert by_title(store)["A"].essence_actual_min == 75
+    with pytest.raises(TrialError, match="read-only"):
+        today.update(a.id, title="Other")
+    today.revive(a.id)
+    today.update(a.id, title="Other")
 
 
 def test_nothing_can_be_done_before_the_day_is_sealed(store: Store, clock: FixedClock) -> None:

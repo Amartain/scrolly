@@ -139,11 +139,9 @@ class ScribeIn(BaseModel):
 
 
 class TrialPatchIn(BaseModel):
-    """Only the fields that are sent change. `actual` corrects a conquered trial's minutes."""
+    """Only the fields that are sent change. A conquered trial is read-only."""
 
     title: str | None = None
     is_mandate: bool | None = None
-    actual: str | None = None
     estimate: str | None = None
     qi: str | None = None
-    actual_qi: str | None = None

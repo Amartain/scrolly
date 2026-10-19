@@ -1,3 +1,4 @@
+from dataclasses import replace
 from datetime import datetime
 from typing import Any
 
@@ -7,11 +8,10 @@ from scrolly.domain.day_flow import (
     TrialError,
     conquer,
     revive,
-    set_actual_qi,
     set_estimated_qi,
 )
 from scrolly.domain.models import OriginType, Trial, TrialState
-from scrolly.domain.qi import QiError, effective_qi, spent
+from scrolly.domain.qi import effective_qi, spent
 from tests.factories import make_trial
 
 NOW = datetime.fromisoformat("2026-10-18T13:00:00+02:00")
@@ -31,12 +31,11 @@ def test_conquering_a_trial_without_qi_records_nothing() -> None:
 
 def test_spent_counts_the_recorded_qi_not_the_estimate() -> None:
     done = conquer(_immediate(qi_expected=40), NOW)
-    assert spent([set_actual_qi(done, "65")]) == 65
+    assert spent([replace(done, qi_actual=65)]) == 65
 
 
-def test_a_blank_actual_falls_back_to_the_estimate() -> None:
-    done = set_actual_qi(conquer(_immediate(qi_expected=40), NOW), "")
-    assert done.qi_actual is None
+def test_a_missing_actual_falls_back_to_the_estimate() -> None:
+    done = replace(conquer(_immediate(qi_expected=40), NOW), qi_actual=None)
     assert effective_qi(done) == 40
     assert spent([done]) == 40
 
@@ -50,16 +49,8 @@ def test_a_restorative_art_restores_its_recorded_qi() -> None:
         _immediate(qi_expected=20, origin_type=OriginType.RESTORATIVE_ART),
         NOW,
     )
-    work = set_actual_qi(conquer(_immediate(qi_expected=10), NOW), "50")
-    assert spent([work, set_actual_qi(art, "15")]) == 35
-
-
-def test_correcting_actual_qi_needs_a_conquered_trial_and_a_valid_figure() -> None:
-    with pytest.raises(TrialError):
-        set_actual_qi(_immediate(qi_expected=5), "5")
-    done = conquer(_immediate(qi_expected=5), NOW)
-    with pytest.raises(QiError):
-        set_actual_qi(done, "lots")
+    work = replace(conquer(_immediate(qi_expected=10), NOW), qi_actual=50)
+    assert spent([work, replace(art, qi_actual=15)]) == 35
 
 
 def test_the_estimate_can_change_only_while_the_trial_is_open() -> None:

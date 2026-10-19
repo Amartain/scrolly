@@ -1092,13 +1092,9 @@ export interface components {
         };
         /**
          * TrialPatchIn
-         * @description Only the fields that are sent change. `actual` corrects a conquered trial's minutes.
+         * @description Only the fields that are sent change. A conquered trial is read-only.
          */
         scrolly__api__schemas__dashboard__TrialPatchIn: {
-            /** Actual */
-            actual?: string | null;
-            /** Actual Qi */
-            actual_qi?: string | null;
             /** Estimate */
             estimate?: string | null;
             /** Is Mandate */

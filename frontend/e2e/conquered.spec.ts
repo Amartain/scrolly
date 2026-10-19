@@ -23,26 +23,18 @@ test('conquering lists the trial with its minutes and promotes the next', async 
   await page.getByRole('button', { name: 'Conquer Write report' }).click();
   await expect(conquered(page).getByRole('heading')).toHaveText(/Conquered Today · 1/i);
   await expect(conquered(page).getByText('Write report')).toBeVisible();
-  await expect(conquered(page).getByRole('button', { name: /Edit recorded minutes/ })).toHaveText(
-    '45m',
-  );
+  await expect(conquered(page).getByRole('listitem')).toContainText('45m');
   await expect(immediate(page).getByText('Tidy desk')).toBeVisible();
   await expect(section(page, 'Essence')).toContainText('45m / 45m');
 });
 
-test('the recorded minutes can be corrected, and a bad figure is explained', async ({ page }) => {
+test('a conquered row is read-only: only Revive can be clicked', async ({ page }) => {
   await sealWithEstimate(page);
   await page.getByRole('button', { name: 'Conquer Write report' }).click();
-  const edit = () => conquered(page).getByRole('button', { name: /Edit recorded minutes/ });
-  await edit().click();
-  await conquered(page).getByLabel('Minutes for Write report').fill('soon');
-  await page.keyboard.press('Enter');
-  await expect(conquered(page).getByRole('status')).toContainText('Use 45m, 2h or 1h30m');
-  await expect(edit()).toHaveText('45m');
-  await edit().click();
-  await conquered(page).getByLabel('Minutes for Write report').fill('1h15m');
-  await page.keyboard.press('Enter');
-  await expect(edit()).toHaveText('1h15m');
+  const row = conquered(page).getByRole('listitem');
+  await expect(row).toContainText('45m');
+  await expect(row.getByRole('textbox')).toHaveCount(0);
+  await expect(row.getByRole('button')).toHaveText(['Revive']);
 });
 
 test('reviving puts the trial back on the scroll', async ({ page }) => {

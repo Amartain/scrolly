@@ -88,26 +88,21 @@ class TodayService:
         trial_id: str,
         title: str | None = None,
         is_mandate: bool | None = None,
-        actual: str | None = None,
         qi: str | None = None,
-        actual_qi: str | None = None,
         estimate: str | None = None,
     ) -> None:
         """Only the fields that are given change."""
         trial = self._trial(trial_id)
+        day_flow.require_editable(trial)
         if title is not None:
             self._require_free(title, trial.id)
             trial = day_flow.rename(trial, title)
         if is_mandate is not None:
             trial = set_mandate(trial, is_mandate)
-        if actual is not None:
-            trial = day_flow.set_actual(trial, actual)
         if estimate is not None:
             trial = day_flow.set_estimate(trial, estimate)
         if qi is not None:
             trial = day_flow.set_estimated_qi(trial, qi)
-        if actual_qi is not None:
-            trial = day_flow.set_actual_qi(trial, actual_qi)
         self._store.trials.save([trial], self._now)
 
     def _require_free(self, title: str, except_id: str | None = None) -> None:

@@ -75,14 +75,16 @@ def test_the_last_conquest_is_a_victory(client: TestClient) -> None:
     assert (dashboard["victory"], dashboard["immediate"]) == (True, None)
 
 
-def test_a_conquered_trial_can_be_corrected_then_revived(client: TestClient) -> None:
+def test_a_conquered_trial_is_read_only_until_it_is_revived(client: TestClient) -> None:
     _seal(client, "Write report", "Tidy desk")
     trial = _id(client, "Write report")
     client.post(f"/api/trials/{trial}/conquer")
-    corrected = client.patch(f"/api/trials/{trial}", json={"actual": "1h15m"}).json()
-    assert corrected["dashboard"]["conquered"][0]["actual_text"] == "1h15m"
+    for patch in ({"title": "Other"}, {"is_mandate": True}, {"estimate": "1h"}, {"qi": "5"}):
+        reply = client.patch(f"/api/trials/{trial}", json=patch)
+        assert reply.status_code == 409 and "Revive" in reply.json()["detail"]
     revived = client.post(f"/api/trials/{trial}/revive").json()["dashboard"]
     assert revived["conquered"] == []
+    assert client.patch(f"/api/trials/{trial}", json={"title": "Other"}).status_code == 200
 
 
 def test_postponing_sends_a_copy_to_the_horizon(client: TestClient) -> None:
@@ -110,13 +112,6 @@ def test_a_mortal_can_be_abandoned(client: TestClient) -> None:
 def test_nothing_works_before_the_day_is_sealed(client: TestClient) -> None:
     reply = client.post("/api/trials/anything/conquer")
     assert (reply.status_code, reply.json()["detail"]) == (409, "The day has not begun yet")
-
-
-def test_a_bad_minutes_figure_is_explained(client: TestClient) -> None:
-    _seal(client, "Write report", "Tidy desk")
-    trial = _id(client, "Write report")
-    client.post(f"/api/trials/{trial}/conquer")
-    assert client.patch(f"/api/trials/{trial}", json={"actual": "soon"}).status_code == 422
 
 
 def test_conquered_qi_moves_the_dashboard_gauge(client: TestClient) -> None:

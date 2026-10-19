@@ -26,16 +26,13 @@ def test_the_estimated_qi_of_the_immediate_trial_can_be_edited(client: TestClien
     assert reply.json()["dashboard"]["immediate"]["qi_text"] == "35"
 
 
-def test_the_actual_qi_defaults_to_the_estimate_and_can_be_corrected(client: TestClient) -> None:
+def test_the_actual_qi_is_the_estimate_when_the_trial_is_conquered(client: TestClient) -> None:
     _seal(client, "Write report")
     trial_id = _id(client, "Write report")
     client.patch(f"/api/trials/{trial_id}", json={"qi": "35"})
     done = client.post(f"/api/trials/{trial_id}/conquer").json()
     assert done["dashboard"]["conquered"][0]["qi_text"] == "35"
     assert done["planning"]["qi"]["spent"] == 35
-    corrected = client.patch(f"/api/trials/{trial_id}", json={"actual_qi": "60"}).json()
-    assert corrected["dashboard"]["conquered"][0]["qi_text"] == "60"
-    assert corrected["planning"]["qi"]["spent"] == 60
 
 
 def test_a_bad_qi_is_explained(client: TestClient) -> None:

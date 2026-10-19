@@ -29,6 +29,12 @@ def immediate_of(trials: Sequence[Trial]) -> Trial | None:
     return next((t for t in trials if t.state is TrialState.IMMEDIATE), None)
 
 
+def require_editable(trial: Trial) -> None:
+    """A conquered trial is read-only. To change it, revive it first."""
+    if trial.state is TrialState.DONE:
+        raise TrialError("A conquered trial is read-only. Revive it to change it.")
+
+
 def promote_next(trials: Sequence[Trial]) -> list[Trial]:
     """With no Immediate Trial, the first Remaining one becomes it. Returns what changed."""
     if immediate_of(trials) is not None:
@@ -80,22 +86,10 @@ def revive(trial: Trial, trials: Sequence[Trial]) -> Trial:
     return replace(cleared, state=TrialState.REMAINING, position=top - 1)
 
 
-def set_actual(trial: Trial, text: str) -> Trial:
-    """Correct the minutes recorded for a conquered trial. Blank clears them."""
-    _require(trial, TrialState.DONE, "Only a conquered trial's minutes can be corrected")
-    return replace(trial, essence_actual_min=parse_duration(text))
-
-
 def set_estimate(trial: Trial, text: str) -> Trial:
     """The time expected of a trial that is still open. Blank clears it."""
     _require_open(trial, "Only an open trial's estimate can be changed")
     return replace(trial, essence_expected_min=parse_duration(text))
-
-
-def set_actual_qi(trial: Trial, text: str) -> Trial:
-    """Correct the Qi recorded for a conquered trial. Blank means it cost what was estimated."""
-    _require(trial, TrialState.DONE, "Only a conquered trial's Qi can be corrected")
-    return replace(trial, qi_actual=parse_qi(text))
 
 
 def set_estimated_qi(trial: Trial, text: str) -> Trial:

@@ -11,8 +11,8 @@ from scrolly.domain.day_flow import (
     postpone,
     promote_next,
     rename,
+    require_editable,
     revive,
-    set_actual,
 )
 from scrolly.domain.models import Day, OriginType, Trial, TrialState
 from scrolly.domain.timer import start
@@ -110,15 +110,10 @@ def test_only_a_conquered_trial_can_be_revived() -> None:
         revive(make_trial("Waiting"), [])
 
 
-def test_correcting_the_minutes_of_a_conquered_trial() -> None:
-    done = make_trial("Done", state=TrialState.DONE, essence_actual_min=30)
-    assert set_actual(done, "1h15m").essence_actual_min == 75
-    assert set_actual(done, "").essence_actual_min is None
-
-
-def test_correcting_minutes_needs_a_conquered_trial() -> None:
-    with pytest.raises(TrialError):
-        set_actual(make_trial("Waiting"), "10m")
+def test_a_conquered_trial_is_read_only() -> None:
+    with pytest.raises(TrialError, match="Revive"):
+        require_editable(make_trial("Done", state=TrialState.DONE))
+    require_editable(make_trial("Waiting"))
 
 
 def test_renaming_trims_and_refuses_an_empty_title() -> None:
