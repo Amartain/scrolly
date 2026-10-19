@@ -1,3 +1,4 @@
+from dataclasses import replace
 from datetime import datetime, timedelta
 from typing import Any
 
@@ -15,7 +16,8 @@ from scrolly.domain.day_flow import (
     revive,
     set_estimate,
 )
-from scrolly.domain.models import Day, OriginType, Trial, TrialState
+from scrolly.domain.models import ArtKind, Day, OriginType, Trial, TrialState
+from scrolly.domain.planning import trial_from_horizon
 from scrolly.domain.timer import start
 from tests.factories import make_item, make_trial
 
@@ -60,13 +62,40 @@ def test_nothing_is_promoted_while_a_trial_is_underway_or_none_wait() -> None:
     assert promote_next([make_trial("Done", state=TrialState.DONE)]) == []
 
 
-def test_postponing_goes_to_the_top_of_the_horizon_with_the_estimate_and_no_time() -> None:
+def test_postponing_goes_to_the_top_of_the_horizon_with_the_estimate_and_the_time_worked() -> None:
     trial = start(_immediate(essence_expected_min=45, is_mandate=True), NOW - timedelta(minutes=5))
     gone, horizon = postpone(trial, [make_item("Old")], NOW)
     assert gone.state is TrialState.POSTPONED
     assert gone.timer_started_at is None
     assert [item.title for item in horizon] == ["Now", "Old"]
     assert (horizon[0].essence_expected_min, horizon[0].is_mandate) == (45, True)
+    assert horizon[0].worked_s == 5 * 60
+
+
+def test_an_art_instance_carries_no_time_to_the_horizon() -> None:
+    trial = start(_immediate(art_kind=ArtKind.FOUNDATIONAL), NOW - timedelta(minutes=5))
+    _, horizon = postpone(trial, [], NOW)
+    assert horizon[0].worked_s == 0
+
+
+def test_summoned_back_a_postponed_trial_resumes_from_the_time_worked() -> None:
+    trial = start(_immediate(), NOW - timedelta(minutes=5))
+    _, horizon = postpone(trial, [], NOW)
+    again = trial_from_horizon("t2", horizon[0], NOW.date(), 0)
+    assert again.timer_accumulated_s == 5 * 60
+    assert again.timer_started_at is None
+    # Postponed a second day, the earlier time is not lost or counted twice.
+    resumed = start(again, NOW)
+    _, horizon = postpone(resumed, [], NOW + timedelta(minutes=2))
+    assert horizon[0].worked_s == 7 * 60
+
+
+def test_postponing_onto_an_existing_item_adds_the_time() -> None:
+    trial = start(_immediate(), NOW - timedelta(minutes=5))
+    existing = make_item("Now", id="h1", worked_s=60)
+    waiting = replace(trial, origin_type=OriginType.HORIZON, origin_id="h1")
+    _, horizon = postpone(waiting, [existing], NOW)
+    assert horizon[0].worked_s == 6 * 60
 
 
 def test_postponing_twice_updates_the_horizon_item_instead_of_adding_one() -> None:

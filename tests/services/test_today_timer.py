@@ -68,3 +68,25 @@ def test_only_the_immediate_trial_has_a_timer(store: Store, clock: FixedClock) -
     today = seal_day(store, clock, "A", "B")
     with pytest.raises(TrialError, match="Immediate"):
         today.start_timer(by_title(store)["B"].id)
+
+
+def test_time_worked_goes_to_the_horizon_and_comes_back_when_summoned(
+    store: Store, clock: FixedClock
+) -> None:
+    today = seal_day(store, clock, "A")
+    a = by_title(store)["A"]
+    today.start_timer(a.id)
+    clock.set(clock.now() + timedelta(minutes=12))
+    today.postpone(a.id)
+    (item,) = store.horizon.list_all()
+    assert item.worked_s == 12 * 60
+
+    today.summon("horizon", item.id)
+    back = build_dashboard_view(store, clock.now()).timer
+    assert back is not None
+    assert (back.elapsed_s, back.running) == (12 * 60, False)
+
+    today.start_timer(by_title(store)["A"].id)
+    clock.set(clock.now() + timedelta(minutes=8))
+    today.conquer(by_title(store)["A"].id)
+    assert by_title(store)["A"].essence_actual_min == 20

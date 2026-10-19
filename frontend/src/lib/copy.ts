@@ -95,3 +95,6 @@ export const MILESTONE = {
   many: 'days sealed upon the scroll',
   close: 'Onward',
 } as const;
+
+/** DRAFT: how much of a Horizon item's time was already worked, shown small beside its estimate. */
+export const workedNote = (text: string) => `· ${text} worked`;

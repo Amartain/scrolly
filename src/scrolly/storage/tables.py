@@ -63,6 +63,7 @@ class HorizonItemRow(_Audited, Base):
     origin_id: Mapped[str | None] = mapped_column(String(36), default=None)
     qi_expected: Mapped[int | None] = mapped_column(Integer, default=None)
     art_kind: Mapped[str | None] = mapped_column(String(20), default=None)
+    worked_s: Mapped[int] = mapped_column(Integer, default=0)
 
 
 class ArtRow(_Audited, Base):

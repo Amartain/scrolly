@@ -55,6 +55,18 @@ def test_a_running_timer_is_stopped_and_kept() -> None:
     assert lost.timer_started_at is None and lost.timer_accumulated_s == 600
 
 
+def test_a_mandate_returns_to_the_horizon_with_the_time_worked() -> None:
+    running = make_trial(
+        "Taxes",
+        logical_day=YESTERDAY,
+        is_mandate=True,
+        timer_accumulated_s=300,
+        timer_started_at=NOW - timedelta(seconds=600),
+    )
+    result = rollover([running], [], TODAY, NOW)
+    assert result.horizon[0].worked_s == 900
+
+
 def test_mandates_keep_their_order_on_top_of_the_horizon() -> None:
     first = make_trial("First", logical_day=YESTERDAY, is_mandate=True, position=0)
     second = make_trial("Second", logical_day=YESTERDAY, is_mandate=True, position=1)

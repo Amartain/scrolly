@@ -827,6 +827,8 @@ export interface components {
             /** Title */
             title: string;
             type: components["schemas"]["TrialType"];
+            /** Worked Text */
+            worked_text: string;
         };
         /**
          * HorizonPatchIn

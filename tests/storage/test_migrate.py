@@ -79,6 +79,25 @@ def test_qi_actual_is_added_to_trials_without_touching_existing_rows(tmp_path: P
     assert tuple(row) == (40, None)
 
 
+def test_horizon_items_get_zero_worked_time_on_upgrade(tmp_path: Path) -> None:
+    db_file = tmp_path / "scrolly.db"
+    command.upgrade(_config(db_file), "0006")
+    engine = create_engine(f"sqlite:///{db_file}")
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                "INSERT INTO horizon_item (id, realm_id, created_at, updated_at, title,"
+                " is_mandate, note, position, origin_type)"
+                " VALUES ('h1', 'daily', 'now', 'now', 'Old idea', 0, '', 0, 'brain_dump')"
+            )
+        )
+    upgrade_to_head(db_file, tmp_path / "backups")
+    with engine.connect() as connection:
+        worked = connection.execute(text("SELECT worked_s FROM horizon_item")).scalar_one()
+    engine.dispose()
+    assert worked == 0
+
+
 def test_art_kind_is_backfilled_for_rows_that_came_from_an_art(tmp_path: Path) -> None:
     db_file = tmp_path / "scrolly.db"
     command.upgrade(_config(db_file), "0005")

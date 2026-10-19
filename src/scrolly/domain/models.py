@@ -63,6 +63,8 @@ class HorizonItem:
     origin_id: str | None = None
     qi_expected: int | None = None
     art_kind: ArtKind | None = None
+    # Seconds already worked on it, so timing can go on after it is summoned again.
+    worked_s: int = 0
 
 
 @dataclass(frozen=True)

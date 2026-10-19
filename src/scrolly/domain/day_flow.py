@@ -61,9 +61,10 @@ def conquer(trial: Trial, now: datetime) -> Trial:
 def postpone(
     trial: Trial, horizon: Sequence[HorizonItem], now: datetime
 ) -> tuple[Trial, list[HorizonItem]]:
-    """Send an open trial to the top of the Horizon (estimate kept, time not carried)."""
+    """Send an open trial to the top of the Horizon (estimate and the time worked are kept)."""
     _require_open(trial, "Only an open trial can be postponed")
-    return replace(pause(trial, now), state=TrialState.POSTPONED), return_to_horizon(horizon, trial)
+    stopped = pause(trial, now)
+    return replace(stopped, state=TrialState.POSTPONED), return_to_horizon(horizon, stopped)
 
 
 def abandon(trial: Trial, now: datetime) -> Trial:

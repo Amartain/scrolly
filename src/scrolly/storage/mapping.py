@@ -81,6 +81,7 @@ def horizon_from_row(row: HorizonItemRow) -> HorizonItem:
         origin_id=row.origin_id,
         qi_expected=row.qi_expected,
         art_kind=_kind(row.art_kind),
+        worked_s=row.worked_s,
     )
 
 
@@ -94,6 +95,7 @@ def apply_horizon(row: HorizonItemRow, item: HorizonItem, position: int) -> None
     row.origin_id = item.origin_id
     row.qi_expected = item.qi_expected
     row.art_kind = _kind_value(item.art_kind)
+    row.worked_s = item.worked_s
 
 
 def art_from_row(row: ArtRow) -> Art:

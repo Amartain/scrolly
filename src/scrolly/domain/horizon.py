@@ -22,10 +22,16 @@ def origin_key(trial: Trial) -> str:
 
 
 def return_to_horizon(items: Sequence[HorizonItem], trial: Trial) -> list[HorizonItem]:
-    """Put a trial on top of the Horizon. If its origin is already there, update it instead."""
+    """Put a trial on top of the Horizon. If its origin is already there, update it instead.
+
+    The time worked goes with it (a running timer must be paused first).
+    An Art instance carries none.
+    """
     key = origin_key(trial)
     kept = [item for item in items if key not in (item.id, item.origin_id)]
     previous = next((item for item in items if key in (item.id, item.origin_id)), None)
+    earlier = previous.worked_s if previous else 0
+    worked = 0 if trial.art_kind else trial.timer_accumulated_s + earlier
     returned = HorizonItem(
         id=previous.id if previous else key,
         title=trial.title,
@@ -36,6 +42,7 @@ def return_to_horizon(items: Sequence[HorizonItem], trial: Trial) -> list[Horizo
         origin_id=key,
         qi_expected=trial.qi_expected,
         art_kind=trial.art_kind,
+        worked_s=worked,
     )
     return [returned, *kept]
 

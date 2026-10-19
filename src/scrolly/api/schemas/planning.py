@@ -45,15 +45,18 @@ class HorizonItemOut(BaseModel):
     is_mandate: bool
     type: TrialType
     expected_text: str
+    worked_text: str
 
     @classmethod
     def from_item(cls, item: HorizonItem) -> "HorizonItemOut":
+        worked_min = round(item.worked_s / 60)
         return cls(
             id=item.id,
             title=item.title,
             is_mandate=item.is_mandate,
             type=type_of(item.is_mandate, item.art_kind),
             expected_text=_estimate(item.essence_expected_min),
+            worked_text=_estimate(worked_min or None),
         )
 
 

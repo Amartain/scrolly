@@ -68,6 +68,7 @@ def trial_from_horizon(trial_id: str, item: HorizonItem, day: date, position: in
         note=item.note,
         qi_expected=item.qi_expected,
         art_kind=item.art_kind,
+        timer_accumulated_s=0 if item.art_kind else item.worked_s,
     )
 
 

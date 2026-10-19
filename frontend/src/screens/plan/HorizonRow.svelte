@@ -6,6 +6,7 @@
   import TypeMark from '../../components/TypeMark.svelte';
   import GlyphIcon from '../../icons/GlyphIcon.svelte';
   import { horizon, type HorizonItem } from '../../lib/api';
+  import { workedNote } from '../../lib/copy';
   import { view } from '../../lib/view.svelte';
 
   /** `editable` is the expanded view: rename, switch the type, delete. Otherwise the row only summons. */
@@ -29,6 +30,7 @@
   <span class="title read">{item.title}</span>
 {/if}
 <span class="figure digits">{item.expected_text}</span>
+{#if item.worked_text}<span class="figure digits">{workedNote(item.worked_text)}</span>{/if}
 <TypeMark
   type={item.type}
   title={item.title}
