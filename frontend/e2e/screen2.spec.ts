@@ -22,7 +22,7 @@ test('Scribe Trial adds to the queue, and N jumps to the form', async ({ page })
   await expect(page.getByLabel('Trial to scribe')).toBeFocused();
   await page.getByLabel('Trial to scribe').fill('Pay rent');
   await page.getByLabel('Estimate', { exact: true }).fill('20m');
-  await page.getByRole('button', { name: 'Inscribe' }).click();
+  await page.getByLabel('Estimate', { exact: true }).press('Enter');
   await expect(remaining(page).getByText('Pay rent')).toBeVisible();
   await expect(remaining(page).getByText('(20m)')).toBeVisible();
   await expect(page.getByLabel('Estimate for Pay rent')).toHaveCount(0);
@@ -51,9 +51,20 @@ test('the Horizon takes new ideas, summons them and lets them go', async ({ page
   await page.goto('/');
   const horizon = section(page, 'The Horizon');
   await horizon.getByLabel('A future trial').fill('Call mum');
-  await horizon.getByRole('button', { name: 'Add' }).click();
+  await horizon.getByLabel('Estimate of the future trial').fill('25m');
+  await horizon.getByLabel('A future trial').press('Enter');
   await expect(horizon.getByText('Call mum')).toBeVisible();
-  await expect(horizon.getByRole('textbox')).toHaveCount(1);
+  await expect(horizon.getByText('25m')).toBeVisible();
+  await expect(horizon.getByLabel('A future trial')).toHaveValue('');
+  await horizon.getByLabel('A future trial').fill('Water plants');
+  await horizon.getByLabel('Estimate of the future trial').fill('90');
+  await horizon.getByLabel('Estimate of the future trial').press('Enter');
+  await expect(remaining(page)).toContainText('Use 45m, 2h or 1h30m');
+  await expect(horizon.getByText('Water plants')).toHaveCount(0);
+  await horizon.getByLabel('Estimate of the future trial').fill('');
+  await horizon.getByLabel('A future trial').fill('');
+  // Only the add form has inputs; the rows have none.
+  await expect(horizon.getByRole('textbox')).toHaveCount(2);
   await horizon.getByRole('button', { name: 'Summon Plan the garden' }).click();
   await expect(horizon.getByText('Plan the garden')).toHaveCount(0);
   await expect(remaining(page).getByText('Plan the garden')).toBeVisible();

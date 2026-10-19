@@ -31,7 +31,7 @@ def _view(store: Store, clock: Clock) -> ViewOut:
 
 @router.post("/horizon")
 def add(body: HorizonAddIn, horizon: HorizonDep, store: StoreDep, clock: ClockDep) -> ViewOut:
-    horizon.add(body.title)
+    horizon.add(body.title, body.estimate)
     return _view(store, clock)
 
 

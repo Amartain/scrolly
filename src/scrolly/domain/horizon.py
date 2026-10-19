@@ -50,9 +50,14 @@ def _title(text: str) -> str:
     return cleaned
 
 
-def add_item(items: Sequence[HorizonItem], item_id: str, title: str) -> list[HorizonItem]:
-    """A new idea goes on top of the Horizon."""
-    return [HorizonItem(id=item_id, title=_title(title)), *items]
+def add_item(
+    items: Sequence[HorizonItem], item_id: str, title: str, estimate: str = ""
+) -> list[HorizonItem]:
+    """A new idea goes on top of the Horizon. A blank estimate means none."""
+    item = HorizonItem(
+        id=item_id, title=_title(title), essence_expected_min=parse_duration(estimate)
+    )
+    return [item, *items]
 
 
 def edit_item(

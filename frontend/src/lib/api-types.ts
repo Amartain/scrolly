@@ -790,6 +790,11 @@ export interface components {
         };
         /** HorizonAddIn */
         HorizonAddIn: {
+            /**
+             * Estimate
+             * @default
+             */
+            estimate: string;
             /** Title */
             title: string;
         };

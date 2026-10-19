@@ -15,11 +15,16 @@
     (ids) => horizon.reorder(ids),
   );
   let title = $state('');
+  let estimate = $state('');
   let expanded = $state(false);
 
   async function add(event?: Event) {
     event?.preventDefault();
-    if (title.trim() && (await view.act(() => horizon.add(title)))) title = '';
+    if (!title.trim()) return;
+    if (await view.act(() => horizon.add(title, estimate))) {
+      title = '';
+      estimate = '';
+    }
   }
 </script>
 
@@ -33,7 +38,15 @@
   {/snippet}
   <form class="add" onsubmit={add}>
     <input bind:value={title} placeholder="Scribe a future trial…" aria-label="A future trial" />
+    <input
+      class="estimate digits"
+      bind:value={estimate}
+      placeholder="30m"
+      aria-label="Estimate of the future trial"
+    />
     <Button label="Add" tone="horizon" onclick={() => add()} />
+    <!-- Two fields: a hidden submit lets Enter add from either. -->
+    <button type="submit" hidden tabindex="-1" aria-hidden="true"></button>
   </form>
   {#if order.shown.length === 0}
     <p class="empty">{EMPTY.horizon}</p>
@@ -68,6 +81,12 @@
     color: var(--ink);
     font-family: var(--font-body);
     font-size: var(--text-body-md);
+  }
+
+  input.estimate {
+    flex: none;
+    width: var(--size-estimate);
+    text-align: right;
   }
 
   .empty {

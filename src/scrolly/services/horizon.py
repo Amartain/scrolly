@@ -26,10 +26,10 @@ class HorizonService:
         today = self._store.trials.list_for_day(logical_day(self._now))
         require_free_trial_title(title, items, today, except_id=except_id)
 
-    def add(self, title: str) -> None:
+    def add(self, title: str, estimate: str = "") -> None:
         current = self._store.horizon.list_all()
         self._require_free(title, current)
-        items = add_item(current, str(uuid.uuid4()), title)
+        items = add_item(current, str(uuid.uuid4()), title, estimate)
         self._store.horizon.replace_all(items, self._now)
 
     def edit(

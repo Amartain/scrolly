@@ -1,5 +1,6 @@
 import pytest
 
+from scrolly.domain.duration import DurationError
 from scrolly.domain.horizon import HorizonError, add_item, edit_item, remove_item
 from scrolly.domain.models import HorizonItem
 from scrolly.domain.ordering import OrderError, reorder_by_ids
@@ -9,6 +10,18 @@ ITEMS = [HorizonItem(id="a", title="A", essence_expected_min=30), HorizonItem(id
 
 def test_a_new_idea_goes_on_top_with_a_trimmed_title() -> None:
     assert [i.title for i in add_item(ITEMS, "n", "  New  ")] == ["New", "A", "B"]
+
+
+def test_a_new_idea_can_carry_an_estimate() -> None:
+    assert add_item(ITEMS, "n", "New", "1h30m")[0].essence_expected_min == 90
+    assert add_item(ITEMS, "n", "New", "")[0].essence_expected_min is None
+    assert add_item(ITEMS, "n", "New")[0].essence_expected_min is None
+
+
+def test_a_bad_estimate_is_never_saved() -> None:
+    for bad in ("90", "1.5h", "0m", "17h"):
+        with pytest.raises(DurationError):
+            add_item(ITEMS, "n", "New", bad)
 
 
 def test_an_idea_needs_a_title() -> None:

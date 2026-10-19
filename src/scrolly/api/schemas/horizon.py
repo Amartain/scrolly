@@ -5,6 +5,7 @@ from scrolly.domain.models import ArtKind
 
 class HorizonAddIn(BaseModel):
     title: str
+    estimate: str = ""
 
 
 class HorizonPatchIn(BaseModel):

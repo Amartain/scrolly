@@ -106,7 +106,8 @@ export const today = {
 
 /** The user's backlog and the order of their Arts. */
 export const horizon = {
-  add: (title: string) => send<View>('/api/horizon', json('POST', { title })),
+  add: (title: string, estimate = '') =>
+    send<View>('/api/horizon', json('POST', { title, estimate })),
   edit: (id: string, patch: { title?: string; estimate?: string; is_mandate?: boolean }) =>
     send<View>(`/api/horizon/${id}`, json('PATCH', patch)),
   discard: (id: string) => send<View>(`/api/horizon/${id}`, json('DELETE')),

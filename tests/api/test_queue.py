@@ -139,6 +139,14 @@ def test_the_horizon_can_be_added_to_edited_discarded_and_reordered(client: Test
     assert client.post("/api/horizon", json={"title": " "}).status_code == 409
 
 
+def test_a_horizon_idea_can_be_added_with_an_estimate(client: TestClient) -> None:
+    client.post("/api/horizon", json={"title": "Garden", "estimate": "45m"})
+    bad = client.post("/api/horizon", json={"title": "Weed", "estimate": "90"})
+    assert bad.status_code == 422
+    items = _view(client)["planning"]["horizon"]
+    assert [(i["title"], i["expected_text"]) for i in items] == [("Garden", "45m")]
+
+
 def test_arts_can_be_reordered_within_their_kind(client: TestClient) -> None:
     _import(
         client,
