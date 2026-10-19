@@ -52,8 +52,7 @@ test('the Horizon takes new ideas, summons them and lets them go', async ({ page
   await horizon.getByLabel('A future trial').fill('Call mum');
   await horizon.getByRole('button', { name: 'Add' }).click();
   await expect(horizon.getByText('Call mum')).toBeVisible();
-  await horizon.getByRole('button', { name: 'Discard Call mum' }).click();
-  await expect(horizon.getByText('Call mum')).toHaveCount(0);
+  await expect(horizon.getByRole('textbox')).toHaveCount(1);
   await horizon.getByRole('button', { name: 'Summon Plan the garden' }).click();
   await expect(horizon.getByText('Plan the garden')).toHaveCount(0);
   await expect(remaining(page).getByText('Plan the garden')).toBeVisible();

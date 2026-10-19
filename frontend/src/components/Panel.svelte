@@ -11,6 +11,7 @@
     striped = false,
     count,
     hint,
+    actions,
     children,
   }: {
     title: string;
@@ -22,6 +23,8 @@
     count?: number;
     /** A short line in the header, for example how to reorder. */
     hint?: string;
+    /** Small controls at the right of the header, for example the expand button. */
+    actions?: Snippet;
     children?: Snippet;
   } = $props();
 </script>
@@ -30,6 +33,7 @@
   <div class="head">
     <h2 class="display">{title}{count === undefined ? '' : ` · ${count}`}</h2>
     {#if hint}<span class="hint">{hint}</span>{/if}
+    {#if actions}<span class="actions">{@render actions()}</span>{/if}
   </div>
   <div class="body" class:scroll class:striped>
     {#if children}
@@ -55,9 +59,10 @@
 
   .head {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: var(--space-4);
+    min-height: calc(var(--size-glyph-button) + var(--space-2) * 2);
     padding: var(--space-2) var(--space-4);
     background: var(--head-bg);
     color: var(--head-ink);
@@ -67,6 +72,12 @@
   .head h2 {
     margin: 0;
     font-size: var(--text-display-md);
+  }
+
+  .actions {
+    display: flex;
+    gap: var(--space-2);
+    margin-left: auto;
   }
 
   .hint {

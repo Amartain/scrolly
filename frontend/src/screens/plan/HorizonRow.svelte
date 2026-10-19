@@ -1,4 +1,4 @@
-<!-- A Horizon item: title, estimate, then the type mark (the Mandate switch) and the buttons. -->
+<!-- A Horizon item: title, its duration in small figures, the type mark, then Summon or the edit buttons. -->
 <script lang="ts">
   import Button from '../../components/Button.svelte';
   import EditableText from '../../components/EditableText.svelte';
@@ -8,21 +8,16 @@
   import { horizon, type HorizonItem } from '../../lib/api';
   import { view } from '../../lib/view.svelte';
 
+  /** `editable` is the expanded view: rename, switch the type, delete. Otherwise the row only summons. */
   let {
     item,
     onsummon,
     editable = false,
-  }: { item: HorizonItem; onsummon: () => void; editable?: boolean } = $props();
+  }: { item: HorizonItem; onsummon?: () => void; editable?: boolean } = $props();
 
   let name = $state<EditableText>();
   const edit = (patch: Parameters<typeof horizon.edit>[1]) =>
     view.act(() => horizon.edit(item.id, patch));
-
-  async function commitEstimate(event: Event) {
-    const input = event.currentTarget as HTMLInputElement;
-    if (input.value.trim() === item.expected_text) return;
-    if (!(await edit({ estimate: input.value }))) input.value = item.expected_text;
-  }
 </script>
 
 {#if editable}
@@ -32,17 +27,10 @@
     onsave={(title) => edit({ title })}
     bind:this={name}
   />
-  <input
-    class="estimate digits"
-    value={item.expected_text}
-    placeholder="—"
-    aria-label="Estimate for {item.title}"
-    onchange={commitEstimate}
-  />
 {:else}
   <span class="title read">{item.title}</span>
-  <span class="figure digits">{item.expected_text}</span>
 {/if}
+<span class="figure digits">{item.expected_text}</span>
 <TypeMark
   type={item.type}
   title={item.title}
@@ -58,8 +46,9 @@
   >
     <GlyphIcon name="x" />
   </GlyphButton>
+{:else if onsummon}
+  <Button label="Summon" tone="horizon" description="Summon {item.title}" onclick={onsummon} />
 {/if}
-<Button label="Summon" tone="horizon" description="Summon {item.title}" onclick={onsummon} />
 
 <style>
   .title {
@@ -72,18 +61,6 @@
 
   .figure {
     color: var(--ink-muted);
-  }
-
-  .estimate {
-    flex: none;
-    width: var(--size-estimate);
-    height: var(--size-glyph-button);
-    padding-inline: var(--space-2);
-    background: var(--surface-raised);
-    border: var(--border-width) solid var(--line);
-    box-shadow: var(--shadow-sunken);
-    color: var(--ink);
-    font-size: var(--text-body-md);
-    text-align: right;
+    font-size: var(--text-body-sm);
   }
 </style>

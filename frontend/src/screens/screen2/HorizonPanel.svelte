@@ -1,5 +1,6 @@
 <script lang="ts">
   import Button from '../../components/Button.svelte';
+  import ExpandButton from '../../components/ExpandButton.svelte';
   import Panel from '../../components/Panel.svelte';
   import ReorderList from '../../components/ReorderList.svelte';
   import { horizon, today, type HorizonItem } from '../../lib/api';
@@ -7,12 +8,14 @@
   import { useOrder } from '../../lib/order.svelte';
   import { view } from '../../lib/view.svelte';
   import HorizonRow from '../plan/HorizonRow.svelte';
+  import HorizonExpand from './HorizonExpand.svelte';
 
   const order = useOrder(
     () => view.planning?.horizon ?? [],
     (ids) => horizon.reorder(ids),
   );
   let title = $state('');
+  let expanded = $state(false);
 
   async function add(event?: Event) {
     event?.preventDefault();
@@ -21,10 +24,13 @@
 </script>
 
 {#snippet row(item: HorizonItem)}
-  <HorizonRow {item} editable onsummon={() => view.act(() => today.summon('horizon', item.id))} />
+  <HorizonRow {item} onsummon={() => view.act(() => today.summon('horizon', item.id))} />
 {/snippet}
 
 <Panel title="The Horizon" tone="horizon" count={order.shown.length} scroll striped>
+  {#snippet actions()}
+    <ExpandButton label="Expand The Horizon" onclick={() => (expanded = true)} />
+  {/snippet}
   <form class="add" onsubmit={add}>
     <input bind:value={title} placeholder="Scribe a future trial…" aria-label="A future trial" />
     <Button label="Add" tone="horizon" onclick={() => add()} />
@@ -35,6 +41,10 @@
     <ReorderList items={order.shown} label="The Horizon" onreorder={order.reorder} {row} />
   {/if}
 </Panel>
+
+{#if expanded}
+  <HorizonExpand onclose={() => (expanded = false)} />
+{/if}
 
 <style>
   /* Two row heights, so the bands below keep their rhythm. */
