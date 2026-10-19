@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 from scrolly.api.schemas.dashboard import DashboardOut
 from scrolly.api.schemas.legend import LegendOut
+from scrolly.api.schemas.milestone import MilestoneOut
 from scrolly.api.schemas.planning import PlanningOut
 from scrolly.domain.appearance import DayVariant, Phase, ReadingFont, Theme
 from scrolly.services.view import ViewData
@@ -23,6 +24,8 @@ class ViewOut(BaseModel):
     legend: LegendOut
     planning: PlanningOut
     dashboard: DashboardOut
+    # Only the response to the day's first seal carries one.
+    milestone: MilestoneOut | None = None
 
     @classmethod
     def from_data(cls, data: ViewData) -> "ViewOut":

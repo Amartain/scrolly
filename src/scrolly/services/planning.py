@@ -115,7 +115,8 @@ class PlanningService:
         if draft is not None:
             abandon_planning(self._store, draft, self._now)
 
-    def seal(self) -> None:
+    def seal(self) -> bool:
+        """Start the day. True on the first seal of the logical day (a new Heavenly Cycle)."""
         draft = self._draft(PlanPhase.ESTIMATE, PlanPhase.WEIGH)
         qi_start = None
         if self._golden_core_on():
@@ -128,3 +129,4 @@ class PlanningService:
         self._store.trials.save([first], now)
         self._store.days.save(sealed_day, now)
         self._store.drafts.delete()
+        return day.first_sealed_at is None

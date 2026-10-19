@@ -900,6 +900,22 @@ export interface components {
          * @enum {string}
          */
         Metric: "trials" | "essence" | "qi";
+        /**
+         * MilestoneOut
+         * @description Shown once, after the day's first seal.
+         */
+        MilestoneOut: {
+            /** Attribution */
+            attribution: string | null;
+            /** Banner */
+            banner: string | null;
+            /** Cycles */
+            cycles: number;
+            /** Quote */
+            quote: string;
+            /** Stand In */
+            stand_in: boolean;
+        };
         /** OrderIn */
         OrderIn: {
             /** Ids */
@@ -1136,6 +1152,7 @@ export interface components {
              * Format: date
              */
             logical_day: string;
+            milestone?: components["schemas"]["MilestoneOut"] | null;
             /**
              * Now
              * Format: date-time

@@ -5,6 +5,7 @@ import {
   putReadingFont,
   type DayVariant,
   type ImportResult,
+  type Milestone,
   type Planning,
   type ReadingFont,
   type Theme,
@@ -29,6 +30,8 @@ class ViewStore {
   set notice(text: string) {
     this.noticeParts = text ? [{ text }] : [];
   }
+  /** The milestone to show after the first seal of the day, until it is closed. */
+  milestone = $state<Milestone | null>(null);
   /** `performance.now()` when `current` arrived. Only the ticking display reads it. */
   receivedAt = $state(0);
 
@@ -45,6 +48,12 @@ class ViewStore {
     else delete root.dataset.dayVariant;
     this.current = view;
     this.receivedAt = performance.now();
+    // Only the response to the day's first seal carries a milestone; later views never clear it.
+    if (view.milestone) this.milestone = view.milestone;
+  }
+
+  dismissMilestone() {
+    this.milestone = null;
   }
 
   /** Keep typed planning text in the local view while its save is on the way. */

@@ -87,3 +87,11 @@ export const INVITE = {
 
 /** Names on the chart toggle. */
 export const METRIC_LABEL = { trials: 'Trials', essence: 'Essence', qi: 'Qi' } as const;
+
+/** DRAFT: the overlay after the day's first seal. The count is Heavenly Cycles, never "consecutive". */
+export const MILESTONE = {
+  title: 'Heavenly Cycles',
+  one: 'day sealed upon the scroll',
+  many: 'days sealed upon the scroll',
+  close: 'Onward',
+} as const;

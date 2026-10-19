@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { sealDay, toEstimate } from './helpers';
+import { sealAndClose, sealDay, toEstimate } from './helpers';
 
 const view = async (page: Page) => (await page.request.get('/api/view')).json();
 
@@ -38,7 +38,7 @@ test('awakening the Golden Core adds a phase to weigh the Qi, then seals', async
   await expect(gauge).toHaveAttribute('aria-valuenow', '90');
   // 10 Qi unspent comes back as a bonus.
   await expect(page.getByText("tomorrow's core begins at")).toContainText('110 Qi');
-  await page.getByRole('button', { name: 'Seal Scroll and Commence' }).click();
+  await sealAndClose(page);
   await expect(page.getByRole('heading', { name: 'The Immediate Trial' })).toBeVisible();
   expect((await view(page)).planning.qi.start).toBe(100);
 });
@@ -68,7 +68,7 @@ test('planning past the redline is allowed and says how tomorrow begins', async 
   await setQi(page, 'Two', '100');
   await setQi(page, 'Three', '5');
   await expect(page.getByText("tomorrow's core begins at")).toContainText('10 Qi');
-  await page.getByRole('button', { name: 'Seal Scroll and Commence' }).click();
+  await sealAndClose(page);
   await expect(page.getByRole('heading', { name: 'The Immediate Trial' })).toBeVisible();
 });
 
@@ -81,7 +81,7 @@ test('Back to Estimating keeps the Qi, and Settings switches the Golden Core off
   await expect(page.getByRole('heading', { name: 'Estimate the Journey' })).toBeVisible();
   await page.getByRole('button', { name: 'Proceed: Weigh the Qi' }).click();
   await expect(page.getByLabel('Qi cost of Write report')).toHaveValue('40');
-  await page.getByRole('button', { name: 'Seal Scroll and Commence' }).click();
+  await sealAndClose(page);
   await expect(page.getByRole('heading', { name: 'The Immediate Trial' })).toBeVisible();
   await page.getByRole('button', { name: 'Settings' }).click();
   const toggle = page.getByLabel('Weigh Qi while planning');
@@ -122,7 +122,7 @@ for (const size of [
 test('conquered Qi fills the gauge on the dashboard', async ({ page }) => {
   await toWeigh(page, 'Write report', 'Tidy desk');
   await setQi(page, 'Write report', '60');
-  await page.getByRole('button', { name: 'Seal Scroll and Commence' }).click();
+  await sealAndClose(page);
   const gauge = page.locator('section[aria-label="Essence"]').getByRole('meter', {
     name: 'Qi conquered today',
   });

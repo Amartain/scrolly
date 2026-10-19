@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from scrolly.api.deps import get_clock, get_store
+from scrolly.api.schemas.milestone import MilestoneOut
 from scrolly.api.schemas.planning import (
     OrderIn,
     QiStartIn,
@@ -14,6 +15,7 @@ from scrolly.api.schemas.planning import (
 from scrolly.api.schemas.view import ViewOut
 from scrolly.ports import Clock, Store
 from scrolly.services.day import DayService
+from scrolly.services.milestone_content import milestone_after
 from scrolly.services.planning import PlanningService
 from scrolly.services.planning_trials import PlanningTrialsService
 from scrolly.services.view import build_view
@@ -80,8 +82,12 @@ def qi_start(body: QiStartIn, planning: PlanningDep, store: StoreDep, clock: Clo
 
 @router.post("/seal")
 def seal(planning: PlanningDep, store: StoreDep, clock: ClockDep) -> ViewOut:
-    planning.seal()
-    return _view(store, clock)
+    first_of_the_day = planning.seal()
+    view = _view(store, clock)
+    if first_of_the_day:
+        milestone = milestone_after(view.dashboard.heavenly_cycles)
+        view.milestone = MilestoneOut.from_milestone(milestone)
+    return view
 
 
 @router.post("/summon")

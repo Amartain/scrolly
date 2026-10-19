@@ -76,3 +76,12 @@ export async function canvasColor(page: Page): Promise<string> {
     return value.trim().toUpperCase();
   });
 }
+
+/** Click Seal Scroll and Commence, then close the milestone that follows the day's first seal. */
+export async function sealAndClose(page: Page) {
+  await page.getByRole('button', { name: 'Seal Scroll and Commence' }).click();
+  const milestone = page.getByRole('dialog', { name: 'Heavenly Cycles' });
+  await expect(milestone).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(milestone).toHaveCount(0);
+}

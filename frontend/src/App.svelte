@@ -8,6 +8,7 @@
   import Phase3 from './screens/Phase3.svelte';
   import Screen1 from './screens/Screen1.svelte';
   import Screen2 from './screens/Screen2.svelte';
+  import MilestoneOverlay from './components/MilestoneOverlay.svelte';
   import ThemeOrbs from './components/ThemeOrbs.svelte';
   import Settings from './screens/Settings.svelte';
   import ZeroState from './screens/ZeroState.svelte';
@@ -65,6 +66,7 @@
 </div>
 {#if onDashboard}
   <Screen2 />
+  <MilestoneOverlay />
 {/if}
 {#if onboarding}
   <ThemeOrbs />

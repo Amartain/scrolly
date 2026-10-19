@@ -1,0 +1,57 @@
+[
+  {
+    "day": 3,
+    "quote": {
+      "text": "I will keep leveling up until I reach the top.",
+      "attribution": "the System has redacted the author"
+    },
+    "banner": null
+  },
+  {
+    "day": 7,
+    "quote": {
+      "text": "I wasn't born strong; I worked my ass off to make myself one.",
+      "attribution": "the System has redacted the author, gather more shards to reveal"
+    },
+    "banner": null
+  },
+  {
+    "day": 10,
+    "quote": {
+      "text": "All we have to decide is what to do with the time that is given us.",
+      "attribution": "J.R.R. Tolkien"
+    },
+    "banner": "Day 10 Milestone: Foundation Established!"
+  },
+  {
+    "day": 14,
+    "quote": { "text": "Nothing is ever easy.", "attribution": "Zeddicus Zu'l Zorander" },
+    "banner": "Day 14 Milestone: Half a Moon of Devotion!"
+  },
+  {
+    "day": 21,
+    "quote": null,
+    "banner": "Day 21 Milestone: The Discipline Has Become Nature!"
+  },
+  {
+    "day": 30,
+    "quote": {
+      "text": "They gave me that nickname because I was too weak… So I must become stronger.",
+      "attribution": "Shadow Monarch's Early Path"
+    },
+    "banner": "Day 30 Milestone: Master of the Pristine Peak!"
+  },
+  {
+    "day": 60,
+    "quote": {
+      "text": "If the road is easy, you're likely going the wrong way.",
+      "attribution": "Terry Goodkind"
+    },
+    "banner": null
+  },
+  {
+    "day": 100,
+    "quote": { "text": "Arise.", "attribution": "Sung Jinwoo" },
+    "banner": null
+  }
+]

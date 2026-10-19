@@ -16,6 +16,7 @@ export type Art = components['schemas']['ArtOut'];
 export type LetGo = components['schemas']['LetGoOut'];
 export type ChartSeries = components['schemas']['SeriesOut'];
 export type Metric = ChartSeries['metric'];
+export type Milestone = components['schemas']['MilestoneOut'];
 export type ArtKind = components['schemas']['ArtOrderIn']['kind'];
 export type Theme = components['schemas']['AppearanceIn']['theme'];
 export type DayVariant = NonNullable<components['schemas']['AppearanceIn']['day_variant']>;

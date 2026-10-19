@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { art, begin, importFile, section, toEstimate } from './helpers';
+import { art, begin, importFile, sealAndClose, section, toEstimate } from './helpers';
 
 const trialRows = (page: Page) =>
   page.getByRole('list', { name: 'Trials on the scroll' }).getByRole('listitem');
@@ -42,7 +42,7 @@ test('plan a day from the first click to the sealed dashboard', async ({ page })
   await page.keyboard.press('Alt+ArrowDown');
   await expect.poll(() => titles(page)).toEqual(['Tidy desk', 'Write report']);
 
-  await page.getByRole('button', { name: 'Seal Scroll and Commence' }).click();
+  await sealAndClose(page);
   await expect(section(page, 'The Immediate Trial')).toContainText('Tidy desk');
   await expect(section(page, 'Remaining Trials')).toContainText('Write report');
   await expect(section(page, 'Remaining Trials')).toContainText('(1h15m)');
