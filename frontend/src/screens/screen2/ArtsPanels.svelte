@@ -1,7 +1,8 @@
 <script lang="ts">
-  import ExpandButton from './../../components/ExpandButton.svelte';
+  import GlyphButton from '../../components/GlyphButton.svelte';
   import Panel from '../../components/Panel.svelte';
   import ReorderList from '../../components/ReorderList.svelte';
+  import GlyphIcon from '../../icons/GlyphIcon.svelte';
   import { horizon, today, type Art, type ArtKind } from '../../lib/api';
   import { EMPTY } from '../../lib/copy';
   import { useOrder } from '../../lib/order.svelte';
@@ -33,7 +34,9 @@
 <div class="pair">
   <Panel title="Foundational Arts" tone="foundational" scroll striped>
     {#snippet actions()}
-      <ExpandButton label="Expand Foundational Arts" onclick={() => (expanded = 'foundational')} />
+      <GlyphButton label="Add a Foundational Art" onclick={() => (expanded = 'foundational')}>
+        <GlyphIcon name="plus" />
+      </GlyphButton>
     {/snippet}
     {#if foundational.shown.length === 0}
       <p class="empty">{EMPTY.foundational}</p>
@@ -48,7 +51,9 @@
   </Panel>
   <Panel title="Restorative Arts" tone="restorative" scroll striped>
     {#snippet actions()}
-      <ExpandButton label="Expand Restorative Arts" onclick={() => (expanded = 'restorative')} />
+      <GlyphButton label="Add a Restorative Art" onclick={() => (expanded = 'restorative')}>
+        <GlyphIcon name="plus" />
+      </GlyphButton>
     {/snippet}
     {#if restorative.shown.length === 0}
       <p class="empty">{EMPTY.restorative}</p>

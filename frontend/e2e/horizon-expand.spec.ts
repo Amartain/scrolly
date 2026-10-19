@@ -26,7 +26,8 @@ test('the expanded Horizon renames, switches Mandate and deletes, by keyboard', 
   await expect(dialog).toBeVisible();
   await expect(dialog.getByRole('textbox')).toHaveCount(0); // no duration input anywhere
 
-  await dialog.getByRole('button', { name: 'Edit Taxes' }).press('Enter');
+  await expect(dialog.getByRole('button', { name: /^Edit / })).toHaveCount(0); // no pencils
+  await dialog.getByRole('button', { name: 'Taxes', exact: true }).press('Enter');
   await dialog.getByLabel('Rename Taxes').fill('Pay taxes');
   await page.keyboard.press('Enter');
   await expect(dialog.getByText('Pay taxes')).toBeVisible();

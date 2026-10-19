@@ -12,7 +12,7 @@
   let draft = $state('');
   let field = $state<HTMLInputElement>();
 
-  /** Begin renaming, for example from a pencil button. */
+  /** Begin renaming from outside, for example after a keyboard shortcut. */
   export async function start() {
     draft = value;
     editing = true;

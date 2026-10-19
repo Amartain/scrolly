@@ -15,7 +15,6 @@
     editable = false,
   }: { item: HorizonItem; onsummon?: () => void; editable?: boolean } = $props();
 
-  let name = $state<EditableText>();
   const edit = (patch: Parameters<typeof horizon.edit>[1]) =>
     view.act(() => horizon.edit(item.id, patch));
 </script>
@@ -25,7 +24,6 @@
     value={item.title}
     label="Rename {item.title}"
     onsave={(title) => edit({ title })}
-    bind:this={name}
   />
 {:else}
   <span class="title read">{item.title}</span>
@@ -37,9 +35,6 @@
   onToggle={editable ? () => edit({ is_mandate: !item.is_mandate }) : undefined}
 />
 {#if editable}
-  <GlyphButton label="Edit {item.title}" onclick={() => name?.start()}>
-    <GlyphIcon name="pencil" />
-  </GlyphButton>
   <GlyphButton
     label="Discard {item.title}"
     onclick={() => view.act(() => horizon.discard(item.id))}

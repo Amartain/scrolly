@@ -1,4 +1,5 @@
-<!-- An Art template: title, default duration, its type mark, and + to summon a copy. -->
+<!-- An Art template on an Arts-only list: its mark leads (static, nothing to switch), then title, default
+     duration, and ↑ to summon a copy. -->
 <script lang="ts">
   import GlyphButton from '../../components/GlyphButton.svelte';
   import TypeMark from '../../components/TypeMark.svelte';
@@ -12,11 +13,11 @@
   }: { art: Art; kind: 'foundational' | 'restorative'; onsummon: () => void } = $props();
 </script>
 
+<TypeMark type={kind} />
 <span class="title read">{art.title}</span>
 <span class="figure digits">{art.expected_text}</span>
-<TypeMark type={kind} />
 <GlyphButton label="Summon {art.title}" onclick={onsummon}>
-  <GlyphIcon name="plus" />
+  <GlyphIcon name="up" />
 </GlyphButton>
 
 <style>

@@ -5,6 +5,7 @@
   import GlyphButton from '../../components/GlyphButton.svelte';
   import Modal from '../../components/Modal.svelte';
   import RowList from '../../components/RowList.svelte';
+  import TypeMark from '../../components/TypeMark.svelte';
   import GlyphIcon from '../../icons/GlyphIcon.svelte';
   import { arts, type Art, type ArtKind } from '../../lib/api';
   import { EMPTY } from '../../lib/copy';
@@ -19,7 +20,10 @@
   );
   let title = $state('');
   let estimate = $state('');
-  let names: Record<string, EditableText | undefined> = $state({});
+  let nameField = $state<HTMLInputElement>();
+
+  // Opened from the + in the header: the name is ready to type. Runs after Modal has shown the dialog.
+  $effect(() => nameField?.focus());
 
   async function add(event?: Event) {
     event?.preventDefault();
@@ -40,11 +44,11 @@
 </script>
 
 {#snippet row(art: Art)}
+  <TypeMark type={kind} />
   <EditableText
     value={art.title}
     label="Rename {art.title}"
     onsave={(next) => view.act(() => arts.edit(art.id, { title: next }))}
-    bind:this={names[art.id]}
   />
   <input
     class="duration digits"
@@ -53,9 +57,6 @@
     aria-label="Duration of {art.title}"
     onchange={(event) => setDuration(art, event)}
   />
-  <GlyphButton label="Edit {art.title}" onclick={() => names[art.id]?.start()}>
-    <GlyphIcon name="pencil" />
-  </GlyphButton>
   <GlyphButton label="Delete {art.title}" onclick={() => view.act(() => arts.remove(art.id))}>
     <GlyphIcon name="x" />
   </GlyphButton>
@@ -63,7 +64,12 @@
 
 <Modal title="{heading}, expanded" tone={kind} {onclose}>
   <form class="add" onsubmit={add}>
-    <input bind:value={title} placeholder="Name a practice…" aria-label="A new Art" />
+    <input
+      bind:this={nameField}
+      bind:value={title}
+      placeholder="Name a practice…"
+      aria-label="A new Art"
+    />
     <input
       class="duration digits"
       bind:value={estimate}
