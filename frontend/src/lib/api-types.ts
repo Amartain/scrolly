@@ -695,6 +695,22 @@ export interface components {
             /** Title */
             title?: string | null;
         };
+        /** BarOut */
+        BarOut: {
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Height Pct */
+            height_pct: number;
+            /** Is Rest */
+            is_rest: boolean;
+            /** Label */
+            label: string;
+            /** Value Text */
+            value_text: string;
+        };
         /** Body_import_file_api_import_post */
         Body_import_file_api_import_post: {
             /** File */
@@ -739,6 +755,8 @@ export interface components {
         };
         /** DashboardOut */
         DashboardOut: {
+            /** Charts */
+            charts: components["schemas"]["SeriesOut"][];
             /** Conquered */
             conquered: components["schemas"]["ConqueredOut"][];
             essence: components["schemas"]["EssenceOut"];
@@ -877,6 +895,11 @@ export interface components {
             title: string;
             type: components["schemas"]["TrialType"];
         };
+        /**
+         * Metric
+         * @enum {string}
+         */
+        Metric: "trials" | "essence" | "qi";
         /** OrderIn */
         OrderIn: {
             /** Ids */
@@ -928,6 +951,20 @@ export interface components {
             text: string;
             /** Trials */
             trials: components["schemas"]["PlanTrialOut"][];
+        };
+        /** PointOut */
+        PointOut: {
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Label */
+            label: string;
+            /** Value */
+            value: number;
+            /** Value Text */
+            value_text: string;
         };
         /**
          * QiFillOut
@@ -1006,6 +1043,19 @@ export interface components {
             qi: string;
             /** Title */
             title: string;
+        };
+        /**
+         * SeriesOut
+         * @description Both charts for one metric. `placeholder` data is a fixed shape for the fog.
+         */
+        SeriesOut: {
+            metric: components["schemas"]["Metric"];
+            /** Momentum */
+            momentum: components["schemas"]["PointOut"][];
+            /** Placeholder */
+            placeholder: boolean;
+            /** Rhythm */
+            rhythm: components["schemas"]["BarOut"][];
         };
         /** SummonIn */
         SummonIn: {

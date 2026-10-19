@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+from scrolly.api.schemas.charts import SeriesOut
 from scrolly.domain.duration import format_duration
 from scrolly.domain.essence import EssenceSummary
 from scrolly.domain.legend import TrialType, type_of
@@ -110,6 +111,7 @@ class DashboardOut(BaseModel):
     victory: bool
     lifetime_conquered: int
     heavenly_cycles: int
+    charts: list[SeriesOut]
 
     @classmethod
     def from_data(cls, data: DashboardView) -> "DashboardOut":
@@ -125,6 +127,7 @@ class DashboardOut(BaseModel):
             victory=data.victory,
             lifetime_conquered=data.lifetime_conquered,
             heavenly_cycles=data.heavenly_cycles,
+            charts=[SeriesOut.from_series(s) for s in data.charts],
         )
 
 

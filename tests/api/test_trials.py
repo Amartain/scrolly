@@ -139,3 +139,17 @@ def test_the_counters_start_at_zero_and_grow_with_the_day(client: TestClient) ->
     assert _dashboard(client)["lifetime_conquered"] == 1
     client.post(f"/api/trials/{first}/revive")
     assert _dashboard(client)["lifetime_conquered"] == 0
+
+
+def test_the_dashboard_carries_both_charts_for_each_metric(client: TestClient) -> None:
+    _seal(client, "A", "B")
+    charts = _dashboard(client)["charts"]
+    assert [c["metric"] for c in charts] == ["trials", "essence"]
+    assert all(c["placeholder"] for c in charts)
+    first = _dashboard(client)["immediate"]["id"]
+    client.post(f"/api/trials/{first}/conquer")
+    trials = _dashboard(client)["charts"][0]
+    assert trials["placeholder"] is False
+    assert [(p["value"], p["value_text"]) for p in trials["momentum"]] == [(1, "1")]
+    assert len(trials["rhythm"]) == 7
+    assert trials["rhythm"][-1]["is_rest"] is False

@@ -73,3 +73,18 @@ test('conquering the last trial brings the victory banner', async ({ page }) => 
   await expect(page.getByRole('heading', { name: 'The Sun Sets on the Peak' })).toBeVisible();
   await expect(conquered(page).getByText('Only one')).toBeVisible();
 });
+
+test('Lifetime Conquered goes up on conquer and back down on revive; Cycles stay', async ({
+  page,
+}) => {
+  await sealWithEstimate(page);
+  const lifetime = section(page, 'Lifetime Conquered');
+  const cycles = section(page, 'Heavenly Cycles');
+  await expect(lifetime).toContainText('0');
+  await expect(cycles).toContainText('1');
+  await page.getByRole('button', { name: 'Conquer Write report' }).click();
+  await expect(lifetime).toContainText('1');
+  await page.getByRole('button', { name: 'Revive Write report' }).click();
+  await expect(lifetime).toContainText('0');
+  await expect(cycles).toContainText('1');
+});

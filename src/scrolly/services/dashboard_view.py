@@ -8,6 +8,7 @@ from scrolly.domain.models import Trial, TrialState
 from scrolly.domain.stats import heavenly_cycles, lifetime_conquered
 from scrolly.domain.timer import elapsed_seconds
 from scrolly.ports import Store
+from scrolly.services.charts_view import Series, build_charts
 
 
 @dataclass(frozen=True)
@@ -30,6 +31,7 @@ class DashboardView:
     victory: bool
     lifetime_conquered: int
     heavenly_cycles: int
+    charts: list[Series]
 
 
 def build_dashboard_view(store: Store, now: datetime) -> DashboardView:
@@ -56,4 +58,5 @@ def build_dashboard_view(store: Store, now: datetime) -> DashboardView:
         victory=is_victory(store.days.get(today), trials),
         lifetime_conquered=lifetime_conquered(store.trials.list_all()),
         heavenly_cycles=heavenly_cycles(store.days.list_all()),
+        charts=build_charts(store, today),
     )

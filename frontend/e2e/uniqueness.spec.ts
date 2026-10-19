@@ -46,19 +46,22 @@ test('Scribe and the Horizon take an Art name again and again', async ({ page })
   await importFile(page, 'rituals.json', [art]);
   await sealDay(page, 'First');
   await page.goto('/');
-  for (const title of ['Stretch', 'Stretch']) {
-    await page.getByLabel('Trial to scribe').fill(title);
-    await page.getByLabel('Trial to scribe').press('Enter');
-  }
-  await expect(
-    section(page, 'Remaining Trials').getByRole('img', { name: 'Foundational Art' }),
-  ).toHaveCount(2);
+  const remaining = section(page, 'Remaining Trials').getByRole('img', {
+    name: 'Foundational Art',
+  });
   const horizon = section(page, 'The Horizon');
-  for (const title of ['Stretch', 'Stretch']) {
-    await horizon.getByLabel('A future trial').fill(title);
-    await horizon.getByLabel('A future trial').press('Enter');
+  const listed = horizon.getByRole('img', { name: 'Foundational Art' });
+  // Wait for each add to land: the field clears when it does, and would wipe the next fill.
+  for (const count of [1, 2]) {
+    await page.getByLabel('Trial to scribe').fill('Stretch');
+    await page.getByLabel('Trial to scribe').press('Enter');
+    await expect(remaining).toHaveCount(count);
   }
-  await expect(horizon.getByRole('img', { name: 'Foundational Art' })).toHaveCount(2);
+  for (const count of [1, 2]) {
+    await horizon.getByLabel('A future trial').fill('Stretch');
+    await horizon.getByLabel('A future trial').press('Enter');
+    await expect(listed).toHaveCount(count);
+  }
 });
 
 test('Scribe a Horizon title: the note says where it is and offers a way out', async ({ page }) => {

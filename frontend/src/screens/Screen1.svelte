@@ -1,5 +1,7 @@
 <script lang="ts">
   import Panel from '../components/Panel.svelte';
+  import MetricToggle from '../components/MetricToggle.svelte';
+  import { chartChoice } from '../lib/charts.svelte';
   import { EMPTY } from '../lib/copy';
   import { conquer, toggleTimer } from '../lib/immediate';
   import { onControl, typing } from '../lib/keys';
@@ -8,10 +10,16 @@
   import ConqueredList from './dashboard/ConqueredList.svelte';
   import EssencePanel from './dashboard/EssencePanel.svelte';
   import ImmediateCard from './dashboard/ImmediateCard.svelte';
+  import MomentumChart from './dashboard/MomentumChart.svelte';
+  import RhythmChart from './dashboard/RhythmChart.svelte';
   import StatCard from './dashboard/StatCard.svelte';
   import VictoryBanner from './dashboard/VictoryBanner.svelte';
 
   const dashboard = $derived(view.current?.dashboard);
+  const charts = $derived(dashboard?.charts ?? []);
+  const series = $derived(chartChoice.pick(charts));
+  // The toggle waits until something has been conquered: before that the charts are only a hint.
+  const live = $derived(charts.some((c) => !c.placeholder));
 
   // Space starts or pauses the timer, Enter conquers. A focused button already does both itself.
   function onkeydown(event: KeyboardEvent) {
@@ -47,8 +55,37 @@
       <StatCard title="Lifetime Conquered" value={dashboard?.lifetime_conquered ?? 0} />
       <StatCard title="Heavenly Cycles" value={dashboard?.heavenly_cycles ?? 0} />
     </div>
-    <Panel title="Cumulative Momentum" empty={EMPTY.momentum} />
-    <Panel title="Rhythm" empty={EMPTY.rhythm} />
+    {#if series}
+      <Panel title="Cumulative Momentum">
+        {#snippet actions()}
+          {#if live}
+            <MetricToggle
+              metrics={charts.map((c) => c.metric)}
+              value={series.metric}
+              tone="growth"
+              onpick={(metric) => (chartChoice.metric = metric)}
+            />
+          {/if}
+        {/snippet}
+        <MomentumChart {series} />
+      </Panel>
+      <Panel title="Rhythm">
+        {#snippet actions()}
+          {#if live}
+            <MetricToggle
+              metrics={charts.map((c) => c.metric)}
+              value={series.metric}
+              tone="gold"
+              onpick={(metric) => (chartChoice.metric = metric)}
+            />
+          {/if}
+        {/snippet}
+        <RhythmChart {series} />
+      </Panel>
+    {:else}
+      <Panel title="Cumulative Momentum" />
+      <Panel title="Rhythm" />
+    {/if}
   </div>
 </div>
 <button class="fold display" type="button" onclick={() => showScreen('two')}>

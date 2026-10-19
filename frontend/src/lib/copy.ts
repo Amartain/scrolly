@@ -12,8 +12,6 @@ export const EMPTY = {
   restorative: 'No restorative art gathered yet.',
   horizon: 'The Horizon is clear. Mist hangs over distant peaks.',
   onScroll: 'The scroll is blank. Summon a trial, or scribe one.',
-  momentum: 'Momentum gathers like mist. It will appear here.',
-  rhythm: 'Your rhythm will be drawn here, day by day.',
 } as const;
 
 /** A line of a note; `em` marks a user's title, shown in italics. */
@@ -80,3 +78,12 @@ export function refusalNote(refusal: TitleRefusal): Segment[] {
     .filter(([, names]) => names.length > 0)
     .flatMap(([lead, names], i) => [plain(i === 0 ? lead : `. ${lead}`), ...titles(names)]);
 }
+
+/** DRAFT, proposed 2026-10-19: said over the fogged charts until the first trial is conquered. */
+export const INVITE = {
+  momentum: 'Conquer your first trial to reveal your cultivation momentum.',
+  rhythm: 'Conquer your first trial to reveal your cultivation rhythm.',
+} as const;
+
+/** Names on the chart toggle. */
+export const METRIC_LABEL = { trials: 'Trials', essence: 'Essence', qi: 'Qi' } as const;
