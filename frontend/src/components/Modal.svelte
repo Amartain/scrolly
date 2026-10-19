@@ -1,4 +1,3 @@
-<!-- A panel that opens over the screen. Escape or the close button closes it; focus returns to the opener. -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import GlyphIcon from '../icons/GlyphIcon.svelte';
@@ -16,41 +15,35 @@
 
   let dialog = $state<HTMLDialogElement>();
 
-  $effect(() => dialog?.showModal());
+  $effect(() => {
+    const opener = document.activeElement;
+    dialog?.showModal();
+    return () => {
+      dialog?.close();
+      if (opener instanceof HTMLElement) opener.focus();
+    };
+  });
 </script>
 
-<dialog bind:this={dialog} aria-label={title} {onclose}>
+<dialog
+  bind:this={dialog}
+  aria-label={title}
+  onkeydown={(event) => {
+    if (event.key !== 'Escape') return;
+    event.preventDefault();
+    onclose();
+  }}
+  oncancel={(event) => {
+    event.preventDefault();
+    onclose();
+  }}
+>
   <Panel {title} {tone} scroll striped>
     {#snippet actions()}
-      <GlyphButton label="Close {title}" onclick={() => dialog?.close()}>
+      <GlyphButton label="Close {title}" onclick={onclose}>
         <GlyphIcon name="x" />
       </GlyphButton>
     {/snippet}
     {@render children()}
   </Panel>
 </dialog>
-
-<style>
-  dialog {
-    width: min(100% - var(--space-6) * 2, 48rem);
-    max-height: 80dvh;
-    padding: 0;
-    background: transparent;
-    border: 0;
-    color: var(--ink);
-  }
-
-  dialog[open] {
-    display: flex;
-    flex-direction: column;
-  }
-
-  dialog :global(.panel) {
-    flex: 1;
-  }
-
-  dialog::backdrop {
-    background: color-mix(in srgb, var(--surface-panel) 55%, transparent);
-    backdrop-filter: blur(var(--space-2));
-  }
-</style>

@@ -11,7 +11,7 @@ from scrolly.domain.day_flow import (
     set_estimated_qi,
 )
 from scrolly.domain.models import OriginType, Trial, TrialState
-from scrolly.domain.qi import effective_qi, spent
+from scrolly.domain.qi import QiError, effective_qi, spent
 from tests.factories import make_trial
 
 NOW = datetime.fromisoformat("2026-10-18T13:00:00+02:00")
@@ -53,11 +53,17 @@ def test_a_restorative_art_restores_its_recorded_qi() -> None:
     assert spent([work, replace(art, qi_actual=15)]) == 35
 
 
-def test_the_estimate_can_change_only_while_the_trial_is_open() -> None:
-    assert set_estimated_qi(_immediate(qi_expected=5), "25").qi_expected == 25
-    assert set_estimated_qi(_immediate(qi_expected=5), "").qi_expected is None
+def test_the_qi_estimate_is_set_once_and_only_while_the_trial_is_open() -> None:
+    assert set_estimated_qi(_immediate(), "25").qi_expected == 25
+    assert set_estimated_qi(_immediate(), "").qi_expected is None
+    with pytest.raises(TrialError, match="already set"):
+        set_estimated_qi(_immediate(qi_expected=5), "25")
+    with pytest.raises(TrialError, match="already set"):
+        set_estimated_qi(_immediate(qi_expected=0), "25")
     with pytest.raises(TrialError):
-        set_estimated_qi(conquer(_immediate(qi_expected=5), NOW), "25")
+        set_estimated_qi(conquer(_immediate(), NOW), "25")
+    with pytest.raises(QiError):
+        set_estimated_qi(_immediate(), "lots")
 
 
 def test_reviving_clears_the_recorded_qi() -> None:

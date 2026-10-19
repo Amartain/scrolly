@@ -132,3 +132,14 @@ def test_renaming_changes_the_title(store: Store, clock: FixedClock) -> None:
     today = seal_day(store, clock, "A")
     today.update(by_title(store)["A"].id, title="  Better title ")
     assert list(by_title(store)) == ["Better title"]
+
+
+def test_a_blank_estimate_at_the_seal_can_be_set_once(store: Store, clock: FixedClock) -> None:
+    today = seal_day(store, clock, "A")
+    a = by_title(store)["A"]
+    today.update(a.id, estimate="30m", qi="12")
+    assert (by_title(store)["A"].essence_expected_min, by_title(store)["A"].qi_expected) == (30, 12)
+    with pytest.raises(TrialError, match="already set"):
+        today.update(a.id, estimate="1h")
+    with pytest.raises(TrialError, match="already set"):
+        today.update(a.id, qi="40")

@@ -2,7 +2,7 @@
   import Button from '../../components/Button.svelte';
   import EditableText from '../../components/EditableText.svelte';
   import GlyphButton from '../../components/GlyphButton.svelte';
-  import QiField from '../../components/QiField.svelte';
+  import SetOnce from '../../components/SetOnce.svelte';
   import StateMark from '../../components/StateMark.svelte';
   import TypeMark from '../../components/TypeMark.svelte';
   import GlyphIcon from '../../icons/GlyphIcon.svelte';
@@ -14,12 +14,6 @@
   const qiOn = $derived(view.planning?.qi.enabled ?? false);
   const update = (patch: Parameters<typeof today.update>[1]) =>
     view.act(() => today.update(trial.id, patch));
-
-  async function commitEstimate(event: Event) {
-    const input = event.currentTarget as HTMLInputElement;
-    if (input.value.trim() === trial.expected_text) return;
-    if (!(await update({ estimate: input.value }))) input.value = trial.expected_text;
-  }
 </script>
 
 <StateMark state="remaining" />
@@ -28,15 +22,17 @@
   label="Rename {trial.title}"
   onsave={(title) => update({ title })}
 />
-<input
-  class="estimate digits"
+<SetOnce
+  kind="time"
+  confirm="Set the time for {trial.title}"
   value={trial.expected_text}
-  placeholder="—"
-  aria-label="Estimate for {trial.title}"
-  onchange={commitEstimate}
+  label="Estimate for {trial.title}"
+  onsave={(estimate) => update({ estimate })}
 />
 {#if qiOn}
-  <QiField
+  <SetOnce
+    kind="qi"
+    confirm="Set the Qi for {trial.title}"
     value={trial.qi_text}
     restores={trial.type === 'restorative'}
     label="Qi expected of {trial.title}"
@@ -72,18 +68,6 @@
 {/if}
 
 <style>
-  .estimate {
-    flex: none;
-    width: var(--size-estimate);
-    height: var(--size-glyph-button);
-    padding-inline: var(--space-2);
-    background: var(--surface-raised);
-    border: var(--border-width) solid var(--line);
-    box-shadow: var(--shadow-sunken);
-    font-size: var(--text-body-md);
-    text-align: right;
-  }
-
   .postpone {
     --glyph-ink: var(--postponed);
     display: flex;

@@ -821,8 +821,6 @@ export interface components {
         ImmediateOut: {
             /** Expected Text */
             expected_text: string;
-            /** Has Note */
-            has_note: boolean;
             /** Id */
             id: string;
             /** Is Mandate */

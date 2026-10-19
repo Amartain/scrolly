@@ -8,7 +8,8 @@ test('Qi is set on the Immediate card and shown as plain text once conquered', a
   const field = page.getByLabel('Qi expected of Write report');
   await field.fill('35');
   await field.press('Enter');
-  await expect(field).toHaveValue('35');
+  await expect(page.getByText('(35 Qi)')).toBeVisible();
+  await expect(field).toHaveCount(0);
   await page.getByRole('button', { name: 'Conquer Write report' }).click();
   const row = section(page, 'Conquered Today').getByRole('listitem');
   await expect(row).toContainText('35 Qi');

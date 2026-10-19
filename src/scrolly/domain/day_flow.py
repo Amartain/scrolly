@@ -87,15 +87,18 @@ def revive(trial: Trial, trials: Sequence[Trial]) -> Trial:
 
 
 def set_estimate(trial: Trial, text: str) -> Trial:
-    """The time expected of a trial that is still open. Blank clears it."""
+    """The time expected of an open trial. It is set once: a trial that has one keeps it."""
     _require_open(trial, "Only an open trial's estimate can be changed")
+    if trial.essence_expected_min is not None:
+        raise TrialError("The estimate is already set")
     return replace(trial, essence_expected_min=parse_duration(text))
 
 
 def set_estimated_qi(trial: Trial, text: str) -> Trial:
-    """The Qi expected of a trial that is still open. Blank clears it."""
-    if trial.state not in OPEN_STATES:
-        raise TrialError("Only an open trial's estimate can be changed")
+    """The Qi expected of an open trial. It is set once: a trial that has one keeps it."""
+    _require_open(trial, "Only an open trial's estimate can be changed")
+    if trial.qi_expected is not None:
+        raise TrialError("The Qi estimate is already set")
     return replace(trial, qi_expected=parse_qi(text))
 
 

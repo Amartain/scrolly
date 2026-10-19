@@ -40,6 +40,14 @@ def test_scribing_after_the_seal_queues_a_trial_with_estimate_and_qi(client: Tes
     )
 
 
+def test_a_scribed_trial_lands_first_in_the_queue(client: TestClient) -> None:
+    _seal(client, "A", "B", "C")
+    client.post("/api/trials", json={"title": "Pay rent"})
+    trials = client.get("/api/view").json()["planning"]["trials"]
+    waiting = [t["title"] for t in trials if t["state"] == "remaining"]
+    assert waiting == ["Pay rent", "B", "C"]
+
+
 def test_scribing_needs_a_title(client: TestClient) -> None:
     _seal(client, "A")
     assert client.post("/api/trials", json={"title": " "}).status_code == 409
@@ -152,12 +160,14 @@ def test_arts_can_be_reordered_within_their_kind(client: TestClient) -> None:
 def test_the_estimate_of_a_waiting_trial_can_be_set_after_the_seal(client: TestClient) -> None:
     _seal(client, "A", "B")
     waiting = _id(client, "B")
+    assert client.patch(f"/api/trials/{waiting}", json={"estimate": "soon"}).status_code == 422
     reply = client.patch(f"/api/trials/{waiting}", json={"estimate": "1h15m"})
     assert (
         next(t for t in reply.json()["planning"]["trials"] if t["id"] == waiting)["expected_text"]
         == "1h15m"
     )
-    assert client.patch(f"/api/trials/{waiting}", json={"estimate": "soon"}).status_code == 422
+    again = client.patch(f"/api/trials/{waiting}", json={"estimate": "2h"})
+    assert again.status_code == 409 and "already set" in again.json()["detail"]
 
 
 def test_a_horizon_item_switches_between_mandate_and_mortal(client: TestClient) -> None:

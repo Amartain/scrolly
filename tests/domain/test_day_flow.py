@@ -13,6 +13,7 @@ from scrolly.domain.day_flow import (
     rename,
     require_editable,
     revive,
+    set_estimate,
 )
 from scrolly.domain.models import Day, OriginType, Trial, TrialState
 from scrolly.domain.timer import start
@@ -134,3 +135,12 @@ def test_victory_needs_a_sealed_day_something_conquered_and_nothing_open() -> No
 def test_a_day_where_everything_was_let_go_is_not_a_victory() -> None:
     assert not is_victory(SEALED, [make_trial("Gone", state=TrialState.LOST)])
     assert not is_victory(SEALED, [])
+
+
+def test_the_time_estimate_is_set_once() -> None:
+    assert set_estimate(make_trial("A"), "45m").essence_expected_min == 45
+    assert set_estimate(make_trial("A"), "").essence_expected_min is None
+    with pytest.raises(TrialError, match="already set"):
+        set_estimate(make_trial("A", essence_expected_min=30), "1h")
+    with pytest.raises(TrialError):
+        set_estimate(make_trial("A", state=TrialState.DONE), "1h")

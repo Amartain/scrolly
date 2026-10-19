@@ -24,10 +24,17 @@ def _by_title(trials: list[Trial], title: str) -> Trial:
     return next(t for t in trials if t.title == title)
 
 
-def test_a_scribed_trial_waits_at_the_end_while_one_is_underway() -> None:
+def test_a_scribed_trial_goes_on_top_of_remaining_while_one_is_underway() -> None:
     trial = scribe("n", "  Pay rent ", "20m", "15", DAY, _day())
-    assert (trial.state, trial.position, trial.title) == (TrialState.REMAINING, 3, "Pay rent")
+    assert (trial.state, trial.position, trial.title) == (TrialState.REMAINING, 0, "Pay rent")
     assert (trial.essence_expected_min, trial.qi_expected) == (20, 15)
+    order = sorted([*_day(), trial], key=lambda t: t.position)
+    assert [t.title for t in order if t.state is TrialState.REMAINING] == ["Pay rent", "B", "C"]
+
+
+def test_a_scribed_trial_with_nothing_waiting_takes_the_next_place() -> None:
+    only = [make_trial("Now", state=TrialState.IMMEDIATE, position=0)]
+    assert scribe("n", "Pay rent", "", "", DAY, only).position == 1
 
 
 def test_a_scribed_trial_is_immediate_when_nothing_is_underway() -> None:

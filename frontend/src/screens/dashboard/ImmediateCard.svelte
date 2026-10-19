@@ -1,7 +1,7 @@
 <script lang="ts">
   import EditableText from '../../components/EditableText.svelte';
   import Panel from '../../components/Panel.svelte';
-  import QiField from '../../components/QiField.svelte';
+  import SetOnce from '../../components/SetOnce.svelte';
   import StateMark from '../../components/StateMark.svelte';
   import TypeMark from '../../components/TypeMark.svelte';
   import { today, type Immediate } from '../../lib/api';
@@ -12,17 +12,12 @@
 
   const qiOn = $derived(view.planning?.qi.enabled ?? false);
   const meta = $derived(
-    [
-      trial.expected_text ? `Expected ${trial.expected_text}` : 'No estimate',
-      view.current?.legend.types[trial.type]?.label,
-      trial.has_note ? '1 note' : '',
-    ]
-      .filter(Boolean)
-      .join(' · '),
+    [view.current?.legend.types[trial.type]?.label].filter(Boolean).join(' · '),
   );
 
   const rename = (title: string) => view.act(() => today.update(trial.id, { title }));
   const setQi = (qi: string) => view.act(() => today.update(trial.id, { qi }));
+  const setEstimate = (estimate: string) => view.act(() => today.update(trial.id, { estimate }));
   const toggleMandate = () =>
     view.act(() => today.update(trial.id, { is_mandate: !trial.is_mandate }));
 </script>
@@ -37,8 +32,17 @@
         >
         <span class="meta">{meta}</span>
       </div>
+      <SetOnce
+        kind="time"
+        confirm="Set the time for {trial.title}"
+        value={trial.expected_text}
+        label="Estimate for {trial.title}"
+        onsave={setEstimate}
+      />
       {#if qiOn}
-        <QiField
+        <SetOnce
+          kind="qi"
+          confirm="Set the Qi for {trial.title}"
           value={trial.qi_text}
           label="Qi expected of {trial.title}"
           restores={trial.type === 'restorative'}

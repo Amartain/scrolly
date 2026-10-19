@@ -35,7 +35,6 @@ class ImmediateOut(BaseModel):
     type: TrialType
     expected_text: str
     qi_text: str
-    has_note: bool
     timer: TimerOut
 
     @classmethod
@@ -48,7 +47,6 @@ class ImmediateOut(BaseModel):
             type=type_of(trial.is_mandate, trial.origin_type),
             expected_text=_minutes(trial.essence_expected_min),
             qi_text=_qi(trial.qi_expected),
-            has_note=bool(trial.note),
             timer=TimerOut.from_view(timer),
         )
 

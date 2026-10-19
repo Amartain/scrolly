@@ -20,15 +20,20 @@ def scribe(
     day: date,
     trials: Sequence[Trial],
 ) -> Trial:
-    """A new trial for a sealed day: Immediate if nothing is underway, else last in the queue."""
+    """A new trial for a sealed day: Immediate if nothing is underway, else on top of Remaining.
+
+    A sudden trial is the next thing to do, so it goes ahead of the ones already waiting.
+    """
     cleaned = title.strip()
     if not cleaned:
         raise TrialError("A trial needs a title")
     line = trial_from_line(trial_id, cleaned, day, next_position(trials))
     state = TrialState.REMAINING if immediate_of(trials) else TrialState.IMMEDIATE
+    waiting = [t.position for t in trials if t.state is TrialState.REMAINING]
     return replace(
         line,
         state=state,
+        position=min(waiting) - 1 if waiting else line.position,
         essence_expected_min=parse_duration(estimate),
         qi_expected=parse_qi(qi),
     )

@@ -24,7 +24,8 @@ test('Scribe Trial adds to the queue, and N jumps to the form', async ({ page })
   await page.getByLabel('Estimate', { exact: true }).fill('20m');
   await page.getByRole('button', { name: 'Inscribe' }).click();
   await expect(remaining(page).getByText('Pay rent')).toBeVisible();
-  await expect(page.getByLabel('Estimate for Pay rent')).toHaveValue('20m');
+  await expect(remaining(page).getByText('(20m)')).toBeVisible();
+  await expect(page.getByLabel('Estimate for Pay rent')).toHaveCount(0);
   await expect(page.getByLabel('Trial to scribe')).toHaveValue('');
 });
 
@@ -86,4 +87,13 @@ test('conquered trials read in the order they were conquered, under counters', a
   await expect(section(page, 'Conquered Today').locator('li .read')).toHaveText(['A', 'B']);
   await expect(section(page, 'Lifetime Conquered')).toContainText('2');
   await expect(section(page, 'Heavenly Cycles')).toContainText('1');
+});
+
+test('a scribed trial goes on top of Remaining, under the Immediate one', async ({ page }) => {
+  await sealDay(page, 'First', 'Second', 'Third');
+  await page.goto('/');
+  await page.getByLabel('Trial to scribe').fill('Sudden');
+  await page.getByRole('button', { name: 'Inscribe' }).click();
+  await expect.poll(() => titles(page)).toEqual(['Sudden', 'Second', 'Third']);
+  await expect(section(page, 'The Immediate Trial')).toContainText('First');
 });
