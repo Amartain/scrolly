@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { sealDay } from './helpers';
+import { sealDay, toEstimate } from './helpers';
 
 const titleFamily = (page: Page) =>
   page
@@ -66,4 +66,20 @@ test('OpenDyslexic is set smaller than Atkinson so saved text keeps its footprin
   await page.request.put('/api/reading-font', { data: { font: 'opendyslexic' } });
   await page.reload();
   expect(await size()).toBeLessThan(atkinson);
+});
+
+test('in Phases 1 to 3 a title in a list is readable and every input stays pixel', async ({
+  page,
+}) => {
+  await toEstimate(page, 'Write the report');
+  const face = (selector: string) =>
+    page
+      .locator(selector)
+      .first()
+      .evaluate((el) => getComputedStyle(el).fontFamily);
+  expect(await face('li .read')).toContain('Atkinson');
+  expect(await face('input')).toContain('VT323');
+  await page.getByRole('button', { name: /Back to Inscribing/ }).click();
+  expect(await face('li .read')).toContain('Atkinson');
+  expect(await face('textarea')).toContain('VT323');
 });

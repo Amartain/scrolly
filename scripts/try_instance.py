@@ -1,7 +1,7 @@
 """Run Scrolly on a scratch data folder, next to the real one.
 
   poe try-mine   ~/scrolly-mine  port 4757  your prototype data, imported once on the first run
-  poe try-blank  ~/scrolly-blank port 4767  empty (`--reset` wipes this folder first)
+  poe try-blank  ~/scrolly-blank port 4767  always starts empty: the folder is wiped first
 
 Each folder has its own lock file, so both can run together. ~/.scrolly is never touched.
 It serves the last built frontend (`poe build` or `poe check` builds it).
@@ -40,15 +40,27 @@ def import_prototype_data() -> None:
         print(f"imported {path.name}: {summary}")
 
 
+def wipe(home: Path) -> bool:
+    """Empty the folder so the next start is a first run. False if something still holds it."""
+    try:
+        shutil.rmtree(home)
+    except FileNotFoundError:
+        return True
+    except OSError as error:
+        print(f"Could not wipe {home}: {error}", file=sys.stderr)
+        print("Close the running try-blank first, then run it again.", file=sys.stderr)
+        return False
+    return True
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("which", choices=INSTANCES)
-    parser.add_argument("--reset", action="store_true", help="wipe the blank folder first")
     args = parser.parse_args()
 
     home, port = INSTANCES[args.which]
-    if args.reset and args.which == "blank":
-        shutil.rmtree(home, ignore_errors=True)
+    if args.which == "blank" and not wipe(home):
+        return 1
     os.environ["SCROLLY_HOME"] = str(home)
     home.mkdir(parents=True, exist_ok=True)
 
