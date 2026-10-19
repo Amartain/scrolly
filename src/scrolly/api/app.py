@@ -5,7 +5,8 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from scrolly.api.routes import golden_core, horizon, imports, planning, trials, view
+from scrolly.api.routes import arts, golden_core, horizon, imports, planning, trials, view
+from scrolly.domain.arts import ArtError
 from scrolly.domain.day_flow import TrialError
 from scrolly.domain.duration import DurationError
 from scrolly.domain.horizon import HorizonError
@@ -35,6 +36,7 @@ def create_app(
     app.add_exception_handler(TrialError, _refuse(409))
     app.add_exception_handler(HorizonError, _refuse(409))
     app.add_exception_handler(OrderError, _refuse(409))
+    app.add_exception_handler(ArtError, _refuse(409))
     app.add_exception_handler(DuplicateTitleError, _refuse(409))
     app.add_exception_handler(DurationError, _refuse(422))
     app.add_exception_handler(QiError, _refuse(422))
@@ -44,6 +46,7 @@ def create_app(
     app.include_router(planning.router)
     app.include_router(trials.router)
     app.include_router(horizon.router)
+    app.include_router(arts.router)
     if static_dir is not None and static_dir.is_dir():
         app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
     return app

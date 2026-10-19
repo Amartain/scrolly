@@ -21,6 +21,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/arts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add */
+        post: operations["add_api_arts_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/arts/order": {
         parameters: {
             query?: never;
@@ -36,6 +53,24 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/arts/{art_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove */
+        delete: operations["remove_api_arts__art_id__delete"];
+        options?: never;
+        head?: never;
+        /** Edit */
+        patch: operations["edit_api_arts__art_id__patch"];
         trace?: never;
     };
     "/api/golden-core": {
@@ -619,6 +654,17 @@ export interface components {
             reading_font: components["schemas"]["ReadingFont"];
             theme: components["schemas"]["Theme"];
         };
+        /** ArtAddIn */
+        ArtAddIn: {
+            /**
+             * Estimate
+             * @default
+             */
+            estimate: string;
+            kind: components["schemas"]["ArtKind"];
+            /** Title */
+            title: string;
+        };
         /**
          * ArtKind
          * @enum {string}
@@ -638,6 +684,16 @@ export interface components {
             id: string;
             /** Title */
             title: string;
+        };
+        /**
+         * ArtPatchIn
+         * @description Only the fields that are sent change. An empty estimate clears it.
+         */
+        ArtPatchIn: {
+            /** Estimate */
+            estimate?: string | null;
+            /** Title */
+            title?: string | null;
         };
         /** Body_import_file_api_import_post */
         Body_import_file_api_import_post: {
@@ -1106,6 +1162,39 @@ export interface operations {
             };
         };
     };
+    add_api_arts_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ArtAddIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     reorder_arts_api_arts_order_put: {
         parameters: {
             query?: never;
@@ -1116,6 +1205,72 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ArtOrderIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_api_arts__art_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                art_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    edit_api_arts__art_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                art_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ArtPatchIn"];
             };
         };
         responses: {

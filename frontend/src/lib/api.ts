@@ -116,3 +116,12 @@ export const horizon = {
   reorderArts: (kind: ArtKind, ids: string[]) =>
     send<View>('/api/arts/order', json('PUT', { kind, ids })),
 };
+
+/** Add, edit and delete Arts (their order is `horizon.reorderArts`). */
+export const arts = {
+  add: (kind: ArtKind, title: string, estimate: string) =>
+    send<View>('/api/arts', json('POST', { kind, title, estimate })),
+  edit: (id: string, patch: { title?: string; estimate?: string }) =>
+    send<View>(`/api/arts/${id}`, json('PATCH', patch)),
+  remove: (id: string) => send<View>(`/api/arts/${id}`, json('DELETE')),
+};

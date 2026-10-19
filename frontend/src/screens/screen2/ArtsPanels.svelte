@@ -1,11 +1,13 @@
 <script lang="ts">
+  import ExpandButton from './../../components/ExpandButton.svelte';
   import Panel from '../../components/Panel.svelte';
   import ReorderList from '../../components/ReorderList.svelte';
-  import { horizon, today, type Art } from '../../lib/api';
+  import { horizon, today, type Art, type ArtKind } from '../../lib/api';
   import { EMPTY } from '../../lib/copy';
   import { useOrder } from '../../lib/order.svelte';
   import { view } from '../../lib/view.svelte';
   import ArtRow from '../plan/ArtRow.svelte';
+  import ArtsExpand from './ArtsExpand.svelte';
 
   const foundational = useOrder(
     () => view.planning?.foundational ?? [],
@@ -17,6 +19,7 @@
   );
 
   const summon = (id: string) => view.act(() => today.summon('art', id));
+  let expanded = $state<ArtKind | null>(null);
 </script>
 
 {#snippet foundationalRow(art: Art)}
@@ -29,6 +32,9 @@
 
 <div class="pair">
   <Panel title="Foundational Arts" tone="foundational" scroll striped>
+    {#snippet actions()}
+      <ExpandButton label="Expand Foundational Arts" onclick={() => (expanded = 'foundational')} />
+    {/snippet}
     {#if foundational.shown.length === 0}
       <p class="empty">{EMPTY.foundational}</p>
     {:else}
@@ -41,6 +47,9 @@
     {/if}
   </Panel>
   <Panel title="Restorative Arts" tone="restorative" scroll striped>
+    {#snippet actions()}
+      <ExpandButton label="Expand Restorative Arts" onclick={() => (expanded = 'restorative')} />
+    {/snippet}
     {#if restorative.shown.length === 0}
       <p class="empty">{EMPTY.restorative}</p>
     {:else}
@@ -53,6 +62,10 @@
     {/if}
   </Panel>
 </div>
+
+{#if expanded}
+  <ArtsExpand kind={expanded} onclose={() => (expanded = null)} />
+{/if}
 
 <style>
   .pair {

@@ -45,3 +45,10 @@ class SqlArts:
                 row.position = position
                 row.updated_at = utc_iso(now)
         self._session.flush()
+
+    def delete(self, ids: Sequence[str]) -> None:
+        for art_id in ids:
+            row = self._session.get(ArtRow, art_id)
+            if row is not None:
+                self._session.delete(row)
+        self._session.flush()
