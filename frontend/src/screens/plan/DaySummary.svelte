@@ -1,10 +1,12 @@
 <script lang="ts">
   import MandateMark from '../../components/MandateMark.svelte';
   import Panel from '../../components/Panel.svelte';
+  import { SUNSET } from '../../lib/copy';
   import { view } from '../../lib/view.svelte';
   import SunsetInvitation from './SunsetInvitation.svelte';
 
   const budget = $derived(view.planning?.budget);
+  const sunset = $derived(view.current?.sunset);
   const alt = $derived(
     budget?.light_text
       ? `${budget.planned_text} planned, ${budget.light_text} of light left`
@@ -40,17 +42,24 @@
       {:else if budget.has_sunset}
         <p class="muted">The sun has set. Rest is part of the path.</p>
       {/if}
-      <!-- One reserved row, so a count or the one-time question never moves the panels below. -->
-      <div class="muted last">
-        <span>
-          {#if budget.unestimated_count > 0}
-            <span class="digits">{budget.unestimated_count}</span> without an estimate
-          {:else}
-            &nbsp;
-          {/if}
-        </span>
-        {#if view.current && !view.current.sunset.invited}<SunsetInvitation />{/if}
+      <!-- One fixed row: the one-time question, then a quiet line saying what was answered. -->
+      <div class="muted sunset">
+        {#if sunset && !sunset.invited}
+          <SunsetInvitation />
+        {:else if sunset?.enabled}
+          {SUNSET.kept(sunset.at_text)}
+        {:else}
+          {SUNSET.none}
+        {/if}
       </div>
+      <!-- One reserved line, so a count appearing never moves the panels below. -->
+      <p class="muted last">
+        {#if budget.unestimated_count > 0}
+          <span class="digits">{budget.unestimated_count}</span> without an estimate
+        {:else}
+          &nbsp;
+        {/if}
+      </p>
     </div>
   </Panel>
 {/if}
@@ -105,10 +114,16 @@
   }
 
   .last {
+    margin-bottom: 0;
+  }
+
+  /* The row holds the one-time question, which has buttons: it is that tall from the start. */
+  .sunset {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: var(--space-3);
     min-height: var(--size-glyph-button);
+    margin-bottom: var(--space-2);
+    white-space: nowrap;
   }
 </style>

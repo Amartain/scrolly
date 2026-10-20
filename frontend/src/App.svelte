@@ -9,6 +9,7 @@
   import Screen1 from './screens/Screen1.svelte';
   import Screen2 from './screens/Screen2.svelte';
   import MilestoneOverlay from './components/MilestoneOverlay.svelte';
+  import PlanningTimer from './components/PlanningTimer.svelte';
   import SunsetAdvisor from './components/SunsetAdvisor.svelte';
   import SunsetPoem from './components/SunsetPoem.svelte';
   import ThemeOrbs from './components/ThemeOrbs.svelte';
@@ -78,6 +79,9 @@
 {/if}
 {#if onboarding}
   <ThemeOrbs />
+{/if}
+{#if onboarding && status !== 'zero'}
+  <PlanningTimer />
 {/if}
 
 <style>

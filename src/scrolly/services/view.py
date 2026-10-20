@@ -15,6 +15,7 @@ from scrolly.services.day import DayService
 from scrolly.services.day_budget import build_budget
 from scrolly.services.golden_core import QiView, build_qi_view
 from scrolly.services.legend import load_legend
+from scrolly.services.planning_timer import PlanningTimerView, build_planning_timer
 from scrolly.services.planning_view import PlanningView, build_planning_view
 from scrolly.services.poem import build_poem
 from scrolly.services.sunset import load_prefs
@@ -33,6 +34,7 @@ class ViewData:
     advisor: AdvisorView
     poem: PoemPick | None
     legend: Legend
+    planning_timer: PlanningTimerView
 
 
 def build_view(store: Store, clock: Clock) -> ViewData:
@@ -51,6 +53,7 @@ def build_view(store: Store, clock: Clock) -> ViewData:
         advisor=build_advisor(store, now, sunset, phase),
         poem=build_poem(store, now, phase),
         legend=load_legend(store),
+        planning_timer=build_planning_timer(store, now),
         planning=build_planning_view(store, today),
         budget=build_budget(store, now),
         qi=build_qi_view(store, now),

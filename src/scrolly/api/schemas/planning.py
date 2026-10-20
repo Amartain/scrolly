@@ -8,6 +8,7 @@ from scrolly.domain.duration import format_duration
 from scrolly.domain.legend import TrialType, type_of
 from scrolly.domain.models import Art, HorizonItem, OriginType, PlanStatus, Trial, TrialState
 from scrolly.services.golden_core import QiView
+from scrolly.services.planning_timer import PlanningTimerView
 from scrolly.services.planning_view import PlanningView
 
 
@@ -70,6 +71,18 @@ class ArtOut(BaseModel):
         return cls(id=art.id, title=art.title, expected_text=_estimate(art.essence_expected_min))
 
 
+class PlanningTimerOut(BaseModel):
+    """Time spent planning today as of this view; the browser animates the seconds from here."""
+
+    elapsed_s: int
+    running: bool
+    expected_s: int | None  # always None: planning has no target, only a count
+
+    @classmethod
+    def from_view(cls, timer: PlanningTimerView) -> "PlanningTimerOut":
+        return cls(elapsed_s=timer.elapsed_s, running=timer.running, expected_s=None)
+
+
 class PlanningOut(BaseModel):
     status: PlanStatus
     text: str
@@ -79,9 +92,12 @@ class PlanningOut(BaseModel):
     restorative: list[ArtOut]
     budget: BudgetOut
     qi: QiOut
+    timer: PlanningTimerOut
 
     @classmethod
-    def from_data(cls, data: PlanningView, budget: DayBudget, qi: QiView) -> "PlanningOut":
+    def from_data(
+        cls, data: PlanningView, budget: DayBudget, qi: QiView, timer: PlanningTimerView
+    ) -> "PlanningOut":
         return cls(
             status=data.status,
             text=data.text,
@@ -91,6 +107,7 @@ class PlanningOut(BaseModel):
             restorative=[ArtOut.from_art(a) for a in data.restorative],
             budget=BudgetOut.from_budget(budget),
             qi=QiOut.from_view(qi),
+            timer=PlanningTimerOut.from_view(timer),
         )
 
 

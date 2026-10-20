@@ -6,6 +6,7 @@ from scrolly.domain.models import Day
 from scrolly.domain.rollover import rollover
 from scrolly.ports import Clock, Store
 from scrolly.services.planning import abandon_planning
+from scrolly.services.planning_timer import close_stale_timers
 
 
 def run_rollover(store: Store, today: date, now: datetime) -> None:
@@ -32,4 +33,5 @@ class DayService:
         if draft is not None and draft.logical_day < today:
             abandon_planning(self._store, draft, now)
         run_rollover(self._store, today, now)
+        close_stale_timers(self._store, today, now)
         self._store.days.save(replace(day, rolled_over_at=now), now)

@@ -13,6 +13,7 @@ from scrolly.domain.planning import (
     seal,
     trial_from_line,
 )
+from scrolly.domain.planning_timer import pause as pause_planning
 from scrolly.domain.qi import choose_start
 from scrolly.domain.uniqueness import require_free_dump
 from scrolly.ports import Clock, Store
@@ -125,7 +126,9 @@ class PlanningService:
             qi_start = chosen_start(self._store, draft, self._today)
         now = self._now
         day = self._store.days.get(self._today) or Day(logical_day=self._today)
-        first, sealed_day = seal(planning_trials(self._store, self._today), day, now, qi_start)
+        # Sealing ends the planning: a running planning timer is banked, not lost.
+        banked = pause_planning(day, now)
+        first, sealed_day = seal(planning_trials(self._store, self._today), banked, now, qi_start)
         self._store.trials.save([first], now)
         self._store.days.save(sealed_day, now)
         self._store.drafts.delete()

@@ -79,7 +79,9 @@ class ViewOut(BaseModel):
             ),
             poem=PoemOut.from_pick(data.poem) if data.poem else None,
             legend=LegendOut.build(data.legend),
-            planning=PlanningOut.from_data(data.planning, data.budget, data.qi),
+            planning=PlanningOut.from_data(
+                data.planning, data.budget, data.qi, data.planning_timer
+            ),
             dashboard=DashboardOut.from_data(data.dashboard),
         )
 

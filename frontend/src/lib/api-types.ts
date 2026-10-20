@@ -462,6 +462,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/planning/timer/pause": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pause */
+        post: operations["pause_api_planning_timer_pause_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/planning/timer/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reset */
+        post: operations["reset_api_planning_timer_reset_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/planning/timer/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start */
+        post: operations["start_api_planning_timer_start_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/planning/trials": {
         parameters: {
             query?: never;
@@ -1240,8 +1291,21 @@ export interface components {
             status: components["schemas"]["PlanStatus"];
             /** Text */
             text: string;
+            timer: components["schemas"]["PlanningTimerOut"];
             /** Trials */
             trials: components["schemas"]["PlanTrialOut"][];
+        };
+        /**
+         * PlanningTimerOut
+         * @description Time spent planning today as of this view; the browser animates the seconds from here.
+         */
+        PlanningTimerOut: {
+            /** Elapsed S */
+            elapsed_s: number;
+            /** Expected S */
+            expected_s: number | null;
+            /** Running */
+            running: boolean;
         };
         /**
          * PoemOut
@@ -2409,6 +2473,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    pause_api_planning_timer_pause_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+        };
+    };
+    reset_api_planning_timer_reset_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+        };
+    };
+    start_api_planning_timer_start_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
                 };
             };
         };

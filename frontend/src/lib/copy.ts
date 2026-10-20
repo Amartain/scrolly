@@ -101,11 +101,13 @@ export const workedNote = (text: string) => `· ${text} worked`;
 
 /** DRAFT: the one-time sunset question in the Day Summary, and its quiet states. */
 export const SUNSET = {
-  ask: 'When does your sunset come?',
+  ask: 'Your sunset?',
   set: 'Set',
   later: 'Not now',
   hint: 'Use a time like 21:00',
   off: 'No sunset kept. The Day Summary shows totals only.',
+  kept: (at: string) => `Sunset at ${at}`,
+  none: 'No sunset kept',
 } as const;
 
 /** DRAFT: the overrun advisor, one gentle word when the open trials would run past sunset. */
@@ -185,4 +187,12 @@ export const SEAL = {
   placeholder: 'Inscribe a word…',
   inscribe: 'Inscribe',
   unknown: 'The scroll does not answer to those words.',
+} as const;
+
+/** DRAFT: the planning timer. */
+export const PLANNING_TIME = {
+  start: 'Start planning time',
+  pause: 'Pause planning time',
+  reset: 'Reset planning time',
+  label: 'Time spent planning',
 } as const;

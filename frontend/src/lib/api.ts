@@ -189,3 +189,10 @@ export type SealResult = components['schemas']['SealOut'];
 /** Words for the Secret Seal Inscription. `recognized` is false when they name no seal. */
 export const inscribeSeal = (text: string) =>
   send<SealResult>('/api/seal-inscription', json('POST', { text }));
+
+/** The quiet planning timer of Phases 1 to 3. It counts and is recorded for each day. */
+export const planningTimer = {
+  start: () => plan('timer/start', json('POST')),
+  pause: () => plan('timer/pause', json('POST')),
+  reset: () => plan('timer/reset', json('POST')),
+};
