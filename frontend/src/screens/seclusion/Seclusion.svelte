@@ -33,8 +33,9 @@
   function onkeydown(event: KeyboardEvent) {
     const modified = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
     if (!trial || modified || typing(event.target) || onControl(event.target)) return;
-    if (event.key === ' ') void (trial.timer.running ? seclusion.pause() : seclusion.start());
-    else if (event.key === 'Enter') void seclusion.finish('conquered', trial);
+    if (event.key === ' ') void seclusion.toggle();
+    else if (event.key === 'Enter' && !seclusion.settingUp)
+      void seclusion.finish('conquered', trial);
     else return;
     event.preventDefault();
   }

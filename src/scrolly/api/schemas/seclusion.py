@@ -9,6 +9,7 @@ from scrolly.domain.cycles import Phase as CyclesPhase
 from scrolly.domain.flow import FlowPhase, FlowView
 from scrolly.domain.legend import TrialType, type_of
 from scrolly.domain.models import Trial
+from scrolly.domain.run_clock import BREAK_MAX_MIN, CYCLES_MAX, FOCUS_MAX_MIN, RATIO_MAX
 from scrolly.domain.seclusion import IncenseState, IncenseView
 from scrolly.domain.segments import Discipline
 from scrolly.services.seclusion import SeclusionView
@@ -67,11 +68,31 @@ class FlowOut(BaseModel):
     banked_s: int
     break_left_s: int
     break_total_s: int
+    can_break: bool
+    break_in_s: int | None
     running: bool
 
     @classmethod
     def from_view(cls, view: FlowView) -> "FlowOut":
         return cls(**asdict(view))
+
+
+class LimitsOut(BaseModel):
+    """The most the dials may hold. The rules are Python's; the screen only draws the dials."""
+
+    focus_max_min: int
+    break_max_min: int
+    cycles_max: int
+    ratio_max: int
+
+    @classmethod
+    def build(cls) -> "LimitsOut":
+        return cls(
+            focus_max_min=FOCUS_MAX_MIN,
+            break_max_min=BREAK_MAX_MIN,
+            cycles_max=CYCLES_MAX,
+            ratio_max=RATIO_MAX,
+        )
 
 
 class SeclusionOut(BaseModel):
@@ -83,6 +104,7 @@ class SeclusionOut(BaseModel):
     incense: IncenseOut | None
     gong_in_s: int | None
     plan: CyclesPlanIn
+    limits: LimitsOut
     cycles: CyclesOut | None
     flow: FlowOut | None
     remaining: list[WaitingOut]
@@ -101,6 +123,7 @@ class SeclusionOut(BaseModel):
             incense=None if view.incense is None else IncenseOut.from_view(view.incense),
             gong_in_s=view.gong_in_s,
             plan=CyclesPlanIn(**asdict(view.plan)),
+            limits=LimitsOut.build(),
             cycles=None if view.cycles is None else CyclesOut.from_view(view.cycles),
             flow=None if view.flow is None else FlowOut.from_view(view.flow),
             remaining=[WaitingOut.from_trial(t) for t in view.remaining],

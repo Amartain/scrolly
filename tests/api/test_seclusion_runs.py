@@ -16,6 +16,16 @@ def test_the_dial_starts_a_focus_and_remembers_what_was_set(client: TestClient) 
     assert started["plan"] == DIAL
 
 
+def test_the_room_sends_the_limits_of_its_dials(client: TestClient) -> None:
+    enter_on(client, "cycles", "Write report")
+    assert room(client)["limits"] == {
+        "focus_max_min": 120,
+        "break_max_min": 60,
+        "cycles_max": 12,
+        "ratio_max": 10,
+    }
+
+
 def test_focus_ends_at_the_set_time_even_when_nobody_looked(
     client: TestClient, clock: FixedClock
 ) -> None:

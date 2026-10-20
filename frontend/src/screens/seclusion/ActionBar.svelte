@@ -5,11 +5,29 @@
   import type { Immediate } from '../../lib/api';
   import { SECLUSION } from '../../lib/copy-seclusion';
   import { seclusion } from '../../lib/seclusion.svelte';
+  import type { SeclusionState } from '../../lib/seclusion-api';
 
-  let { trial, ringSeconds }: { trial: Immediate; ringSeconds: number } = $props();
+  let { room, trial }: { room: SeclusionState; trial: Immediate } = $props();
 
-  const running = $derived(trial.timer.running);
-  const idle = $derived(!running && ringSeconds === 0);
+  const running = $derived(seclusion.running);
+
+  // Which of the time controls the open tab offers right now.
+  const controls = $derived.by(() => {
+    if (room.cycles) {
+      const phase = room.cycles.phase;
+      return {
+        start: phase === 'waiting',
+        toggle: phase === 'focus' || phase === 'break',
+        conquer: phase !== 'idle',
+      };
+    }
+    if (room.flow) {
+      const phase = room.flow.phase;
+      return { start: phase === 'idle', toggle: phase === 'focus', conquer: phase !== 'idle' };
+    }
+    const idle = !running && room.ring_elapsed_s === 0;
+    return { start: idle, toggle: !idle, conquer: !idle };
+  });
 
   const conquer = () => seclusion.finish('conquered', trial);
   const postpone = () => seclusion.finish('postponed', trial);
@@ -18,9 +36,10 @@
 
 <div class="bar">
   <div class="time">
-    {#if idle}
+    {#if controls.start}
       <Button label={SECLUSION.start} tone="primary" onclick={seclusion.start} />
-    {:else}
+    {/if}
+    {#if controls.toggle}
       <button
         class="icon play"
         type="button"
@@ -29,6 +48,8 @@
       >
         <GlyphIcon name={running ? 'pause' : 'play'} />
       </button>
+    {/if}
+    {#if controls.conquer}
       <Button
         label={SECLUSION.conquered}
         tone="gold"

@@ -17,7 +17,17 @@ from pathlib import Path
 TOKENS = Path(__file__).resolve().parent.parent / "frontend" / "src" / "styles" / "tokens"
 SURFACES = ("--surface-panel", "--surface-raised")
 TEXT = ("--ink", "--ink-muted", "--mandate", "--growth-text")
-GAUGE = ("--qi-calm", "--qi-surge", "--qi-redline")
+GAUGE = (
+    "--qi-calm",
+    "--qi-surge",
+    "--qi-redline",
+    "--cycles",
+    "--cycles-break",
+    "--flow",
+    "--flow-break",
+)
+# The selected Seclusion tab: its words on its colour.
+TAB_INK = (("--on-cycles", "--cycles"), ("--on-flow", "--flow"))
 CONQUERED_ROWS = ("--conquered-row-a", "--conquered-row-b")
 CONQUERED_TEXT = ("--ink", "--ink-muted")
 DECLARATION = re.compile(r"(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{6})\s*;")
@@ -82,6 +92,7 @@ def contrast_problems(name: str, values: dict[str, str]) -> list[str]:
     found = []
     pairs = [(t, s, 4.5) for t in TEXT for s in SURFACES] + [(g, "--inset", 3.0) for g in GAUGE]
     pairs += [(t, s, 4.5) for t in CONQUERED_TEXT for s in CONQUERED_ROWS]
+    pairs += [(ink, tab, 4.5) for ink, tab in TAB_INK]
     for token, surface, needed in pairs:
         if token not in values or surface not in values:
             found.append(f"{name}: {token} or {surface} is missing")

@@ -1381,10 +1381,14 @@ export interface components {
         FlowOut: {
             /** Banked S */
             banked_s: number;
+            /** Break In S */
+            break_in_s: number | null;
             /** Break Left S */
             break_left_s: number;
             /** Break Total S */
             break_total_s: number;
+            /** Can Break */
+            can_break: boolean;
             /** Focus S */
             focus_s: number;
             phase: components["schemas"]["FlowPhase"];
@@ -1531,6 +1535,20 @@ export interface components {
             /** Title */
             title: string;
             type: components["schemas"]["TrialType"];
+        };
+        /**
+         * LimitsOut
+         * @description The most the dials may hold. The rules are Python's; the screen only draws the dials.
+         */
+        LimitsOut: {
+            /** Break Max Min */
+            break_max_min: number;
+            /** Cycles Max */
+            cycles_max: number;
+            /** Focus Max Min */
+            focus_max_min: number;
+            /** Ratio Max */
+            ratio_max: number;
         };
         /**
          * Metric
@@ -1762,6 +1780,7 @@ export interface components {
             /** Gong In S */
             gong_in_s: number | null;
             incense: components["schemas"]["IncenseOut"] | null;
+            limits: components["schemas"]["LimitsOut"];
             /** Note */
             note: string;
             plan: components["schemas"]["CyclesPlanIn"];

@@ -5,34 +5,43 @@
   import { seclusion } from '../../lib/seclusion.svelte';
   import type { SeclusionState } from '../../lib/seclusion-api';
   import ActionBar from './ActionBar.svelte';
+  import CyclesRing from './CyclesRing.svelte';
+  import CyclesSetup from './CyclesSetup.svelte';
+  import FlowRing from './FlowRing.svelte';
   import Ring from './Ring.svelte';
   import Tabs from './Tabs.svelte';
+  import TimerRow from './TimerRow.svelte';
   import TrialHeader from './TrialHeader.svelte';
   import WhatNext from './WhatNext.svelte';
 
   let { room, trial }: { room: SeclusionState; trial: Immediate } = $props();
+
+  const caption = $derived(
+    room.cycles ? SECLUSION.cycles.caption : room.flow ? SECLUSION.flow.caption : SECLUSION.caption,
+  );
 </script>
 
 <section class="scroll" aria-label="Focus Scroll">
-  <Tabs />
+  <Tabs {room} />
   <TrialHeader {trial} note={room.note} />
   <div class="stage">
     {#if seclusion.finished}
       <WhatNext {room} {trial} />
+    {:else if room.cycles}
+      {#if room.cycles.phase === 'idle'}
+        <CyclesSetup {room} />
+      {:else}
+        <CyclesRing cycles={room.cycles} />
+      {/if}
+    {:else if room.flow}
+      <FlowRing {room} flow={room.flow} />
     {:else}
       <Ring {room} {trial} />
     {/if}
   </div>
-  <p class="caption">{SECLUSION.caption}</p>
-  <div class="timer-row">
-    <button class="text display" type="button" onclick={seclusion.newTimer}
-      >{SECLUSION.newTimer}</button
-    >
-    <button class="text display" type="button" onclick={seclusion.zeroOut}
-      >{SECLUSION.zeroOut}</button
-    >
-  </div>
-  <ActionBar {trial} ringSeconds={room.ring_elapsed_s} />
+  <p class="caption">{caption}</p>
+  <TimerRow {room} />
+  <ActionBar {room} {trial} />
 </section>
 
 <style>
@@ -61,28 +70,5 @@
     color: var(--ink-muted);
     font-size: var(--text-body-sm);
     text-align: center;
-  }
-
-  .timer-row {
-    display: flex;
-    justify-content: center;
-    gap: var(--space-4);
-    padding: var(--space-3) var(--space-5);
-  }
-
-  .text {
-    padding: var(--space-1) var(--space-3);
-    background: var(--btn);
-    background-image: var(--gloss-btn);
-    color: var(--ink);
-    border: var(--border-width) solid var(--line);
-    box-shadow: var(--shadow-button);
-    font-size: var(--text-display-sm);
-    cursor: pointer;
-  }
-
-  .text:active {
-    box-shadow: none;
-    transform: translate(var(--shadow-offset), var(--shadow-offset));
   }
 </style>

@@ -1,11 +1,16 @@
-<!-- The three disciplines. Only the Trial of the Incense is lit so far. -->
+<!-- The three disciplines. Each keeps its own colour; choosing one closes the segment that was running
+     (its time stays on the trial) and waits, fresh, for Start. -->
 <script lang="ts">
   import { SECLUSION } from '../../lib/copy-seclusion';
+  import { seclusion } from '../../lib/seclusion.svelte';
+  import type { Discipline, SeclusionState } from '../../lib/seclusion-api';
 
-  const TABS = [
-    { id: 'incense', label: SECLUSION.tabs.incense, ready: true },
-    { id: 'pulse', label: SECLUSION.tabs.pulse, ready: false },
-    { id: 'flow', label: SECLUSION.tabs.flow, ready: false },
+  let { room }: { room: SeclusionState } = $props();
+
+  const TABS: { id: Discipline; label: string }[] = [
+    { id: 'incense', label: SECLUSION.tabs.incense },
+    { id: 'cycles', label: SECLUSION.tabs.cycles },
+    { id: 'flow', label: SECLUSION.tabs.flow },
   ];
 </script>
 
@@ -15,9 +20,9 @@
       class="tab display"
       role="tab"
       type="button"
-      aria-selected={tab.id === 'incense'}
-      disabled={!tab.ready}
-      title={tab.ready ? undefined : SECLUSION.tabLater}
+      data-tab={tab.id}
+      aria-selected={tab.id === room.discipline}
+      onclick={() => void (tab.id !== room.discipline && seclusion.chooseDiscipline(tab.id))}
     >
       {tab.label}
     </button>
@@ -49,15 +54,20 @@
   }
 
   .tab[aria-selected='true'] {
-    background: var(--gold);
+    --tab-bg: var(--gold);
+    --tab-ink: var(--on-gold);
+    background: var(--tab-bg);
     background-image: none;
-    color: var(--on-gold);
+    color: var(--tab-ink);
   }
 
-  .tab:disabled {
-    background: var(--surface-stripe);
-    background-image: none;
-    color: var(--ink-faint);
-    cursor: default;
+  .tab[aria-selected='true'][data-tab='cycles'] {
+    --tab-bg: var(--cycles);
+    --tab-ink: var(--on-cycles);
+  }
+
+  .tab[aria-selected='true'][data-tab='flow'] {
+    --tab-bg: var(--flow);
+    --tab-ink: var(--on-flow);
   }
 </style>

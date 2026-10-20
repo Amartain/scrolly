@@ -48,6 +48,8 @@ class FlowView:
     banked_s: int
     break_left_s: int
     break_total_s: int
+    can_break: bool  # at least a minute is banked
+    break_in_s: int | None  # focus still to run before a break can start; only while focus runs
     running: bool
 
 
@@ -128,13 +130,26 @@ def flow_view(bank: FlowBank, now: datetime) -> FlowView:
     if bank.phase is FlowPhase.BREAK:
         left = max(0, bank.break_s - run_elapsed(bank.break_clock, now))
     running = bank.focus.running or bank.break_clock.running
+    banked = banked_rest_s(bank, now)
+    can_break = bank.phase is FlowPhase.FOCUS and banked >= MIN_BREAK_S
+    focus = focus_seconds(bank, now)
     return FlowView(
         bank.phase,
         bank.work,
         bank.rest,
-        focus_seconds(bank, now),
-        banked_rest_s(bank, now),
+        focus,
+        banked,
         left,
         bank.break_s,
+        can_break,
+        _break_in_s(bank, focus),
         running,
     )
+
+
+def _break_in_s(bank: FlowBank, focus_s: int) -> int | None:
+    """Focus seconds until a minute of rest is banked, so the screen knows when to ask again."""
+    if bank.phase is not FlowPhase.FOCUS or not bank.focus.running:
+        return None
+    needed = -(-(MIN_BREAK_S + bank.used_s) * bank.work // bank.rest)  # ceiling
+    return max(0, needed - focus_s)

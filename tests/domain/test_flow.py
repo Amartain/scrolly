@@ -74,6 +74,23 @@ def test_a_break_needs_a_minute_banked() -> None:
         start_break(start_flow(FlowBank(5, 1), T0), at(4))
 
 
+def test_a_break_can_start_once_a_minute_is_banked() -> None:
+    bank = start_flow(FlowBank(5, 1), T0)
+    assert flow_view(bank, at(4)).can_break is False
+    assert flow_view(bank, at(5)).can_break is True
+    assert flow_view(start_break(bank, at(5)), at(5)).can_break is False  # already resting
+
+
+def test_the_view_says_how_long_until_a_break_can_start() -> None:
+    bank = start_flow(FlowBank(5, 1), T0)
+    assert flow_view(bank, at(0)).break_in_s == 5 * 60
+    assert flow_view(bank, at(3)).break_in_s == 2 * 60
+    assert flow_view(bank, at(5)).break_in_s == 0
+    assert flow_view(pause_flow(bank, at(3)), at(9)).break_in_s is None  # nothing banks while paused
+    ratio = start_flow(FlowBank(1, 10), T0)  # a minute of rest every six seconds of focus
+    assert flow_view(ratio, at(0)).break_in_s == 6
+
+
 def test_the_ratio_is_fixed_once_the_bank_is_open() -> None:
     with pytest.raises(RunError):
         set_ratio(start_flow(FlowBank(5, 1), T0), 3, 2)
