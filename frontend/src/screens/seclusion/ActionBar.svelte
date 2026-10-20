@@ -2,7 +2,7 @@
 <script lang="ts">
   import Button from '../../components/Button.svelte';
   import GlyphIcon from '../../icons/GlyphIcon.svelte';
-  import { today, type Immediate } from '../../lib/api';
+  import type { Immediate } from '../../lib/api';
   import { SECLUSION } from '../../lib/copy-seclusion';
   import { seclusion } from '../../lib/seclusion.svelte';
 
@@ -11,9 +11,9 @@
   const running = $derived(trial.timer.running);
   const idle = $derived(!running && ringSeconds === 0);
 
-  const conquer = () => seclusion.trial(() => today.conquer(trial.id));
-  const postpone = () => seclusion.trial(() => today.postpone(trial.id));
-  const abandon = () => seclusion.trial(() => today.abandon(trial.id));
+  const conquer = () => seclusion.finish('conquered', trial);
+  const postpone = () => seclusion.finish('postponed', trial);
+  const abandon = () => seclusion.finish('abandoned', trial);
 </script>
 
 <div class="bar">

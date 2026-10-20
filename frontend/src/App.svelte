@@ -23,8 +23,12 @@
 
   $effect(() => view.start());
 
-  // Seclusion left open (a reload, a crash, a night session) opens again where it was.
+  // Seclusion left open (a reload, a crash, a night session) opens again where it was. It asks only
+  // after the first view has arrived: two first requests at once would both start the day.
+  let seclusionAsked = false;
   $effect(() => {
+    if (!view.current || seclusionAsked) return;
+    seclusionAsked = true;
     void seclusion.load().then(() => {
       if (seclusion.state?.active) mode = 'seclusion';
     });

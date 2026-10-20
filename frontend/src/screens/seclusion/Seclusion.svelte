@@ -1,13 +1,11 @@
 <!-- The focus room: the Immediate Trial, its timer and three release valves. Nothing else is shown. -->
 <script lang="ts">
-  import Panel from '../../components/Panel.svelte';
-  import { today } from '../../lib/api';
   import { playGong } from '../../lib/chime';
-  import { SECLUSION } from '../../lib/copy-seclusion';
   import { onControl, typing } from '../../lib/keys';
   import { seclusion } from '../../lib/seclusion.svelte';
   import { view } from '../../lib/view.svelte';
   import FocusScroll from './FocusScroll.svelte';
+  import RestScroll from './RestScroll.svelte';
   import TopBar from './TopBar.svelte';
   import UtilityColumn from './UtilityColumn.svelte';
 
@@ -36,13 +34,21 @@
     const modified = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
     if (!trial || modified || typing(event.target) || onControl(event.target)) return;
     if (event.key === ' ') void (trial.timer.running ? seclusion.pause() : seclusion.start());
-    else if (event.key === 'Enter') void seclusion.trial(() => today.conquer(trial.id));
+    else if (event.key === 'Enter') void seclusion.finish('conquered', trial);
     else return;
     event.preventDefault();
   }
+
+  // N: jump to the Scribe box, as on the dashboard.
+  function onnote(event: KeyboardEvent) {
+    const modified = event.altKey || event.ctrlKey || event.metaKey;
+    if (modified || typing(event.target) || (event.key !== 'n' && event.key !== 'N')) return;
+    event.preventDefault();
+    document.getElementById('seclusion-scribe')?.focus();
+  }
 </script>
 
-<svelte:window {onkeydown} />
+<svelte:window {onkeydown} onkeydowncapture={onnote} />
 
 <div class="room">
   <TopBar {onleave} />
@@ -50,7 +56,7 @@
     {#if room && trial}
       <FocusScroll {room} {trial} />
     {:else}
-      <Panel title={SECLUSION.title} empty={SECLUSION.nothingLeft} />
+      <RestScroll />
     {/if}
     <UtilityColumn />
   </div>

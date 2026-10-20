@@ -2,10 +2,12 @@
 <script lang="ts">
   import Panel from '../../components/Panel.svelte';
   import { SECLUSION } from '../../lib/copy-seclusion';
+  import ScribeBox from './ScribeBox.svelte';
 </script>
 
 <div class="column">
   <Panel title={SECLUSION.parallelTitle} empty={SECLUSION.parallelLine} />
+  <ScribeBox />
   <div class="grow">
     <Panel title={SECLUSION.scrapsTitle} empty={SECLUSION.scrapsLine} />
   </div>

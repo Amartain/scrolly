@@ -8,6 +8,7 @@
   import Ring from './Ring.svelte';
   import Tabs from './Tabs.svelte';
   import TrialHeader from './TrialHeader.svelte';
+  import WhatNext from './WhatNext.svelte';
 
   let { room, trial }: { room: SeclusionState; trial: Immediate } = $props();
 </script>
@@ -15,7 +16,13 @@
 <section class="scroll" aria-label="Focus Scroll">
   <Tabs />
   <TrialHeader {trial} note={room.note} />
-  <div class="stage"><Ring {room} {trial} /></div>
+  <div class="stage">
+    {#if seclusion.finished}
+      <WhatNext {room} {trial} />
+    {:else}
+      <Ring {room} {trial} />
+    {/if}
+  </div>
   <p class="caption">{SECLUSION.caption}</p>
   <div class="timer-row">
     <button class="text display" type="button" onclick={seclusion.newTimer}

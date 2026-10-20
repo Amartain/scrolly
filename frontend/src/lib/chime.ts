@@ -39,3 +39,6 @@ const GONG: [hz: number, level: number][] = [
   [594, 0.03],
 ];
 export const playGong = () => ring(GONG, 4);
+
+/** A soft tick that says a sudden trial was written down. */
+export const playTick = () => ring([[880, 0.05]], 0.25);
