@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import StrEnum
 
 
@@ -19,10 +19,24 @@ class ReadingFont(StrEnum):
     OPENDYSLEXIC = "opendyslexic"
 
 
+class HeaderChoice(StrEnum):
+    """Which picture fills the header band. `auto` follows the theme and the time of day."""
+
+    AUTO = "auto"
+    SERENE_DAY = "serene-day"
+    SERENE_DUSK = "serene-dusk"
+    PAVILION = "pavilion"
+    CUSTOM = "custom"
+
+
 class Phase(StrEnum):
     DAY = "day"
     GOLDEN = "golden"
     DUSK = "dusk"
+
+
+class AppearanceError(ValueError):
+    """A choice that cannot be made. The message is shown to the user."""
 
 
 @dataclass(frozen=True)
@@ -30,6 +44,9 @@ class Preferences:
     theme: Theme = Theme.SERENE
     day_variant: DayVariant = DayVariant.TEAL
     reading_font: ReadingFont = ReadingFont.ATKINSON
+    header: HeaderChoice = HeaderChoice.AUTO
+    # Counts the user's uploads (0 = none yet), so a new picture is fetched afresh.
+    header_version: int = 0
 
 
 @dataclass(frozen=True)
@@ -38,6 +55,8 @@ class Appearance:
     day_variant: DayVariant | None
     phase: Phase
     reading_font: ReadingFont = ReadingFont.ATKINSON
+    header: HeaderChoice = HeaderChoice.AUTO
+    header_version: int = 0
 
 
 def resolve_appearance(prefs: Preferences, phase: Phase = Phase.DAY) -> Appearance:
@@ -51,4 +70,18 @@ def resolve_appearance(prefs: Preferences, phase: Phase = Phase.DAY) -> Appearan
         day_variant=variant,
         phase=phase,
         reading_font=prefs.reading_font,
+        header=prefs.header,
+        header_version=prefs.header_version,
     )
+
+
+def choose_header(prefs: Preferences, choice: HeaderChoice) -> Preferences:
+    """Pick a header picture. The user's own can be picked once one has been uploaded."""
+    if choice is HeaderChoice.CUSTOM and prefs.header_version == 0:
+        raise AppearanceError("Choose a picture of your own first")
+    return replace(prefs, header=choice)
+
+
+def with_uploaded_header(prefs: Preferences) -> Preferences:
+    """A new picture of the user's own is now the header."""
+    return replace(prefs, header=HeaderChoice.CUSTOM, header_version=prefs.header_version + 1)

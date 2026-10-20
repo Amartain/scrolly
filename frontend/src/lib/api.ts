@@ -172,3 +172,14 @@ export const putSymbol = (
   key: string,
   patch: { emoji?: string; shortcode?: string } = {},
 ) => send<View>('/api/legend', json('PUT', { group, key, ...patch }));
+
+export type HeaderChoice = components['schemas']['HeaderIn']['choice'];
+
+export const putHeader = (choice: HeaderChoice) =>
+  send<View>('/api/header', json('PUT', { choice }));
+
+export async function uploadHeader(file: File): Promise<View> {
+  const body = new FormData();
+  body.append('file', file);
+  return send<View>('/api/header-image', { method: 'POST', body });
+}

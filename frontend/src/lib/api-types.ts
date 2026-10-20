@@ -168,6 +168,44 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/header": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Choose Header */
+        put: operations["choose_header_api_header_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/header-image": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Header Image */
+        get: operations["header_image_api_header_image_get"];
+        put?: never;
+        /**
+         * Upload Header Image
+         * @description The user's own picture for the header band: PNG, JPEG or WebP, up to 5 MB.
+         */
+        post: operations["upload_header_image_api_header_image_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -819,6 +857,9 @@ export interface components {
         /** AppearanceOut */
         AppearanceOut: {
             day_variant: components["schemas"]["DayVariant"] | null;
+            header: components["schemas"]["HeaderChoice"];
+            /** Header Version */
+            header_version: number;
             phase: components["schemas"]["Phase"];
             reading_font: components["schemas"]["ReadingFont"];
             theme: components["schemas"]["Theme"];
@@ -882,6 +923,11 @@ export interface components {
         };
         /** Body_import_file_api_import_post */
         Body_import_file_api_import_post: {
+            /** File */
+            file: string;
+        };
+        /** Body_upload_header_image_api_header_image_post */
+        Body_upload_header_image_api_header_image_post: {
             /** File */
             file: string;
         };
@@ -994,6 +1040,16 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /**
+         * HeaderChoice
+         * @description Which picture fills the header band. `auto` follows the theme and the time of day.
+         * @enum {string}
+         */
+        HeaderChoice: "auto" | "serene-day" | "serene-dusk" | "pavilion" | "custom";
+        /** HeaderIn */
+        HeaderIn: {
+            choice: components["schemas"]["HeaderChoice"];
         };
         /** HealthOut */
         HealthOut: {
@@ -1764,6 +1820,92 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["GoldenCoreIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    choose_header_api_header_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HeaderIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    header_image_api_header_image_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    upload_header_image_api_header_image_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_header_image_api_header_image_post"];
             };
         };
         responses: {

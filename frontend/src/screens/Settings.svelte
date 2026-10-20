@@ -1,7 +1,9 @@
 <script lang="ts">
   import Button from '../components/Button.svelte';
   import DataPanel from './DataPanel.svelte';
+  import FeedbackPanel from './FeedbackPanel.svelte';
   import GoldenCorePanel from './GoldenCorePanel.svelte';
+  import HeaderPanel from './HeaderPanel.svelte';
   import SunsetPanel from './SunsetPanel.svelte';
   import SymbolsPanel from './SymbolsPanel.svelte';
   import ThemePanel from './ThemePanel.svelte';
@@ -16,12 +18,14 @@
   </div>
   <div class="column">
     <ThemePanel />
+    <HeaderPanel />
     <SymbolsPanel />
   </div>
   <div class="column">
     <SunsetPanel />
     <GoldenCorePanel />
     <DataPanel />
+    <FeedbackPanel />
   </div>
 </div>
 

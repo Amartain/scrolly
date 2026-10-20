@@ -9,6 +9,9 @@
   type Group = 'states' | 'types';
   type Symbol = View['legend']['states'][string];
 
+  /** The refusal of this panel's own last change (not the shared notice other panels use). */
+  let message = $state('');
+
   const groups = $derived<[Group, [string, Symbol][]][]>([
     ['states', Object.entries(view.current?.legend.states ?? {})],
     ['types', Object.entries(view.current?.legend.types ?? {})],
@@ -25,7 +28,12 @@
     const field = event.currentTarget;
     const { emoji = '', shortcode = '' } = patch;
     const done = await view.act(() => putSymbol(group, key, { emoji, shortcode }));
+    message = done ? '' : view.notice;
     if (!done) field.value = old;
+  }
+
+  async function restore(group: Group, key: string) {
+    message = (await view.act(() => putSymbol(group, key))) ? '' : view.notice;
   }
 </script>
 
@@ -66,12 +74,12 @@
           <Button
             label={SYMBOLS.reset}
             description="Restore the default for {label}"
-            onclick={() => view.act(() => putSymbol(group, key))}
+            onclick={() => restore(group, key)}
           />
         </div>
       {/each}
     {/each}
-    <p class="note" aria-live="polite">{view.notice}</p>
+    <p class="note" aria-live="polite">{message}</p>
   </div>
 </Panel>
 

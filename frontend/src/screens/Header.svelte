@@ -1,4 +1,8 @@
 <script lang="ts">
+  import pavilion from '../assets/headers/pavilion.webp';
+  import sereneDay from '../assets/headers/serene-day.webp';
+  import sereneDusk from '../assets/headers/serene-dusk.webp';
+  import { view } from '../lib/view.svelte';
   import HandscrollIcon from '../icons/HandscrollIcon.svelte';
   import SlidersIcon from '../icons/SlidersIcon.svelte';
   import IconButton from '../components/IconButton.svelte';
@@ -11,6 +15,16 @@
     return () => clearInterval(timer);
   });
 
+  /** The user's choice of picture. Left undefined ("match the theme"), the theme's own token shows. */
+  const picture = $derived.by(() => {
+    const a = view.current?.appearance;
+    if (a?.header === 'serene-day') return `url(${sereneDay})`;
+    if (a?.header === 'serene-dusk') return `url(${sereneDusk})`;
+    if (a?.header === 'pavilion') return `url(${pavilion})`;
+    if (a?.header === 'custom') return `url(/api/header-image?v=${a.header_version})`;
+    return undefined;
+  });
+
   const time = $derived(
     now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }),
   );
@@ -19,7 +33,7 @@
   );
 </script>
 
-<header class="header">
+<header class="header" style:background-image={picture}>
   <div class="plate">
     <HandscrollIcon />
     <div class="titles">

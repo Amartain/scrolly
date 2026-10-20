@@ -7,7 +7,7 @@ from scrolly.api.schemas.legend import LegendOut
 from scrolly.api.schemas.milestone import MilestoneOut
 from scrolly.api.schemas.planning import PlanningOut
 from scrolly.api.schemas.poem import PoemOut
-from scrolly.domain.appearance import DayVariant, Phase, ReadingFont, Theme
+from scrolly.domain.appearance import DayVariant, HeaderChoice, Phase, ReadingFont, Theme
 from scrolly.services.view import ViewData
 
 
@@ -16,6 +16,9 @@ class AppearanceOut(BaseModel):
     day_variant: DayVariant | None
     phase: Phase
     reading_font: ReadingFont
+    header: HeaderChoice
+    # Changes with each upload of the user's own picture, so the browser fetches it afresh.
+    header_version: int
 
 
 class SunsetOut(BaseModel):
@@ -60,6 +63,8 @@ class ViewOut(BaseModel):
                 day_variant=a.day_variant,
                 phase=a.phase,
                 reading_font=a.reading_font,
+                header=a.header,
+                header_version=a.header_version,
             ),
             sunset=SunsetOut(
                 enabled=data.sunset.enabled,
@@ -86,6 +91,10 @@ class AppearanceIn(BaseModel):
 
 class ReadingFontIn(BaseModel):
     font: ReadingFont
+
+
+class HeaderIn(BaseModel):
+    choice: HeaderChoice
 
 
 class SunsetIn(BaseModel):

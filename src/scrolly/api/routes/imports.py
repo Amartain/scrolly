@@ -27,7 +27,8 @@ def import_file(file: UploadFile, request: Request, store: StoreDep, clock: Cloc
         # A zip or CSV is read as whole tables; a bad one is refused (422) before anything changes.
         archive = parse_archive(name, content)
         stamp = backup_name(clock.now()).removeprefix("scrolly-").removesuffix(".zip")
-        keeper = copy_keeper(request.app.state.backup_dir, stamp)
+        data_dir = request.app.state.data_dir
+        keeper = copy_keeper(None if data_dir is None else data_dir / "backups", stamp)
         added, skipped = ArchiveService(store, clock, keeper).restore(archive)
         return ImportOut.from_counts(added, skipped, ViewOut.from_data(build_view(store, clock)))
     try:

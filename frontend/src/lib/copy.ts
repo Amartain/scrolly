@@ -159,3 +159,22 @@ export const SYMBOLS = {
   note: 'Your own emoji and Discord shortcodes for the Legend of the Scrolls. Each one stands for a single meaning.',
   reset: 'Default',
 } as const;
+
+/** DRAFT: Settings › Header and the feedback links. */
+export const HEADER = {
+  title: 'Header',
+  auto: 'Match the theme',
+  custom: 'My own picture',
+  choose: 'Choose a picture',
+  hint: 'PNG, JPEG or WebP, up to 5 MB. It stays on this computer.',
+} as const;
+
+export const FEEDBACK = {
+  title: 'Feedback',
+  note: 'These open a short form in your browser.',
+  links: [
+    { label: 'Report a bug', href: 'https://forms.gle/fsEJDygF3FCKrstu7' },
+    { label: 'Share a thought', href: 'https://forms.gle/BbMjJ7xN1BJtFb7q9' },
+    { label: 'Write to the developer', href: 'https://forms.gle/haR4N5k7npJTWMLi9' },
+  ],
+} as const;

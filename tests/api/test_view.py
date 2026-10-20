@@ -9,6 +9,8 @@ def test_view_shape(client: TestClient) -> None:
         "day_variant": None,
         "phase": "day",
         "reading_font": "atkinson",
+        "header": "auto",
+        "header_version": 0,
     }
 
 

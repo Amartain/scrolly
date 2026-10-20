@@ -1,30 +1,7 @@
-from collections.abc import Iterator
-from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
-import pytest
 from fastapi.testclient import TestClient
-
-from scrolly.api.app import create_app
-from scrolly.clock import FixedClock
-from scrolly.ports import Store
-from scrolly.storage.store import SqliteStores
-
-
-@pytest.fixture
-def copies(tmp_path: Path) -> Path:
-    return tmp_path / "copies"
-
-
-@pytest.fixture
-def app_client(clock: FixedClock, stores: SqliteStores, copies: Path) -> TestClient:
-    @contextmanager
-    def factory() -> Iterator[Store]:
-        with stores() as opened:
-            yield opened
-
-    return TestClient(create_app(clock, factory, backup_dir=copies))
 
 
 def _seal(client: TestClient, *titles: str) -> dict[str, Any]:
