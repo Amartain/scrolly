@@ -15,6 +15,7 @@ from scrolly.domain.planning import (
 )
 from scrolly.domain.uniqueness import require_free_trial_title
 from scrolly.ports import Clock, Store
+from scrolly.services.sunset import settle_day
 
 
 class TodayService:
@@ -66,6 +67,7 @@ class TodayService:
     def conquer(self, trial_id: str) -> None:
         self._store.trials.save([day_flow.conquer(self._trial(trial_id), self._now)], self._now)
         self._promote()
+        settle_day(self._store, self._now)
 
     def postpone(self, trial_id: str) -> None:
         gone, horizon = day_flow.postpone(
@@ -74,10 +76,12 @@ class TodayService:
         self._store.horizon.replace_all(horizon, self._now)
         self._store.trials.save([gone], self._now)
         self._promote()
+        settle_day(self._store, self._now)
 
     def abandon(self, trial_id: str) -> None:
         self._store.trials.save([day_flow.abandon(self._trial(trial_id), self._now)], self._now)
         self._promote()
+        settle_day(self._store, self._now)
 
     def revive(self, trial_id: str) -> None:
         trial = self._trial(trial_id)

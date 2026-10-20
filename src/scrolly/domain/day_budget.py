@@ -17,8 +17,9 @@ class DayBudget:
     mandate_min: int
     mortal_min: int
     unestimated_count: int
-    light_min: int | None  # None once the sun has set
+    light_min: int | None  # None once the sun has set, or when the user keeps no sunset
     beyond_light_min: int
+    has_sunset: bool = True
 
 
 def sunset_at(now: datetime, sunset: time) -> datetime:
@@ -33,13 +34,16 @@ def light_left(now: datetime, sunset: time) -> int | None:
     return None if seconds <= 0 else int(seconds // 60)
 
 
-def day_budget(trials: Sequence[Trial], now: datetime, sunset: time) -> DayBudget:
-    """The open trials against the light left. Trials without an estimate are counted, not timed."""
+def day_budget(trials: Sequence[Trial], now: datetime, sunset: time | None) -> DayBudget:
+    """The open trials against the light left. Trials without an estimate are counted, not timed.
+
+    With no sunset (the user said "not now") only the totals are given.
+    """
     open_trials = [t for t in trials if t.state in OPEN_STATES]
     estimates = [(t, t.essence_expected_min or 0) for t in open_trials]
     planned = sum(minutes for _, minutes in estimates)
     mandate = sum(minutes for t, minutes in estimates if t.is_mandate)
-    light = light_left(now, sunset)
+    light = None if sunset is None else light_left(now, sunset)
     return DayBudget(
         trial_count=len(open_trials),
         planned_min=planned,
@@ -48,4 +52,5 @@ def day_budget(trials: Sequence[Trial], now: datetime, sunset: time) -> DayBudge
         unestimated_count=sum(1 for t in open_trials if t.essence_expected_min is None),
         light_min=light,
         beyond_light_min=0 if light is None else max(0, planned - light),
+        has_sunset=sunset is not None,
     )

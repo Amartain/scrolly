@@ -98,3 +98,12 @@ export const MILESTONE = {
 
 /** DRAFT: how much of a Horizon item's time was already worked, shown small beside its estimate. */
 export const workedNote = (text: string) => `· ${text} worked`;
+
+/** DRAFT: the one-time sunset question in the Day Summary, and its quiet states. */
+export const SUNSET = {
+  ask: 'When does your sunset come?',
+  set: 'Set',
+  later: 'Not now',
+  hint: 'Use a time like 21:00',
+  off: 'No sunset kept. The Day Summary shows totals only.',
+} as const;

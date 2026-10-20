@@ -2,6 +2,7 @@
   import MandateMark from '../../components/MandateMark.svelte';
   import Panel from '../../components/Panel.svelte';
   import { view } from '../../lib/view.svelte';
+  import SunsetInvitation from './SunsetInvitation.svelte';
 
   const budget = $derived(view.planning?.budget);
   const alt = $derived(
@@ -36,17 +37,20 @@
             &nbsp;
           {/if}
         </p>
-      {:else}
+      {:else if budget.has_sunset}
         <p class="muted">The sun has set. Rest is part of the path.</p>
       {/if}
-      <!-- One reserved line, so a count appearing never moves the panels below. -->
-      <p class="muted last">
-        {#if budget.unestimated_count > 0}
-          <span class="digits">{budget.unestimated_count}</span> without an estimate
-        {:else}
-          &nbsp;
-        {/if}
-      </p>
+      <!-- One reserved row, so a count or the one-time question never moves the panels below. -->
+      <div class="muted last">
+        <span>
+          {#if budget.unestimated_count > 0}
+            <span class="digits">{budget.unestimated_count}</span> without an estimate
+          {:else}
+            &nbsp;
+          {/if}
+        </span>
+        {#if view.current && !view.current.sunset.invited}<SunsetInvitation />{/if}
+      </div>
     </div>
   </Panel>
 {/if}
@@ -101,6 +105,10 @@
   }
 
   .last {
-    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-height: var(--size-glyph-button);
   }
 </style>

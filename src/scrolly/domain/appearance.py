@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from datetime import datetime
 from enum import StrEnum
 
 
@@ -41,16 +40,15 @@ class Appearance:
     reading_font: ReadingFont = ReadingFont.ATKINSON
 
 
-def resolve_appearance(prefs: Preferences, now: datetime) -> Appearance:
-    """What the UI should look like right now.
+def resolve_appearance(prefs: Preferences, phase: Phase = Phase.DAY) -> Appearance:
+    """What the UI should look like right now. Only Pavilion has a day variant.
 
-    Only Pavilion has a day variant. The phase is always day until the sunset
-    system exists (build step 7).
+    The phase comes from the sunset system (`domain/sunset.py`).
     """
     variant = prefs.day_variant if prefs.theme is Theme.PAVILION else None
     return Appearance(
         theme=prefs.theme,
         day_variant=variant,
-        phase=Phase.DAY,
+        phase=phase,
         reading_font=prefs.reading_font,
     )

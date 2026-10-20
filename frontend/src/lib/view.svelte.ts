@@ -3,6 +3,7 @@ import {
   importFile,
   putAppearance,
   putReadingFont,
+  putSunset,
   type DayVariant,
   type ImportResult,
   type Milestone,
@@ -15,6 +16,7 @@ import {
 import { refusalNote, type Segment } from './copy';
 
 const REFRESH_MS = 60_000;
+const FADE_MS = 60_000;
 
 /** The latest server view. Also the only place the theme attributes on <html> are set. */
 class ViewStore {
@@ -42,7 +44,7 @@ class ViewStore {
   private apply(view: View) {
     const root = document.documentElement;
     root.dataset.theme = view.appearance.theme;
-    root.dataset.phase = view.appearance.phase;
+    this.fadeInto(view.appearance.phase);
     root.dataset.readingFont = view.appearance.reading_font;
     if (view.appearance.day_variant) root.dataset.dayVariant = view.appearance.day_variant;
     else delete root.dataset.dayVariant;
@@ -51,6 +53,19 @@ class ViewStore {
     // Only the response to the day's first seal carries a milestone; later views never clear it.
     if (view.milestone) this.milestone = view.milestone;
   }
+
+  /** Set the phase. When it changes while the page is open, the palette fades over a minute. */
+  private fadeInto(phase: string) {
+    const root = document.documentElement;
+    if (root.dataset.phase && root.dataset.phase !== phase) {
+      root.dataset.fading = '';
+      clearTimeout(this.fadeTimer);
+      this.fadeTimer = setTimeout(() => delete root.dataset.fading, FADE_MS + 1000);
+    }
+    root.dataset.phase = phase;
+  }
+
+  private fadeTimer: ReturnType<typeof setTimeout> | undefined;
 
   dismissMilestone() {
     this.milestone = null;
@@ -84,6 +99,11 @@ class ViewStore {
 
   async choose(theme: Theme, dayVariant: DayVariant | null) {
     this.apply(await putAppearance(theme, dayVariant));
+  }
+
+  /** Answer the sunset invitation, or change the hour, the on/off choice or the chime. */
+  setSunset(patch: { enabled?: boolean; at?: string; chime?: boolean }): Promise<boolean> {
+    return this.act(() => putSunset(patch));
   }
 
   async chooseReadingFont(font: ReadingFont) {

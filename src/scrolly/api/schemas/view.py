@@ -17,10 +17,20 @@ class AppearanceOut(BaseModel):
     reading_font: ReadingFont
 
 
+class SunsetOut(BaseModel):
+    """The sunset choice. `invited` is true once the user has answered (a time, or "not now")."""
+
+    enabled: bool
+    invited: bool
+    at_text: str
+    chime: bool
+
+
 class ViewOut(BaseModel):
     now: datetime
     logical_day: date
     appearance: AppearanceOut
+    sunset: SunsetOut
     legend: LegendOut
     planning: PlanningOut
     dashboard: DashboardOut
@@ -39,6 +49,12 @@ class ViewOut(BaseModel):
                 phase=a.phase,
                 reading_font=a.reading_font,
             ),
+            sunset=SunsetOut(
+                enabled=data.sunset.enabled,
+                invited=data.sunset.invited,
+                at_text=f"{data.sunset.hour:02d}:{data.sunset.minute:02d}",
+                chime=data.sunset.chime,
+            ),
             legend=LegendOut.build(),
             planning=PlanningOut.from_data(data.planning, data.budget, data.qi),
             dashboard=DashboardOut.from_data(data.dashboard),
@@ -52,6 +68,14 @@ class AppearanceIn(BaseModel):
 
 class ReadingFontIn(BaseModel):
     font: ReadingFont
+
+
+class SunsetIn(BaseModel):
+    """Only what is given changes. A time (such as "21:00") or an on/off answers the invitation."""
+
+    enabled: bool | None = None
+    at: str | None = None
+    chime: bool | None = None
 
 
 class HealthOut(BaseModel):

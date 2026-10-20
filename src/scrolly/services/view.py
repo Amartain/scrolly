@@ -4,6 +4,7 @@ from datetime import date, datetime
 from scrolly.domain.appearance import Appearance, resolve_appearance
 from scrolly.domain.day_budget import DayBudget
 from scrolly.domain.logical_day import logical_day
+from scrolly.domain.sunset import SunsetPrefs, phase_at
 from scrolly.ports import Clock, Store
 from scrolly.services.appearance import AppearanceService
 from scrolly.services.dashboard_view import DashboardView, build_dashboard_view
@@ -11,6 +12,7 @@ from scrolly.services.day import DayService
 from scrolly.services.day_budget import build_budget
 from scrolly.services.golden_core import QiView, build_qi_view
 from scrolly.services.planning_view import PlanningView, build_planning_view
+from scrolly.services.sunset import load_prefs
 
 
 @dataclass(frozen=True)
@@ -22,6 +24,7 @@ class ViewData:
     budget: DayBudget
     qi: QiView
     dashboard: DashboardView
+    sunset: SunsetPrefs
 
 
 def build_view(store: Store, clock: Clock) -> ViewData:
@@ -29,11 +32,14 @@ def build_view(store: Store, clock: Clock) -> ViewData:
     DayService(store, clock).ensure_today()
     now = clock.now()
     prefs = AppearanceService(store, clock).preferences()
+    sunset = load_prefs(store)
     today = logical_day(now)
+    phase = phase_at(now, sunset, store.days.get(today))
     return ViewData(
         now=now,
         logical_day=today,
-        appearance=resolve_appearance(prefs, now),
+        appearance=resolve_appearance(prefs, phase),
+        sunset=sunset,
         planning=build_planning_view(store, today),
         budget=build_budget(store, now),
         qi=build_qi_view(store, now),

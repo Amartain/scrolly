@@ -6,6 +6,7 @@ export type Planning = components['schemas']['PlanningOut'];
 export type PlanTrial = components['schemas']['PlanTrialOut'];
 export type Budget = components['schemas']['BudgetOut'];
 export type Qi = components['schemas']['QiOut'];
+export type Sunset = components['schemas']['SunsetOut'];
 export type QiFill = components['schemas']['QiFillOut'];
 export type Dashboard = components['schemas']['DashboardOut'];
 export type Immediate = components['schemas']['ImmediateOut'];
@@ -63,6 +64,9 @@ export const putAppearance = (theme: Theme, dayVariant: DayVariant | null) =>
 
 export const putReadingFont = (font: ReadingFont) =>
   send<View>('/api/reading-font', json('PUT', { font }));
+
+export const putSunset = (patch: { enabled?: boolean; at?: string; chime?: boolean }) =>
+  send<View>('/api/sunset', json('PUT', patch));
 
 export async function importFile(file: File): Promise<ImportResult> {
   const body = new FormData();

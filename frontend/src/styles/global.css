@@ -46,3 +46,15 @@ input {
 .digits {
   font-variant-numeric: tabular-nums;
 }
+
+/* A circadian shift (day, golden hour, dusk) fades over about a minute (art-direction › Motion). */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-fading],
+  :root[data-fading] * {
+    transition:
+      background-color 60s linear,
+      color 60s linear,
+      border-color 60s linear,
+      fill 60s linear;
+  }
+}

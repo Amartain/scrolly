@@ -21,6 +21,7 @@ class BudgetOut(BaseModel):
     mandate_pct: int
     mortal_pct: int
     light_pct: int
+    has_sunset: bool
 
     @classmethod
     def from_budget(cls, budget: DayBudget) -> "BudgetOut":
@@ -37,6 +38,7 @@ class BudgetOut(BaseModel):
             mandate_pct=_pct(budget.mandate_min, span),
             mortal_pct=_pct(budget.mortal_min, span),
             light_pct=0 if light is None else _pct(light, span),
+            has_sunset=budget.has_sunset,
         )
 
 

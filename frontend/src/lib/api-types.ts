@@ -417,6 +417,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/sunset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Choose Sunset
+         * @description Answer the invitation, or change the sunset hour, the on/off choice or the chime.
+         */
+        put: operations["choose_sunset_api_sunset_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/trials": {
         parameters: {
             query?: never;
@@ -723,6 +743,8 @@ export interface components {
         BudgetOut: {
             /** Beyond Text */
             beyond_text: string | null;
+            /** Has Sunset */
+            has_sunset: boolean;
             /** Light Pct */
             light_pct: number;
             /** Light Text */
@@ -1085,6 +1107,32 @@ export interface components {
              */
             source: "horizon" | "art";
         };
+        /**
+         * SunsetIn
+         * @description Only what is given changes. A time (such as "21:00") or an on/off answers the invitation.
+         */
+        SunsetIn: {
+            /** At */
+            at?: string | null;
+            /** Chime */
+            chime?: boolean | null;
+            /** Enabled */
+            enabled?: boolean | null;
+        };
+        /**
+         * SunsetOut
+         * @description The sunset choice. `invited` is true once the user has answered (a time, or "not now").
+         */
+        SunsetOut: {
+            /** At Text */
+            at_text: string;
+            /** Chime */
+            chime: boolean;
+            /** Enabled */
+            enabled: boolean;
+            /** Invited */
+            invited: boolean;
+        };
         /** SymbolOut */
         SymbolOut: {
             /** Emoji */
@@ -1161,6 +1209,7 @@ export interface components {
              */
             now: string;
             planning: components["schemas"]["PlanningOut"];
+            sunset: components["schemas"]["SunsetOut"];
         };
         /**
          * TrialPatchIn
@@ -1952,6 +2001,39 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ReadingFontIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    choose_sunset_api_sunset_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SunsetIn"];
             };
         };
         responses: {
