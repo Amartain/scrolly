@@ -1,12 +1,15 @@
 <!-- The Incense ring. Python says whether it is counting down or overfilled; this only draws it and
-     adds the seconds since the view arrived. Past the estimate the ring turns a brighter shade. -->
+     adds the seconds since the view arrived. The incense burns down: the colour is what remains, with
+     round ends, a sheen and a clock that ticks every second. Past the estimate the ring is full again
+     in a brighter shade. The shapes are drawn in a 100-unit box, so they scale with the ring. -->
 <script lang="ts">
   import SetOnce from '../../components/SetOnce.svelte';
   import { today, type Immediate } from '../../lib/api';
   import { SECLUSION } from '../../lib/copy-seclusion';
   import { seclusion } from '../../lib/seclusion.svelte';
   import type { SeclusionState } from '../../lib/seclusion-api';
-  import { leftText, useTimerDisplay } from '../../lib/timer.svelte';
+  import { ringClock, useTimerDisplay } from '../../lib/timer.svelte';
+  import RingArt from './RingArt.svelte';
 
   let { room, trial }: { room: SeclusionState; trial: Immediate } = $props();
 
@@ -22,8 +25,7 @@
   const over = $derived((incense?.over_s ?? 0) + extra);
   const overfilled = $derived(incense?.state === 'overfilled');
   const expected = $derived(trial.timer.expected_s);
-  // The incense burns down: the colour is what remains and shrinks. Past the estimate the ring is
-  // full again in the brighter shade. Only the angle of the arc is worked out here.
+  // Only the length of the arc is worked out here.
   const fill = $derived.by(() => {
     if (overfilled) return 100;
     if (!expected) return 0;
@@ -50,6 +52,7 @@
   role="timer"
   aria-label={overfilled ? SECLUSION.pastEstimate(trial.expected_text) : SECLUSION.remaining}
 >
+  <RingArt {fill} />
   <div class="inner">
     {#if !incense}
       <p class="ask display">{SECLUSION.askEstimate}</p>
@@ -61,10 +64,10 @@
         onsave={setEstimate}
       />
     {:else if overfilled}
-      <p class="big display">+{Math.floor(over / 60)}m</p>
+      <p class="big display digits">+{ringClock(over)}</p>
       <p class="small">{SECLUSION.pastEstimate(trial.expected_text)}</p>
     {:else}
-      <p class="big display digits">{leftText(left)}</p>
+      <p class="big display digits">{ringClock(left)}</p>
       <p class="word display">{SECLUSION.remaining}</p>
       <p class="small">{SECLUSION.ofEstimate(trial.expected_text)}</p>
     {/if}
@@ -77,15 +80,12 @@
 <style>
   .ring {
     --ring-fill: var(--gold);
+    position: relative;
     flex: none;
     display: grid;
     place-items: center;
     width: var(--size-ring);
     aspect-ratio: 1;
-    border-radius: 50%;
-    background: conic-gradient(var(--ring-fill) calc(var(--fill) * 1%), var(--inset) 0);
-    border: var(--border-width) solid var(--line);
-    box-shadow: var(--shadow-button);
   }
 
   .ring[data-over] {
@@ -93,17 +93,14 @@
   }
 
   .inner {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: var(--space-1);
-    width: calc(100% - var(--size-ring-band) * 2);
-    aspect-ratio: 1;
-    padding: var(--space-4);
-    border-radius: 50%;
-    background: var(--surface-raised);
-    border: var(--border-width) solid var(--line);
+    width: 70%;
+    padding: var(--space-2);
     text-align: center;
   }
 
@@ -117,6 +114,7 @@
     line-height: 1;
     text-shadow: var(--space-1) var(--space-1) 0 var(--num-shadow);
     text-transform: none;
+    white-space: nowrap;
   }
 
   .word {

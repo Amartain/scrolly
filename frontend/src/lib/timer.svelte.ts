@@ -39,9 +39,14 @@ export function clockText(seconds: number): string {
 /** Whole minutes ("27m"), for the time logged. */
 export const minutesText = (seconds: number) => `${Math.floor(seconds / 60)}m`;
 
-/** The big figure on the Incense ring: minutes left, or seconds in the last minute. */
-export const leftText = (seconds: number) =>
-  seconds >= 60 ? `${Math.ceil(seconds / 60)}m` : `${Math.max(0, seconds)}s`;
+/** The clock on the Incense ring: 44:58, or 1:05:00 from an hour up. It moves every second. */
+export function ringClock(seconds: number): string {
+  const total = Math.max(0, Math.floor(seconds));
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const hours = Math.floor(total / 3600);
+  const clock = `${pad(Math.floor(total / 60) % 60)}:${pad(total % 60)}`;
+  return hours > 0 ? `${hours}:${clock}` : clock;
+}
 
 /** The quiet "+12m flow" shown past the estimate. Empty until a whole minute over. */
 export function flowText(seconds: number, expected: number | null): string {
