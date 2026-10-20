@@ -24,6 +24,7 @@
 
 <Panel title="Data">
   <div class="data">
+    <Button label="Backup Scroll" onclick={() => (window.location.href = '/api/export')} />
     <Button label="Restore Scroll" onclick={() => picker.click()} />
     <input
       bind:this={picker}

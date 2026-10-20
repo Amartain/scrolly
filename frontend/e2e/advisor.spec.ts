@@ -39,6 +39,6 @@ test('Not again today keeps it quiet through a reload, until Settings wakes it',
 
   await page.getByRole('button', { name: 'Settings' }).click();
   await page.getByRole('button', { name: 'Let the advisor speak again today' }).click();
-  await page.getByRole('button', { name: 'Back' }).click();
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
   await expect(dialog).toBeVisible();
 });

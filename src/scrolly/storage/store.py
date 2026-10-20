@@ -6,6 +6,7 @@ from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from scrolly.ports import Store
+from scrolly.storage.archive import SqlArchive
 from scrolly.storage.arts import SqlArts
 from scrolly.storage.days import SqlDays
 from scrolly.storage.drafts import SqlDrafts
@@ -35,6 +36,7 @@ class SqliteStores:
                 arts=SqlArts(session),
                 days=SqlDays(session),
                 drafts=SqlDrafts(session),
+                archive=SqlArchive(session),
                 commit=session.commit,
             )
             session.commit()

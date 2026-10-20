@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from typing import Any, Protocol
 
+from scrolly.domain.archive import Tables
 from scrolly.domain.models import Art, Day, HorizonItem, PlanningDraft, Trial
 
 
@@ -61,6 +62,14 @@ class DraftRepository(Protocol):
     def delete(self) -> None: ...
 
 
+class ArchiveRepository(Protocol):
+    def dump(self) -> Tables: ...
+
+    def replace_all(self, tables: Tables) -> int: ...
+
+    def add_missing(self, tables: Tables) -> tuple[int, int]: ...
+
+
 @dataclass(frozen=True)
 class Store:
     """Everything one request may touch. One store = one transaction."""
@@ -71,6 +80,7 @@ class Store:
     arts: ArtRepository
     days: DayRepository
     drafts: DraftRepository
+    archive: ArchiveRepository
     commit: Callable[[], None]
 
 

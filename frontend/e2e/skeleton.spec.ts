@@ -46,7 +46,7 @@ test('theme changes in Settings re-paint without moving any panel', async ({ pag
   await page.getByRole('button', { name: 'Settings' }).click();
   await page.getByText('Hidden Pavilion').click();
   await page.getByText('Crimson').click();
-  await page.getByRole('button', { name: 'Back' }).click();
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
 
   const root = page.locator('html');
   await expect(root).toHaveAttribute('data-theme', 'pavilion');

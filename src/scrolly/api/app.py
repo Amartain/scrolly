@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from scrolly.api.routes import (
     advisor,
     arts,
+    export,
     golden_core,
     horizon,
     imports,
@@ -62,6 +63,7 @@ def create_app(
     app.include_router(golden_core.router)
     app.include_router(sunset.router)
     app.include_router(advisor.router)
+    app.include_router(export.router)
     app.include_router(imports.router)
     app.include_router(planning.router)
     app.include_router(trials.router)
