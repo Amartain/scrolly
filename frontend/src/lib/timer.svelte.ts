@@ -31,6 +31,37 @@ export function useTimerDisplay(
   };
 }
 
+/**
+ * The seconds left of a countdown the server sent (its remaining seconds, less those since it arrived).
+ * When a running countdown reaches zero, `onzero` runs once so the room can be read again: the server
+ * says what comes next. Every ring and card that shows a countdown uses this, so a phase is never missed.
+ */
+export function useCountdown(
+  run: () => { remaining_s: number; running: boolean } | null,
+  receivedAt: () => number,
+  onzero: () => void,
+) {
+  const since = useTimerDisplay(() => {
+    const current = run();
+    return current ? { elapsed_s: 0, running: current.running, expected_s: null } : null;
+  }, receivedAt);
+  const left = $derived(Math.max(0, (run()?.remaining_s ?? 0) - since.seconds));
+
+  let askedAt = 0;
+  $effect(() => {
+    const current = run();
+    if (!current?.running || left > 0 || askedAt === receivedAt()) return;
+    askedAt = receivedAt();
+    onzero();
+  });
+
+  return {
+    get left(): number {
+      return left;
+    },
+  };
+}
+
 export function clockText(seconds: number): string {
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${pad(Math.floor(seconds / 3600))}:${pad(Math.floor(seconds / 60) % 60)}:${pad(seconds % 60)}`;

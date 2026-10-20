@@ -1,5 +1,8 @@
 import { today, type View } from './api';
 import { playGong } from './chime';
+import { SECLUSION } from './copy-seclusion';
+import { askNotifyPermission, notify } from './notify';
+import { playSound, soundFor } from './seclusion-sounds';
 import {
   seclusion as api,
   type CyclesPlan,
@@ -33,9 +36,12 @@ class SeclusionStore {
   get running(): boolean {
     const room = this.state;
     if (!room) return false;
-    if (room.discipline === 'cycles') return room.cycles?.running ?? false;
-    if (room.discipline === 'flow') return room.flow?.running ?? false;
-    return room.trial?.timer.running ?? false;
+    const working = room.trial?.timer.running ?? false;
+    const cycles = room.cycles;
+    // The cycle's own clock can run with no trial being worked (after a conquest): then Start is offered.
+    if (cycles) return cycles.phase === 'break' ? cycles.running : cycles.running && working;
+    if (room.flow) return room.flow.running;
+    return working;
   }
 
   /** The Cycles dial is showing: Enter and Space belong to its buttons. */
@@ -51,11 +57,29 @@ class SeclusionStore {
     }
   }
 
+  /**
+   * A countdown has reached zero here: read the room again and ring what the new phase calls for.
+   * The end of the last cycle also sends the desktop notice. Reading the room on its own never rings.
+   */
+  async settle() {
+    const before = this.state;
+    await this.load();
+    const sound = soundFor(before, this.state);
+    if (!sound) return;
+    playSound(sound);
+    if (sound === 'final')
+      notify(SECLUSION.tabs.cycles, `${SECLUSION.cycles.done} ${SECLUSION.cycles.doneHint}`);
+  }
+
   /** Run a command of the focus room. A refusal becomes the notice. */
   async act(command: () => Promise<SeclusionState>): Promise<boolean> {
     try {
-      this.apply(await command());
+      const before = this.state;
+      const next = await command();
+      this.apply(next);
       view.notice = '';
+      // Only a focus the user began rings from here; the ends of a phase ring from `settle`.
+      if (soundFor(before, next) === 'knock') playSound('knock');
       return true;
     } catch (error) {
       view.notice = error instanceof Error ? error.message : 'Something went wrong.';
@@ -105,12 +129,16 @@ class SeclusionStore {
     this.finished = null;
     return this.act(api.leave);
   };
-  start = () => {
+  start = async () => {
     this.finished = null;
+    await this.ratios; // a ratio still on its way must land before the bank opens
     return this.act(api.start);
   };
   /** Start the first focus of the Cycles with what the dial holds. */
-  startCycles = (plan: CyclesPlan) => this.act(() => api.startCycles(plan));
+  startCycles = (plan: CyclesPlan) => {
+    askNotifyPermission(); // a click is what lets the browser ask
+    return this.act(() => api.startCycles(plan));
+  };
   pause = () => this.act(api.pause);
   /** Space: pause what runs, start what waits. The Cycles dial has its own Start. */
   toggle = () => {
@@ -118,9 +146,18 @@ class SeclusionStore {
     if (this.settingUp || resting) return Promise.resolve(false);
     return this.running ? this.pause() : this.start();
   };
-  takeBreak = () => this.act(api.takeBreak);
+  takeBreak = () => {
+    this.finished = null; // the break shows on the ring
+    return this.act(api.takeBreak);
+  };
   endBreak = () => this.act(api.endBreak);
-  setRatio = (work: number, rest: number) => this.act(() => api.setRatio(work, rest));
+  /** One change at a time, in the order made: the server could otherwise meet two of them reversed. */
+  private ratios: Promise<unknown> = Promise.resolve();
+  setRatio = (work: number, rest: number) => {
+    const done = this.ratios.then(() => this.act(() => api.setRatio(work, rest)));
+    this.ratios = done;
+    return done;
+  };
   newTimer = () => {
     this.finished = null;
     return this.act(api.newTimer);

@@ -3,6 +3,7 @@
   import GlyphButton from '../../components/GlyphButton.svelte';
   import GlyphIcon from '../../icons/GlyphIcon.svelte';
   import { SECLUSION } from '../../lib/copy-seclusion';
+  import SoundPopover from './SoundPopover.svelte';
 
   let { onleave }: { onleave: () => void } = $props();
 
@@ -31,6 +32,7 @@
   <h1 class="title display">{SECLUSION.title}</h1>
   <span class="tagline">{SECLUSION.tagline}</span>
   <span class="clock display digits">{time}</span>
+  <SoundPopover />
   <GlyphButton label={SECLUSION.fullScreen} onclick={toggleFullScreen}>
     <GlyphIcon name="fullscreen" />
   </GlyphButton>

@@ -6,11 +6,32 @@
   import { SECLUSION } from '../../lib/copy-seclusion';
   import { seclusion } from '../../lib/seclusion.svelte';
   import type { SeclusionState } from '../../lib/seclusion-api';
+  import RunStatus from './RunStatus.svelte';
 
   let { room, trial }: { room: SeclusionState; trial: Immediate } = $props();
 
   let choosing = $state(false);
   const finished = $derived(seclusion.finished);
+
+  const cycles = $derived(room.cycles);
+  const flow = $derived(room.flow);
+  const inRun = $derived(Boolean(cycles || flow));
+
+  // What goes on: carry the run on with the next trial, or (Incense) a fresh timer on it.
+  const carry = $derived.by(() => {
+    if (cycles) {
+      if (cycles.phase === 'focus') return SECLUSION.continueCycle;
+      return cycles.phase === 'waiting' ? SECLUSION.start : null;
+    }
+    if (flow)
+      return flow.phase === 'break'
+        ? null
+        : flow.phase === 'idle'
+          ? SECLUSION.start
+          : SECLUSION.continueFlow;
+    return SECLUSION.startNewTimer;
+  });
+  const canBreak = $derived(cycles?.phase === 'focus' || (flow?.can_break ?? false));
 </script>
 
 <div class="card" role="group" aria-label={SECLUSION.whatNext}>
@@ -35,16 +56,25 @@
       >{SECLUSION.back}</button
     >
   {:else}
+    <RunStatus {room} />
     <p class="next">
       <span class="label display">{SECLUSION.next}</span> <span class="read">{trial.title}</span>
     </p>
     <div class="actions">
-      <Button
-        label={SECLUSION.startNewTimer}
-        tone="primary"
-        description="{SECLUSION.startNewTimer}: {trial.title}"
-        onclick={seclusion.newTimer}
-      />
+      {#if carry}
+        <Button
+          label={carry}
+          tone="primary"
+          description="{carry}: {trial.title}"
+          onclick={inRun ? seclusion.start : seclusion.newTimer}
+        />
+      {/if}
+      {#if canBreak}
+        <Button label={SECLUSION.takeBreakNow} onclick={seclusion.takeBreak} />
+      {/if}
+      {#if inRun}
+        <Button label={SECLUSION.startNewCycle} onclick={seclusion.newTimer} />
+      {/if}
       {#if room.remaining.length > 0}
         <Button label={SECLUSION.switchTrials} onclick={() => (choosing = true)} />
       {/if}

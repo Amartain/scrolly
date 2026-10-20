@@ -6,7 +6,7 @@
   import { SECLUSION } from '../../lib/copy-seclusion';
   import { seclusion } from '../../lib/seclusion.svelte';
   import type { SeclusionState } from '../../lib/seclusion-api';
-  import { ringClock, useTimerDisplay } from '../../lib/timer.svelte';
+  import { ringClock, useCountdown, useTimerDisplay } from '../../lib/timer.svelte';
   import RingFrame from './RingFrame.svelte';
   import Stepper from './Stepper.svelte';
 
@@ -30,7 +30,13 @@
   const elapsed = $derived(flow.focus_s + (resting ? 0 : since.seconds));
   // The bank grows as the focus does; the server holds the real figure and says when a break can start.
   const banked = $derived(flow.banked_s + Math.floor((since.seconds * flow.rest) / flow.work));
-  const left = $derived(Math.max(0, flow.break_left_s - since.seconds));
+  // When the rest runs out, the room is read again: focus then waits for Start.
+  const count = useCountdown(
+    () => (resting ? { remaining_s: flow.break_left_s, running: flow.running } : null),
+    () => seclusion.receivedAt,
+    () => void seclusion.settle(),
+  );
+  const left = $derived(count.left);
   const fill = $derived(resting ? (left / flow.break_total_s) * 100 : 100);
 
   // The server says when a break can first start; the browser only asks again then.
@@ -40,15 +46,6 @@
     const wait = due * 1000 - (performance.now() - seclusion.receivedAt);
     const id = setTimeout(() => void seclusion.load(), Math.max(0, wait));
     return () => clearTimeout(id);
-  });
-
-  // When the rest runs out, ask the server: focus then waits for Start.
-  let askedAt = 0;
-  $effect(() => {
-    if (!resting || !flow.running || left > 0) return;
-    if (askedAt === seclusion.receivedAt) return;
-    askedAt = seclusion.receivedAt;
-    void seclusion.load();
   });
 </script>
 

@@ -15,6 +15,7 @@ import {
   type View,
 } from './api';
 import { refusalNote, type Segment } from './copy';
+import { putSound } from './sound-api';
 
 const REFRESH_MS = 60_000;
 const FADE_MS = 60_000;
@@ -117,6 +118,16 @@ class ViewStore {
   setSunset(patch: { enabled?: boolean; at?: string; chime?: boolean }): Promise<boolean> {
     return this.act(() => putSunset(patch));
   }
+
+  /** The one volume (0-100) and the one mute of every sound. Only what is given changes. */
+  setSound(patch: { volume?: number; muted?: boolean }): Promise<boolean> {
+    // One at a time, in the order made: the server merges each change into what it holds.
+    const done = this.sounds.then(() => this.act(() => putSound(patch)));
+    this.sounds = done;
+    return done;
+  }
+
+  private sounds: Promise<unknown> = Promise.resolve();
 
   async chooseReadingFont(font: ReadingFont) {
     this.apply(await putReadingFont(font));

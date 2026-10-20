@@ -5,31 +5,21 @@
   import { SECLUSION } from '../../lib/copy-seclusion';
   import { seclusion } from '../../lib/seclusion.svelte';
   import type { SeclusionState } from '../../lib/seclusion-api';
-  import { ringClock, useTimerDisplay } from '../../lib/timer.svelte';
+  import { ringClock, useCountdown } from '../../lib/timer.svelte';
   import RingFrame from './RingFrame.svelte';
 
   let { cycles }: { cycles: NonNullable<SeclusionState['cycles']> } = $props();
 
   const copy = SECLUSION.cycles;
   const live = $derived(cycles.phase === 'focus' || cycles.phase === 'break');
-  const since = useTimerDisplay(
-    () => ({ elapsed_s: 0, running: cycles.running && live, expected_s: null }),
+  const count = useCountdown(
+    () => (live ? cycles : null),
     () => seclusion.receivedAt,
+    () => void seclusion.settle(),
   );
-  const left = $derived(
-    live ? Math.max(0, cycles.remaining_s - since.seconds) : cycles.remaining_s,
-  );
+  const left = $derived(live ? count.left : cycles.remaining_s);
   const fill = $derived(live ? (left / cycles.total_s) * 100 : 100);
   const label = $derived(cycles.phase === 'break' ? copy.break : copy.focus);
-
-  // When the countdown reaches zero, ask the server: it moves the run on (break, waiting or done).
-  let askedAt = 0;
-  $effect(() => {
-    if (!live || !cycles.running || left > 0) return;
-    if (askedAt === seclusion.receivedAt) return;
-    askedAt = seclusion.receivedAt;
-    void seclusion.load();
-  });
 </script>
 
 <RingFrame

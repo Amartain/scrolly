@@ -86,7 +86,8 @@ def test_the_view_says_how_long_until_a_break_can_start() -> None:
     assert flow_view(bank, at(0)).break_in_s == 5 * 60
     assert flow_view(bank, at(3)).break_in_s == 2 * 60
     assert flow_view(bank, at(5)).break_in_s == 0
-    assert flow_view(pause_flow(bank, at(3)), at(9)).break_in_s is None  # nothing banks while paused
+    paused = pause_flow(bank, at(3))
+    assert flow_view(paused, at(9)).break_in_s is None  # nothing banks while paused
     ratio = start_flow(FlowBank(1, 10), T0)  # a minute of rest every six seconds of focus
     assert flow_view(ratio, at(0)).break_in_s == 6
 
