@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from scrolly.domain.legend import STATE_SYMBOLS, TYPE_SYMBOLS, Symbol
+from scrolly.domain.legend import Legend, Symbol
 
 
 class SymbolOut(BaseModel):
@@ -20,8 +20,8 @@ class LegendOut(BaseModel):
     types: dict[str, SymbolOut]
 
     @classmethod
-    def build(cls) -> "LegendOut":
+    def build(cls, legend: Legend) -> "LegendOut":
         return cls(
-            states={s.value: SymbolOut.from_symbol(sym) for s, sym in STATE_SYMBOLS.items()},
-            types={t.value: SymbolOut.from_symbol(sym) for t, sym in TYPE_SYMBOLS.items()},
+            states={s.value: SymbolOut.from_symbol(sym) for s, sym in legend.states.items()},
+            types={t.value: SymbolOut.from_symbol(sym) for t, sym in legend.types.items()},
         )

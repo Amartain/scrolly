@@ -73,7 +73,7 @@ class ViewOut(BaseModel):
                 silenced=data.advisor.silenced,
             ),
             poem=PoemOut.from_pick(data.poem) if data.poem else None,
-            legend=LegendOut.build(),
+            legend=LegendOut.build(data.legend),
             planning=PlanningOut.from_data(data.planning, data.budget, data.qi),
             dashboard=DashboardOut.from_data(data.dashboard),
         )

@@ -140,3 +140,22 @@ export const DATA = {
   cancel: 'Cancel',
   purged: "Today's scroll is clear.",
 } as const;
+
+/** DRAFT: the Dispatch screen and the Symbols settings. */
+export const DISPATCH = {
+  title: 'Scroll of Heavenly Tribulations',
+  open: 'DISPATCH',
+  clip: 'Clip to Scroll',
+  clipped: 'Clipped. Paste it where your companions gather.',
+  unclipped: 'The clipboard would not open. Select the text and copy it by hand.',
+  dnd: 'DND header',
+  postponed: 'Include postponed',
+  abandoned: 'Include abandoned',
+  back: 'Back',
+} as const;
+
+export const SYMBOLS = {
+  title: 'Symbols',
+  note: 'Your own emoji and Discord shortcodes for the Legend of the Scrolls. Each one stands for a single meaning.',
+  reset: 'Default',
+} as const;

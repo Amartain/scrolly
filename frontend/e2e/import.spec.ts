@@ -36,7 +36,7 @@ test('Restore Scroll can be reached with the keyboard', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Settings' }).click();
   const restore = page.getByRole('button', { name: 'Restore Scroll' });
-  for (let presses = 0; presses < 12; presses++) {
+  for (let presses = 0; presses < 80; presses++) {
     if (await restore.evaluate((el) => el === document.activeElement)) break;
     await page.keyboard.press('Tab');
   }

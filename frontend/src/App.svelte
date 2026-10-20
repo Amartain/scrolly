@@ -12,10 +12,11 @@
   import SunsetAdvisor from './components/SunsetAdvisor.svelte';
   import SunsetPoem from './components/SunsetPoem.svelte';
   import ThemeOrbs from './components/ThemeOrbs.svelte';
+  import Dispatch from './screens/Dispatch.svelte';
   import Settings from './screens/Settings.svelte';
   import ZeroState from './screens/ZeroState.svelte';
 
-  let mode = $state<'dashboard' | 'settings'>('dashboard');
+  let mode = $state<'dashboard' | 'settings' | 'dispatch'>('dashboard');
 
   $effect(() => view.start());
 
@@ -29,7 +30,7 @@
   const toggleSettings = () => (mode = mode === 'settings' ? 'dashboard' : 'settings');
 
   function onkeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape' && mode === 'settings') mode = 'dashboard';
+    if (event.key === 'Escape' && mode !== 'dashboard') mode = 'dashboard';
     if (!onDashboard || typing(event.target) || event.altKey || event.ctrlKey || event.metaKey)
       return;
     if (event.key === 'n' || event.key === 'N') {
@@ -53,6 +54,9 @@
   {#if mode === 'settings'}
     <Header settingsOpen onsettings={toggleSettings} />
     <Settings onback={() => (mode = 'dashboard')} />
+  {:else if mode === 'dispatch'}
+    <Header settingsOpen={false} onsettings={toggleSettings} />
+    <Dispatch onback={() => (mode = 'dashboard')} />
   {:else if status === 'zero'}
     <ZeroState />
   {:else if status === 'inscribe'}
@@ -67,7 +71,7 @@
   {/if}
 </div>
 {#if onDashboard}
-  <Screen2 />
+  <Screen2 ondispatch={() => (mode = 'dispatch')} />
   <MilestoneOverlay />
   <SunsetAdvisor />
   <SunsetPoem />

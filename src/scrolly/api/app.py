@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from scrolly.api.routes import (
     advisor,
     arts,
+    dispatch,
     export,
     golden_core,
     horizon,
@@ -23,6 +24,7 @@ from scrolly.domain.arts import ArtError
 from scrolly.domain.day_flow import TrialError
 from scrolly.domain.duration import DurationError
 from scrolly.domain.horizon import HorizonError
+from scrolly.domain.legend import LegendError
 from scrolly.domain.ordering import OrderError
 from scrolly.domain.planning import PlanningError
 from scrolly.domain.qi import QiError
@@ -64,11 +66,13 @@ def create_app(
     app.add_exception_handler(DuplicateTitleError, _refuse_title)
     app.add_exception_handler(DurationError, _refuse(422))
     app.add_exception_handler(ArchiveError, _refuse(422))
+    app.add_exception_handler(LegendError, _refuse(422))
     app.add_exception_handler(QiError, _refuse(422))
     app.include_router(view.router)
     app.include_router(golden_core.router)
     app.include_router(sunset.router)
     app.include_router(advisor.router)
+    app.include_router(dispatch.router)
     app.include_router(export.router)
     app.include_router(imports.router)
     app.include_router(planning.router)

@@ -156,3 +156,19 @@ export const advisor = {
 export const poemSeen = () => send<View>('/api/sunset/poem-seen', json('POST'));
 
 export const purgeToday = () => send<View>('/api/purge', json('POST'));
+
+export type DispatchData = components['schemas']['DispatchOut'];
+
+/** The Dispatch: today's scroll as Discord text, and the options that shape it. */
+export const dispatch = {
+  get: () => send<DispatchData>('/api/dispatch'),
+  set: (patch: { dnd?: boolean; include_postponed?: boolean; include_abandoned?: boolean }) =>
+    send<DispatchData>('/api/dispatch', json('PUT', patch)),
+};
+
+/** Change one symbol of the Legend; with neither emoji nor shortcode it is restored. */
+export const putSymbol = (
+  group: 'states' | 'types',
+  key: string,
+  patch: { emoji?: string; shortcode?: string } = {},
+) => send<View>('/api/legend', json('PUT', { group, key, ...patch }));

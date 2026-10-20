@@ -1,10 +1,14 @@
 <script lang="ts">
+  import Button from '../components/Button.svelte';
+  import { DISPATCH } from '../lib/copy';
   import { SCREEN_TWO_ID } from '../lib/screens';
   import ArtsPanels from './screen2/ArtsPanels.svelte';
   import HorizonPanel from './screen2/HorizonPanel.svelte';
   import LetGoPanels from './screen2/LetGoPanels.svelte';
   import RemainingPanel from './screen2/RemainingPanel.svelte';
   import ScribePanel from './screen2/ScribePanel.svelte';
+
+  let { ondispatch }: { ondispatch: () => void } = $props();
 </script>
 
 <div class="screen" id={SCREEN_TWO_ID}>
@@ -16,6 +20,7 @@
   </div>
   <div class="column right">
     <HorizonPanel />
+    <div class="tools"><Button label={DISPATCH.open} onclick={ondispatch} /></div>
   </div>
 </div>
 
@@ -45,6 +50,18 @@
   }
 
   .right {
-    grid-template-rows: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) var(--size-glyph-button);
+  }
+
+  .tools {
+    /* A fixed row, so a theme with thicker borders moves nothing. */
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end;
+    gap: var(--space-3);
+  }
+
+  .tools :global(.button) {
+    padding-block: 0;
   }
 </style>

@@ -110,6 +110,24 @@ export interface paths {
         patch: operations["edit_api_arts__art_id__patch"];
         trace?: never;
     };
+    "/api/dispatch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Dispatch */
+        get: operations["dispatch_api_dispatch_get"];
+        /** Choose Dispatch */
+        put: operations["choose_dispatch_api_dispatch_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/export": {
         parameters: {
             query?: never;
@@ -230,6 +248,23 @@ export interface paths {
         put?: never;
         /** Import File */
         post: operations["import_file_api_import_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/legend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Choose Symbol */
+        put: operations["choose_symbol_api_legend_put"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -913,6 +948,32 @@ export interface components {
          * @enum {string}
          */
         DayVariant: "teal" | "crimson";
+        /**
+         * DispatchIn
+         * @description Only what is given changes.
+         */
+        DispatchIn: {
+            /** Dnd */
+            dnd?: boolean | null;
+            /** Include Abandoned */
+            include_abandoned?: boolean | null;
+            /** Include Postponed */
+            include_postponed?: boolean | null;
+        };
+        /**
+         * DispatchOut
+         * @description The scroll as text for Discord, with the options that shaped it.
+         */
+        DispatchOut: {
+            /** Dnd */
+            dnd: boolean;
+            /** Include Abandoned */
+            include_abandoned: boolean;
+            /** Include Postponed */
+            include_postponed: boolean;
+            /** Text */
+            text: string;
+        };
         /** EssenceOut */
         EssenceOut: {
             /** Actual Text */
@@ -1273,6 +1334,20 @@ export interface components {
             /** Invited */
             invited: boolean;
         };
+        /**
+         * SymbolIn
+         * @description One symbol of the Legend. Give neither emoji nor shortcode to restore the default.
+         */
+        SymbolIn: {
+            /** Emoji */
+            emoji?: string | null;
+            /** Group */
+            group: string;
+            /** Key */
+            key: string;
+            /** Shortcode */
+            shortcode?: string | null;
+        };
         /** SymbolOut */
         SymbolOut: {
             /** Emoji */
@@ -1606,6 +1681,59 @@ export interface operations {
             };
         };
     };
+    dispatch_api_dispatch_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DispatchOut"];
+                };
+            };
+        };
+    };
+    choose_dispatch_api_dispatch_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DispatchIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DispatchOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     export_api_export_get: {
         parameters: {
             query?: never;
@@ -1831,6 +1959,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ImportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    choose_symbol_api_legend_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SymbolIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
                 };
             };
             /** @description Validation Error */

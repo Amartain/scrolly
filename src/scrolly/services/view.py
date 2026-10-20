@@ -3,6 +3,7 @@ from datetime import date, datetime
 
 from scrolly.domain.appearance import Appearance, resolve_appearance
 from scrolly.domain.day_budget import DayBudget
+from scrolly.domain.legend import Legend
 from scrolly.domain.logical_day import logical_day
 from scrolly.domain.poems import PoemPick
 from scrolly.domain.sunset import SunsetPrefs, phase_at
@@ -13,6 +14,7 @@ from scrolly.services.dashboard_view import DashboardView, build_dashboard_view
 from scrolly.services.day import DayService
 from scrolly.services.day_budget import build_budget
 from scrolly.services.golden_core import QiView, build_qi_view
+from scrolly.services.legend import load_legend
 from scrolly.services.planning_view import PlanningView, build_planning_view
 from scrolly.services.poem import build_poem
 from scrolly.services.sunset import load_prefs
@@ -30,6 +32,7 @@ class ViewData:
     sunset: SunsetPrefs
     advisor: AdvisorView
     poem: PoemPick | None
+    legend: Legend
 
 
 def build_view(store: Store, clock: Clock) -> ViewData:
@@ -47,6 +50,7 @@ def build_view(store: Store, clock: Clock) -> ViewData:
         sunset=sunset,
         advisor=build_advisor(store, now, sunset, phase),
         poem=build_poem(store, now, phase),
+        legend=load_legend(store),
         planning=build_planning_view(store, today),
         budget=build_budget(store, now),
         qi=build_qi_view(store, now),
