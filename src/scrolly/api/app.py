@@ -18,6 +18,7 @@ from scrolly.api.routes import (
     planning,
     planning_timer,
     seals,
+    seclusion,
     sunset,
     trials,
     view,
@@ -88,6 +89,7 @@ def create_app(
     app.include_router(planning_timer.router)
     app.include_router(seals.router)
     app.include_router(trials.router)
+    app.include_router(seclusion.router)
     app.include_router(horizon.router)
     app.include_router(arts.router)
     if static_dir is not None and static_dir.is_dir():

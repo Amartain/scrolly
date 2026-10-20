@@ -638,6 +638,125 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/seclusion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get State */
+        get: operations["get_state_api_seclusion_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/seclusion/enter": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Enter */
+        post: operations["enter_api_seclusion_enter_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/seclusion/leave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Leave */
+        post: operations["leave_api_seclusion_leave_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/seclusion/timer/new": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** New Timer */
+        post: operations["new_timer_api_seclusion_timer_new_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/seclusion/timer/pause": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pause Timer */
+        post: operations["pause_timer_api_seclusion_timer_pause_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/seclusion/timer/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start Timer */
+        post: operations["start_timer_api_seclusion_timer_start_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/seclusion/timer/zero": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Zero Out */
+        post: operations["zero_out_api_seclusion_timer_zero_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/sunset": {
         parameters: {
             query?: never;
@@ -1066,6 +1185,11 @@ export interface components {
          */
         DayVariant: "teal" | "crimson";
         /**
+         * Discipline
+         * @enum {string}
+         */
+        Discipline: "dashboard" | "incense" | "pulse" | "flow";
+        /**
          * DispatchIn
          * @description Only what is given changes.
          */
@@ -1196,6 +1320,19 @@ export interface components {
             trials_added: number;
             view: components["schemas"]["ViewOut"];
         };
+        /** IncenseOut */
+        IncenseOut: {
+            /** Over S */
+            over_s: number;
+            /** Remaining S */
+            remaining_s: number;
+            state: components["schemas"]["IncenseState"];
+        };
+        /**
+         * IncenseState
+         * @enum {string}
+         */
+        IncenseState: "remaining" | "overfilled";
         /**
          * LegendOut
          * @description Keyed by trial state (`immediate`, `done`, ...) and by trial type (`mandate`, ...).
@@ -1439,6 +1576,22 @@ export interface components {
             recognized: boolean;
             view: components["schemas"]["ViewOut"];
         };
+        /** SeclusionOut */
+        SeclusionOut: {
+            /** Active */
+            active: boolean;
+            discipline: components["schemas"]["Discipline"];
+            /** Gong In S */
+            gong_in_s: number | null;
+            incense: components["schemas"]["IncenseOut"] | null;
+            /** Note */
+            note: string;
+            /** Remaining */
+            remaining: components["schemas"]["WaitingOut"][];
+            /** Ring Elapsed S */
+            ring_elapsed_s: number;
+            trial: components["schemas"]["ImmediateOut"] | null;
+        };
         /**
          * SeriesOut
          * @description Both charts for one metric. `placeholder` data is a fixed shape for the fog.
@@ -1581,6 +1734,17 @@ export interface components {
             planning: components["schemas"]["PlanningOut"];
             poem: components["schemas"]["PoemOut"] | null;
             sunset: components["schemas"]["SunsetOut"];
+        };
+        /**
+         * WaitingOut
+         * @description A trial that waits in Remaining: enough to choose it in "Switch trials".
+         */
+        WaitingOut: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            type: components["schemas"]["TrialType"];
         };
         /**
          * TrialPatchIn
@@ -2749,6 +2913,146 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_state_api_seclusion_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+        };
+    };
+    enter_api_seclusion_enter_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+        };
+    };
+    leave_api_seclusion_leave_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+        };
+    };
+    new_timer_api_seclusion_timer_new_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+        };
+    };
+    pause_timer_api_seclusion_timer_pause_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+        };
+    };
+    start_timer_api_seclusion_timer_start_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+        };
+    };
+    zero_out_api_seclusion_timer_zero_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
                 };
             };
         };
