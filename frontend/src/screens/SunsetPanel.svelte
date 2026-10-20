@@ -63,7 +63,7 @@
 
   input {
     flex: none;
-    width: var(--size-estimate);
+    width: calc(var(--size-estimate) * 1.5);
     height: var(--size-field);
     padding-inline: var(--space-3);
     background: var(--surface-raised);

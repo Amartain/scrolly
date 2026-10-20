@@ -42,10 +42,15 @@ class ViewStore {
     return this.current?.planning ?? null;
   }
 
-  private apply(view: View) {
+  /**
+   * Show a view. `fade` is true only for the minute-by-minute refresh, so the palette fades when the
+   * clock crosses into golden hour or dusk while the page is open. On load, on return to the tab and
+   * after the user's own actions the new phase shows at once.
+   */
+  private apply(view: View, fade = false) {
     const root = document.documentElement;
     root.dataset.theme = view.appearance.theme;
-    this.fadeInto(view.appearance.phase);
+    this.setPhase(view.appearance.phase, fade && this.current !== null);
     root.dataset.readingFont = view.appearance.reading_font;
     if (view.appearance.day_variant) root.dataset.dayVariant = view.appearance.day_variant;
     else delete root.dataset.dayVariant;
@@ -55,15 +60,20 @@ class ViewStore {
     if (view.milestone) this.milestone = view.milestone;
   }
 
-  /** Set the phase. When it changes while the page is open, the palette fades over a minute. */
-  private fadeInto(phase: string) {
+  private setPhase(phase: string, fade: boolean) {
     const root = document.documentElement;
-    if (root.dataset.phase && root.dataset.phase !== phase) {
+    if (fade && root.dataset.phase !== phase) {
       root.dataset.fading = '';
       clearTimeout(this.fadeTimer);
-      this.fadeTimer = setTimeout(() => delete root.dataset.fading, FADE_MS + 1000);
+      this.fadeTimer = setTimeout(() => this.stopFading(), FADE_MS + 1000);
     }
     root.dataset.phase = phase;
+  }
+
+  /** End a fade at once, so a theme chosen during it shows immediately. */
+  private stopFading() {
+    clearTimeout(this.fadeTimer);
+    delete document.documentElement.dataset.fading;
   }
 
   private fadeTimer: ReturnType<typeof setTimeout> | undefined;
@@ -77,9 +87,9 @@ class ViewStore {
     if (this.current) this.current.planning.text = text;
   }
 
-  async refresh() {
+  async refresh(fade = false) {
     try {
-      this.apply(await getView());
+      this.apply(await getView(), fade);
     } catch {
       // Keep showing the last view; the next refresh tries again.
     }
@@ -99,6 +109,7 @@ class ViewStore {
   }
 
   async choose(theme: Theme, dayVariant: DayVariant | null) {
+    this.stopFading();
     this.apply(await putAppearance(theme, dayVariant));
   }
 
@@ -129,7 +140,7 @@ class ViewStore {
 
   start() {
     void this.refresh();
-    setInterval(() => void this.refresh(), REFRESH_MS);
+    setInterval(() => void this.refresh(true), REFRESH_MS);
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) void this.refresh();
     });

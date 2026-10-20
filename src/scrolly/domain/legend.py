@@ -117,7 +117,8 @@ def with_symbol(
     if shortcode is not None:
         chosen["shortcode"] = parse_shortcode(shortcode)
     if chosen:
-        mine.setdefault(group, {})[key] = chosen
+        # Changing one part keeps the other part the user set earlier.
+        mine.setdefault(group, {}).setdefault(key, {}).update(chosen)
     else:
         mine.get(group, {}).pop(key, None)
     _require_distinct(build_legend(mine))

@@ -100,3 +100,10 @@ def test_only_known_symbols_can_be_changed() -> None:
         with_symbol({}, "states", "nonsense", "🌱", None)
     with pytest.raises(LegendError):
         with_symbol({}, "weather", "done", "🌱", None)
+
+
+def test_changing_the_shortcode_keeps_an_emoji_chosen_earlier() -> None:
+    mine = with_symbol({}, "states", "immediate", "🔥", None)
+    mine = with_symbol(mine, "states", "immediate", None, "fire")
+    symbol = build_legend(mine).states[TrialState.IMMEDIATE]
+    assert (symbol.emoji, symbol.shortcode) == ("🔥", ":fire:")

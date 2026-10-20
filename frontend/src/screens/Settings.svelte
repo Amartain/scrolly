@@ -66,4 +66,9 @@
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   }
+
+  /* Panels keep their full height; the column scrolls instead of squeezing them. */
+  .column > :global(*) {
+    flex: none;
+  }
 </style>
