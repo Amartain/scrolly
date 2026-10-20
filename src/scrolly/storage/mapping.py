@@ -126,6 +126,7 @@ def day_from_row(row: DayRow) -> Day:
         dusk_override=row.dusk_override,
         advisor_silenced=row.advisor_silenced,
         qi_start=row.qi_start,
+        poem_shown_at=from_iso(row.poem_shown_at),
     )
 
 
@@ -136,3 +137,4 @@ def apply_day(row: DayRow, day: Day) -> None:
     row.dusk_override = day.dusk_override
     row.advisor_silenced = day.advisor_silenced
     row.qi_start = day.qi_start
+    row.poem_shown_at = _iso(day.poem_shown_at)

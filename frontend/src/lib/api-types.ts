@@ -474,6 +474,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/sunset/poem-seen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Poem Seen
+         * @description The sunset poem was read and closed ("Settle Qi").
+         */
+        post: operations["poem_seen_api_sunset_poem_seen_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/trials": {
         parameters: {
             query?: never;
@@ -1046,6 +1066,32 @@ export interface components {
             /** Trials */
             trials: components["schemas"]["PlanTrialOut"][];
         };
+        /**
+         * PoemOut
+         * @description The sunset poem until it is settled. Layout and language order are chosen in Python.
+         */
+        PoemOut: {
+            /** Archetype */
+            archetype: string;
+            /** Chinese */
+            chinese: string[];
+            /** Chinese First */
+            chinese_first: boolean;
+            /** English */
+            english: string;
+            /** Id */
+            id: string;
+            /** Ideogram */
+            ideogram: string;
+            /** Pairing */
+            pairing: string;
+            /** Pinyin */
+            pinyin: string;
+            /** Reflection */
+            reflection: string;
+            /** Stand In */
+            stand_in: boolean;
+        };
         /** PointOut */
         PointOut: {
             /**
@@ -1264,6 +1310,7 @@ export interface components {
              */
             now: string;
             planning: components["schemas"]["PlanningOut"];
+            poem: components["schemas"]["PoemOut"] | null;
             sunset: components["schemas"]["SunsetOut"];
         };
         /**
@@ -2161,6 +2208,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    poem_seen_api_sunset_poem_seen_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
                 };
             };
         };

@@ -6,6 +6,7 @@ from scrolly.api.schemas.dashboard import DashboardOut
 from scrolly.api.schemas.legend import LegendOut
 from scrolly.api.schemas.milestone import MilestoneOut
 from scrolly.api.schemas.planning import PlanningOut
+from scrolly.api.schemas.poem import PoemOut
 from scrolly.domain.appearance import DayVariant, Phase, ReadingFont, Theme
 from scrolly.services.view import ViewData
 
@@ -40,6 +41,8 @@ class ViewOut(BaseModel):
     appearance: AppearanceOut
     sunset: SunsetOut
     advisor: AdvisorOut
+    # Present from the first view at dusk until the user settles it.
+    poem: PoemOut | None
     legend: LegendOut
     planning: PlanningOut
     dashboard: DashboardOut
@@ -69,6 +72,7 @@ class ViewOut(BaseModel):
                 mandates=data.advisor.mandates,
                 silenced=data.advisor.silenced,
             ),
+            poem=PoemOut.from_pick(data.poem) if data.poem else None,
             legend=LegendOut.build(),
             planning=PlanningOut.from_data(data.planning, data.budget, data.qi),
             dashboard=DashboardOut.from_data(data.dashboard),

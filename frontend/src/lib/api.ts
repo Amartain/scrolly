@@ -152,3 +152,5 @@ export const advisor = {
   silence: (silenced: boolean) => send<View>('/api/advisor', json('PUT', { silenced })),
   postponeMandates: () => send<View>('/api/advisor/postpone-mandates', json('POST')),
 };
+
+export const poemSeen = () => send<View>('/api/sunset/poem-seen', json('POST'));

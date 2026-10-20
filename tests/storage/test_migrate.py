@@ -120,3 +120,21 @@ def test_art_kind_is_backfilled_for_rows_that_came_from_an_art(tmp_path: Path) -
         rows = connection.execute(text("SELECT id, art_kind FROM trial ORDER BY id")).all()
     engine.dispose()
     assert [tuple(r) for r in rows] == [("a", "foundational"), ("b", "restorative"), ("c", None)]
+
+
+def test_days_get_a_poem_shown_column_on_upgrade(tmp_path: Path) -> None:
+    db_file = tmp_path / "scrolly.db"
+    command.upgrade(_config(db_file), "0007")
+    engine = create_engine(f"sqlite:///{db_file}")
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                "INSERT INTO day (id, realm_id, created_at, updated_at, logical_day,"
+                " advisor_silenced) VALUES ('d1', 'daily', 'now', 'now', '2026-10-18', 0)"
+            )
+        )
+    upgrade_to_head(db_file, tmp_path / "backups")
+    with engine.connect() as connection:
+        shown = connection.execute(text("SELECT poem_shown_at FROM day")).scalar_one()
+    engine.dispose()
+    assert shown is None

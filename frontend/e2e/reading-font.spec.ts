@@ -80,6 +80,7 @@ test('in Phases 1 to 3 a title in a list is readable and every input stays pixel
   expect(await face('li .read')).toContain('Atkinson');
   expect(await face('input')).toContain('VT323');
   await page.getByRole('button', { name: /Back to Inscribing/ }).click();
+  await expect(page.locator('textarea')).toBeVisible();
   expect(await face('li .read')).toContain('Atkinson');
   expect(await face('textarea')).toContain('VT323');
 });

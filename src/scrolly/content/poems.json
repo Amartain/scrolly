@@ -1,0 +1,102 @@
+[
+  {
+    "id": "dusk",
+    "ideogram": "暮",
+    "pinyin": "Mù",
+    "chinese": ["日落山色静", "风过竹影轻"],
+    "english": "The sun sets, the mountain's colours are still; the wind passes, bamboo shadows are light.",
+    "reflection": "The day has said what it had to say. You may stop listening for more.",
+    "pairing": "gold",
+    "stand_in": true
+  },
+  {
+    "id": "moon",
+    "ideogram": "月",
+    "pinyin": "Yuè",
+    "chinese": ["月上松梢白", "泉流石畔清"],
+    "english": "The moon climbs, white on the pine tips; the spring runs clear beside the stones.",
+    "reflection": "Something small and bright kept going while you were busy. Notice it now.",
+    "pairing": "ink",
+    "stand_in": true
+  },
+  {
+    "id": "lamp",
+    "ideogram": "灯",
+    "pinyin": "Dēng",
+    "chinese": ["一灯照小径", "万籁入初宁"],
+    "english": "One lamp lights the narrow path; ten thousand sounds settle into first calm.",
+    "reflection": "A single light is enough for the next few steps. Tonight, the next step is rest.",
+    "pairing": "gold",
+    "stand_in": true
+  },
+  {
+    "id": "cloud",
+    "ideogram": "云",
+    "pinyin": "Yún",
+    "chinese": ["云归山更静", "路远心自宽"],
+    "english": "The clouds return and the mountain is stiller; the road is long, and the heart grows wide.",
+    "reflection": "Distance is not the same as delay. You were on the road all day.",
+    "pairing": "jade",
+    "stand_in": true
+  },
+  {
+    "id": "tea",
+    "ideogram": "茶",
+    "pinyin": "Chá",
+    "chinese": ["煮茶听夜雨", "闲坐待星升"],
+    "english": "Boil the tea and hear the night rain; sit idle and wait for the stars to rise.",
+    "reflection": "Nothing is owed to the evening. It asks only that you be in it.",
+    "pairing": "jade",
+    "stand_in": true
+  },
+  {
+    "id": "pine",
+    "ideogram": "松",
+    "pinyin": "Sōng",
+    "chinese": ["松青不惧雪", "心定自无忧"],
+    "english": "The pine stays green and does not fear the snow; a settled heart is free of worry by itself.",
+    "reflection": "Steadiness is not the absence of weather. It is staying rooted through it.",
+    "pairing": "jade",
+    "stand_in": true
+  },
+  {
+    "id": "water",
+    "ideogram": "水",
+    "pinyin": "Shuǐ",
+    "chinese": ["流水不争先", "终向海中归"],
+    "english": "Flowing water does not race to be first; in the end it returns to the sea.",
+    "reflection": "Your pace was your own, and it carried you here. That is the whole of it.",
+    "pairing": "ink",
+    "stand_in": true
+  },
+  {
+    "id": "plum",
+    "ideogram": "梅",
+    "pinyin": "Méi",
+    "chinese": ["寒梅开一枝", "暗香入夜深"],
+    "english": "A winter plum opens a single branch; its hidden fragrance enters the deep night.",
+    "reflection": "One thing done well can perfume a whole day. Let the rest be quiet.",
+    "pairing": "gold",
+    "stand_in": true
+  },
+  {
+    "id": "bell",
+    "ideogram": "钟",
+    "pinyin": "Zhōng",
+    "chinese": ["远钟一声落", "尘念随风收"],
+    "english": "A distant bell lets fall one note; the dust of thought gathers up with the wind.",
+    "reflection": "Let the day's last noise be a bell, and let it end there.",
+    "pairing": "ink",
+    "stand_in": true
+  },
+  {
+    "id": "brush",
+    "ideogram": "笔",
+    "pinyin": "Bǐ",
+    "chinese": ["笔落一日毕", "卷收万事轻"],
+    "english": "The brush is lifted and the day is complete; the scroll is rolled and ten thousand matters grow light.",
+    "reflection": "The scroll is sealed for today. Put down the brush.",
+    "pairing": "jade",
+    "stand_in": true
+  }
+]

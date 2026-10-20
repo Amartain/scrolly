@@ -3,6 +3,7 @@
   import Panel from '../components/Panel.svelte';
   import ToggleChoice from '../components/ToggleChoice.svelte';
   import { advisor } from '../lib/api';
+  import { playChime } from '../lib/chime';
   import { ADVISOR, SUNSET } from '../lib/copy';
   import { view } from '../lib/view.svelte';
 
@@ -41,6 +42,7 @@
       checked={sunset?.chime ?? false}
       onchange={(chime) => view.setSunset({ chime })}
     />
+    <Button label="Test chime" onclick={playChime} />
     <Button
       label={ADVISOR.wake}
       disabled={!view.current?.advisor.silenced}

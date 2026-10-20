@@ -119,3 +119,9 @@ export const ADVISOR = {
   never: 'Not again today',
   wake: 'Let the advisor speak again today',
 } as const;
+
+/** DRAFT: the sunset poem. */
+export const POEM = {
+  title: 'Sunset Poem',
+  close: 'Settle Qi',
+} as const;

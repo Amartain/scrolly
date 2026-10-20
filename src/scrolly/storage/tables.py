@@ -87,6 +87,7 @@ class DayRow(_Audited, Base):
     dusk_override: Mapped[str | None] = mapped_column(String(20), default=None)
     advisor_silenced: Mapped[bool] = mapped_column(Boolean, default=False)
     qi_start: Mapped[int | None] = mapped_column(Integer, default=None)
+    poem_shown_at: Mapped[str | None] = mapped_column(String(40), default=None)
 
 
 class PlanningDraftRow(_Audited, Base):

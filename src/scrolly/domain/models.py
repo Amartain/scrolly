@@ -85,6 +85,7 @@ class Day:
     dusk_override: str | None = None
     advisor_silenced: bool = False
     qi_start: int | None = None
+    poem_shown_at: datetime | None = None
 
 
 class PlanPhase(StrEnum):

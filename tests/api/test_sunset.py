@@ -87,3 +87,27 @@ def test_a_day_with_trials_left_stays_in_daylight(client: TestClient) -> None:
     sealed = _seal(client, "First", "Second")
     trial_id = sealed["dashboard"]["immediate"]["id"]
     assert client.post(f"/api/trials/{trial_id}/conquer").json()["appearance"]["phase"] == "day"
+
+
+def test_the_poem_comes_at_dusk_once_a_day(client: TestClient, clock: FixedClock) -> None:
+    client.put("/api/sunset", json={"at": "21:00"})
+    assert _view(client)["poem"] is None
+    clock.set(datetime.fromisoformat("2026-10-18T21:05:00+02:00"))
+    first = _view(client)["poem"]
+    assert first is not None and first["stand_in"] is True and len(first["chinese"]) == 2
+    assert _view(client)["poem"] == first  # a reload shows the same page
+
+    settled = client.post("/api/sunset/poem-seen").json()
+    assert settled["poem"] is None
+    assert _view(client)["poem"] is None
+
+    clock.set(datetime.fromisoformat("2026-10-19T21:05:00+02:00"))
+    assert _view(client)["poem"] is not None  # the next day's dusk has its own
+
+
+def test_finishing_the_day_brings_the_poem_too(client: TestClient) -> None:
+    client.put("/api/sunset", json={"enabled": False})
+    sealed = _seal(client, "Only trial")
+    assert sealed["poem"] is None
+    done = client.post(f"/api/trials/{sealed['dashboard']['immediate']['id']}/conquer").json()
+    assert done["poem"] is not None
