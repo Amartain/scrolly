@@ -36,10 +36,18 @@ class TodayService:
         """The scroll being worked: yesterday's while Seclusion holds it open past 04:00."""
         return working_day(self._store, self._now)
 
-    def _save(self, trials: list[Trial], discipline: Discipline = Discipline.DASHBOARD) -> None:
-        """Save trials whose timers may have started or stopped, keeping their segments in step."""
+    def _save(
+        self,
+        trials: list[Trial],
+        discipline: Discipline = Discipline.DASHBOARD,
+        at: datetime | None = None,
+    ) -> None:
+        """Save trials whose timers may have started or stopped, keeping their segments in step.
+
+        `at` is when a timer really stopped, if that was before now (a focus that ended while away).
+        """
         self._store.trials.save(trials, self._now)
-        sync_segments(self._store, trials, self._now, discipline)
+        sync_segments(self._store, trials, at or self._now, discipline)
 
     def _trials(self) -> list[Trial]:
         day = self._store.days.get(self._today)
@@ -66,8 +74,9 @@ class TodayService:
     def start_timer(self, trial_id: str, discipline: Discipline = Discipline.DASHBOARD) -> None:
         self._save([timer.start(self._timed(trial_id), self._now)], discipline)
 
-    def pause_timer(self, trial_id: str) -> None:
-        self._save([timer.pause(self._timed(trial_id), self._now)])
+    def pause_timer(self, trial_id: str, at: datetime | None = None) -> None:
+        stopped = at or self._now
+        self._save([timer.pause(self._timed(trial_id), stopped)], at=stopped)
 
     def reset_timer(self, trial_id: str) -> None:
         self._save([timer.reset(self._timed(trial_id))])

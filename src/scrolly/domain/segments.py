@@ -14,7 +14,7 @@ from scrolly.domain.logical_day import logical_day, logical_day_end
 class Discipline(StrEnum):
     DASHBOARD = "dashboard"
     INCENSE = "incense"
-    PULSE = "pulse"
+    CYCLES = "cycles"
     FLOW = "flow"
 
 

@@ -1,6 +1,12 @@
+from dataclasses import asdict
+from typing import Literal
+
 from pydantic import BaseModel
 
 from scrolly.api.schemas.dashboard import ImmediateOut
+from scrolly.domain.cycles import CyclesView
+from scrolly.domain.cycles import Phase as CyclesPhase
+from scrolly.domain.flow import FlowPhase, FlowView
 from scrolly.domain.legend import TrialType, type_of
 from scrolly.domain.models import Trial
 from scrolly.domain.seclusion import IncenseState, IncenseView
@@ -30,6 +36,44 @@ class WaitingOut(BaseModel):
         return cls(id=trial.id, title=trial.title, type=type_of(trial.is_mandate, trial.art_kind))
 
 
+class CyclesPlanIn(BaseModel):
+    focus_min: int
+    break_min: int
+    cycles: int
+
+
+class CyclesOut(BaseModel):
+    """Harmonious Cycles: the time left in this focus or break, from the run's own clock."""
+
+    phase: CyclesPhase
+    cycle: int
+    cycles: int
+    remaining_s: int
+    total_s: int
+    running: bool
+
+    @classmethod
+    def from_view(cls, view: CyclesView) -> "CyclesOut":
+        return cls(**asdict(view))
+
+
+class FlowOut(BaseModel):
+    """River Flow: focused time, the rest banked from it, and a break counting the bank down."""
+
+    phase: FlowPhase
+    work: int
+    rest: int
+    focus_s: int
+    banked_s: int
+    break_left_s: int
+    break_total_s: int
+    running: bool
+
+    @classmethod
+    def from_view(cls, view: FlowView) -> "FlowOut":
+        return cls(**asdict(view))
+
+
 class SeclusionOut(BaseModel):
     active: bool
     discipline: Discipline
@@ -38,6 +82,9 @@ class SeclusionOut(BaseModel):
     ring_elapsed_s: int
     incense: IncenseOut | None
     gong_in_s: int | None
+    plan: CyclesPlanIn
+    cycles: CyclesOut | None
+    flow: FlowOut | None
     remaining: list[WaitingOut]
 
     @classmethod
@@ -53,5 +100,22 @@ class SeclusionOut(BaseModel):
             ring_elapsed_s=view.ring_elapsed_s,
             incense=None if view.incense is None else IncenseOut.from_view(view.incense),
             gong_in_s=view.gong_in_s,
+            plan=CyclesPlanIn(**asdict(view.plan)),
+            cycles=None if view.cycles is None else CyclesOut.from_view(view.cycles),
+            flow=None if view.flow is None else FlowOut.from_view(view.flow),
             remaining=[WaitingOut.from_trial(t) for t in view.remaining],
         )
+
+
+class DisciplineIn(BaseModel):
+    discipline: Discipline
+
+
+class RatioIn(BaseModel):
+    work: int
+    rest: int
+
+
+class FinishIn(BaseModel):
+    how: Literal["conquered", "abandoned", "postponed"]
+    trial_id: str

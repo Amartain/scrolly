@@ -655,6 +655,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/seclusion/break/end": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** End Break */
+        post: operations["end_break_api_seclusion_break_end_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/seclusion/break/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start Break */
+        post: operations["start_break_api_seclusion_break_start_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/seclusion/discipline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Choose Discipline */
+        post: operations["choose_discipline_api_seclusion_discipline_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/seclusion/enter": {
         parameters: {
             query?: never;
@@ -666,6 +717,43 @@ export interface paths {
         put?: never;
         /** Enter */
         post: operations["enter_api_seclusion_enter_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/seclusion/finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Finish
+         * @description Conquer, abandon or postpone the trial at hand, with the room's run kept right.
+         */
+        post: operations["finish_api_seclusion_finish_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/seclusion/flow/ratio": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Set Ratio */
+        put: operations["set_ratio_api_seclusion_flow_ratio_put"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -732,7 +820,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Start Timer */
+        /**
+         * Start Timer
+         * @description Start or carry on. On the Cycles dial the body holds what was set; elsewhere it is empty.
+         */
         post: operations["start_timer_api_seclusion_timer_start_post"];
         delete?: never;
         options?: never;
@@ -751,6 +842,23 @@ export interface paths {
         put?: never;
         /** Zero Out */
         post: operations["zero_out_api_seclusion_timer_zero_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/sound": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Choose Sound */
+        put: operations["choose_sound_api_sound_put"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1050,7 +1158,7 @@ export interface components {
             header: components["schemas"]["HeaderChoice"];
             /** Header Version */
             header_version: number;
-            phase: components["schemas"]["Phase"];
+            phase: components["schemas"]["scrolly__domain__appearance__Phase"];
             reading_font: components["schemas"]["ReadingFont"];
             theme: components["schemas"]["Theme"];
         };
@@ -1160,6 +1268,32 @@ export interface components {
             title: string;
             type: components["schemas"]["TrialType"];
         };
+        /**
+         * CyclesOut
+         * @description Harmonious Cycles: the time left in this focus or break, from the run's own clock.
+         */
+        CyclesOut: {
+            /** Cycle */
+            cycle: number;
+            /** Cycles */
+            cycles: number;
+            phase: components["schemas"]["scrolly__domain__cycles__Phase"];
+            /** Remaining S */
+            remaining_s: number;
+            /** Running */
+            running: boolean;
+            /** Total S */
+            total_s: number;
+        };
+        /** CyclesPlanIn */
+        CyclesPlanIn: {
+            /** Break Min */
+            break_min: number;
+            /** Cycles */
+            cycles: number;
+            /** Focus Min */
+            focus_min: number;
+        };
         /** DashboardOut */
         DashboardOut: {
             /** Charts */
@@ -1188,7 +1322,11 @@ export interface components {
          * Discipline
          * @enum {string}
          */
-        Discipline: "dashboard" | "incense" | "pulse" | "flow";
+        Discipline: "dashboard" | "incense" | "cycles" | "flow";
+        /** DisciplineIn */
+        DisciplineIn: {
+            discipline: components["schemas"]["Discipline"];
+        };
         /**
          * DispatchIn
          * @description Only what is given changes.
@@ -1226,6 +1364,42 @@ export interface components {
             /** Remaining Text */
             remaining_text: string;
         };
+        /** FinishIn */
+        FinishIn: {
+            /**
+             * How
+             * @enum {string}
+             */
+            how: "conquered" | "abandoned" | "postponed";
+            /** Trial Id */
+            trial_id: string;
+        };
+        /**
+         * FlowOut
+         * @description River Flow: focused time, the rest banked from it, and a break counting the bank down.
+         */
+        FlowOut: {
+            /** Banked S */
+            banked_s: number;
+            /** Break Left S */
+            break_left_s: number;
+            /** Break Total S */
+            break_total_s: number;
+            /** Focus S */
+            focus_s: number;
+            phase: components["schemas"]["FlowPhase"];
+            /** Rest */
+            rest: number;
+            /** Running */
+            running: boolean;
+            /** Work */
+            work: number;
+        };
+        /**
+         * FlowPhase
+         * @enum {string}
+         */
+        FlowPhase: "idle" | "focus" | "break";
         /** GoldenCoreIn */
         GoldenCoreIn: {
             /** Enabled */
@@ -1390,11 +1564,6 @@ export interface components {
          */
         OriginType: "brain_dump" | "horizon" | "foundational_art" | "restorative_art" | "quick_add";
         /**
-         * Phase
-         * @enum {string}
-         */
-        Phase: "day" | "golden" | "dusk";
-        /**
          * PlanStatus
          * @enum {string}
          */
@@ -1537,6 +1706,13 @@ export interface components {
             /** Value */
             value: number;
         };
+        /** RatioIn */
+        RatioIn: {
+            /** Rest */
+            rest: number;
+            /** Work */
+            work: number;
+        };
         /**
          * ReadingFont
          * @description The face for text the user wrote. Atkinson Hyperlegible Next is the default.
@@ -1580,12 +1756,15 @@ export interface components {
         SeclusionOut: {
             /** Active */
             active: boolean;
+            cycles: components["schemas"]["CyclesOut"] | null;
             discipline: components["schemas"]["Discipline"];
+            flow: components["schemas"]["FlowOut"] | null;
             /** Gong In S */
             gong_in_s: number | null;
             incense: components["schemas"]["IncenseOut"] | null;
             /** Note */
             note: string;
+            plan: components["schemas"]["CyclesPlanIn"];
             /** Remaining */
             remaining: components["schemas"]["WaitingOut"][];
             /** Ring Elapsed S */
@@ -1604,6 +1783,26 @@ export interface components {
             placeholder: boolean;
             /** Rhythm */
             rhythm: components["schemas"]["BarOut"][];
+        };
+        /**
+         * SoundIn
+         * @description Only what is given changes.
+         */
+        SoundIn: {
+            /** Muted */
+            muted?: boolean | null;
+            /** Volume */
+            volume?: number | null;
+        };
+        /**
+         * SoundOut
+         * @description Seclusion's sounds and the sunset chime: one volume (0-100) and one mute.
+         */
+        SoundOut: {
+            /** Muted */
+            muted: boolean;
+            /** Volume */
+            volume: number;
         };
         /** SummonIn */
         SummonIn: {
@@ -1733,6 +1932,7 @@ export interface components {
             now: string;
             planning: components["schemas"]["PlanningOut"];
             poem: components["schemas"]["PoemOut"] | null;
+            sound: components["schemas"]["SoundOut"];
             sunset: components["schemas"]["SunsetOut"];
         };
         /**
@@ -1772,6 +1972,16 @@ export interface components {
             /** Qi */
             qi?: string | null;
         };
+        /**
+         * Phase
+         * @enum {string}
+         */
+        scrolly__domain__appearance__Phase: "day" | "golden" | "dusk";
+        /**
+         * Phase
+         * @enum {string}
+         */
+        scrolly__domain__cycles__Phase: "idle" | "focus" | "break" | "waiting" | "done";
     };
     responses: never;
     parameters: never;
@@ -2937,6 +3147,79 @@ export interface operations {
             };
         };
     };
+    end_break_api_seclusion_break_end_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+        };
+    };
+    start_break_api_seclusion_break_start_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+        };
+    };
+    choose_discipline_api_seclusion_discipline_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DisciplineIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     enter_api_seclusion_enter_post: {
         parameters: {
             query?: never;
@@ -2953,6 +3236,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+        };
+    };
+    finish_api_seclusion_finish_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FinishIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    set_ratio_api_seclusion_flow_ratio_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RatioIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -3024,7 +3373,11 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["CyclesPlanIn"] | null;
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {
@@ -3033,6 +3386,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -3053,6 +3415,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+        };
+    };
+    choose_sound_api_sound_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SoundIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

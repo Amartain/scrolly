@@ -38,6 +38,13 @@ class AdvisorOut(BaseModel):
     silenced: bool
 
 
+class SoundOut(BaseModel):
+    """Seclusion's sounds and the sunset chime: one volume (0-100) and one mute."""
+
+    volume: int
+    muted: bool
+
+
 class ViewOut(BaseModel):
     now: datetime
     logical_day: date
@@ -49,6 +56,7 @@ class ViewOut(BaseModel):
     legend: LegendOut
     planning: PlanningOut
     dashboard: DashboardOut
+    sound: SoundOut
     # Only the response to the day's first seal carries one.
     milestone: MilestoneOut | None = None
 
@@ -83,6 +91,7 @@ class ViewOut(BaseModel):
                 data.planning, data.budget, data.qi, data.planning_timer
             ),
             dashboard=DashboardOut.from_data(data.dashboard),
+            sound=SoundOut(volume=data.sound.volume, muted=data.sound.muted),
         )
 
 
@@ -93,6 +102,13 @@ class AppearanceIn(BaseModel):
 
 class ReadingFontIn(BaseModel):
     font: ReadingFont
+
+
+class SoundIn(BaseModel):
+    """Only what is given changes."""
+
+    volume: int | None = None
+    muted: bool | None = None
 
 
 class HeaderIn(BaseModel):

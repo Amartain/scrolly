@@ -18,6 +18,7 @@ from scrolly.services.legend import load_legend
 from scrolly.services.planning_timer import PlanningTimerView, build_planning_timer
 from scrolly.services.planning_view import PlanningView, build_planning_view
 from scrolly.services.poem import build_poem
+from scrolly.services.seclusion_prefs import SoundPrefs, load_sound
 from scrolly.services.sunset import load_prefs
 
 
@@ -35,6 +36,7 @@ class ViewData:
     poem: PoemPick | None
     legend: Legend
     planning_timer: PlanningTimerView
+    sound: SoundPrefs
 
 
 def build_view(store: Store, clock: Clock) -> ViewData:
@@ -58,4 +60,5 @@ def build_view(store: Store, clock: Clock) -> ViewData:
         budget=build_budget(store, now),
         qi=build_qi_view(store, now),
         dashboard=build_dashboard_view(store, now),
+        sound=load_sound(store),
     )

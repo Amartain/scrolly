@@ -34,6 +34,7 @@ from scrolly.domain.legend import LegendError
 from scrolly.domain.ordering import OrderError
 from scrolly.domain.planning import PlanningError
 from scrolly.domain.qi import QiError
+from scrolly.domain.run_clock import RunError
 from scrolly.domain.uniqueness import DuplicateTitleError
 from scrolly.ports import Clock, StoreFactory
 
@@ -77,6 +78,7 @@ def create_app(
     app.add_exception_handler(AppearanceError, _refuse(422))
     app.add_exception_handler(HeaderImageError, _refuse(422))
     app.add_exception_handler(QiError, _refuse(422))
+    app.add_exception_handler(RunError, _refuse(422))
     app.include_router(view.router)
     app.include_router(golden_core.router)
     app.include_router(sunset.router)
