@@ -72,6 +72,7 @@ test('the ring drains: full before the start, shrinking while it runs', async ({
   await room(page).getByLabel('Estimate for Write report').fill('2m');
   await room(page).getByRole('button', { name: 'Set the time for Write report' }).click();
   const fill = () => ring(page).evaluate((el) => Number(el.style.getPropertyValue('--fill')));
+  await expect(ring(page)).toContainText('remaining');
   expect(await fill()).toBe(100);
   await room(page).getByRole('button', { name: 'Start', exact: true }).click();
   await expect.poll(fill).toBeLessThan(100);
