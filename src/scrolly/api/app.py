@@ -6,7 +6,17 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from scrolly.api.routes import arts, golden_core, horizon, imports, planning, sunset, trials, view
+from scrolly.api.routes import (
+    advisor,
+    arts,
+    golden_core,
+    horizon,
+    imports,
+    planning,
+    sunset,
+    trials,
+    view,
+)
 from scrolly.domain.arts import ArtError
 from scrolly.domain.day_flow import TrialError
 from scrolly.domain.duration import DurationError
@@ -51,6 +61,7 @@ def create_app(
     app.include_router(view.router)
     app.include_router(golden_core.router)
     app.include_router(sunset.router)
+    app.include_router(advisor.router)
     app.include_router(imports.router)
     app.include_router(planning.router)
     app.include_router(trials.router)

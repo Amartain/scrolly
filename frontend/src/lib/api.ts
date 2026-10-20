@@ -146,3 +146,9 @@ export const arts = {
     send<View>(`/api/arts/${id}`, json('PATCH', patch)),
   remove: (id: string) => send<View>(`/api/arts/${id}`, json('DELETE')),
 };
+
+/** The overrun advisor. Python decides when it speaks. */
+export const advisor = {
+  silence: (silenced: boolean) => send<View>('/api/advisor', json('PUT', { silenced })),
+  postponeMandates: () => send<View>('/api/advisor/postpone-mandates', json('POST')),
+};

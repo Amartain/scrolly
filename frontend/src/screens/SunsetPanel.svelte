@@ -2,7 +2,8 @@
   import Button from '../components/Button.svelte';
   import Panel from '../components/Panel.svelte';
   import ToggleChoice from '../components/ToggleChoice.svelte';
-  import { SUNSET } from '../lib/copy';
+  import { advisor } from '../lib/api';
+  import { ADVISOR, SUNSET } from '../lib/copy';
   import { view } from '../lib/view.svelte';
 
   const sunset = $derived(view.current?.sunset);
@@ -39,6 +40,11 @@
       label="Chime at sunset"
       checked={sunset?.chime ?? false}
       onchange={(chime) => view.setSunset({ chime })}
+    />
+    <Button
+      label={ADVISOR.wake}
+      disabled={!view.current?.advisor.silenced}
+      onclick={() => view.act(() => advisor.silence(false))}
     />
     <p class="note" aria-live="polite">{message || (sunset?.enabled ? '' : SUNSET.off)}</p>
   </div>

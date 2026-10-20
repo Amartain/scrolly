@@ -4,10 +4,11 @@ from collections.abc import Sequence
 from dataclasses import replace
 from datetime import date, datetime
 
+from scrolly.domain.advisor import postponable_mandates
 from scrolly.domain.art_match import art_kind_for
-from scrolly.domain.day_flow import TrialError, immediate_of
+from scrolly.domain.day_flow import TrialError, immediate_of, postpone
 from scrolly.domain.duration import parse_duration
-from scrolly.domain.models import Art, Trial, TrialState
+from scrolly.domain.models import Art, HorizonItem, Trial, TrialState
 from scrolly.domain.planning import next_position, trial_from_line
 from scrolly.domain.qi import parse_qi
 from scrolly.domain.timer import pause
@@ -54,6 +55,22 @@ def promote(trial: Trial, trials: Sequence[Trial], now: datetime) -> list[Trial]
         stepped_back = replace(pause(current, now), state=TrialState.REMAINING, position=top - 1)
         changed.append(stepped_back)
     return changed
+
+
+def postpone_mandates(
+    trials: Sequence[Trial], horizon: Sequence[HorizonItem], now: datetime
+) -> tuple[list[Trial], list[HorizonItem]]:
+    """Send the waiting Mandates to the top of the Horizon, with the time worked and in their order.
+
+    The Immediate Trial stays: it is the one being done.
+    """
+    items = list(horizon)
+    changed: list[Trial] = []
+    # Last first, so the one that was on top ends on top.
+    for trial in reversed(postponable_mandates(trials)):
+        gone, items = postpone(trial, items, now)
+        changed.append(gone)
+    return changed, items
 
 
 def reorder_remaining(trials: Sequence[Trial], ids: Sequence[str]) -> list[Trial]:

@@ -9,6 +9,7 @@
   import Screen1 from './screens/Screen1.svelte';
   import Screen2 from './screens/Screen2.svelte';
   import MilestoneOverlay from './components/MilestoneOverlay.svelte';
+  import SunsetAdvisor from './components/SunsetAdvisor.svelte';
   import ThemeOrbs from './components/ThemeOrbs.svelte';
   import Settings from './screens/Settings.svelte';
   import ZeroState from './screens/ZeroState.svelte';
@@ -67,6 +68,7 @@
 {#if onDashboard}
   <Screen2 />
   <MilestoneOverlay />
+  <SunsetAdvisor />
 {/if}
 {#if onboarding}
   <ThemeOrbs />

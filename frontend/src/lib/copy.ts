@@ -107,3 +107,15 @@ export const SUNSET = {
   hint: 'Use a time like 21:00',
   off: 'No sunset kept. The Day Summary shows totals only.',
 } as const;
+
+/** DRAFT: the overrun advisor, one gentle word when the open trials would run past sunset. */
+export const ADVISOR = {
+  title: 'The Light Grows Short',
+  body: 'The trials still open reach past the sunset. You may send the waiting Heavenly Mandates to the Horizon, or carry on as you are.',
+  bodyNoMandates:
+    'The trials still open reach past the sunset. Carry on as you are, or let some go as the day asks.',
+  postpone: 'Postpone Mandates to Horizon',
+  dismiss: 'Dismiss',
+  never: 'Not again today',
+  wake: 'Let the advisor speak again today',
+} as const;

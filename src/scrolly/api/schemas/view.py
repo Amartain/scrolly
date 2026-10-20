@@ -26,11 +26,20 @@ class SunsetOut(BaseModel):
     chime: bool
 
 
+class AdvisorOut(BaseModel):
+    """The overrun advisor: `due` when the open trials would run past sunset."""
+
+    due: bool
+    mandates: int
+    silenced: bool
+
+
 class ViewOut(BaseModel):
     now: datetime
     logical_day: date
     appearance: AppearanceOut
     sunset: SunsetOut
+    advisor: AdvisorOut
     legend: LegendOut
     planning: PlanningOut
     dashboard: DashboardOut
@@ -54,6 +63,11 @@ class ViewOut(BaseModel):
                 invited=data.sunset.invited,
                 at_text=f"{data.sunset.hour:02d}:{data.sunset.minute:02d}",
                 chime=data.sunset.chime,
+            ),
+            advisor=AdvisorOut(
+                due=data.advisor.due,
+                mandates=data.advisor.mandates,
+                silenced=data.advisor.silenced,
             ),
             legend=LegendOut.build(),
             planning=PlanningOut.from_data(data.planning, data.budget, data.qi),
@@ -80,3 +94,7 @@ class SunsetIn(BaseModel):
 
 class HealthOut(BaseModel):
     app: str = "scrolly"
+
+
+class AdvisorIn(BaseModel):
+    silenced: bool
