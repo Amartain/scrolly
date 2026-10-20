@@ -6,6 +6,7 @@ from typing import Any, Protocol
 
 from scrolly.domain.archive import Tables
 from scrolly.domain.models import Art, Day, HorizonItem, PlanningDraft, Trial
+from scrolly.domain.segments import Segment
 
 
 class Clock(Protocol):
@@ -28,6 +29,16 @@ class TrialRepository(Protocol):
     def delete(self, ids: Sequence[str]) -> None: ...
 
     def save(self, trials: Sequence[Trial], now: datetime) -> None: ...
+
+
+class SegmentRepository(Protocol):
+    def list_open(self) -> list[Segment]: ...
+
+    def list_for_trial(self, trial_id: str) -> list[Segment]: ...
+
+    def delete_for_trials(self, trial_ids: Sequence[str]) -> None: ...
+
+    def save(self, segments: Sequence[Segment], now: datetime) -> None: ...
 
 
 class HorizonRepository(Protocol):
@@ -76,6 +87,7 @@ class Store:
 
     settings: SettingsRepository
     trials: TrialRepository
+    segments: SegmentRepository
     horizon: HorizonRepository
     arts: ArtRepository
     days: DayRepository

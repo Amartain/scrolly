@@ -14,16 +14,25 @@ class RolloverResult:
 
 
 def rollover(
-    trials: Sequence[Trial], horizon: Sequence[HorizonItem], today: date, now: datetime
+    trials: Sequence[Trial],
+    horizon: Sequence[HorizonItem],
+    today: date,
+    now: datetime,
+    held_day: date | None = None,
 ) -> RolloverResult:
     """Settle every unfinished trial from before `today`.
 
     A Mortal Trial is lost to time. A Heavenly Mandate returns to the top of the
     Horizon (deduplicated). Finished and postponed trials stay as they are, so a
-    second run changes nothing.
+    second run changes nothing. The `held_day` (the scroll open in Seclusion past 04:00)
+    is left alone until the user steps out.
     """
     stale = sorted(
-        (t for t in trials if t.state in OPEN_STATES and t.logical_day < today),
+        (
+            t
+            for t in trials
+            if t.state in OPEN_STATES and t.logical_day < today and t.logical_day != held_day
+        ),
         key=lambda t: (t.logical_day, t.position),
     )
     changed: list[Trial] = []

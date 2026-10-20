@@ -6,6 +6,7 @@ from hypothesis import strategies as st
 
 from scrolly.domain.analytics import (
     Metric,
+    daily_totals,
     momentum,
     placeholder_momentum,
     placeholder_rhythm,
@@ -129,3 +130,13 @@ def test_rhythm_heights_stay_in_range(values: list[int]) -> None:
     for bar in bars:
         assert bar.is_rest == (bar.value == 0)
         assert bar.height_pct == 0 if bar.is_rest else 25 <= bar.height_pct <= 100
+
+
+def test_essence_counts_abandoned_minutes_but_trials_do_not() -> None:
+    day = date(2026, 10, 10)
+    trials = [
+        make_trial("A", logical_day=day, state=TrialState.DONE, essence_actual_min=30),
+        make_trial("B", logical_day=day, state=TrialState.LOST, essence_actual_min=20),
+    ]
+    assert daily_totals(trials, Metric.ESSENCE) == {day: 50}
+    assert daily_totals(trials, Metric.TRIALS) == {day: 1}

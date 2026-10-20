@@ -35,3 +35,13 @@ def test_the_meter_stops_at_full_when_the_day_ran_long() -> None:
 def test_trials_without_numbers_count_as_zero() -> None:
     trials = [make_trial("A", state=TrialState.DONE), make_trial("B")]
     assert essence_summary(trials) == EssenceSummary(0, 0, 0, 0)
+
+
+def test_abandoned_minutes_count_as_expended_but_not_as_planned() -> None:
+    trials = [
+        make_trial("A", state=TrialState.DONE, essence_expected_min=30, essence_actual_min=30),
+        make_trial("B", state=TrialState.LOST, essence_expected_min=60, essence_actual_min=20),
+        make_trial("C", state=TrialState.LOST, essence_expected_min=60),
+    ]
+    summary = essence_summary(trials)
+    assert (summary.actual_min, summary.expected_min) == (50, 30)

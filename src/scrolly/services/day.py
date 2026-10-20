@@ -7,13 +7,22 @@ from scrolly.domain.rollover import rollover
 from scrolly.ports import Clock, Store
 from scrolly.services.planning import abandon_planning
 from scrolly.services.planning_timer import close_stale_timers
+from scrolly.services.seclusion_state import held_day
+from scrolly.services.segments import sync_segments
 
 
 def run_rollover(store: Store, today: date, now: datetime) -> None:
     """Settle every unfinished trial from before today and save the result."""
-    result = rollover(store.trials.list_open_before(today), store.horizon.list_all(), today, now)
+    result = rollover(
+        store.trials.list_open_before(today),
+        store.horizon.list_all(),
+        today,
+        now,
+        held_day=held_day(store, today),
+    )
     if result.changed:
         store.trials.save(result.changed, now)
+        sync_segments(store, result.changed, now)
         store.horizon.replace_all(result.horizon, now)
 
 

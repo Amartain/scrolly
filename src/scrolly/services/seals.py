@@ -9,6 +9,7 @@ from scrolly.domain.rollover import rollover
 from scrolly.domain.secret_seals import Seal, SealKind, parse_seal
 from scrolly.domain.sunset import FINISHED
 from scrolly.ports import Clock, Store
+from scrolly.services.segments import sync_segments
 
 
 class SealService:
@@ -50,6 +51,7 @@ class SealService:
         result = rollover(trials, self._store.horizon.list_all(), tomorrow, now)
         if result.changed:
             self._store.trials.save(result.changed, now)
+            sync_segments(self._store, result.changed, now)
             self._store.horizon.replace_all(result.horizon, now)
         self._store.days.save(replace(day, dusk_override=None, advisor_silenced=False), now)
 

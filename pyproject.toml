@@ -93,6 +93,7 @@ forbidden_modules = ["scrolly.storage", "sqlalchemy"]
 dev = "python scripts/dev.py"
 test = "pytest"
 types = "python scripts/gen_types.py"
+map = "python scripts/code_map.py"
 build = "python scripts/build.py"
 try-mine = "python scripts/try_instance.py mine"
 try-blank = "python scripts/try_instance.py blank"
@@ -108,5 +109,6 @@ sequence = [
     { cmd = "python scripts/check_contrast.py" },
     { cmd = "python scripts/check_file_length.py" },
     { cmd = "python scripts/gen_types.py --check" },
+    { cmd = "python scripts/code_map.py --check" },
     { cmd = "python scripts/frontend_check.py" },
 ]

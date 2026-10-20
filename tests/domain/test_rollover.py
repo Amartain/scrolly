@@ -106,3 +106,13 @@ def test_a_second_rollover_changes_nothing_and_no_mandate_vanishes(trials: list[
         and t.state in {TrialState.IMMEDIATE, TrialState.REMAINING}
     }
     assert returned_titles <= {item.title for item in first.horizon}
+
+
+def test_the_day_held_open_by_seclusion_is_not_settled() -> None:
+    held = [
+        make_trial("Now", logical_day=YESTERDAY, state=TrialState.IMMEDIATE),
+        make_trial("Next", logical_day=YESTERDAY, id="next"),
+    ]
+    other = make_trial("Old", logical_day=date(2026, 10, 15), id="old")
+    result = rollover([*held, other], [], TODAY, NOW, held_day=YESTERDAY)
+    assert [t.id for t in result.changed] == ["old"]

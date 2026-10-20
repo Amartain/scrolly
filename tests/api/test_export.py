@@ -21,7 +21,7 @@ def test_backup_is_a_timestamped_zip_with_one_csv_per_table(client: TestClient) 
     assert 'filename="scrolly-20261018-131200.zip"' in reply.headers["content-disposition"]
     names = set(zipfile.ZipFile(io.BytesIO(reply.content)).namelist())
     assert {"trial.csv", "horizon_item.csv", "art.csv", "day.csv", "setting.csv"} <= names
-    assert "planning_draft.csv" in names
+    assert {"planning_draft.csv", "timer_segment.csv"} <= names
 
 
 def test_the_trial_table_carries_every_column_including_art_kind(client: TestClient) -> None:

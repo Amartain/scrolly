@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from scrolly.config import REALM_DEFAULT
 from scrolly.domain.models import Trial, TrialState
 from scrolly.storage.mapping import apply_trial, trial_from_row
-from scrolly.storage.tables import TrialRow
+from scrolly.storage.tables import TimerSegmentRow, TrialRow
 from scrolly.storage.timestamps import utc_iso
 
 
@@ -35,6 +35,9 @@ class SqlTrials:
         return [trial_from_row(row) for row in self._rows(TrialRow.logical_day == day.isoformat())]
 
     def delete(self, ids: Sequence[str]) -> None:
+        self._session.execute(
+            delete(TimerSegmentRow).where(TimerSegmentRow.trial_id.in_(list(ids)))
+        )
         self._session.execute(delete(TrialRow).where(TrialRow.id.in_(list(ids))))
         self._session.flush()
 

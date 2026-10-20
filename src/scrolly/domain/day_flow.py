@@ -9,7 +9,7 @@ from scrolly.domain.duration import parse_duration
 from scrolly.domain.horizon import return_to_horizon
 from scrolly.domain.models import OPEN_STATES, Art, Day, HorizonItem, Trial, TrialState
 from scrolly.domain.qi import parse_qi
-from scrolly.domain.timer import actual_minutes, pause
+from scrolly.domain.timer import actual_minutes, pause, timer_ran
 
 
 class TrialError(ValueError):
@@ -68,11 +68,15 @@ def postpone(
 
 
 def abandon(trial: Trial, now: datetime) -> Trial:
-    """Let a Mortal Trial go. A Heavenly Mandate is never abandoned: it is postponed."""
+    """Let a Mortal Trial go. A Heavenly Mandate is never abandoned: it is postponed.
+
+    The minutes it was timed still count as Essence expended (none if it never ran).
+    """
     _require_open(trial, "Only an open trial can be abandoned")
     if trial.is_mandate:
         raise TrialError("A Heavenly Mandate cannot be abandoned. Postpone it to the Horizon.")
-    return replace(pause(trial, now), state=TrialState.LOST)
+    spent = actual_minutes(trial, now) if timer_ran(trial) else None
+    return replace(pause(trial, now), state=TrialState.LOST, essence_actual_min=spent)
 
 
 def revive(trial: Trial, trials: Sequence[Trial]) -> Trial:

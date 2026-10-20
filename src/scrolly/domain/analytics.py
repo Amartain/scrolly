@@ -49,10 +49,12 @@ def _value(trial: Trial, metric: Metric) -> int:
 
 
 def daily_totals(trials: Sequence[Trial], metric: Metric) -> dict[date, int]:
-    """Per logical day, the total of what was conquered that day."""
+    """Per logical day, the total of what was conquered that day (Essence also counts the
+    minutes timed on a trial that was let go)."""
+    spent = {TrialState.DONE, TrialState.LOST} if metric is Metric.ESSENCE else {TrialState.DONE}
     totals: dict[date, int] = {}
     for trial in trials:
-        if trial.state is TrialState.DONE:
+        if trial.state in spent:
             totals[trial.logical_day] = totals.get(trial.logical_day, 0) + _value(trial, metric)
     return totals
 

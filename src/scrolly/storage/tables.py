@@ -92,6 +92,15 @@ class DayRow(_Audited, Base):
     planning_accumulated_s: Mapped[int] = mapped_column(Integer, default=0)
 
 
+class TimerSegmentRow(_Audited, Base):
+    __tablename__ = "timer_segment"
+
+    trial_id: Mapped[str] = mapped_column(String(36), index=True)
+    discipline: Mapped[str] = mapped_column(String(20))
+    started_at: Mapped[str] = mapped_column(String(40))
+    ended_at: Mapped[str | None] = mapped_column(String(40), default=None)
+
+
 class PlanningDraftRow(_Audited, Base):
     __tablename__ = "planning_draft"
     __table_args__ = (UniqueConstraint("realm_id"),)

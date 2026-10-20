@@ -4,7 +4,6 @@ from typing import Literal
 
 from scrolly.domain import day_flow, queue, timer
 from scrolly.domain.day_flow import TrialError
-from scrolly.domain.logical_day import logical_day
 from scrolly.domain.models import Trial, TrialState
 from scrolly.domain.planning import (
     PlanningError,
@@ -13,8 +12,11 @@ from scrolly.domain.planning import (
     trial_from_art,
     trial_from_horizon,
 )
+from scrolly.domain.segments import Discipline
 from scrolly.domain.uniqueness import require_free_trial_title
 from scrolly.ports import Clock, Store
+from scrolly.services.seclusion_state import working_day
+from scrolly.services.segments import sync_segments
 from scrolly.services.sunset import settle_day
 
 
@@ -31,7 +33,13 @@ class TodayService:
 
     @property
     def _today(self) -> date:
-        return logical_day(self._now)
+        """The scroll being worked: yesterday's while Seclusion holds it open past 04:00."""
+        return working_day(self._store, self._now)
+
+    def _save(self, trials: list[Trial], discipline: Discipline = Discipline.DASHBOARD) -> None:
+        """Save trials whose timers may have started or stopped, keeping their segments in step."""
+        self._store.trials.save(trials, self._now)
+        sync_segments(self._store, trials, self._now, discipline)
 
     def _trials(self) -> list[Trial]:
         day = self._store.days.get(self._today)
@@ -55,17 +63,18 @@ class TodayService:
         promoted = day_flow.promote_next(self._store.trials.list_for_day(self._today))
         self._store.trials.save(promoted, self._now)
 
-    def start_timer(self, trial_id: str) -> None:
-        self._store.trials.save([timer.start(self._timed(trial_id), self._now)], self._now)
+    def start_timer(self, trial_id: str, discipline: Discipline = Discipline.DASHBOARD) -> None:
+        self._save([timer.start(self._timed(trial_id), self._now)], discipline)
 
     def pause_timer(self, trial_id: str) -> None:
-        self._store.trials.save([timer.pause(self._timed(trial_id), self._now)], self._now)
+        self._save([timer.pause(self._timed(trial_id), self._now)])
 
     def reset_timer(self, trial_id: str) -> None:
-        self._store.trials.save([timer.reset(self._timed(trial_id))], self._now)
+        self._save([timer.reset(self._timed(trial_id))])
+        self._store.segments.delete_for_trials([trial_id])
 
     def conquer(self, trial_id: str) -> None:
-        self._store.trials.save([day_flow.conquer(self._trial(trial_id), self._now)], self._now)
+        self._save([day_flow.conquer(self._trial(trial_id), self._now)])
         self._promote()
         settle_day(self._store, self._now)
 
@@ -74,12 +83,12 @@ class TodayService:
             self._trial(trial_id), self._store.horizon.list_all(), self._now
         )
         self._store.horizon.replace_all(horizon, self._now)
-        self._store.trials.save([gone], self._now)
+        self._save([gone])
         self._promote()
         settle_day(self._store, self._now)
 
     def abandon(self, trial_id: str) -> None:
-        self._store.trials.save([day_flow.abandon(self._trial(trial_id), self._now)], self._now)
+        self._save([day_flow.abandon(self._trial(trial_id), self._now)])
         self._promote()
         settle_day(self._store, self._now)
 
@@ -124,7 +133,7 @@ class TodayService:
 
     def promote(self, trial_id: str) -> None:
         trial, trials = self._trial(trial_id), self._trials()
-        self._store.trials.save(queue.promote(trial, trials, self._now), self._now)
+        self._save(queue.promote(trial, trials, self._now))
 
     def reorder(self, ids: list[str]) -> None:
         ordered = queue.reorder_remaining(self._trials(), ids)

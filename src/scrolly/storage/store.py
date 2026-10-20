@@ -11,6 +11,7 @@ from scrolly.storage.arts import SqlArts
 from scrolly.storage.days import SqlDays
 from scrolly.storage.drafts import SqlDrafts
 from scrolly.storage.horizon import SqlHorizon
+from scrolly.storage.segments import SqlSegments
 from scrolly.storage.settings import SqlSettings
 from scrolly.storage.trials import SqlTrials
 
@@ -32,6 +33,7 @@ class SqliteStores:
             yield Store(
                 settings=SqlSettings(session),
                 trials=SqlTrials(session),
+                segments=SqlSegments(session),
                 horizon=SqlHorizon(session),
                 arts=SqlArts(session),
                 days=SqlDays(session),

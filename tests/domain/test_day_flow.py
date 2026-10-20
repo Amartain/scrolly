@@ -173,3 +173,12 @@ def test_the_time_estimate_is_set_once() -> None:
         set_estimate(make_trial("A", essence_expected_min=30), "1h")
     with pytest.raises(TrialError):
         set_estimate(make_trial("A", state=TrialState.DONE), "1h")
+
+
+def test_abandoning_a_timed_trial_records_the_minutes_it_took() -> None:
+    lost = abandon(start(_immediate(essence_expected_min=60), NOW - timedelta(minutes=20)), NOW)
+    assert lost.essence_actual_min == 20
+
+
+def test_abandoning_an_untimed_trial_records_nothing_even_with_an_estimate() -> None:
+    assert abandon(_immediate(essence_expected_min=60), NOW).essence_actual_min is None
