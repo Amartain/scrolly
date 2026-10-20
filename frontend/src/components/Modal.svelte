@@ -31,6 +31,8 @@
   onkeydown={(event) => {
     if (event.key !== 'Escape') return;
     event.preventDefault();
+    // Only the top layer answers Escape: the screen under a pop-up stays where it is.
+    event.stopPropagation();
     onclose();
   }}
   oncancel={(event) => {

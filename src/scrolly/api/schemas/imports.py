@@ -23,3 +23,15 @@ class ImportOut(BaseModel):
             arts_added=summary.arts_added,
             view=ViewOut.from_data(view),
         )
+
+    @classmethod
+    def from_counts(cls, added: int, skipped: int, view: ViewOut) -> "ImportOut":
+        """A restored zip or CSV: rows added (a zip: everything), rows already there."""
+        return cls(
+            added=added,
+            skipped=skipped,
+            trials_added=0,
+            horizon_added=0,
+            arts_added=0,
+            view=view,
+        )

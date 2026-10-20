@@ -15,4 +15,6 @@ def build_app(with_static: bool = True) -> FastAPI:
     """Migrate the user's database and wire the real app."""
     upgrade_to_head(db_path(), data_dir() / "backups")
     stores = SqliteStores(make_engine(db_path()))
-    return create_app(SystemClock(), stores, STATIC_DIR if with_static else None)
+    return create_app(
+        SystemClock(), stores, STATIC_DIR if with_static else None, data_dir() / "backups"
+    )

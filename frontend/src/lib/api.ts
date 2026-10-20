@@ -154,3 +154,5 @@ export const advisor = {
 };
 
 export const poemSeen = () => send<View>('/api/sunset/poem-seen', json('POST'));
+
+export const purgeToday = () => send<View>('/api/purge', json('POST'));

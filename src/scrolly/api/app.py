@@ -18,6 +18,7 @@ from scrolly.api.routes import (
     trials,
     view,
 )
+from scrolly.domain.archive import ArchiveError
 from scrolly.domain.arts import ArtError
 from scrolly.domain.day_flow import TrialError
 from scrolly.domain.duration import DurationError
@@ -44,12 +45,16 @@ def _refuse_title(request: Request, error: Exception) -> JSONResponse:
 
 
 def create_app(
-    clock: Clock, store_factory: StoreFactory, static_dir: Path | None = None
+    clock: Clock,
+    store_factory: StoreFactory,
+    static_dir: Path | None = None,
+    backup_dir: Path | None = None,
 ) -> FastAPI:
     """The single composition root: everything the API needs is passed in here."""
     app = FastAPI(title="Scrolly")
     app.state.clock = clock
     app.state.store_factory = store_factory
+    app.state.backup_dir = backup_dir
     # Domain errors become HTTP errors only here.
     app.add_exception_handler(PlanningError, _refuse(409))
     app.add_exception_handler(TrialError, _refuse(409))
@@ -58,6 +63,7 @@ def create_app(
     app.add_exception_handler(ArtError, _refuse(409))
     app.add_exception_handler(DuplicateTitleError, _refuse_title)
     app.add_exception_handler(DurationError, _refuse(422))
+    app.add_exception_handler(ArchiveError, _refuse(422))
     app.add_exception_handler(QiError, _refuse(422))
     app.include_router(view.router)
     app.include_router(golden_core.router)

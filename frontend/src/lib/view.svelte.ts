@@ -3,6 +3,7 @@ import {
   importFile,
   putAppearance,
   putReadingFont,
+  purgeToday,
   putSunset,
   type DayVariant,
   type ImportResult,
@@ -108,6 +109,11 @@ class ViewStore {
 
   async chooseReadingFont(font: ReadingFont) {
     this.apply(await putReadingFont(font));
+  }
+
+  /** Purge Today's Scroll: today's open trials and the planning in progress. */
+  purge(): Promise<boolean> {
+    return this.act(purgeToday);
   }
 
   async restore(file: File): Promise<ImportResult> {

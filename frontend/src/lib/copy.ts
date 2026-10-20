@@ -125,3 +125,18 @@ export const POEM = {
   title: 'Sunset Poem',
   close: 'Settle Qi',
 } as const;
+
+/** DRAFT: Settings › Data. */
+export const DATA = {
+  hint: 'Reads a Scrolly backup (.zip), a table (.csv), an old backup (.json) or a Discord Dispatch (.md).',
+  replaceTitle: 'Replace everything?',
+  replaceBody:
+    'This backup takes the place of everything Scrolly holds now. A copy of the current data is saved first, in the backups folder.',
+  replace: 'Replace',
+  purgeTitle: "Purge Today's Scroll?",
+  purgeBody:
+    "Today's open trials are cleared. Conquered trials stay, and Heavenly Mandates and trials called down from the Horizon go back to it with the time worked.",
+  purge: 'Purge',
+  cancel: 'Cancel',
+  purged: "Today's scroll is clear.",
+} as const;
