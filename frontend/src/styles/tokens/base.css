@@ -48,7 +48,12 @@
   --size-staged: 10rem;
   --size-field: 2.5rem;
   --size-estimate: 4.5rem;
-  --size-immediate: 12.5rem;
+  --size-immediate: 16.25rem;
+  --size-ring: 26rem;
+  --size-ring-band: 1.5rem;
+  --size-utility-min: 18.75rem;
+  --size-seclusion-bar: 3.5rem;
+  --size-tab: 3.5rem;
   --size-short-panel: 7rem;
   --size-stat: 7rem;
   --size-orb: 2rem;
@@ -58,6 +63,8 @@
   --scrollbar-track: var(--inset);
 
   --canvas-fill: var(--surface-canvas);
+  /* Seclusion's own backdrop: the canvas, but a deeper blue after dark in Serene (art-direction.md). */
+  --seclusion-canvas: var(--surface-canvas);
   --icon-highlight: rgba(255, 255, 255, 0.6);
 
   --shadow-panel:

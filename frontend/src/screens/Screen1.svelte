@@ -15,6 +15,8 @@
   import StatCard from './dashboard/StatCard.svelte';
   import VictoryBanner from './dashboard/VictoryBanner.svelte';
 
+  let { onseclusion }: { onseclusion?: () => void } = $props();
+
   const dashboard = $derived(view.current?.dashboard);
   const charts = $derived(dashboard?.charts ?? []);
   const series = $derived(chartChoice.pick(charts));
@@ -43,7 +45,7 @@
       {#if dashboard?.victory}
         <VictoryBanner />
       {:else if dashboard?.immediate}
-        <ImmediateCard trial={dashboard.immediate} />
+        <ImmediateCard trial={dashboard.immediate} {onseclusion} />
       {:else}
         <Panel title="The Immediate Trial" empty={EMPTY.immediate} />
       {/if}

@@ -1,8 +1,10 @@
 <script lang="ts">
   import { typing } from './lib/keys';
   import { focusScribe, onScreenTwo, showScreen } from './lib/screens';
+  import { seclusion } from './lib/seclusion.svelte';
   import { view } from './lib/view.svelte';
   import Header from './screens/Header.svelte';
+  import Seclusion from './screens/seclusion/Seclusion.svelte';
   import Phase1 from './screens/Phase1.svelte';
   import Phase2 from './screens/Phase2.svelte';
   import Phase3 from './screens/Phase3.svelte';
@@ -17,9 +19,27 @@
   import Settings from './screens/Settings.svelte';
   import ZeroState from './screens/ZeroState.svelte';
 
-  let mode = $state<'dashboard' | 'settings' | 'dispatch'>('dashboard');
+  let mode = $state<'dashboard' | 'settings' | 'dispatch' | 'seclusion'>('dashboard');
 
   $effect(() => view.start());
+
+  // Seclusion left open (a reload, a crash, a night session) opens again where it was.
+  $effect(() => {
+    void seclusion.load().then(() => {
+      if (seclusion.state?.active) mode = 'seclusion';
+    });
+  });
+
+  async function enterSeclusion() {
+    if (await seclusion.enter()) mode = 'seclusion';
+  }
+
+  /** Stepping out pauses the trial; a scroll held open past 04:00 then rolls over. */
+  async function leaveSeclusion() {
+    await seclusion.leave();
+    await view.refresh();
+    mode = 'dashboard';
+  }
 
   const status = $derived(view.planning?.status);
   const onboarding = $derived(
@@ -31,12 +51,18 @@
   const toggleSettings = () => (mode = mode === 'settings' ? 'dashboard' : 'settings');
 
   function onkeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape' && mode !== 'dashboard') mode = 'dashboard';
+    if (event.key === 'Escape' && mode === 'seclusion') void leaveSeclusion();
+    else if (event.key === 'Escape' && mode !== 'dashboard') mode = 'dashboard';
     if (!onDashboard || typing(event.target) || event.altKey || event.ctrlKey || event.metaKey)
       return;
     if (event.key === 'n' || event.key === 'N') {
       event.preventDefault();
       focusScribe();
+      return;
+    }
+    if ((event.key === 'f' || event.key === 'F') && view.current?.dashboard.immediate) {
+      event.preventDefault();
+      void enterSeclusion();
       return;
     }
     const down = event.key === 'ArrowDown' && !onScreenTwo();
@@ -52,7 +78,9 @@
 
 <!-- The header belongs to the dashboard (and sits under the zero-state fog). Planning has none. -->
 <div class="screen">
-  {#if mode === 'settings'}
+  {#if mode === 'seclusion'}
+    <Seclusion onleave={leaveSeclusion} />
+  {:else if mode === 'settings'}
     <Header settingsOpen onsettings={toggleSettings} />
     <Settings onback={() => (mode = 'dashboard')} />
   {:else if mode === 'dispatch'}
@@ -68,7 +96,7 @@
     <Phase3 />
   {:else if status === 'active'}
     <Header settingsOpen={false} onsettings={toggleSettings} />
-    <Screen1 />
+    <Screen1 onseclusion={enterSeclusion} />
   {/if}
 </div>
 {#if onDashboard}

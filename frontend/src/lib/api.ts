@@ -45,13 +45,13 @@ async function failure(reply: Response, path: string): Promise<Error> {
   return new Error(detail ?? `${path}: ${reply.status}`);
 }
 
-async function send<T>(path: string, init?: RequestInit): Promise<T> {
+export async function send<T>(path: string, init?: RequestInit): Promise<T> {
   const reply = await fetch(path, init);
   if (!reply.ok) throw await failure(reply, path);
   return (await reply.json()) as T;
 }
 
-const json = (method: string, body?: unknown): RequestInit => ({
+export const json = (method: string, body?: unknown): RequestInit => ({
   method,
   headers: { 'Content-Type': 'application/json' },
   body: body === undefined ? undefined : JSON.stringify(body),

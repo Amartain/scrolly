@@ -1,5 +1,5 @@
 import { expect, test } from './fixtures';
-import { canvasColor, panelBoxes, sealDay } from './helpers';
+import { canvasColor, panelBoxes, sealDay, section } from './helpers';
 
 test.use({ viewport: { width: 1440, height: 900 } });
 
@@ -40,6 +40,7 @@ test('all five token sets resolve to the art-direction canvas colors', async ({ 
 test('theme changes in Settings re-paint without moving any panel', async ({ page }) => {
   await sealDay(page);
   await page.goto('/');
+  await expect(section(page, 'The Immediate Trial')).toBeVisible();
   const before = await panelBoxes(page);
   const serene = await canvasColor(page);
 

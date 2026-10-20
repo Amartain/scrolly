@@ -4,11 +4,13 @@
   import SetOnce from '../../components/SetOnce.svelte';
   import StateMark from '../../components/StateMark.svelte';
   import TypeMark from '../../components/TypeMark.svelte';
+  import Button from '../../components/Button.svelte';
   import { today, type Immediate } from '../../lib/api';
+  import { SECLUSION } from '../../lib/copy-seclusion';
   import { view } from '../../lib/view.svelte';
   import TimerControls from './TimerControls.svelte';
 
-  let { trial }: { trial: Immediate } = $props();
+  let { trial, onseclusion }: { trial: Immediate; onseclusion?: () => void } = $props();
 
   const qiOn = $derived(view.planning?.qi.enabled ?? false);
   const meta = $derived(
@@ -54,6 +56,16 @@
       >
     </div>
     <TimerControls {trial} />
+    {#if onseclusion}
+      <div class="enter">
+        <Button
+          label={SECLUSION.enter}
+          tone="strong"
+          description="{SECLUSION.enterNamed}: {trial.title}"
+          onclick={onseclusion}
+        />
+      </div>
+    {/if}
   </div>
 </Panel>
 
@@ -69,6 +81,15 @@
     display: flex;
     align-items: center;
     gap: var(--space-4);
+  }
+
+  .enter {
+    display: grid;
+  }
+
+  .enter :global(.button) {
+    padding-block: var(--space-3);
+    letter-spacing: 0.15em;
   }
 
   .mark {
