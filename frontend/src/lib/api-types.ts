@@ -567,6 +567,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/seal-inscription": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inscribe
+         * @description Words typed into Settings, Secret Seal Inscription. Unknown words do nothing.
+         */
+        post: operations["inscribe_api_seal_inscription_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/sunset": {
         parameters: {
             query?: never;
@@ -1340,6 +1360,20 @@ export interface components {
             qi: string;
             /** Title */
             title: string;
+        };
+        /** SealIn */
+        SealIn: {
+            /** Text */
+            text: string;
+        };
+        /**
+         * SealOut
+         * @description `recognized` is false when the words name no seal; nothing changed then.
+         */
+        SealOut: {
+            /** Recognized */
+            recognized: boolean;
+            view: components["schemas"]["ViewOut"];
         };
         /**
          * SeriesOut
@@ -2549,6 +2583,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    inscribe_api_seal_inscription_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SealIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SealOut"];
                 };
             };
             /** @description Validation Error */

@@ -178,3 +178,11 @@ export const FEEDBACK = {
     { label: 'Write to the developer', href: 'https://forms.gle/haR4N5k7npJTWMLi9' },
   ],
 } as const;
+
+/** DRAFT: Settings › Secret Seal Inscription. */
+export const SEAL = {
+  title: 'Secret Seal Inscription',
+  placeholder: 'Inscribe a word…',
+  inscribe: 'Inscribe',
+  unknown: 'The scroll does not answer to those words.',
+} as const;

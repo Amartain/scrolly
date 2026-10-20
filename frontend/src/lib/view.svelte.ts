@@ -111,6 +111,11 @@ class ViewStore {
     this.apply(await putReadingFont(font));
   }
 
+  /** Show a view that arrived some other way (the answer to a secret seal). */
+  show(view: View) {
+    this.apply(view);
+  }
+
   /** Purge Today's Scroll: today's open trials and the planning in progress. */
   purge(): Promise<boolean> {
     return this.act(purgeToday);

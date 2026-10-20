@@ -1,0 +1,43 @@
+"""The Secret Seal Inscription: words typed in Settings that do something unusual. Pure."""
+
+import re
+from dataclasses import dataclass
+from enum import StrEnum
+
+ARISE_DAY = 100
+MAX_DAY = 9999
+
+
+class SealKind(StrEnum):
+    DUSK = "dusk"  # force dusk for the day: the palette, the chime and the poem
+    SUNRISE = "sunrise"  # clear the forced dusk
+    DAY = "day"  # the milestone overlay for a day number
+    ROLLOVER = "4am"  # run today's rollover now
+    RESTART = "restart-today"  # today starts over at the zero state
+
+
+@dataclass(frozen=True)
+class Seal:
+    kind: SealKind
+    day: int | None = None  # only for SealKind.DAY
+
+
+_WORDS = {
+    "dusk": Seal(SealKind.DUSK),
+    "sunrise": Seal(SealKind.SUNRISE),
+    "4am": Seal(SealKind.ROLLOVER),
+    "restart-today": Seal(SealKind.RESTART),
+    "arise": Seal(SealKind.DAY, ARISE_DAY),
+}
+_DAY = re.compile(r"(?:day\s+)?([0-9]{1,4})")
+
+
+def parse_seal(text: str) -> Seal | None:
+    """The seal these words name, or None. Case and extra spaces do not matter."""
+    cleaned = " ".join(text.split()).casefold()
+    if cleaned in _WORDS:
+        return _WORDS[cleaned]
+    match = _DAY.fullmatch(cleaned)
+    if match is not None and 1 <= int(match[1]) <= MAX_DAY:
+        return Seal(SealKind.DAY, int(match[1]))
+    return None

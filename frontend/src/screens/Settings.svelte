@@ -4,6 +4,7 @@
   import FeedbackPanel from './FeedbackPanel.svelte';
   import GoldenCorePanel from './GoldenCorePanel.svelte';
   import HeaderPanel from './HeaderPanel.svelte';
+  import SealPanel from './SealPanel.svelte';
   import SunsetPanel from './SunsetPanel.svelte';
   import SymbolsPanel from './SymbolsPanel.svelte';
   import ThemePanel from './ThemePanel.svelte';
@@ -25,6 +26,7 @@
     <SunsetPanel />
     <GoldenCorePanel />
     <DataPanel />
+    <SealPanel ondone={onback} />
     <FeedbackPanel />
   </div>
 </div>

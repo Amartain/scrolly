@@ -16,6 +16,7 @@ from scrolly.api.routes import (
     horizon,
     imports,
     planning,
+    seals,
     sunset,
     trials,
     view,
@@ -83,6 +84,7 @@ def create_app(
     app.include_router(export.router)
     app.include_router(imports.router)
     app.include_router(planning.router)
+    app.include_router(seals.router)
     app.include_router(trials.router)
     app.include_router(horizon.router)
     app.include_router(arts.router)

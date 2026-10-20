@@ -183,3 +183,9 @@ export async function uploadHeader(file: File): Promise<View> {
   body.append('file', file);
   return send<View>('/api/header-image', { method: 'POST', body });
 }
+
+export type SealResult = components['schemas']['SealOut'];
+
+/** Words for the Secret Seal Inscription. `recognized` is false when they name no seal. */
+export const inscribeSeal = (text: string) =>
+  send<SealResult>('/api/seal-inscription', json('POST', { text }));
