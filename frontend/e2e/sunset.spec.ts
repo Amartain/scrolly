@@ -9,7 +9,7 @@ test('the Day Summary asks for a sunset once; Not now retires it and keeps total
 }) => {
   await toEstimate(page, 'Write', 'Tidy');
   const summary = section(page, 'Day Summary');
-  await expect(summary).toContainText('of light left until sunset');
+  await expect(summary.getByLabel('Sunset time')).toBeVisible();
   await summary.getByRole('button', { name: 'Not now' }).click();
   await expect(summary.getByRole('button', { name: 'Not now' })).toHaveCount(0);
   await expect(summary).not.toContainText('of light left');
@@ -24,19 +24,21 @@ test('a sunset time answers the question, and Settings can change it', async ({ 
   await summary.getByLabel('Sunset time').fill('9pm');
   await summary.getByRole('button', { name: 'Set' }).click();
   await expect(summary.getByLabel('Sunset time')).toBeVisible(); // refused: still asking
-  await summary.getByLabel('Sunset time').fill('22:30');
+  // 03:59 is just before the 04:00 rollover, so at any hour of the day the sunset is still ahead.
+  await summary.getByLabel('Sunset time').fill('03:59');
   await page.keyboard.press('Enter');
   await expect(summary.getByLabel('Sunset time')).toHaveCount(0);
+  await expect(summary).toContainText('of light left until sunset');
 
   await sealAndClose(page);
   await page.getByRole('button', { name: 'Settings' }).click();
   const panel = section(page, 'Sunset');
-  await expect(panel.getByLabel('Sunset time')).toHaveValue('22:30');
-  await panel.getByLabel('Sunset time').fill('23:00');
+  await expect(panel.getByLabel('Sunset time')).toHaveValue('03:59');
+  await panel.getByLabel('Sunset time').fill('03:30');
   await panel.getByRole('button', { name: 'Set' }).click();
   await page.reload();
   await page.getByRole('button', { name: 'Settings' }).click();
-  await expect(section(page, 'Sunset').getByLabel('Sunset time')).toHaveValue('23:00');
+  await expect(section(page, 'Sunset').getByLabel('Sunset time')).toHaveValue('03:30');
 });
 
 test('finishing the day brings dusk, even with no sunset kept', async ({ page }) => {
