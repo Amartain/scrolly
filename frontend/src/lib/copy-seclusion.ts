@@ -9,7 +9,7 @@ export const SECLUSION = {
   tabs: { incense: 'Trial of the Incense', pulse: 'Harmonious Pulse', flow: 'River Flow' },
   tabLater: 'Not ready yet',
   atHand: 'Trial at hand',
-  begin: 'Begin',
+  start: 'Start',
   conquered: 'Conquered!',
   newTimer: 'New timer',
   zeroOut: 'Zero out',

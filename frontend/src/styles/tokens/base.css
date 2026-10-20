@@ -21,6 +21,8 @@
   --text-display-lg: 2rem;
   --text-display-xl: 3rem;
   --text-numeral: 3.5rem;
+  /* The one big figure in Seclusion's ring (owner approved a larger size, 2026-10-20). */
+  --text-numeral-ring: 5rem;
   --text-body-sm: 1.25rem;
   --text-body-md: 1.5rem;
   --text-body-lg: 2rem;

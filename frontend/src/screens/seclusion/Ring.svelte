@@ -22,10 +22,13 @@
   const over = $derived((incense?.over_s ?? 0) + extra);
   const overfilled = $derived(incense?.state === 'overfilled');
   const expected = $derived(trial.timer.expected_s);
-  // Only the angle of the arc is worked out here.
-  const fill = $derived(
-    overfilled ? 100 : expected ? Math.min(100, (clock.seconds / expected) * 100) : 0,
-  );
+  // The incense burns down: the colour is what remains and shrinks. Past the estimate the ring is
+  // full again in the brighter shade. Only the angle of the arc is worked out here.
+  const fill = $derived.by(() => {
+    if (overfilled) return 100;
+    if (!expected) return 0;
+    return Math.max(0, 100 - (clock.seconds / expected) * 100);
+  });
 
   // When the countdown reaches zero, ask the server: it says when the ring is overfilled.
   let askedAt = 0;
@@ -110,7 +113,7 @@
 
   .big {
     color: var(--num);
-    font-size: var(--text-numeral);
+    font-size: var(--text-numeral-ring);
     line-height: 1;
     text-shadow: var(--space-1) var(--space-1) 0 var(--num-shadow);
     text-transform: none;

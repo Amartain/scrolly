@@ -19,7 +19,7 @@
 <div class="bar">
   <div class="time">
     {#if idle}
-      <Button label={SECLUSION.begin} tone="primary" onclick={seclusion.start} />
+      <Button label={SECLUSION.start} tone="primary" onclick={seclusion.start} />
     {:else}
       <button
         class="icon play"

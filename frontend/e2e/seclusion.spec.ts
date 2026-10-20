@@ -20,7 +20,7 @@ test('F opens Seclusion with only the trial at hand, and Step out pauses it', as
   await page.keyboard.press('f');
   await expect(room(page)).toContainText('Write report');
   await expect(room(page)).not.toContainText('Tidy desk');
-  await room(page).getByRole('button', { name: 'Begin' }).click();
+  await room(page).getByRole('button', { name: 'Start', exact: true }).click();
   await expect(room(page).getByRole('button', { name: 'Pause timer' })).toBeVisible();
   await page.getByRole('button', { name: 'Step out' }).click();
   await expect(page.getByRole('button', { name: 'Start timer' })).toBeVisible();
@@ -39,12 +39,12 @@ test('a reload keeps Seclusion open', async ({ page }) => {
   await expect(room(page)).toContainText('Write report');
 });
 
-test('Idle shows only Begin; running shows Conquered and Abandon for a Mortal Trial', async ({
+test('Idle shows only Start; running shows Conquered and Abandon for a Mortal Trial', async ({
   page,
 }) => {
   await enter(page);
   await expect(room(page).getByRole('button', { name: 'Conquer Write report' })).toHaveCount(0);
-  await room(page).getByRole('button', { name: 'Begin' }).click();
+  await room(page).getByRole('button', { name: 'Start', exact: true }).click();
   await expect(room(page).getByRole('button', { name: 'Conquer Write report' })).toBeVisible();
   await expect(room(page).getByRole('button', { name: 'Abandon Write report' })).toBeVisible();
   await expect(room(page).getByRole('button', { name: /Postpone/ })).toHaveCount(0);
@@ -67,23 +67,34 @@ test('a trial with no estimate asks for one, then the ring counts it down', asyn
   await expect(ring(page)).toContainText('of your 45m estimate');
 });
 
+test('the ring drains: full before the start, shrinking while it runs', async ({ page }) => {
+  await enter(page);
+  await room(page).getByLabel('Estimate for Write report').fill('2m');
+  await room(page).getByRole('button', { name: 'Set the time for Write report' }).click();
+  const fill = () => ring(page).evaluate((el) => Number(el.style.getPropertyValue('--fill')));
+  expect(await fill()).toBe(100);
+  await room(page).getByRole('button', { name: 'Start', exact: true }).click();
+  await expect.poll(fill).toBeLessThan(100);
+  expect(await fill()).toBeGreaterThan(80);
+});
+
 test('Zero out clears the ring and keeps the time logged', async ({ page }) => {
   await enter(page);
   await room(page).getByLabel('Estimate for Write report').fill('45m');
   await room(page).getByRole('button', { name: 'Set the time for Write report' }).click();
-  await room(page).getByRole('button', { name: 'Begin' }).click();
+  await room(page).getByRole('button', { name: 'Start', exact: true }).click();
   await page.waitForTimeout(2200);
   await room(page).getByRole('button', { name: 'Zero out' }).click();
-  await expect(room(page).getByRole('button', { name: 'Begin' })).toBeVisible();
+  await expect(room(page).getByRole('button', { name: 'Start', exact: true })).toBeVisible();
   await expect(ring(page)).toContainText('45m');
 });
 
 test('conquering in Seclusion brings the next trial, idle', async ({ page }) => {
   await enter(page);
-  await room(page).getByRole('button', { name: 'Begin' }).click();
+  await room(page).getByRole('button', { name: 'Start', exact: true }).click();
   await room(page).getByRole('button', { name: 'Conquer Write report' }).click();
   await expect(room(page)).toContainText('Tidy desk');
-  await expect(room(page).getByRole('button', { name: 'Begin' })).toBeVisible();
+  await expect(room(page).getByRole('button', { name: 'Start', exact: true })).toBeVisible();
 });
 
 test('on a narrow screen the utility column stacks below the focus scroll', async ({ page }) => {

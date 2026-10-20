@@ -39,10 +39,10 @@ test('conquering shows What next with the next trial idle; Undo takes it back', 
   page,
 }) => {
   await enter(page, 'Write report', 'Tidy desk');
-  await room(page).getByRole('button', { name: 'Begin' }).click();
+  await room(page).getByRole('button', { name: 'Start', exact: true }).click();
   await room(page).getByRole('button', { name: 'Conquer Write report' }).click();
   await expect(card(page)).toContainText('Tidy desk');
-  await expect(room(page).getByRole('button', { name: 'Begin' })).toBeVisible();
+  await expect(room(page).getByRole('button', { name: 'Start', exact: true })).toBeVisible();
   await card(page).getByRole('button', { name: 'Undo' }).click();
   await expect(card(page)).toHaveCount(0);
   await expect(room(page)).toContainText('Write report');
@@ -51,7 +51,7 @@ test('conquering shows What next with the next trial idle; Undo takes it back', 
 
 test('Start new timer runs the next trial', async ({ page }) => {
   await enter(page, 'Write report', 'Tidy desk');
-  await room(page).getByRole('button', { name: 'Begin' }).click();
+  await room(page).getByRole('button', { name: 'Start', exact: true }).click();
   await room(page).getByRole('button', { name: 'Conquer Write report' }).click();
   await card(page)
     .getByRole('button', { name: /Start new timer/ })
@@ -64,7 +64,7 @@ test('Switch trials lists Remaining and the chosen trial becomes the one at hand
   page,
 }) => {
   await enter(page, 'Write report', 'Tidy desk', 'Water plants');
-  await room(page).getByRole('button', { name: 'Begin' }).click();
+  await room(page).getByRole('button', { name: 'Start', exact: true }).click();
   await room(page).getByRole('button', { name: 'Conquer Write report' }).click();
   await card(page).getByRole('button', { name: 'Switch trials' }).click();
   await card(page).getByRole('button', { name: 'Switch to Water plants' }).click();
@@ -83,7 +83,7 @@ test('the last trial ends in rest: dusk comes, and Undo brings the trial back', 
   page,
 }) => {
   await enter(page, 'Write report');
-  await room(page).getByRole('button', { name: 'Begin' }).click();
+  await room(page).getByRole('button', { name: 'Start', exact: true }).click();
   await room(page).getByRole('button', { name: 'Conquer Write report' }).click();
   await expect(page.getByText('Well done, time to rest.')).toBeVisible();
   await expect(page.locator('html')).toHaveAttribute('data-phase', 'dusk');
