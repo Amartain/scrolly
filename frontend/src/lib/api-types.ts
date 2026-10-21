@@ -992,6 +992,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/seclusion/scraps-hidden": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Hide Scraps
+         * @description Fold Bamboo Scraps away in the focus room, or unfold it. The choice is kept.
+         */
+        put: operations["hide_scraps_api_seclusion_scraps_hidden_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/seclusion/timer/new": {
         parameters: {
             query?: never;
@@ -2112,6 +2132,11 @@ export interface components {
             /** Text */
             text: string;
         };
+        /** ScrapsHiddenIn */
+        ScrapsHiddenIn: {
+            /** Hidden */
+            hidden: boolean;
+        };
         /** ScribeIn */
         ScribeIn: {
             /**
@@ -2160,6 +2185,11 @@ export interface components {
             remaining: components["schemas"]["WaitingOut"][];
             /** Ring Elapsed S */
             ring_elapsed_s: number;
+            /**
+             * Scraps Hidden
+             * @default false
+             */
+            scraps_hidden: boolean;
             trial: components["schemas"]["ImmediateOut"] | null;
         };
         /**
@@ -4030,6 +4060,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+        };
+    };
+    hide_scraps_api_seclusion_scraps_hidden_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScrapsHiddenIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

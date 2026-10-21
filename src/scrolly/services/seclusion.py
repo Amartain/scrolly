@@ -15,7 +15,7 @@ from scrolly.services.dashboard_view import TimerView
 from scrolly.services.day import run_rollover
 from scrolly.services.scraps import ScrapService
 from scrolly.services.seclusion_parallel import ParallelControl, ParallelView
-from scrolly.services.seclusion_prefs import load_plan
+from scrolly.services.seclusion_prefs import load_plan, load_scraps_hidden
 from scrolly.services.seclusion_runs import RunControl
 from scrolly.services.seclusion_state import read_state, working_day, write_state
 from scrolly.services.today import TodayService
@@ -35,6 +35,7 @@ class SeclusionView:
     flow: FlowView | None  # only on the Flow tab
     remaining: list[Trial]
     parallel: ParallelView | None = None  # the trial run beside this one
+    scraps_hidden: bool = False  # Bamboo Scraps is folded away
 
 
 class SeclusionService:
@@ -144,7 +145,8 @@ class SeclusionService:
         write_state(self._store, replace(state, baselines=baselines), self._now)
 
     def view(self) -> SeclusionView:
-        return replace(self._room_view(), parallel=self.parallel.view())
+        hidden = load_scraps_hidden(self._store)
+        return replace(self._room_view(), parallel=self.parallel.view(), scraps_hidden=hidden)
 
     def _room_view(self) -> SeclusionView:
         state = self._runs.settle()

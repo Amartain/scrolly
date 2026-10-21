@@ -3,6 +3,7 @@
   import Button from '../components/Button.svelte';
   import ScrollSheet from '../components/ScrollSheet.svelte';
   import { planning } from '../lib/api';
+  import { cutLine } from '../lib/cut-line';
   import { view } from '../lib/view.svelte';
   import Guidance from './plan/Guidance.svelte';
   import Notice from './plan/Notice.svelte';
@@ -61,6 +62,7 @@
         </label>
         <textarea
           id="dump"
+          use:cutLine
           bind:value={text}
           oninput={edit}
           placeholder={'Morning coffee + podcast\nNutritious breakfast\nRead chapter 1'}

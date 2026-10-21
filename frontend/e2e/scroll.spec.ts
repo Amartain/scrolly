@@ -10,14 +10,7 @@ const THEMES = [
   { theme: 'pavilion', day_variant: 'teal' },
 ];
 
-const QUIET = [
-  'Essence',
-  'Cumulative Momentum',
-  'Rhythm',
-  'Scribe Trial',
-  'Postponed Today',
-  'Fallen Leaves',
-];
+const QUIET = ['Essence', 'Momentum', 'Rhythm', 'Scribe Trial', 'Postponed Today', 'Fallen Leaves'];
 const LISTS = [
   'The Immediate Trial',
   'Conquered Today',

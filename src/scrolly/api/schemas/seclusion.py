@@ -110,6 +110,7 @@ class SeclusionOut(BaseModel):
     remaining: list[WaitingOut]
     # The trial run beside this one: a trial of its own, with its own timer.
     parallel: ImmediateOut | None = None
+    scraps_hidden: bool = False
 
     @classmethod
     def from_view(cls, view: SeclusionView) -> "SeclusionOut":
@@ -132,6 +133,7 @@ class SeclusionOut(BaseModel):
             parallel=None
             if view.parallel is None
             else ImmediateOut.from_trial(view.parallel.trial, view.parallel.timer),
+            scraps_hidden=view.scraps_hidden,
         )
 
 
@@ -142,6 +144,10 @@ class DisciplineIn(BaseModel):
 class RatioIn(BaseModel):
     work: int
     rest: int
+
+
+class ScrapsHiddenIn(BaseModel):
+    hidden: bool
 
 
 class FinishIn(BaseModel):

@@ -81,6 +81,12 @@ export const SECLUSION = {
     start: 'Start the trial beside',
     pause: 'Pause the trial beside',
   },
+  fold: {
+    hide: 'hide ▾',
+    show: 'show ▸',
+    hideName: (title: string) => `Hide ${title}`,
+    showName: (title: string) => `Show ${title}`,
+  },
   scrapsTitle: 'Bamboo Scraps',
   scrapsLine: 'Loose thoughts rest here.',
   scrapSaved: 'Saved',

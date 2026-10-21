@@ -58,7 +58,7 @@
       <StatCard title="Heavenly Cycles" value={dashboard?.heavenly_cycles ?? 0} />
     </div>
     {#if series}
-      <Panel title="Cumulative Momentum" guide="momentum">
+      <Panel title="Momentum" guide="momentum">
         {#snippet actions()}
           {#if live}
             <MetricToggle
@@ -85,7 +85,7 @@
         <RhythmChart {series} />
       </Panel>
     {:else}
-      <Panel title="Cumulative Momentum" />
+      <Panel title="Momentum" />
       <Panel title="Rhythm" />
     {/if}
   </div>

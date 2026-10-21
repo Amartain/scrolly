@@ -25,4 +25,7 @@ export const seclusion = {
   finish: (how: EndedHow, trialId: string) => post('finish', { how, trial_id: trialId }),
   setRatio: (work: number, rest: number) =>
     send<SeclusionState>('/api/seclusion/flow/ratio', json('PUT', { work, rest })),
+  /** Fold Bamboo Scraps away, or unfold it. The server keeps the choice. */
+  hideScraps: (hidden: boolean) =>
+    send<SeclusionState>('/api/seclusion/scraps-hidden', json('PUT', { hidden })),
 };

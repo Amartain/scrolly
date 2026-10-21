@@ -16,7 +16,7 @@ async function writeOneScrap(page: Page, text: string) {
 
 async function openPage(page: Page) {
   await page.keyboard.press('ArrowDown'); // the second screen, where the link lives
-  await page.getByRole('button', { name: 'Bamboo Scraps' }).click();
+  await page.getByRole('button', { name: 'Bamboo Scraps', exact: true }).click();
 }
 
 test('The page shows each kept scrap with its day, hours, trials and text, and nothing to edit', async ({

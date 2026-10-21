@@ -19,6 +19,8 @@ test('a day with nothing on the scroll starts in the quiet zero state', async ({
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'The Peak is Serene' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Cultivate Your Focus' })).toBeVisible();
+  // Only the title and the button, as in the prototype: no line under the title.
+  await expect(page.getByText('Nothing is on the scroll')).toHaveCount(0);
   await expect(page.locator('[inert]')).toHaveCount(1);
   const fits = await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight);
   expect(fits).toBe(true);

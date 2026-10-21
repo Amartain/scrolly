@@ -179,6 +179,7 @@ class SeclusionStore {
     return this.act(api.newTimer);
   };
   zeroOut = () => this.act(api.zeroOut);
+  hideScraps = (hidden: boolean) => this.act(() => api.hideScraps(hidden));
 }
 
 export const seclusion = new SeclusionStore();

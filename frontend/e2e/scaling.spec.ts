@@ -33,7 +33,7 @@ for (const size of SIZES) {
       expect(byName[left].x).toBeLessThan(byName[right].x);
 
     // Left column above right column positions, top to bottom, are the same at every size.
-    ordered('The Immediate Trial', 'Cumulative Momentum');
+    ordered('The Immediate Trial', 'Momentum');
     expect(byName['Essence'].y).toBeLessThan(byName['The Immediate Trial'].y);
     expect(byName['The Immediate Trial'].y).toBeLessThan(byName['Conquered Today'].y);
     expect(byName['Scribe Trial'].y).toBeLessThan(byName['Remaining Trials'].y);

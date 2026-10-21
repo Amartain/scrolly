@@ -1,19 +1,30 @@
 <!-- Bamboo Scraps: a plain scratchpad for loose thoughts. It saves itself on a pause in typing, on
-     blur and when the page closes; a small mark says so. One scrap per visit to Seclusion. -->
+     blur and when the page closes; a small mark says so. One scrap per visit to Seclusion. It can be
+     folded away (the choice is kept by the server); what is written stays. -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import Panel from '../../components/Panel.svelte';
+  import { cutLine } from '../../lib/cut-line';
   import { SECLUSION } from '../../lib/copy-seclusion';
   import { scrapPad } from '../../lib/scrap-pad.svelte';
+  import { seclusion } from '../../lib/seclusion.svelte';
+  import Valve from './Valve.svelte';
 
   onMount(() => void scrapPad.load());
+
+  const folded = $derived(seclusion.state?.scraps_hidden ?? false);
+
+  async function fold() {
+    await scrapPad.flush(); // what is written is saved before the box goes away
+    await seclusion.hideScraps(!folded);
+  }
 </script>
 
 <svelte:window onpagehide={scrapPad.unload} />
 
-<Panel title={SECLUSION.scrapsTitle}>
+<Valve title={SECLUSION.scrapsTitle} grow {folded} onfold={fold}>
   <div class="pad">
     <textarea
+      use:cutLine
       value={scrapPad.text}
       placeholder={SECLUSION.scrapsLine}
       aria-label={SECLUSION.scrapsTitle}
@@ -23,7 +34,7 @@
     <!-- One reserved line, so the mark never moves anything. -->
     <p class="mark" role="status">{scrapPad.saved && scrapPad.text ? SECLUSION.scrapSaved : ''}</p>
   </div>
-</Panel>
+</Valve>
 
 <style>
   .pad {
@@ -32,9 +43,10 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-    padding: var(--space-3) var(--space-4);
+    padding: var(--space-2) var(--space-4) var(--space-3);
   }
 
+  /* The box takes everything the other valves leave. */
   textarea {
     flex: 1;
     min-height: calc(var(--size-field) * 3);
@@ -44,6 +56,7 @@
     border: var(--border-width) solid var(--line);
     box-shadow: var(--shadow-sunken);
     color: var(--ink);
+    font-family: var(--font-body);
     font-size: var(--text-body-md);
   }
 

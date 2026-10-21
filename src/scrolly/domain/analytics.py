@@ -1,4 +1,4 @@
-"""The two motivation charts: Cumulative Momentum and the 7-day Rhythm. Pure.
+"""The two motivation charts: Momentum (cumulative) and the 7-day Rhythm. Pure.
 
 These charts show the user their momentum and rhythm. They are not analytics: Rhythm bars use a
 compressed scale so one big day never dwarfs the rest, and the figures are rounded for the eye.

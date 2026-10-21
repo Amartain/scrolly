@@ -1,7 +1,7 @@
 import { expect, test } from './fixtures';
 import { sealDay, section } from './helpers';
 
-const momentum = (page: import('@playwright/test').Page) => section(page, 'Cumulative Momentum');
+const momentum = (page: import('@playwright/test').Page) => section(page, 'Momentum');
 const rhythm = (page: import('@playwright/test').Page) => section(page, 'Rhythm');
 
 test('before the first conquest both charts are fogged with an invitation and no toggle', async ({
@@ -47,6 +47,37 @@ test('after a conquest the charts are real and the toggle switches both by keybo
     'true',
   );
   await expect(momentum(page).getByRole('button', { name: 'Qi' })).toHaveCount(0);
+});
+
+test('the charts carry no numbers; hover shows one day, and so do the arrow keys', async ({
+  page,
+}) => {
+  await sealDay(page, 'First', 'Second');
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Conquer First' }).click();
+  const today = rhythm(page).getByRole('listitem').last();
+  await expect(today).toHaveText(/^\D+$/); // a weekday and a bar, no figure
+  await expect(momentum(page).getByRole('status')).toHaveCount(0);
+  await expect(rhythm(page).getByRole('status')).toHaveCount(0);
+
+  await today.hover();
+  await expect(rhythm(page).getByRole('status')).toHaveText(/ · 1$/);
+  await page.mouse.move(0, 0);
+  await expect(rhythm(page).getByRole('status')).toHaveCount(0);
+  await momentum(page)
+    .getByRole('group', { name: /Momentum/ })
+    .hover();
+  await expect(momentum(page).getByRole('status')).toHaveText(/ · 1$/);
+
+  // One tab stop for each chart; the keys read a day at a time and Esc puts the tip away.
+  const days = rhythm(page).getByRole('list', { name: /Rhythm/ });
+  await days.focus();
+  await page.keyboard.press('ArrowLeft');
+  await expect(rhythm(page).getByRole('status')).toHaveText(/ · rest$/);
+  await page.keyboard.press('End');
+  await expect(rhythm(page).getByRole('status')).toHaveText(/ · 1$/);
+  await page.keyboard.press('Escape');
+  await expect(rhythm(page).getByRole('status')).toHaveCount(0);
 });
 
 test('Qi joins the toggle only when the Golden Core is on', async ({ page }) => {

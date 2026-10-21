@@ -49,7 +49,7 @@ test('the second screen, the Archives and Seclusion each have one', async ({ pag
     'Postponed Today',
     'Fallen Leaves',
     'Conquered Today',
-    'Cumulative Momentum',
+    'Momentum',
     'Rhythm',
   ]) {
     await expect(open(page, panel)).toHaveCount(1);

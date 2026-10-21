@@ -32,9 +32,23 @@ def test_an_idea_needs_a_title() -> None:
 def test_editing_changes_only_what_is_given() -> None:
     edited = edit_item(ITEMS, "a", "Renamed", None)
     assert (edited[0].title, edited[0].essence_expected_min) == ("Renamed", 30)
-    assert edit_item(ITEMS, "a", None, "1h")[0].essence_expected_min == 60
-    assert edit_item(ITEMS, "a", None, "")[0].essence_expected_min is None
+    assert edit_item(ITEMS, "b", None, "1h")[1].essence_expected_min == 60
     assert edited[1] == ITEMS[1]
+
+
+def test_an_estimate_is_set_once_and_never_changed_or_cleared() -> None:
+    for attempt in ("1h", "30m", ""):
+        with pytest.raises(HorizonError, match="already set"):
+            edit_item(ITEMS, "a", None, attempt)
+    # Nothing to keep: a blank estimate stays blank, and a bad one is still refused.
+    assert edit_item(ITEMS, "b", None, "")[1].essence_expected_min is None
+    with pytest.raises(DurationError):
+        edit_item(ITEMS, "b", None, "90")
+
+
+def test_renaming_or_switching_the_type_leaves_a_set_estimate_alone() -> None:
+    edited = edit_item(ITEMS, "a", "Renamed", None, True)
+    assert (edited[0].title, edited[0].essence_expected_min) == ("Renamed", 30)
 
 
 def test_editing_or_removing_a_missing_item_is_refused() -> None:

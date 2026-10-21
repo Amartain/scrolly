@@ -14,10 +14,10 @@
   <div class="veil">
     <section class="message" aria-label="The Peak is Serene">
       <h1 class="display title">The Peak is Serene</h1>
-      <p class="line">Nothing is on the scroll today.</p>
       <Button
         label="Cultivate Your Focus"
         tone="primary"
+        size="large"
         onclick={() => view.act(planning.start)}
       />
     </section>
@@ -49,26 +49,18 @@
     backdrop-filter: blur(var(--space-2));
   }
 
+  /* No frame: the title and the one button float on the fog, a little above the middle. */
   .message {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-10) var(--space-12);
-    background: var(--surface-panel);
-    background-image: var(--gloss-faint);
-    border: var(--border-width) solid var(--line);
-    box-shadow: var(--shadow-panel);
+    gap: var(--space-8);
+    margin-bottom: var(--space-12);
   }
 
   .title {
     margin: 0;
     font-size: var(--text-display-xl);
-  }
-
-  .line {
-    margin: 0;
-    color: var(--ink-muted);
-    font-size: var(--text-body-lg);
+    text-shadow: var(--space-1) var(--space-1) 0 var(--surface-canvas);
   }
 </style>

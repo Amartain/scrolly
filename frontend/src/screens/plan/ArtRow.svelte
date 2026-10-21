@@ -14,7 +14,7 @@
 </script>
 
 <TypeMark type={kind} />
-<span class="title read">{art.title}</span>
+<span class="title read small">{art.title}</span>
 <span class="figure digits">{art.expected_text}</span>
 <GlyphButton label="Summon {art.title}" onclick={onsummon}>
   <GlyphIcon name="up" />
@@ -27,6 +27,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .small {
+    font-size: var(--text-read-sm);
   }
 
   .figure {

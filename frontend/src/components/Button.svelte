@@ -15,12 +15,15 @@
     tone = 'default',
     disabled = false,
     description,
+    size = 'normal',
   }: {
     label: string;
     onclick: () => void;
     tone?: Tone;
     disabled?: boolean;
     description?: string;
+    /** `large` is for the one button a screen is built around (the landing screen). */
+    size?: 'normal' | 'large';
   } = $props();
 </script>
 
@@ -28,6 +31,7 @@
   class="button display"
   type="button"
   data-tone={tone}
+  data-size={size}
   aria-label={description}
   title={description}
   {onclick}
@@ -45,6 +49,11 @@
     box-shadow: var(--shadow-button);
     font-size: var(--text-display-sm);
     white-space: nowrap;
+  }
+
+  .button[data-size='large'] {
+    padding: var(--space-5) var(--space-10);
+    font-size: var(--text-display-md);
   }
 
   .button[data-tone='primary'] {

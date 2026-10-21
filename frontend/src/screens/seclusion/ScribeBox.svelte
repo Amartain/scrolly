@@ -1,11 +1,11 @@
 <!-- A sudden trial, exactly as on the dashboard: it lands on top of Remaining. Enter inscribes. -->
 <script lang="ts">
   import Button from '../../components/Button.svelte';
-  import Panel from '../../components/Panel.svelte';
   import { today } from '../../lib/api';
   import { playTick } from '../../lib/chime';
   import { SECLUSION } from '../../lib/copy-seclusion';
   import { seclusion } from '../../lib/seclusion.svelte';
+  import Valve from './Valve.svelte';
 
   const TOAST_MS = 2500;
 
@@ -25,7 +25,7 @@
   }
 </script>
 
-<Panel title={SECLUSION.scribeTitle}>
+<Valve title={SECLUSION.scribeTitle}>
   <form class="scribe" onsubmit={inscribe}>
     <div class="row">
       <input
@@ -41,7 +41,7 @@
     <!-- One reserved line, so the confirmation never moves anything. -->
     <p class="toast" role="status">{saved ? SECLUSION.inscribed : ''}</p>
   </form>
-</Panel>
+</Valve>
 
 <style>
   .scribe {

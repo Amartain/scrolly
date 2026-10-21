@@ -27,7 +27,7 @@
     onsave={(title) => edit({ title })}
   />
 {:else}
-  <span class="title read">{item.title}</span>
+  <span class="title read small">{item.title}</span>
 {/if}
 <span class="figure digits">{item.expected_text}</span>
 {#if item.worked_text}<span class="figure digits">{workedNote(item.worked_text)}</span>{/if}
@@ -54,6 +54,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .small {
+    font-size: var(--text-read-sm);
   }
 
   .figure {

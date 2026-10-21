@@ -1,4 +1,4 @@
-"""What the user last chose for Cycles, Flow and sound, kept in the settings."""
+"""What the user last chose for Cycles, Flow, sound and the side column, kept in the settings."""
 
 from dataclasses import dataclass
 from datetime import datetime
@@ -10,6 +10,7 @@ from scrolly.ports import Store
 CYCLES_KEY = "cycles"
 FLOW_KEY = "flow"
 SOUND_KEY = "sound"
+SCRAPS_KEY = "scraps"
 DEFAULT_RATIO = (3, 1)  # the research favours 3:1; 5:1 is hustle culture
 
 
@@ -54,3 +55,13 @@ def load_sound(store: Store) -> SoundPrefs:
 def save_sound(store: Store, prefs: SoundPrefs, now: datetime) -> None:
     check_range(prefs.volume, 0, 100, "The volume")
     store.settings.set(SOUND_KEY, {"volume": prefs.volume, "muted": prefs.muted}, now)
+
+
+def load_scraps_hidden(store: Store) -> bool:
+    """Whether Bamboo Scraps is folded away in the focus room. Shown until the user hides it."""
+    saved = store.settings.get(SCRAPS_KEY) or {}
+    return bool(saved.get("hidden", False))
+
+
+def save_scraps_hidden(store: Store, hidden: bool, now: datetime) -> None:
+    store.settings.set(SCRAPS_KEY, {"hidden": hidden}, now)

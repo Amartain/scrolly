@@ -28,6 +28,8 @@
   --text-body-lg: 2rem;
   --text-body-xl: 2.5rem;
   --text-read-md: 1.25rem;
+  /* The Horizon and Arts side lists: long titles fit better (ui-craft 8, exception of 2026-10-21). */
+  --text-read-sm: 1rem;
   --text-read-lg: 1.75rem;
   --tracking-display: 0.0625em;
 
@@ -141,5 +143,6 @@
   --font-read: var(--font-opendyslexic);
   /* OpenDyslexic is wider and taller than Atkinson at the same size, so saved text is set smaller. */
   --text-read-md: 1rem;
+  --text-read-sm: 0.875rem;
   --text-read-lg: 1.4rem;
 }

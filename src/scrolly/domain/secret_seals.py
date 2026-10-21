@@ -30,11 +30,14 @@ _WORDS = {
     "arise": Seal(SealKind.DAY, ARISE_DAY),
 }
 _DAY = re.compile(r"(?:day\s+)?([0-9]{1,4})")
+# Marks around the words, never inside them: sentence marks, quotes, brackets.
+# "-" is left alone, so "-3" and "restart-today" stay as they are.
+_MARKS = " .,;:!?…\"'“”()[]"
 
 
 def parse_seal(text: str) -> Seal | None:
-    """The seal these words name, or None. Case and extra spaces do not matter."""
-    cleaned = " ".join(text.split()).casefold()
+    """The seal these words name, or None. Case, extra spaces and marks around them are ignored."""
+    cleaned = " ".join(text.split()).strip(_MARKS).casefold()
     if cleaned in _WORDS:
         return _WORDS[cleaned]
     match = _DAY.fullmatch(cleaned)

@@ -9,12 +9,14 @@ from scrolly.api.schemas.seclusion import (
     DisciplineIn,
     FinishIn,
     RatioIn,
+    ScrapsHiddenIn,
     SeclusionOut,
 )
 from scrolly.domain.cycles import make_plan
 from scrolly.ports import Clock, Store
 from scrolly.services.day import DayService
 from scrolly.services.seclusion import SeclusionService
+from scrolly.services.seclusion_prefs import save_scraps_hidden
 
 router = APIRouter(prefix="/api/seclusion")
 
@@ -114,6 +116,15 @@ def pause_parallel(seclusion: SeclusionDep) -> SeclusionOut:
 def finish_parallel(body: ParallelFinishIn, seclusion: SeclusionDep) -> SeclusionOut:
     """Conquer, abandon or postpone the parallel trial on its own; the main trial is untouched."""
     seclusion.parallel.finish(body.how)
+    return SeclusionOut.from_view(seclusion.view())
+
+
+@router.put("/scraps-hidden")
+def hide_scraps(
+    body: ScrapsHiddenIn, seclusion: SeclusionDep, store: StoreDep, clock: ClockDep
+) -> SeclusionOut:
+    """Fold Bamboo Scraps away in the focus room, or unfold it. The choice is kept."""
+    save_scraps_hidden(store, body.hidden, clock.now())
     return SeclusionOut.from_view(seclusion.view())
 
 

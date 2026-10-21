@@ -26,6 +26,8 @@ test('Stepping out saves what was typed at once, and the next visit starts a fre
   await enter(page);
   await pad(page).fill('typed and left at once');
   await page.getByRole('button', { name: 'Step out' }).click();
+  // Out of the room is the point at which the scrap is saved and closed.
+  await expect(page.getByRole('button', { name: /Enter Seclusion/ })).toBeVisible();
   const kept = await page.request.get('/api/scraps/current');
   expect(await kept.json()).toEqual({ text: '' }); // that visit's scrap is closed
   await page.getByRole('button', { name: /Enter Seclusion/ }).click();

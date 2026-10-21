@@ -93,6 +93,7 @@ def contrast_problems(name: str, values: dict[str, str]) -> list[str]:
     pairs = [(t, s, 4.5) for t in TEXT for s in SURFACES] + [(g, "--inset", 3.0) for g in GAUGE]
     pairs += [(t, s, 4.5) for t in CONQUERED_TEXT for s in CONQUERED_ROWS]
     pairs += [(ink, tab, 4.5) for ink, tab in TAB_INK]
+    pairs.append(("--head-ink", "--head-bg", 4.5))  # a panel's title on its header bar
     for token, surface, needed in pairs:
         if token not in values or surface not in values:
             found.append(f"{name}: {token} or {surface} is missing")

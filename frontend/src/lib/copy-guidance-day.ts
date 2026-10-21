@@ -24,11 +24,11 @@ export const DAY_GUIDES = {
     terms: [['Essence', 'the minutes a trial takes, as planned and as lived.']],
   },
   momentum: {
-    name: 'Cumulative Momentum',
+    name: 'Momentum',
     tip: 'Your progress, always rising.',
     dao: 'A line that only climbs shows the whole road, not one bad week. Every conquest raises it.',
     art: 'Switch between Trials, Essence and, with the Golden Core on, Qi. Days with nothing new are left out, so the line never falls.',
-    terms: [['Cumulative', 'added up over every day you have used Scrolly.']],
+    terms: [['Momentum', 'your progress added up over every day you have used Scrolly.']],
   },
   rhythm: {
     name: 'Rhythm',

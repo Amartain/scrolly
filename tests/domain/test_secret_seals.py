@@ -22,6 +22,12 @@ NOW = datetime.fromisoformat("2026-10-18T13:00:00+02:00")
         ("restart-today", Seal(SealKind.RESTART)),
         ("Restart-Today", Seal(SealKind.RESTART)),
         ("arise", Seal(SealKind.DAY, 100)),
+        ("Arise.", Seal(SealKind.DAY, 100)),
+        ("ARISE!", Seal(SealKind.DAY, 100)),
+        ("“Arise”…", Seal(SealKind.DAY, 100)),
+        ("  arise ,", Seal(SealKind.DAY, 100)),
+        ("Day 100.", Seal(SealKind.DAY, 100)),
+        ("Restart-Today!", Seal(SealKind.RESTART)),
         ("day 10", Seal(SealKind.DAY, 10)),
         ("Day   21", Seal(SealKind.DAY, 21)),
         ("7", Seal(SealKind.DAY, 7)),
@@ -34,7 +40,22 @@ def test_the_words_each_name_a_seal(text: str, expected: Seal) -> None:
 
 @pytest.mark.parametrize(
     "text",
-    ["", "hello", "day", "day x", "0", "day 0", "-3", "10000", "restart", "dusk now", "4 am"],
+    [
+        "",
+        "hello",
+        "day",
+        "day x",
+        "0",
+        "day 0",
+        "-3",
+        "10000",
+        "restart",
+        "dusk now",
+        "4 am",
+        "ari se",
+        "...",
+        "a.rise",
+    ],
 )
 def test_other_words_name_nothing(text: str) -> None:
     assert parse_seal(text) is None

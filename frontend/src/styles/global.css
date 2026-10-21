@@ -25,6 +25,12 @@ input {
   color: inherit;
 }
 
+/* A text box that scrolls looks like every other scrolling panel, not like the browser's own. */
+textarea {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
 :focus-visible {
   outline: var(--border-width) solid var(--gold);
   outline-offset: var(--space-1);

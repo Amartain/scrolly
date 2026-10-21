@@ -82,12 +82,15 @@ def edit_item(
     estimate: str | None = None,
     is_mandate: bool | None = None,
 ) -> list[HorizonItem]:
-    """Change the title, estimate and/or type of one item. A blank estimate clears it."""
+    """Change the title, estimate and/or type of one item. The estimate is set once: an item
+    that has one keeps it, as a trial does."""
     target = next((item for item in items if item.id == item_id), None)
     if target is None:
         raise HorizonError("That item is no longer on the Horizon")
     if is_mandate and target.art_kind is not None:
         raise HorizonError("Arts cannot be Heavenly Mandates")
+    if estimate is not None and target.essence_expected_min is not None:
+        raise HorizonError("The estimate is already set")
     return [
         replace(
             item,
