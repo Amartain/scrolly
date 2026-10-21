@@ -1,15 +1,15 @@
 <!-- The right of the room: three release valves, so nothing pulls the user out of the trial. -->
 <script lang="ts">
-  import Panel from '../../components/Panel.svelte';
-  import { SECLUSION } from '../../lib/copy-seclusion';
+  import ParallelPanel from './ParallelPanel.svelte';
+  import ScrapsPanel from './ScrapsPanel.svelte';
   import ScribeBox from './ScribeBox.svelte';
 </script>
 
 <div class="column">
-  <Panel title={SECLUSION.parallelTitle} empty={SECLUSION.parallelLine} />
+  <ParallelPanel />
   <ScribeBox />
   <div class="grow">
-    <Panel title={SECLUSION.scrapsTitle} empty={SECLUSION.scrapsLine} />
+    <ScrapsPanel />
   </div>
 </div>
 

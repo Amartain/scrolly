@@ -93,15 +93,6 @@ export const playGong = () =>
 /** A soft tick that says a sudden trial was written down. */
 export const playTick = () => play([{ at: 0, seconds: 0.25, tones: [[880, 0.05]] }]);
 
-/** Harmonious Cycles, focus begins: two short, dry knocks of a wooden fish. */
-export const playKnock = () => {
-  const knock = { seconds: 0.18, attack: 0.005, shape: 'triangle', drop: 1.5 } as const;
-  play([
-    { ...knock, at: 0, tones: [[660, 0.22]] },
-    { ...knock, at: 0.26, tones: [[660, 0.22]] },
-  ]);
-};
-
 /** Focus ends: a long singing bowl, warm and slowly fading. The two close low tones beat. */
 export const playBowl = () =>
   play([

@@ -148,6 +148,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/ghost/cut": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cut
+         * @description Count only until the user left.
+         */
+        post: operations["cut_api_ghost_cut_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/ghost/keep": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Keep
+         * @description The time away counts: every timer carries on as if it had never stopped.
+         */
+        post: operations["keep_api_ghost_keep_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/golden-core": {
         parameters: {
             query?: never;
@@ -618,6 +658,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/scraps": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Pages
+         * @description Every kept scrap, newest first.
+         */
+        get: operations["pages_api_scraps_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/scraps/current": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Current
+         * @description What is written on the scrap of this visit so far.
+         */
+        get: operations["current_api_scraps_current_get"];
+        /**
+         * Write
+         * @description Save what is written, as it is written. Only inside Seclusion.
+         */
+        put: operations["write_api_scraps_current_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/scraps/export.md": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Export Markdown
+         * @description All scraps as one Markdown file, ready for a notes app.
+         */
+        get: operations["export_markdown_api_scraps_export_md_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/seal-inscription": {
         parameters: {
             query?: never;
@@ -771,6 +875,97 @@ export interface paths {
         put?: never;
         /** Leave */
         post: operations["leave_api_seclusion_leave_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/seclusion/parallel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pick Parallel */
+        post: operations["pick_parallel_api_seclusion_parallel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/seclusion/parallel/finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Finish Parallel
+         * @description Conquer, abandon or postpone the parallel trial on its own; the main trial is untouched.
+         */
+        post: operations["finish_parallel_api_seclusion_parallel_finish_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/seclusion/parallel/pause": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pause Parallel */
+        post: operations["pause_parallel_api_seclusion_parallel_pause_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/seclusion/parallel/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Search Parallel
+         * @description What could run beside the trial at hand: waiting trials, Arts and the Horizon.
+         */
+        get: operations["search_parallel_api_seclusion_parallel_search_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/seclusion/parallel/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start Parallel */
+        post: operations["start_parallel_api_seclusion_parallel_start_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1041,6 +1236,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/trials/{trial_id}/qi": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set Qi
+         * @description The Qi a conquered trial took. Until it is told, the estimate stands.
+         */
+        put: operations["set_qi_api_trials__trial_id__qi_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/trials/{trial_id}/revive": {
         parameters: {
             query?: never;
@@ -1253,6 +1468,18 @@ export interface components {
             /** Unestimated Count */
             unestimated_count: number;
         };
+        /**
+         * CandidateOut
+         * @description Something the search bar offers to run beside the trial at hand.
+         */
+        CandidateOut: {
+            /** Id */
+            id: string;
+            source: components["schemas"]["Source"];
+            /** Title */
+            title: string;
+            type: components["schemas"]["TrialType"];
+        };
         /** ConqueredOut */
         ConqueredOut: {
             /** Actual Text */
@@ -1322,7 +1549,7 @@ export interface components {
          * Discipline
          * @enum {string}
          */
-        Discipline: "dashboard" | "incense" | "cycles" | "flow";
+        Discipline: "dashboard" | "incense" | "cycles" | "flow" | "parallel";
         /** DisciplineIn */
         DisciplineIn: {
             discipline: components["schemas"]["Discipline"];
@@ -1404,6 +1631,16 @@ export interface components {
          * @enum {string}
          */
         FlowPhase: "idle" | "focus" | "break";
+        /**
+         * GhostOut
+         * @description A timer was running while the app was away: when the user left and for how long.
+         */
+        GhostOut: {
+            /** Gap Text */
+            gap_text: string;
+            /** Left Text */
+            left_text: string;
+        };
         /** GoldenCoreIn */
         GoldenCoreIn: {
             /** Enabled */
@@ -1511,6 +1748,13 @@ export interface components {
          * @enum {string}
          */
         IncenseState: "remaining" | "overfilled";
+        /** LaneOut */
+        LaneOut: {
+            /** Spans */
+            spans: components["schemas"]["SpanOut"][];
+            /** Title */
+            title: string;
+        };
         /**
          * LegendOut
          * @description Keyed by trial state (`immediate`, `done`, ...) and by trial type (`mandate`, ...).
@@ -1581,6 +1825,24 @@ export interface components {
          * @enum {string}
          */
         OriginType: "brain_dump" | "horizon" | "foundational_art" | "restorative_art" | "quick_add";
+        /** ParallelFinishIn */
+        ParallelFinishIn: {
+            /**
+             * How
+             * @enum {string}
+             */
+            how: "conquered" | "abandoned" | "postponed";
+        };
+        /**
+         * ParallelPickIn
+         * @description A waiting trial, an Art or a Horizon item by id, or (`new`) a title to make on the spot.
+         */
+        ParallelPickIn: {
+            /** Ref */
+            ref: string;
+            /** Source */
+            source: components["schemas"]["Source"] | "new";
+        };
         /**
          * PlanStatus
          * @enum {string}
@@ -1671,6 +1933,11 @@ export interface components {
             /** Value Text */
             value_text: string;
         };
+        /** QiActualIn */
+        QiActualIn: {
+            /** Qi */
+            qi: number;
+        };
         /**
          * QiFillOut
          * @description How much of each gauge zone a Qi value fills, as shares of the redline.
@@ -1741,6 +2008,37 @@ export interface components {
         ReadingFontIn: {
             font: components["schemas"]["ReadingFont"];
         };
+        /** ScrapIn */
+        ScrapIn: {
+            /** Text */
+            text: string;
+        };
+        /**
+         * ScrapPageOut
+         * @description One finished visit: when it was, the trials worked in the order started, and the text.
+         */
+        ScrapPageOut: {
+            /** Day Text */
+            day_text: string;
+            /** Id */
+            id: string;
+            /** Lanes */
+            lanes: components["schemas"]["LaneOut"][];
+            /** Length Text */
+            length_text: string;
+            /** Text */
+            text: string;
+            /** Time Text */
+            time_text: string;
+        };
+        /**
+         * ScrapTextOut
+         * @description The text on the scrap of this visit to Seclusion.
+         */
+        ScrapTextOut: {
+            /** Text */
+            text: string;
+        };
         /** ScribeIn */
         ScribeIn: {
             /**
@@ -1783,6 +2081,7 @@ export interface components {
             limits: components["schemas"]["LimitsOut"];
             /** Note */
             note: string;
+            parallel?: components["schemas"]["ImmediateOut"] | null;
             plan: components["schemas"]["CyclesPlanIn"];
             /** Remaining */
             remaining: components["schemas"]["WaitingOut"][];
@@ -1822,6 +2121,21 @@ export interface components {
             muted: boolean;
             /** Volume */
             volume: number;
+        };
+        /**
+         * Source
+         * @enum {string}
+         */
+        Source: "remaining" | "art" | "horizon";
+        /**
+         * SpanOut
+         * @description A stretch of the visit as percentages of its length, so the screen only draws it.
+         */
+        SpanOut: {
+            /** Start Pct */
+            start_pct: number;
+            /** Width Pct */
+            width_pct: number;
         };
         /** SummonIn */
         SummonIn: {
@@ -1937,6 +2251,7 @@ export interface components {
             advisor: components["schemas"]["AdvisorOut"];
             appearance: components["schemas"]["AppearanceOut"];
             dashboard: components["schemas"]["DashboardOut"];
+            ghost?: components["schemas"]["GhostOut"] | null;
             legend: components["schemas"]["LegendOut"];
             /**
              * Logical Day
@@ -2297,6 +2612,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+        };
+    };
+    cut_api_ghost_cut_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+        };
+    };
+    keep_api_ghost_keep_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
                 };
             };
         };
@@ -3113,6 +3468,99 @@ export interface operations {
             };
         };
     };
+    pages_api_scraps_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScrapPageOut"][];
+                };
+            };
+        };
+    };
+    current_api_scraps_current_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScrapTextOut"];
+                };
+            };
+        };
+    };
+    write_api_scraps_current_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScrapIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScrapTextOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    export_markdown_api_scraps_export_md_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
     inscribe_api_seal_inscription_post: {
         parameters: {
             query?: never;
@@ -3326,6 +3774,143 @@ export interface operations {
         };
     };
     leave_api_seclusion_leave_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+        };
+    };
+    pick_parallel_api_seclusion_parallel_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ParallelPickIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    finish_parallel_api_seclusion_parallel_finish_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ParallelFinishIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    pause_parallel_api_seclusion_parallel_pause_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeclusionOut"];
+                };
+            };
+        };
+    };
+    search_parallel_api_seclusion_parallel_search_get: {
+        parameters: {
+            query: {
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CandidateOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    start_parallel_api_seclusion_parallel_start_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -3761,6 +4346,41 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    set_qi_api_trials__trial_id__qi_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trial_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QiActualIn"];
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {

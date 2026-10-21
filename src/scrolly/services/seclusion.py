@@ -13,6 +13,8 @@ from scrolly.domain.timer import elapsed_seconds
 from scrolly.ports import Clock, Store
 from scrolly.services.dashboard_view import TimerView
 from scrolly.services.day import run_rollover
+from scrolly.services.scraps import ScrapService
+from scrolly.services.seclusion_parallel import ParallelControl, ParallelView
 from scrolly.services.seclusion_prefs import load_plan
 from scrolly.services.seclusion_runs import RunControl
 from scrolly.services.seclusion_state import read_state, working_day, write_state
@@ -32,6 +34,7 @@ class SeclusionView:
     cycles: CyclesView | None  # only on the Cycles tab
     flow: FlowView | None  # only on the Flow tab
     remaining: list[Trial]
+    parallel: ParallelView | None = None  # the trial run beside this one
 
 
 class SeclusionService:
@@ -42,6 +45,8 @@ class SeclusionService:
         self._clock = clock
         self._today = TodayService(store, clock)
         self._runs = RunControl(store, clock, self._today)
+        self._scraps = ScrapService(store, clock)
+        self.parallel = ParallelControl(store, clock, self._today, self._scraps)
 
     @property
     def _now(self) -> datetime:
@@ -63,9 +68,11 @@ class SeclusionService:
         trial = self._immediate()
         day = logical_day(self._now)
         write_state(self._store, replace(state, active=True, day=day), self._now)
+        self._scraps.open()
         if trial.timer_started_at is not None:
             self._runs.switch(Discipline.INCENSE)  # started on the dashboard: it carries on here
             self._today.start_timer(trial.id, Discipline.INCENSE)
+            self._scraps.note_trial(trial.id)
 
     def leave(self) -> None:
         """Stepping out pauses the trial and the run. A scroll held past 04:00 now rolls over."""
@@ -73,7 +80,9 @@ class SeclusionService:
         if not state.active:
             return
         self._runs.pause()
+        self.parallel.pause()
         write_state(self._store, replace(read_state(self._store), active=False), self._now)
+        self._scraps.close()
         run_rollover(self._store, logical_day(self._now), self._now)
 
     def switch(self, discipline: Discipline) -> None:
@@ -84,6 +93,9 @@ class SeclusionService:
             self._today.start_timer(self._immediate().id, Discipline.INCENSE)
         else:
             self._runs.start(plan)
+        trial = immediate_of(self._trials())
+        if trial is not None and trial.timer_started_at is not None:  # a break starts no trial
+            self._scraps.note_trial(trial.id)
 
     def pause(self) -> None:
         self._runs.pause()
@@ -132,6 +144,9 @@ class SeclusionService:
         write_state(self._store, replace(state, baselines=baselines), self._now)
 
     def view(self) -> SeclusionView:
+        return replace(self._room_view(), parallel=self.parallel.view())
+
+    def _room_view(self) -> SeclusionView:
         state = self._runs.settle()
         now = self._now
         trials = self._trials()

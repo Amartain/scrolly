@@ -29,8 +29,24 @@ async function waitUntilHealthy(url: string, timeoutMs = 30_000): Promise<void> 
   throw new Error(`The server did not start: ${url}`);
 }
 
-/** Every test gets its own server, database and clock-day, so no test depends on another. */
-export const test = base.extend<{ server: string }>({
+/**
+ * Every test gets its own server, database and clock-day, so no test depends on another.
+ * After a conquest the qi card asks how much qi it took: unless a test is about that card
+ * (`test.use({ autoQi: false })`), it is answered with Done, which keeps the estimate.
+ */
+export const test = base.extend<{ server: string; autoQi: boolean }>({
+  autoQi: [true, { option: true }],
+  page: async ({ page, autoQi }, use) => {
+    if (autoQi) {
+      await page.addLocatorHandler(
+        page.getByRole('dialog', { name: 'How much qi did this take?' }),
+        async (card) => {
+          await card.getByRole('button', { name: 'Done' }).click();
+        },
+      );
+    }
+    await use(page);
+  },
   // eslint-disable-next-line no-empty-pattern
   server: async ({}, use) => {
     const home = mkdtempSync(join(tmpdir(), 'scrolly-e2e-'));

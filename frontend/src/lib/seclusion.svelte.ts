@@ -1,7 +1,9 @@
-import { today, type View } from './api';
+import { today, type Immediate, type View } from './api';
 import { playGong } from './chime';
 import { SECLUSION } from './copy-seclusion';
 import { askNotifyPermission, notify } from './notify';
+import { qiAsk } from './qi-ask.svelte';
+import { scrapPad } from './scrap-pad.svelte';
 import { playSound, soundFor } from './seclusion-sounds';
 import {
   seclusion as api,
@@ -59,7 +61,8 @@ class SeclusionStore {
 
   /**
    * A countdown has reached zero here: read the room again and ring what the new phase calls for.
-   * The end of the last cycle also sends the desktop notice. Reading the room on its own never rings.
+   * The end of the last cycle sends the desktop notice; so does the end of a break, but only when the
+   * user is on another tab. Reading the room on its own never rings.
    */
   async settle() {
     const before = this.state;
@@ -69,6 +72,10 @@ class SeclusionStore {
     playSound(sound);
     if (sound === 'final')
       notify(SECLUSION.tabs.cycles, `${SECLUSION.cycles.done} ${SECLUSION.cycles.doneHint}`);
+    if (sound === 'bell' && document.hidden) {
+      const tab = this.state?.discipline === 'flow' ? SECLUSION.tabs.flow : SECLUSION.tabs.cycles;
+      notify(tab, `${SECLUSION.breakOver} ${SECLUSION.breakOverHint}`);
+    }
   }
 
   /** Run a command of the focus room. A refusal becomes the notice. */
@@ -79,7 +86,7 @@ class SeclusionStore {
       this.apply(next);
       view.notice = '';
       // Only a focus the user began rings from here; the ends of a phase ring from `settle`.
-      if (soundFor(before, next) === 'knock') playSound('knock');
+      if (soundFor(before, next) === 'start') playSound('start');
       return true;
     } catch (error) {
       view.notice = error instanceof Error ? error.message : 'Something went wrong.';
@@ -95,11 +102,18 @@ class SeclusionStore {
   }
 
   /** Conquer, abandon or postpone the trial at hand. The next one waits, idle. Nothing left: a gong. */
-  async finish(how: EndedHow, trial: { id: string; title: string }): Promise<void> {
+  async finish(how: EndedHow, trial: Immediate): Promise<void> {
     if (!(await this.act(() => api.finish(how, trial.id)))) return;
     await view.refresh();
     this.finished = { how, id: trial.id, title: trial.title };
     if (this.state?.trial == null) playGong();
+    if (how === 'conquered')
+      qiAsk.ask({
+        id: trial.id,
+        title: trial.title,
+        estimate: Number(trial.qi_text) || 0,
+        undo: () => this.undo(),
+      });
   }
 
   /** Take back a conquest. The trial returns as the one at hand. */
@@ -125,12 +139,14 @@ class SeclusionStore {
   };
 
   enter = () => this.act(api.enter);
-  leave = () => {
+  leave = async () => {
     this.finished = null;
+    await scrapPad.flush(); // what is written on the scrap is saved before the visit ends
     return this.act(api.leave);
   };
   start = async () => {
     this.finished = null;
+    askNotifyPermission(); // Flow's break notice needs it too; a click is what lets the browser ask
     await this.ratios; // a ratio still on its way must land before the bank opens
     return this.act(api.start);
   };

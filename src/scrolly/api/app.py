@@ -1,8 +1,8 @@
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from dataclasses import asdict
 from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -11,12 +11,14 @@ from scrolly.api.routes import (
     arts,
     dispatch,
     export,
+    ghost,
     golden_core,
     header,
     horizon,
     imports,
     planning,
     planning_timer,
+    scraps,
     seals,
     seclusion,
     sunset,
@@ -37,6 +39,7 @@ from scrolly.domain.qi import QiError
 from scrolly.domain.run_clock import RunError
 from scrolly.domain.uniqueness import DuplicateTitleError
 from scrolly.ports import Clock, StoreFactory
+from scrolly.services.ghost import GhostService
 
 
 def _refuse(status: int) -> Callable[[Request, Exception], JSONResponse]:
@@ -79,6 +82,19 @@ def create_app(
     app.add_exception_handler(HeaderImageError, _refuse(422))
     app.add_exception_handler(QiError, _refuse(422))
     app.add_exception_handler(RunError, _refuse(422))
+
+    @app.middleware("http")
+    async def watch_for_ghosts(
+        request: Request, call_next: Callable[[Request], Awaitable[Response]]
+    ) -> Response:
+        """Every request notes that the user is here; one after a long silence pauses the timers."""
+        path = request.url.path
+        if path.startswith("/api/") and path != "/api/health":
+            with store_factory() as store:
+                GhostService(store, clock).watch()
+        return await call_next(request)
+
+    app.include_router(ghost.router)
     app.include_router(view.router)
     app.include_router(golden_core.router)
     app.include_router(sunset.router)
@@ -92,6 +108,7 @@ def create_app(
     app.include_router(seals.router)
     app.include_router(trials.router)
     app.include_router(seclusion.router)
+    app.include_router(scraps.router)
     app.include_router(horizon.router)
     app.include_router(arts.router)
     if static_dir is not None and static_dir.is_dir():

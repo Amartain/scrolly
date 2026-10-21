@@ -8,6 +8,7 @@ from scrolly.domain.day_flow import (
     TrialError,
     conquer,
     revive,
+    set_actual_qi,
     set_estimated_qi,
 )
 from scrolly.domain.models import ArtKind, Trial, TrialState
@@ -64,6 +65,22 @@ def test_the_qi_estimate_is_set_once_and_only_while_the_trial_is_open() -> None:
         set_estimated_qi(conquer(_immediate(), NOW), "25")
     with pytest.raises(QiError):
         set_estimated_qi(_immediate(), "lots")
+
+
+def test_the_user_sets_the_qi_a_conquered_trial_took() -> None:
+    done = conquer(_immediate(qi_expected=40), NOW)
+    assert set_actual_qi(done, 65).qi_actual == 65
+    unestimated = conquer(_immediate(), NOW)
+    assert set_actual_qi(unestimated, 0).qi_actual == 0  # no estimate: now it is told
+
+
+def test_the_qi_a_trial_took_is_checked_and_only_set_once_conquered() -> None:
+    done = conquer(_immediate(qi_expected=40), NOW)
+    for refused in (-1, 101):
+        with pytest.raises(QiError):
+            set_actual_qi(done, refused)
+    with pytest.raises(TrialError):
+        set_actual_qi(_immediate(qi_expected=40), 10)
 
 
 def test_reviving_clears_the_recorded_qi() -> None:

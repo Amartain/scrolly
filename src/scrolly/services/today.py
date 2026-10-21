@@ -15,7 +15,7 @@ from scrolly.domain.planning import (
 from scrolly.domain.segments import Discipline
 from scrolly.domain.uniqueness import require_free_trial_title
 from scrolly.ports import Clock, Store
-from scrolly.services.seclusion_state import working_day
+from scrolly.services.seclusion_state import read_state, working_day
 from scrolly.services.segments import sync_segments
 from scrolly.services.sunset import settle_day
 
@@ -68,7 +68,9 @@ class TodayService:
         return trial
 
     def _promote(self) -> None:
-        promoted = day_flow.promote_next(self._store.trials.list_for_day(self._today))
+        """The next trial: the one run beside the main one if it is unfinished, else the top."""
+        parallel_id = read_state(self._store).parallel_id
+        promoted = day_flow.promote_next(self._store.trials.list_for_day(self._today), parallel_id)
         self._store.trials.save(promoted, self._now)
 
     def start_timer(self, trial_id: str, discipline: Discipline = Discipline.DASHBOARD) -> None:
@@ -82,8 +84,9 @@ class TodayService:
         self._save([timer.reset(self._timed(trial_id))])
         self._store.segments.delete_for_trials([trial_id])
 
-    def conquer(self, trial_id: str) -> None:
-        self._save([day_flow.conquer(self._trial(trial_id), self._now)])
+    def conquer(self, trial_id: str, beside: bool = False) -> None:
+        """Conquer the Immediate Trial, or (`beside`) the one run beside it."""
+        self._save([day_flow.conquer(self._trial(trial_id), self._now, beside)])
         self._promote()
         settle_day(self._store, self._now)
 
@@ -100,6 +103,11 @@ class TodayService:
         self._save([day_flow.abandon(self._trial(trial_id), self._now)])
         self._promote()
         settle_day(self._store, self._now)
+
+    def set_actual_qi(self, trial_id: str, qi: int) -> None:
+        """What the user says a conquered trial took; conquering had recorded the estimate."""
+        trial = day_flow.set_actual_qi(self._trial(trial_id), qi)
+        self._store.trials.save([trial], self._now)
 
     def revive(self, trial_id: str) -> None:
         trial = self._trial(trial_id)
@@ -132,13 +140,15 @@ class TodayService:
         arts = self._store.arts.list_all()
         require_free_trial_title(title, horizon, self._trials(), arts, except_id=except_id)
 
-    def scribe(self, title: str, estimate: str = "", qi: str = "") -> None:
+    def scribe(self, title: str, estimate: str = "", qi: str = "") -> str:
+        """Add a sudden trial on top of Remaining. Returns its id."""
         self._require_free(title)
         arts = self._store.arts.list_all()
         trial = queue.scribe(
             str(uuid.uuid4()), title, estimate, qi, self._today, self._trials(), arts
         )
         self._store.trials.save([trial], self._now)
+        return trial.id
 
     def promote(self, trial_id: str) -> None:
         trial, trials = self._trial(trial_id), self._trials()
@@ -148,8 +158,11 @@ class TodayService:
         ordered = queue.reorder_remaining(self._trials(), ids)
         self._store.trials.save(ordered, self._now)
 
-    def summon(self, source: Literal["horizon", "art"], item_id: str) -> None:
-        """Bring a Horizon item (it leaves the Horizon) or a copy of an Art onto the day's queue."""
+    def summon(self, source: Literal["horizon", "art"], item_id: str) -> str:
+        """Bring a Horizon item (it leaves the Horizon) or a copy of an Art onto the day's queue.
+
+        Returns the id of the trial made.
+        """
         trials = self._trials()
         new_id, position = str(uuid.uuid4()), next_position(trials)
         if source == "horizon":
@@ -166,3 +179,4 @@ class TodayService:
             trial = trial_from_art(new_id, art, self._today, position)
         self._store.trials.save([trial], self._now)
         self._promote()
+        return new_id

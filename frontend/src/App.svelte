@@ -4,6 +4,7 @@
   import { seclusion } from './lib/seclusion.svelte';
   import { view } from './lib/view.svelte';
   import Header from './screens/Header.svelte';
+  import ScrapsPage from './screens/scraps/ScrapsPage.svelte';
   import Seclusion from './screens/seclusion/Seclusion.svelte';
   import Phase1 from './screens/Phase1.svelte';
   import Phase2 from './screens/Phase2.svelte';
@@ -11,6 +12,8 @@
   import Screen1 from './screens/Screen1.svelte';
   import Screen2 from './screens/Screen2.svelte';
   import MilestoneOverlay from './components/MilestoneOverlay.svelte';
+  import GhostCard from './components/GhostCard.svelte';
+  import QiCard from './components/QiCard.svelte';
   import PlanningTimer from './components/PlanningTimer.svelte';
   import SunsetAdvisor from './components/SunsetAdvisor.svelte';
   import SunsetPoem from './components/SunsetPoem.svelte';
@@ -19,7 +22,7 @@
   import Settings from './screens/Settings.svelte';
   import ZeroState from './screens/ZeroState.svelte';
 
-  let mode = $state<'dashboard' | 'settings' | 'dispatch' | 'seclusion'>('dashboard');
+  let mode = $state<'dashboard' | 'settings' | 'dispatch' | 'scraps' | 'seclusion'>('dashboard');
 
   $effect(() => view.start());
 
@@ -90,6 +93,9 @@
   {:else if mode === 'dispatch'}
     <Header settingsOpen={false} onsettings={toggleSettings} />
     <Dispatch onback={() => (mode = 'dashboard')} />
+  {:else if mode === 'scraps'}
+    <Header settingsOpen={false} onsettings={toggleSettings} />
+    <ScrapsPage onback={() => (mode = 'dashboard')} />
   {:else if status === 'zero'}
     <ZeroState />
   {:else if status === 'inscribe'}
@@ -103,8 +109,10 @@
     <Screen1 onseclusion={enterSeclusion} />
   {/if}
 </div>
+<QiCard />
+<GhostCard />
 {#if onDashboard}
-  <Screen2 ondispatch={() => (mode = 'dispatch')} />
+  <Screen2 ondispatch={() => (mode = 'dispatch')} onscraps={() => (mode = 'scraps')} />
   <MilestoneOverlay />
   <SunsetAdvisor />
   <SunsetPoem />

@@ -122,7 +122,7 @@ class RunControl:
 
     def switch(self, discipline: Discipline) -> None:
         """Another tab. The segment closes (its time stays on the trial); a fresh run waits."""
-        if discipline is Discipline.DASHBOARD:
+        if discipline in (Discipline.DASHBOARD, Discipline.PARALLEL):
             raise RunError("That is not a tab of the room")
         state = self.settle()
         self._pause_trial()

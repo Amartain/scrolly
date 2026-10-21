@@ -8,7 +8,7 @@ from scrolly.domain.art_match import with_title
 from scrolly.domain.duration import parse_duration
 from scrolly.domain.horizon import return_to_horizon
 from scrolly.domain.models import OPEN_STATES, Art, Day, HorizonItem, Trial, TrialState
-from scrolly.domain.qi import parse_qi
+from scrolly.domain.qi import check_qi, parse_qi
 from scrolly.domain.timer import actual_minutes, pause, timer_ran
 
 
@@ -36,19 +36,24 @@ def require_editable(trial: Trial) -> None:
         raise TrialError("A conquered trial is read-only. Revive it to change it.")
 
 
-def promote_next(trials: Sequence[Trial]) -> list[Trial]:
-    """With no Immediate Trial, the first Remaining one becomes it. Returns what changed."""
+def promote_next(trials: Sequence[Trial], parallel_id: str | None = None) -> list[Trial]:
+    """With no Immediate Trial, the unfinished parallel one (else the top Remaining) becomes it."""
     if immediate_of(trials) is not None:
         return []
     waiting = sorted(
         (t for t in trials if t.state is TrialState.REMAINING), key=lambda t: t.position
     )
-    return [replace(waiting[0], state=TrialState.IMMEDIATE)] if waiting else []
+    beside = [t for t in waiting if t.id == parallel_id]
+    chosen = (beside or waiting)[:1]
+    return [replace(t, state=TrialState.IMMEDIATE) for t in chosen]
 
 
-def conquer(trial: Trial, now: datetime) -> Trial:
-    """Finish the Immediate Trial: stop the timer, record the timed minutes (else the estimate)."""
-    _require(trial, TrialState.IMMEDIATE, "Only the Immediate Trial can be conquered")
+def conquer(trial: Trial, now: datetime, beside: bool = False) -> Trial:
+    """Finish the Immediate Trial (`beside`: the parallel one): stop its timer, record minutes."""
+    if beside:
+        _require(trial, TrialState.REMAINING, "Only the parallel trial can be conquered here")
+    else:
+        _require(trial, TrialState.IMMEDIATE, "Only the Immediate Trial can be conquered")
     return replace(
         pause(trial, now),
         state=TrialState.DONE,
@@ -56,6 +61,12 @@ def conquer(trial: Trial, now: datetime) -> Trial:
         qi_actual=trial.qi_expected,
         completed_at=now,
     )
+
+
+def set_actual_qi(trial: Trial, qi: int) -> Trial:
+    """The Qi a conquered trial really took. Conquering records the estimate; this corrects it."""
+    _require(trial, TrialState.DONE, "Only a conquered trial's Qi can be set")
+    return replace(trial, qi_actual=check_qi(qi))
 
 
 def postpone(

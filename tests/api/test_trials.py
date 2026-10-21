@@ -129,6 +129,22 @@ def test_conquered_qi_moves_the_dashboard_gauge(client: TestClient) -> None:
     assert qi["spent_fill"]["calm_pct"] > 0
 
 
+def test_the_qi_a_conquest_took_can_be_told_afterwards(client: TestClient) -> None:
+    client.put("/api/golden-core", json={"enabled": True})
+    client.post("/api/planning/start")
+    client.put("/api/planning/text", json={"text": "Write report\nTidy desk"})
+    client.post("/api/planning/proceed")
+    client.post("/api/planning/proceed")
+    trial = _id(client, "Write report")
+    client.post("/api/planning/seal")
+    client.post(f"/api/trials/{trial}/conquer")
+    spent = client.put(f"/api/trials/{trial}/qi", json={"qi": 55}).json()["planning"]["qi"]["spent"]
+    assert spent == 55
+    assert client.put(f"/api/trials/{trial}/qi", json={"qi": 101}).status_code == 422
+    open_trial = _id(client, "Tidy desk")
+    assert client.put(f"/api/trials/{open_trial}/qi", json={"qi": 5}).status_code == 409
+
+
 def test_the_counters_start_at_zero_and_grow_with_the_day(client: TestClient) -> None:
     assert _dashboard(client)["lifetime_conquered"] == 0
     assert _dashboard(client)["heavenly_cycles"] == 0

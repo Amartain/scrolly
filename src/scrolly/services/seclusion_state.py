@@ -7,7 +7,7 @@ from scrolly.domain.cycles import CyclesRun
 from scrolly.domain.day_flow import immediate_of
 from scrolly.domain.flow import FlowBank
 from scrolly.domain.logical_day import logical_day
-from scrolly.domain.models import Trial
+from scrolly.domain.models import Trial, TrialState
 from scrolly.domain.segments import Discipline
 from scrolly.ports import Store
 from scrolly.services.run_codec import cycles_in, cycles_out, flow_in, flow_out
@@ -25,6 +25,8 @@ class SeclusionState:
     discipline: Discipline = Discipline.INCENSE
     cycles: CyclesRun = field(default_factory=CyclesRun)
     flow: FlowBank = field(default_factory=FlowBank)
+    # The waiting trial run beside the one at hand. Stale once that trial is no longer waiting.
+    parallel_id: str | None = None
 
 
 def read_state(store: Store) -> SeclusionState:
@@ -37,6 +39,7 @@ def read_state(store: Store) -> SeclusionState:
         discipline=Discipline(saved.get("discipline", Discipline.INCENSE.value)),
         cycles=cycles_in(saved.get("cycles")),
         flow=flow_in(saved.get("flow"), load_ratio(store)),
+        parallel_id=saved.get("parallel_id"),
     )
 
 
@@ -48,6 +51,7 @@ def write_state(store: Store, state: SeclusionState, now: datetime) -> None:
         "discipline": state.discipline.value,
         "cycles": cycles_out(state.cycles),
         "flow": flow_out(state.flow),
+        "parallel_id": state.parallel_id,
     }
     store.settings.set(KEY, saved, now)
 
@@ -72,3 +76,12 @@ def working_day(store: Store, now: datetime) -> date:
 def immediate_trial(store: Store, now: datetime) -> Trial | None:
     """The Immediate Trial of the scroll being worked."""
     return immediate_of(store.trials.list_for_day(working_day(store, now)))
+
+
+def parallel_trial(store: Store, now: datetime) -> Trial | None:
+    """The trial run beside the one at hand, if it is still waiting on the scroll being worked."""
+    parallel_id = read_state(store).parallel_id
+    trials = store.trials.list_for_day(working_day(store, now))
+    return next(
+        (t for t in trials if t.id == parallel_id and t.state is TrialState.REMAINING), None
+    )

@@ -4,6 +4,7 @@ from typing import Any
 from fastapi.testclient import TestClient
 
 from scrolly.clock import FixedClock
+from tests.api.seclusion_helpers import stay_present
 
 
 def _seal(client: TestClient, *titles: str) -> None:
@@ -123,7 +124,7 @@ def test_a_running_trial_carries_on_past_four_and_stepping_out_lets_the_scroll_g
     _seal(client, "Write report", "Tidy desk")
     client.post("/api/seclusion/enter")
     client.post("/api/seclusion/timer/start")
-    clock.set(clock.now().replace(day=19, hour=4, minute=30))
+    stay_present(client, clock, clock.now().replace(day=19, hour=4, minute=30))
     state = _state(client)
     assert state["active"] is True
     assert state["trial"]["title"] == "Write report"

@@ -16,6 +16,7 @@ class Discipline(StrEnum):
     INCENSE = "incense"
     CYCLES = "cycles"
     FLOW = "flow"
+    PARALLEL = "parallel"  # a trial of its own, run beside the one at hand
 
 
 @dataclass(frozen=True)

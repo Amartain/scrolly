@@ -109,3 +109,14 @@ class PlanningDraftRow(_Audited, Base):
     phase: Mapped[str] = mapped_column(String(20))
     text: Mapped[str] = mapped_column(Text, default="")
     qi_start: Mapped[int | None] = mapped_column(Integer, default=None)
+
+
+class BambooScrapRow(_Audited, Base):
+    __tablename__ = "bamboo_scrap"
+
+    opened_at: Mapped[str] = mapped_column(String(40), index=True)
+    saved_at: Mapped[str] = mapped_column(String(40))
+    closed_at: Mapped[str | None] = mapped_column(String(40), default=None)
+    text: Mapped[str] = mapped_column(Text, default="")
+    # The trials worked during the visit, in order, as ids joined by commas.
+    trial_ids: Mapped[str] = mapped_column(Text, default="")

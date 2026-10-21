@@ -8,7 +8,7 @@ const sounds = (page: Page) => page.evaluate(() => (window as any).__sounds as n
 const notices = (page: Page) => page.evaluate(() => (window as any).__notified as string[][]);
 
 // The pitch each sound starts on, so a test can tell which one rang.
-const KNOCK = 990;
+const START = 1319; // the bell
 const BOWL = 196;
 const BELL = 1319;
 const FINAL = 73;
@@ -154,7 +154,7 @@ test('the Scribe tick follows the mute', async ({ page }) => {
   expect(await sounds(page)).toEqual([TICK]);
 });
 
-test('Start on the Cycles dial knocks, and a reload rings nothing', async ({ page }) => {
+test('Start on the Cycles dial rings the bell, and a reload rings nothing', async ({ page }) => {
   await listen(page);
   await enter(page);
   await room(page).getByRole('tab', { name: 'Harmonious Cycles' }).click();
@@ -163,7 +163,7 @@ test('Start on the Cycles dial knocks, and a reload rings nothing', async ({ pag
   await page.keyboard.press('Enter');
   await page.keyboard.press('Enter');
   await expect(room(page)).toContainText('cycle 1 of 3');
-  expect(await sounds(page)).toEqual([KNOCK]);
+  expect(await sounds(page)).toEqual([START]);
   await page.reload();
   await expect(room(page)).toContainText('cycle 1 of 3');
   expect(await sounds(page)).toEqual([]);

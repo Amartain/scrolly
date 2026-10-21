@@ -137,6 +137,10 @@ class ScribeIn(BaseModel):
     qi: str = ""
 
 
+class QiActualIn(BaseModel):
+    qi: int
+
+
 class TrialPatchIn(BaseModel):
     """Only the fields that are sent change. A conquered trial is read-only."""
 

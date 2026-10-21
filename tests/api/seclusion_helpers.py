@@ -1,6 +1,6 @@
 """Small helpers for tests that drive the focus room through the API."""
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import Any
 
 from fastapi.testclient import TestClient
@@ -33,3 +33,10 @@ def later(clock: FixedClock, minutes: float) -> None:
 def logged(client: TestClient) -> int:
     """Seconds logged on the trial at hand."""
     return int(room(client)["trial"]["timer"]["elapsed_s"])
+
+
+def stay_present(client: TestClient, clock: FixedClock, until: datetime) -> None:
+    """Move the clock on to `until` with the page open: it asks the server every half hour."""
+    while clock.now() < until:
+        clock.set(min(clock.now() + timedelta(minutes=30), until))
+        client.get("/api/view")

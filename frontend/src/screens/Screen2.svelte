@@ -1,6 +1,7 @@
 <script lang="ts">
   import Button from '../components/Button.svelte';
   import { DISPATCH } from '../lib/copy';
+  import { SECLUSION } from '../lib/copy-seclusion';
   import { SCREEN_TWO_ID } from '../lib/screens';
   import ArtsPanels from './screen2/ArtsPanels.svelte';
   import HorizonPanel from './screen2/HorizonPanel.svelte';
@@ -8,7 +9,7 @@
   import RemainingPanel from './screen2/RemainingPanel.svelte';
   import ScribePanel from './screen2/ScribePanel.svelte';
 
-  let { ondispatch }: { ondispatch: () => void } = $props();
+  let { ondispatch, onscraps }: { ondispatch: () => void; onscraps: () => void } = $props();
 </script>
 
 <div class="screen" id={SCREEN_TWO_ID}>
@@ -20,7 +21,10 @@
   </div>
   <div class="column right">
     <HorizonPanel />
-    <div class="tools"><Button label={DISPATCH.open} onclick={ondispatch} /></div>
+    <div class="tools">
+      <Button label={SECLUSION.scrapsTitle} onclick={onscraps} />
+      <Button label={DISPATCH.open} onclick={ondispatch} />
+    </div>
   </div>
 </div>
 

@@ -32,6 +32,9 @@ def test_focus_ends_at_the_set_time_even_when_nobody_looked(
     enter_on(client, "cycles", "Write report")
     client.post("/api/seclusion/timer/start", json=DIAL)
     later(clock, 3 * 60)
+    client.post(
+        "/api/ghost/keep"
+    )  # three hours away with a timer running: the user says they count
     state = room(client)
     assert logged(client) == 120  # the trial stopped at the end of focus, not three hours later
     assert state["trial"]["timer"]["running"] is False

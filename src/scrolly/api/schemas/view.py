@@ -45,6 +45,13 @@ class SoundOut(BaseModel):
     muted: bool
 
 
+class GhostOut(BaseModel):
+    """A timer was running while the app was away: when the user left and for how long."""
+
+    left_text: str
+    gap_text: str
+
+
 class ViewOut(BaseModel):
     now: datetime
     logical_day: date
@@ -57,6 +64,8 @@ class ViewOut(BaseModel):
     planning: PlanningOut
     dashboard: DashboardOut
     sound: SoundOut
+    # Present until the user says whether the time away counts.
+    ghost: GhostOut | None = None
     # Only the response to the day's first seal carries one.
     milestone: MilestoneOut | None = None
 
@@ -92,6 +101,9 @@ class ViewOut(BaseModel):
             ),
             dashboard=DashboardOut.from_data(data.dashboard),
             sound=SoundOut(volume=data.sound.volume, muted=data.sound.muted),
+            ghost=None
+            if data.ghost is None
+            else GhostOut(left_text=data.ghost.left_text, gap_text=data.ghost.gap_text),
         )
 
 

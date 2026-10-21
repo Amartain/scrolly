@@ -50,14 +50,21 @@ class QiOutlook:
     high: int
 
 
+def check_qi(value: int) -> int:
+    """A Qi one trial may cost: a whole number from 0 to 100."""
+    if not 0 <= value <= QI_PER_TRIAL_MAX:
+        raise QiError(f"Qi is a whole number from 0 to {QI_PER_TRIAL_MAX}")
+    return value
+
+
 def parse_qi(text: str) -> int | None:
     """Qi from a whole number 0-100, or blank (None)."""
     cleaned = text.strip()
     if not cleaned:
         return None
-    if not re.fullmatch(r"[0-9]+", cleaned) or int(cleaned) > QI_PER_TRIAL_MAX:
+    if not re.fullmatch(r"[0-9]+", cleaned):
         raise QiError(f"Qi is a whole number from 0 to {QI_PER_TRIAL_MAX}")
-    return int(cleaned)
+    return check_qi(int(cleaned))
 
 
 @dataclass(frozen=True)

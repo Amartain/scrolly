@@ -108,6 +108,8 @@ class SeclusionOut(BaseModel):
     cycles: CyclesOut | None
     flow: FlowOut | None
     remaining: list[WaitingOut]
+    # The trial run beside this one: a trial of its own, with its own timer.
+    parallel: ImmediateOut | None = None
 
     @classmethod
     def from_view(cls, view: SeclusionView) -> "SeclusionOut":
@@ -127,6 +129,9 @@ class SeclusionOut(BaseModel):
             cycles=None if view.cycles is None else CyclesOut.from_view(view.cycles),
             flow=None if view.flow is None else FlowOut.from_view(view.flow),
             remaining=[WaitingOut.from_trial(t) for t in view.remaining],
+            parallel=None
+            if view.parallel is None
+            else ImmediateOut.from_trial(view.parallel.trial, view.parallel.timer),
         )
 
 

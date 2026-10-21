@@ -13,6 +13,7 @@ from scrolly.services.appearance import AppearanceService
 from scrolly.services.dashboard_view import DashboardView, build_dashboard_view
 from scrolly.services.day import DayService
 from scrolly.services.day_budget import build_budget
+from scrolly.services.ghost import GhostView, build_ghost_view
 from scrolly.services.golden_core import QiView, build_qi_view
 from scrolly.services.legend import load_legend
 from scrolly.services.planning_timer import PlanningTimerView, build_planning_timer
@@ -37,6 +38,7 @@ class ViewData:
     legend: Legend
     planning_timer: PlanningTimerView
     sound: SoundPrefs
+    ghost: GhostView | None
 
 
 def build_view(store: Store, clock: Clock) -> ViewData:
@@ -61,4 +63,5 @@ def build_view(store: Store, clock: Clock) -> ViewData:
         qi=build_qi_view(store, now),
         dashboard=build_dashboard_view(store, now),
         sound=load_sound(store),
+        ghost=build_ghost_view(store),
     )

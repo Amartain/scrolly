@@ -49,12 +49,12 @@ test('conquering shows What next with the next trial idle; Undo takes it back', 
   await expect(room(page)).not.toContainText('Tidy desk');
 });
 
-test('Start new timer runs the next trial', async ({ page }) => {
+test('Light new incense runs the next trial', async ({ page }) => {
   await enter(page, 'Write report', 'Tidy desk');
   await room(page).getByRole('button', { name: 'Start', exact: true }).click();
   await room(page).getByRole('button', { name: 'Conquer Write report' }).click();
   await card(page)
-    .getByRole('button', { name: /Start new timer/ })
+    .getByRole('button', { name: /Light new incense/ })
     .click();
   await expect(card(page)).toHaveCount(0);
   await expect(room(page).getByRole('button', { name: 'Pause timer' })).toBeVisible();

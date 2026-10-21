@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from scrolly.api.deps import get_clock, get_store
+from scrolly.api.schemas.parallel import CandidateOut, ParallelFinishIn, ParallelPickIn
 from scrolly.api.schemas.seclusion import (
     CyclesPlanIn,
     DisciplineIn,
@@ -82,6 +83,37 @@ def set_ratio(body: RatioIn, seclusion: SeclusionDep) -> SeclusionOut:
 def finish(body: FinishIn, seclusion: SeclusionDep) -> SeclusionOut:
     """Conquer, abandon or postpone the trial at hand, with the room's run kept right."""
     seclusion.finish(body.how, body.trial_id)
+    return SeclusionOut.from_view(seclusion.view())
+
+
+@router.get("/parallel/search")
+def search_parallel(q: str, seclusion: SeclusionDep) -> list[CandidateOut]:
+    """What could run beside the trial at hand: waiting trials, Arts and the Horizon."""
+    return [CandidateOut.from_candidate(c) for c in seclusion.parallel.search(q)]
+
+
+@router.post("/parallel")
+def pick_parallel(body: ParallelPickIn, seclusion: SeclusionDep) -> SeclusionOut:
+    seclusion.parallel.pick(body.source, body.ref)
+    return SeclusionOut.from_view(seclusion.view())
+
+
+@router.post("/parallel/start")
+def start_parallel(seclusion: SeclusionDep) -> SeclusionOut:
+    seclusion.parallel.start()
+    return SeclusionOut.from_view(seclusion.view())
+
+
+@router.post("/parallel/pause")
+def pause_parallel(seclusion: SeclusionDep) -> SeclusionOut:
+    seclusion.parallel.pause()
+    return SeclusionOut.from_view(seclusion.view())
+
+
+@router.post("/parallel/finish")
+def finish_parallel(body: ParallelFinishIn, seclusion: SeclusionDep) -> SeclusionOut:
+    """Conquer, abandon or postpone the parallel trial on its own; the main trial is untouched."""
+    seclusion.parallel.finish(body.how)
     return SeclusionOut.from_view(seclusion.view())
 
 

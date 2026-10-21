@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from scrolly.api.deps import get_clock, get_store
-from scrolly.api.schemas.dashboard import ScribeIn, TrialPatchIn
+from scrolly.api.schemas.dashboard import QiActualIn, ScribeIn, TrialPatchIn
 from scrolly.api.schemas.planning import OrderIn, SummonIn
 from scrolly.api.schemas.view import ViewOut
 from scrolly.ports import Clock, Store
@@ -92,6 +92,15 @@ def abandon(trial_id: str, today: TodayDep, store: StoreDep, clock: ClockDep) ->
 @router.post("/{trial_id}/revive")
 def revive(trial_id: str, today: TodayDep, store: StoreDep, clock: ClockDep) -> ViewOut:
     today.revive(trial_id)
+    return _view(store, clock)
+
+
+@router.put("/{trial_id}/qi")
+def set_qi(
+    trial_id: str, body: QiActualIn, today: TodayDep, store: StoreDep, clock: ClockDep
+) -> ViewOut:
+    """The Qi a conquered trial took. Until it is told, the estimate stands."""
+    today.set_actual_qi(trial_id, body.qi)
     return _view(store, clock)
 
 

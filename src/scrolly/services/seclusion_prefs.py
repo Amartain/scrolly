@@ -10,7 +10,7 @@ from scrolly.ports import Store
 CYCLES_KEY = "cycles"
 FLOW_KEY = "flow"
 SOUND_KEY = "sound"
-DEFAULT_RATIO = (5, 1)
+DEFAULT_RATIO = (3, 1)  # the research favours 3:1; 5:1 is hustle culture
 
 
 @dataclass(frozen=True)
