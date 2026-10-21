@@ -1,8 +1,9 @@
 """Harmonious Cycles: focus, then a break, for as many cycles as the user sets. Pure, no IO.
 
-The run has its own clock, apart from any trial's timer. A break begins by itself when focus ends;
-the next focus always waits for the user to press Start. Every boundary is found by timestamp, so a
-closed tab or a sleeping machine loses nothing.
+The run has its own clock, apart from any trial's timer. Only the first focus waits for Start; then
+it runs straight through: focus, break, focus, break, for every cycle, each phase beginning when the
+last one ends (owner, 2026-10-22). Every boundary is found by timestamp, so a closed tab or a sleeping
+machine loses nothing.
 """
 
 from dataclasses import dataclass, field, replace
@@ -27,7 +28,7 @@ class Phase(StrEnum):
     IDLE = "idle"  # the dial: nothing set going yet
     FOCUS = "focus"
     BREAK = "break"
-    WAITING = "waiting"  # a break is over; the next focus waits for Start
+    WAITING = "waiting"  # kept for runs saved before 2026-10-22: the next focus waits for Start
     DONE = "done"  # every cycle is finished
 
 
@@ -91,29 +92,42 @@ def resume_run(run: CyclesRun, now: datetime) -> CyclesRun:
     return replace(run, clock=run_start(run.clock, now))
 
 
-def _after_focus(run: CyclesRun, plan: CyclesPlan, at: datetime) -> CyclesRun:
-    if run.cycle >= plan.cycles:
-        return CyclesRun(Phase.DONE, run.cycle)
+@dataclass(frozen=True)
+class Boundary:
+    """A focus that began or ended by itself, and when: the trial's timer follows it."""
+
+    at: datetime
+    focus_begins: bool
+
+
+def _after_focus(run: CyclesRun, at: datetime) -> CyclesRun:
+    """Every focus is followed by its break, the last one too."""
     return CyclesRun(Phase.BREAK, run.cycle, run_start(RunClock(), at))
 
 
-def _after_break(run: CyclesRun, plan: CyclesPlan) -> CyclesRun:
+def _after_break(run: CyclesRun, plan: CyclesPlan, at: datetime) -> CyclesRun:
+    """The next cycle's focus begins at once; after the last cycle's break the run is done."""
     if run.cycle >= plan.cycles:
         return CyclesRun(Phase.DONE, run.cycle)
-    return CyclesRun(Phase.WAITING, run.cycle + 1)
+    return CyclesRun(Phase.FOCUS, run.cycle + 1, run_start(RunClock(), at))
 
 
 def settle_cycles(
     run: CyclesRun, plan: CyclesPlan, now: datetime
-) -> tuple[CyclesRun, datetime | None]:
-    """Cross every boundary that has passed. Returns the run and when focus ended, if it did."""
-    focus_ended_at = None
-    if run.phase is Phase.FOCUS and (ended := reached_at(run.clock, plan.focus_s, now)):
-        focus_ended_at = ended
-        run = _after_focus(run, plan, ended)
-    if run.phase is Phase.BREAK and reached_at(run.clock, plan.break_s, now):
-        run = _after_break(run, plan)
-    return run, focus_ended_at
+) -> tuple[CyclesRun, list[Boundary]]:
+    """Cross every boundary that has passed, in order. Returns the run and each focus that ended
+    or began on the way, so the trial's timer can follow."""
+    crossed: list[Boundary] = []
+    while True:
+        if run.phase is Phase.FOCUS and (ended := reached_at(run.clock, plan.focus_s, now)):
+            run = _after_focus(run, ended)
+            crossed.append(Boundary(ended, focus_begins=False))
+        elif run.phase is Phase.BREAK and (ended := reached_at(run.clock, plan.break_s, now)):
+            run = _after_break(run, plan, ended)
+            if run.phase is Phase.FOCUS:
+                crossed.append(Boundary(ended, focus_begins=True))
+        else:
+            return run, crossed
 
 
 def take_break_now(run: CyclesRun, now: datetime) -> CyclesRun:
@@ -123,10 +137,24 @@ def take_break_now(run: CyclesRun, now: datetime) -> CyclesRun:
     return CyclesRun(Phase.BREAK, run.cycle, run_start(RunClock(), now))
 
 
-def skip_break(run: CyclesRun, plan: CyclesPlan) -> CyclesRun:
+def restart_run(now: datetime) -> CyclesRun:
+    """Begin again from the first cycle: its focus runs at once."""
+    return CyclesRun(Phase.FOCUS, 1, run_start(RunClock(), now))
+
+
+def zero_phase(run: CyclesRun, now: datetime) -> CyclesRun:
+    """The focus or break under way starts over from 0, in the same cycle. Running stays running."""
+    if run.phase not in (Phase.FOCUS, Phase.BREAK):
+        raise RunError("There is nothing to zero out yet")
+    clock = RunClock(now) if run.clock.running else RunClock()
+    return replace(run, clock=clock)
+
+
+def skip_break(run: CyclesRun, plan: CyclesPlan, now: datetime) -> CyclesRun:
+    """End the break early: the next focus begins now (or, after the last cycle, the run is done)."""
     if run.phase is not Phase.BREAK:
         raise RunError("There is no break to skip")
-    return _after_break(run, plan)
+    return _after_break(run, plan, now)
 
 
 def cycles_view(run: CyclesRun, plan: CyclesPlan, now: datetime) -> CyclesView:

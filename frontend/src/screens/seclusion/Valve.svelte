@@ -1,51 +1,57 @@
-<!-- One release valve of the focus room's side column: a quiet label, then what it holds. The column is
-     one frame, so a valve has no box of its own, only a thin line above it. With `onfold` the label
-     carries a hide / show toggle; folded, only the label is left. -->
+<!-- One release valve of the Parallel sidebar: an inset card with its own header band (capitals, as
+     every header), a small mark, and an accent edge so each is told apart at a glance. -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { SECLUSION } from '../../lib/copy-seclusion';
+  import GlyphIcon from '../../icons/GlyphIcon.svelte';
+
+  type Icon = 'parallel' | 'brush' | 'bamboo';
 
   let {
+    id,
     title,
+    icon,
+    accent = 'neutral',
     grow = false,
-    folded = false,
-    onfold,
     children,
   }: {
+    id: string;
     title: string;
-    /** Takes the height the other valves leave (and none when folded). */
+    icon: Icon;
+    /** The edge colour: Parallel Flow is neutral ink (as its timer), Scribe gold, Bamboo green. */
+    accent?: 'neutral' | 'gold' | 'growth';
+    /** Takes the height the other valves leave. */
     grow?: boolean;
-    folded?: boolean;
-    onfold?: () => void;
     children: Snippet;
   } = $props();
 </script>
 
-<section class="valve" class:grow={grow && !folded} aria-label={title}>
-  <div class="head">
-    <h2 class="label">{title}</h2>
-    {#if onfold}
-      <button
-        class="fold"
-        type="button"
-        aria-expanded={!folded}
-        aria-label={folded ? SECLUSION.fold.showName(title) : SECLUSION.fold.hideName(title)}
-        onclick={onfold}>{folded ? SECLUSION.fold.show : SECLUSION.fold.hide}</button
-      >
-    {/if}
-  </div>
-  {#if !folded}{@render children()}{/if}
+<section class="valve {accent}" class:grow {id} aria-label={title}>
+  <h2 class="head display">
+    <span class="icon"><GlyphIcon name={icon} /></span>
+    {title}
+  </h2>
+  {@render children()}
 </section>
 
 <style>
   .valve {
+    --valve-accent: var(--ink);
+    flex: none;
     display: flex;
     flex-direction: column;
     min-height: 0;
+    background: var(--surface-raised);
+    border: var(--border-width) solid var(--line);
+    border-left: var(--space-1) solid var(--valve-accent);
+    box-shadow: var(--shadow-button);
   }
 
-  .valve:not(:first-child) {
-    border-top: var(--border-width) solid var(--grid);
+  .gold {
+    --valve-accent: var(--gold);
+  }
+
+  .growth {
+    --valve-accent: var(--growth);
   }
 
   .grow {
@@ -55,29 +61,17 @@
   .head {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3);
-    padding: var(--space-2) var(--space-4) 0;
-  }
-
-  .label {
+    gap: var(--space-2);
     margin: 0;
-    color: var(--ink-muted);
-    font-size: var(--text-body-sm);
+    padding: var(--space-2) var(--space-3);
+    background: var(--head-bg);
+    color: var(--head-ink);
+    border-bottom: var(--border-width) solid var(--line);
+    font-size: var(--text-display-sm);
     font-weight: normal;
   }
 
-  .fold {
-    padding-inline: var(--space-1);
-    background: none;
-    border: 0;
-    color: var(--ink-muted);
-    font-size: var(--text-body-sm);
-    cursor: pointer;
-  }
-
-  .fold:hover {
-    color: var(--ink);
-    text-decoration: underline;
+  .icon {
+    display: flex;
   }
 </style>

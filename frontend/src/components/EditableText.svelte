@@ -1,4 +1,6 @@
-<!-- Saved text that is renamed in place: double-click it, or press Enter while it has focus. -->
+<!-- Saved text that is renamed in place: double-click it, or press Enter while it has focus.
+     `bare`: the field keeps the text's own look (no box, only the caret), and empty text is sent too,
+     so the server can say what it needs. -->
 <script lang="ts">
   import { tick } from 'svelte';
 
@@ -6,7 +8,15 @@
     value,
     label,
     onsave,
-  }: { value: string; label: string; onsave: (text: string) => void | Promise<unknown> } = $props();
+    bare = false,
+    hint = 'Double-click to rename',
+  }: {
+    value: string;
+    label: string;
+    onsave: (text: string) => void | Promise<unknown>;
+    bare?: boolean;
+    hint?: string;
+  } = $props();
 
   let editing = $state(false);
   let draft = $state('');
@@ -23,7 +33,8 @@
   async function finish(save: boolean) {
     if (!editing) return;
     editing = false;
-    if (save && draft.trim() && draft.trim() !== value) await onsave(draft);
+    const changed = draft.trim() !== value;
+    if (save && changed && (bare || draft.trim())) await onsave(draft);
   }
 
   function onkey(event: KeyboardEvent) {
@@ -35,7 +46,9 @@
 {#if editing}
   <input
     class="text input"
+    class:bare
     aria-label={label}
+    size={bare ? Math.max(value.length, 3) : undefined}
     bind:value={draft}
     bind:this={field}
     onkeydown={onkey}
@@ -43,9 +56,12 @@
   />
 {:else}
   <button
-    class="text read"
+    class="text"
+    class:read={!bare}
+    class:bare
     type="button"
-    title="Double-click to rename"
+    aria-label={bare ? label : undefined}
+    title={hint}
     ondblclick={start}
     onclick={(event) => event.detail === 0 && start()}
   >
@@ -81,5 +97,20 @@
     border: var(--border-width) solid var(--line);
     box-shadow: var(--shadow-sunken);
     padding-inline: var(--space-2);
+  }
+
+  /* The figure stays as it looks; only the caret says it is being written. */
+  .bare,
+  .input.bare {
+    flex: none;
+    font: inherit;
+    color: inherit;
+    text-align: inherit;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    outline: none;
+    caret-color: var(--ink);
   }
 </style>

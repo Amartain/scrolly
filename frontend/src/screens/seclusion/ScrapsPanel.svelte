@@ -1,27 +1,18 @@
 <!-- Bamboo Scraps: a plain scratchpad for loose thoughts. It saves itself on a pause in typing, on
-     blur and when the page closes; a small mark says so. One scrap per visit to Seclusion. It can be
-     folded away (the choice is kept by the server); what is written stays. -->
+     blur and when the page closes; a small mark says so. One scrap per visit to Seclusion. -->
 <script lang="ts">
   import { onMount } from 'svelte';
   import { cutLine } from '../../lib/cut-line';
   import { SECLUSION } from '../../lib/copy-seclusion';
   import { scrapPad } from '../../lib/scrap-pad.svelte';
-  import { seclusion } from '../../lib/seclusion.svelte';
   import Valve from './Valve.svelte';
 
   onMount(() => void scrapPad.load());
-
-  const folded = $derived(seclusion.state?.scraps_hidden ?? false);
-
-  async function fold() {
-    await scrapPad.flush(); // what is written is saved before the box goes away
-    await seclusion.hideScraps(!folded);
-  }
 </script>
 
 <svelte:window onpagehide={scrapPad.unload} />
 
-<Valve title={SECLUSION.scrapsTitle} grow {folded} onfold={fold}>
+<Valve id="valve-scraps" title={SECLUSION.scrapsTitle} icon="bamboo" accent="growth" grow>
   <div class="pad">
     <textarea
       use:cutLine
@@ -42,8 +33,8 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-4) var(--space-3);
+    gap: var(--space-1);
+    padding: var(--space-3) var(--space-3) var(--space-1);
   }
 
   /* The box takes everything the other valves leave. */
@@ -52,7 +43,7 @@
     min-height: calc(var(--size-field) * 3);
     padding: var(--space-3);
     resize: none;
-    background: var(--surface-raised);
+    background: var(--surface-panel);
     border: var(--border-width) solid var(--line);
     box-shadow: var(--shadow-sunken);
     color: var(--ink);
@@ -61,8 +52,9 @@
   }
 
   .mark {
-    min-height: var(--space-6);
+    min-height: var(--space-5);
     margin: 0;
     color: var(--ink-muted);
+    font-size: var(--text-body-sm);
   }
 </style>

@@ -17,15 +17,19 @@ export const seclusion = {
   start: () => post('timer/start'),
   startCycles: (plan: CyclesPlan) => post('timer/start', plan),
   pause: () => post('timer/pause'),
-  newTimer: () => post('timer/new'),
+  /** From zero, at once; the time on this timer is scrapped (ask first). */
+  restart: () => post('timer/new'),
+  /** The focus or break under way starts over; a focus's time is scrapped (ask first). */
   zeroOut: () => post('timer/zero'),
+  /** Back to the dial or the ratio. The time is kept. */
+  stop: () => post('timer/stop'),
   discipline: (discipline: Discipline) => post('discipline', { discipline }),
   takeBreak: () => post('break/start'),
   endBreak: () => post('break/end'),
   finish: (how: EndedHow, trialId: string) => post('finish', { how, trial_id: trialId }),
   setRatio: (work: number, rest: number) =>
     send<SeclusionState>('/api/seclusion/flow/ratio', json('PUT', { work, rest })),
-  /** Fold Bamboo Scraps away, or unfold it. The server keeps the choice. */
-  hideScraps: (hidden: boolean) =>
-    send<SeclusionState>('/api/seclusion/scraps-hidden', json('PUT', { hidden })),
+  /** Fold the Parallel sidebar to a strip, or open it. The server keeps the choice. */
+  hideSidebar: (hidden: boolean) =>
+    send<SeclusionState>('/api/seclusion/sidebar-hidden', json('PUT', { hidden })),
 };

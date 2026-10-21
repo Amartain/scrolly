@@ -37,6 +37,7 @@ class FlowBank:
     used_s: int = 0  # rest already spent in earlier breaks
     break_s: int = 0  # the length of the break under way
     break_clock: RunClock = field(default_factory=RunClock)
+    stretch_from_s: int = 0  # focused seconds when this stretch began (at the last break's end)
 
 
 @dataclass(frozen=True)
@@ -105,7 +106,20 @@ def _end_break(bank: FlowBank, spent_s: int) -> FlowBank:
         used_s=bank.used_s + spent_s,
         break_s=0,
         break_clock=RunClock(),
+        stretch_from_s=bank.focus.accumulated_s,  # the focus clock is stopped during a break
     )
+
+
+def zero_stretch(bank: FlowBank, now: datetime) -> FlowBank:
+    """The stretch under way starts over from 0. Focus: the time since the last break is dropped
+    (rest earned before it stays). A break: it counts the same bank down again. Running stays
+    running."""
+    if bank.phase is FlowPhase.BREAK:
+        return replace(bank, break_clock=RunClock(now))
+    if bank.phase is not FlowPhase.FOCUS:
+        raise RunError("There is nothing to zero out yet")
+    started = now if bank.focus.running else None
+    return replace(bank, focus=RunClock(started, bank.stretch_from_s))
 
 
 def end_break(bank: FlowBank, now: datetime) -> FlowBank:

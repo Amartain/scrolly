@@ -1,11 +1,36 @@
+<!-- A square icon button. Its label is the name a screen reader hears and the tip on hover.
+     `disabled` dims it but keeps it in the Tab order, so a row of them never changes shape. -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
 
-  let { label, onclick, children }: { label: string; onclick: () => void; children: Snippet } =
-    $props();
+  let {
+    label,
+    onclick,
+    disabled = false,
+    id,
+    expanded,
+    children,
+  }: {
+    label: string;
+    onclick: () => void;
+    disabled?: boolean;
+    id?: string;
+    /** For a button that shows or hides something. */
+    expanded?: boolean;
+    children: Snippet;
+  } = $props();
 </script>
 
-<button class="glyph-button" type="button" aria-label={label} title={label} {onclick}>
+<button
+  class="glyph-button"
+  type="button"
+  {id}
+  aria-label={label}
+  aria-expanded={expanded}
+  aria-disabled={disabled || undefined}
+  title={label}
+  onclick={() => !disabled && onclick()}
+>
   {@render children()}
 </button>
 
@@ -29,5 +54,13 @@
   .glyph-button:active {
     box-shadow: none;
     transform: translate(var(--shadow-offset), var(--shadow-offset));
+  }
+
+  .glyph-button[aria-disabled='true'] {
+    color: var(--ink-faint);
+    background-image: none;
+    box-shadow: none;
+    cursor: default;
+    transform: none;
   }
 </style>

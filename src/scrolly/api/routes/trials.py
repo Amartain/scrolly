@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from scrolly.api.deps import get_clock, get_store
-from scrolly.api.schemas.dashboard import QiActualIn, ScribeIn, TrialPatchIn
+from scrolly.api.schemas.dashboard import ActualIn, QiActualIn, ScribeIn, TrialPatchIn
 from scrolly.api.schemas.planning import OrderIn, SummonIn
 from scrolly.api.schemas.view import ViewOut
 from scrolly.ports import Clock, Store
@@ -101,6 +101,15 @@ def set_qi(
 ) -> ViewOut:
     """The Qi a conquered trial took. Until it is told, the estimate stands."""
     today.set_actual_qi(trial_id, body.qi)
+    return _view(store, clock)
+
+
+@router.put("/{trial_id}/actual")
+def set_actual(
+    trial_id: str, body: ActualIn, today: TodayDep, store: StoreDep, clock: ClockDep
+) -> ViewOut:
+    """The time a conquered trial really took, as the user corrects it."""
+    today.set_actual(trial_id, body.text)
     return _view(store, clock)
 
 

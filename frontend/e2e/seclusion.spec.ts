@@ -79,15 +79,53 @@ test('the ring drains: full before the start, shrinking while it runs', async ({
   expect(await fill()).toBeGreaterThan(80);
 });
 
-test('Zero out clears the ring and keeps the time logged', async ({ page }) => {
+test('the icon row: Incense has restart, start and sound; Cycles adds zero out, break and stop', async ({
+  page,
+}) => {
+  await enter(page);
+  const icons = room(page).getByRole('toolbar', { name: 'Timer' }).getByRole('button');
+  await expect(icons).toHaveCount(3);
+  await room(page).getByRole('tab', { name: 'Harmonious Cycles' }).click();
+  await expect(icons).toHaveCount(6);
+  // On the dial nothing has begun: the buttons wait, dimmed, in their places.
+  const breakButton = room(page).getByRole('button', { name: 'Take a break' });
+  await expect(breakButton).toHaveAttribute('aria-disabled', 'true');
+});
+
+test('Restart asks before it scraps a minute or more; Keep and Esc change nothing', async ({
+  page,
+}) => {
+  await page.clock.install();
+  await page.reload();
   await enter(page);
   await room(page).getByLabel('Estimate for Write report').fill('45m');
   await room(page).getByRole('button', { name: 'Set the time for Write report' }).click();
   await room(page).getByRole('button', { name: 'Start', exact: true }).click();
-  await page.waitForTimeout(2200);
-  await room(page).getByRole('button', { name: 'Zero out' }).click();
-  await expect(room(page).getByRole('button', { name: 'Start', exact: true })).toBeVisible();
-  await expect(ring(page)).toContainText('45m');
+  await page.clock.runFor(125_000); // the screen counts two minutes on
+  const restart = room(page).getByRole('button', { name: 'Restart' });
+  await restart.click();
+  // The browser's clock is faked and the server's is not, so only the shape of the question is fixed.
+  const ask = room(page).getByRole('group', { name: /^Scrap \d+m from this trial\?$/ });
+  await expect(ask.getByRole('button', { name: 'Keep' })).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(ask).toHaveCount(0);
+  await expect(restart).toBeFocused();
+  await expect(room(page)).toBeVisible(); // Esc closed the question, not the room
+  await restart.click();
+  await ask.getByRole('button', { name: 'Scrap' }).click();
+  await expect(ring(page)).toContainText('45:00');
+  await expect(room(page).getByRole('button', { name: 'Pause timer' })).toBeVisible();
+});
+
+test('Switch puts another waiting trial at hand; this one steps back, paused', async ({ page }) => {
+  await enter(page);
+  await room(page).getByRole('button', { name: 'Start', exact: true }).click();
+  await room(page).getByRole('button', { name: 'Switch trial' }).click();
+  await room(page).getByRole('button', { name: 'Switch to Tidy desk' }).click();
+  await expect(room(page).getByRole('group', { name: 'Trial at hand' })).toContainText('Tidy desk');
+  const state = await (await page.request.get('/api/seclusion')).json();
+  expect(state.remaining[0].title).toBe('Write report');
+  expect(state.trial.timer.running).toBe(false);
 });
 
 test('conquering in Seclusion brings the next trial, idle', async ({ page }) => {

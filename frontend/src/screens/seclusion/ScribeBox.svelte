@@ -25,7 +25,7 @@
   }
 </script>
 
-<Valve title={SECLUSION.scribeTitle}>
+<Valve id="valve-scribe" title={SECLUSION.scribeTitle} icon="brush" accent="gold">
   <form class="scribe" onsubmit={inscribe}>
     <div class="row">
       <input

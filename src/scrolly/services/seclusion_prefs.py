@@ -10,7 +10,7 @@ from scrolly.ports import Store
 CYCLES_KEY = "cycles"
 FLOW_KEY = "flow"
 SOUND_KEY = "sound"
-SCRAPS_KEY = "scraps"
+SIDEBAR_KEY = "sidebar"  # the whole Parallel sidebar; phase 1's "scraps" key is no longer read
 DEFAULT_RATIO = (3, 1)  # the research favours 3:1; 5:1 is hustle culture
 
 
@@ -57,11 +57,11 @@ def save_sound(store: Store, prefs: SoundPrefs, now: datetime) -> None:
     store.settings.set(SOUND_KEY, {"volume": prefs.volume, "muted": prefs.muted}, now)
 
 
-def load_scraps_hidden(store: Store) -> bool:
-    """Whether Bamboo Scraps is folded away in the focus room. Shown until the user hides it."""
-    saved = store.settings.get(SCRAPS_KEY) or {}
+def load_sidebar_hidden(store: Store) -> bool:
+    """Whether the Parallel sidebar is folded to a strip in the focus room. Shown until hidden."""
+    saved = store.settings.get(SIDEBAR_KEY) or {}
     return bool(saved.get("hidden", False))
 
 
-def save_scraps_hidden(store: Store, hidden: bool, now: datetime) -> None:
-    store.settings.set(SCRAPS_KEY, {"hidden": hidden}, now)
+def save_sidebar_hidden(store: Store, hidden: bool, now: datetime) -> None:
+    store.settings.set(SIDEBAR_KEY, {"hidden": hidden}, now)

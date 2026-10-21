@@ -28,6 +28,17 @@ GAUGE = (
 )
 # The selected Seclusion tab: its words on its colour.
 TAB_INK = (("--on-cycles", "--cycles"), ("--on-flow", "--flow"))
+# The ring's numerals in its own colour on the well (display size: 3:1), a break's words on its
+# disc, and the guidance scrolls' coloured section chips.
+ACCENTS = (
+    ("--cycles", "--surface-raised", 3.0),
+    ("--flow", "--surface-raised", 3.0),
+    ("--on-break-disc", "--cycles-break-disc", 4.5),
+    ("--on-break-disc", "--flow-break-disc", 4.5),
+    ("--on-gold", "--gold", 4.5),
+    ("--on-growth", "--growth", 4.5),
+    ("--entry-dispatch-ink", "--entry-dispatch-bg", 4.5),
+)
 CONQUERED_ROWS = ("--conquered-row-a", "--conquered-row-b")
 CONQUERED_TEXT = ("--ink", "--ink-muted")
 DECLARATION = re.compile(r"(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{6})\s*;")
@@ -92,7 +103,7 @@ def contrast_problems(name: str, values: dict[str, str]) -> list[str]:
     found = []
     pairs = [(t, s, 4.5) for t in TEXT for s in SURFACES] + [(g, "--inset", 3.0) for g in GAUGE]
     pairs += [(t, s, 4.5) for t in CONQUERED_TEXT for s in CONQUERED_ROWS]
-    pairs += [(ink, tab, 4.5) for ink, tab in TAB_INK]
+    pairs += [(ink, tab, 4.5) for ink, tab in TAB_INK] + list(ACCENTS)
     pairs.append(("--head-ink", "--head-bg", 4.5))  # a panel's title on its header bar
     for token, surface, needed in pairs:
         if token not in values or surface not in values:

@@ -1,11 +1,11 @@
 <!-- After a trial ends: the next one waits, idle. Start it, pick another from Remaining, or take it back. -->
 <script lang="ts">
   import Button from '../../components/Button.svelte';
-  import TypeMark from '../../components/TypeMark.svelte';
   import type { Immediate } from '../../lib/api';
   import { SECLUSION } from '../../lib/copy-seclusion';
   import { seclusion } from '../../lib/seclusion.svelte';
   import type { SeclusionState } from '../../lib/seclusion-api';
+  import RemainingPicker from './RemainingPicker.svelte';
   import RunStatus from './RunStatus.svelte';
 
   let { room, trial }: { room: SeclusionState; trial: Immediate } = $props();
@@ -37,21 +37,7 @@
 <div class="card" role="group" aria-label={SECLUSION.whatNext}>
   <h2 class="heading display">{SECLUSION.whatNext}</h2>
   {#if choosing}
-    <ul class="list">
-      {#each room.remaining as waiting (waiting.id)}
-        <li>
-          <button
-            class="row"
-            type="button"
-            aria-label="{SECLUSION.switchTo} {waiting.title}"
-            onclick={() => seclusion.switchTo(waiting.id)}
-          >
-            <span class="mark"><TypeMark type={waiting.type} title={waiting.title} /></span>
-            <span class="read">{waiting.title}</span>
-          </button>
-        </li>
-      {/each}
-    </ul>
+    <RemainingPicker remaining={room.remaining} />
     <button class="link display" type="button" onclick={() => (choosing = false)}
       >{SECLUSION.back}</button
     >
@@ -66,14 +52,15 @@
           label={carry}
           tone="primary"
           description="{carry}: {trial.title}"
-          onclick={inRun ? seclusion.start : seclusion.newTimer}
+          onclick={seclusion.start}
         />
       {/if}
       {#if canBreak}
         <Button label={SECLUSION.takeBreakNow} onclick={seclusion.takeBreak} />
       {/if}
       {#if inRun}
-        <Button label={SECLUSION.startNewCycle} onclick={seclusion.newTimer} />
+        <!-- The next trial has not joined this run yet, so a restart scraps nothing of it. -->
+        <Button label={SECLUSION.startNewCycle} onclick={seclusion.restart} />
       {/if}
       {#if room.remaining.length > 0}
         <Button label={SECLUSION.switchTrials} onclick={() => (choosing = true)} />
@@ -123,38 +110,6 @@
   .actions {
     display: flex;
     gap: var(--space-3);
-  }
-
-  .list {
-    align-self: stretch;
-    max-height: 14rem;
-    margin: 0;
-    padding: 0;
-    overflow-y: auto;
-    list-style: none;
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-  }
-
-  .row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    width: 100%;
-    padding: var(--space-2) var(--space-3);
-    background: none;
-    border: 0;
-    color: var(--ink);
-    text-align: left;
-    cursor: pointer;
-  }
-
-  .row:hover {
-    background: var(--surface-stripe);
-  }
-
-  .mark {
-    display: flex;
   }
 
   .link {

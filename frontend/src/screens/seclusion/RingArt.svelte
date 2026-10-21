@@ -60,8 +60,9 @@
     stroke: var(--inset);
   }
 
+  /* On a break the well fills with a shade of the ring's hue (`--ring-disc`, set by RingFrame). */
   .well {
-    fill: var(--surface-raised);
+    fill: var(--ring-disc, var(--surface-raised));
     stroke: var(--line);
   }
 

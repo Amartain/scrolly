@@ -110,7 +110,10 @@ class SeclusionOut(BaseModel):
     remaining: list[WaitingOut]
     # The trial run beside this one: a trial of its own, with its own timer.
     parallel: ImmediateOut | None = None
-    scraps_hidden: bool = False
+    sidebar_hidden: bool = False
+    # Seconds Restart and Zero out would take off the trial now, so the screen can ask first.
+    restart_scrap_s: int = 0
+    zero_scrap_s: int = 0
 
     @classmethod
     def from_view(cls, view: SeclusionView) -> "SeclusionOut":
@@ -133,7 +136,9 @@ class SeclusionOut(BaseModel):
             parallel=None
             if view.parallel is None
             else ImmediateOut.from_trial(view.parallel.trial, view.parallel.timer),
-            scraps_hidden=view.scraps_hidden,
+            sidebar_hidden=view.sidebar_hidden,
+            restart_scrap_s=view.restart_scrap_s,
+            zero_scrap_s=view.zero_scrap_s,
         )
 
 
@@ -146,7 +151,7 @@ class RatioIn(BaseModel):
     rest: int
 
 
-class ScrapsHiddenIn(BaseModel):
+class SidebarHiddenIn(BaseModel):
     hidden: bool
 
 

@@ -66,4 +66,10 @@ test('the second screen, the Archives and Seclusion each have one', async ({ pag
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog', { name: 'Seclusion: Guidance' })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Step out' })).toBeVisible();
+
+  // The Parallel sidebar has its own, with the keys listed.
+  await page.getByRole('button', { name: 'Guidance: Parallel sidebar' }).click();
+  const sidebar = page.getByRole('dialog', { name: 'Parallel sidebar: Guidance' });
+  await expect(sidebar.getByRole('heading', { name: 'Keys' })).toBeVisible();
+  await expect(sidebar.getByText('Ctrl+B', { exact: true })).toBeVisible();
 });

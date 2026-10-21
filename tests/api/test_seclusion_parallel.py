@@ -65,6 +65,12 @@ def test_a_waiting_trial_can_be_picked_and_only_one_runs_beside(client: TestClie
     assert "Only one" in second.json()["detail"]
 
 
+def test_the_trial_run_beside_is_not_offered_to_switch_to(client: TestClient) -> None:
+    _enter(client, "Write report", "Tend the tea")
+    _pick_new(client, "Sweep the pavilion")
+    assert [t["title"] for t in room(client)["remaining"]] == ["Tend the tea"]
+
+
 def test_the_trial_at_hand_cannot_run_beside_itself(client: TestClient) -> None:
     _enter(client, "Write report", "Tend the tea")
     main = room(client)["trial"]["id"]

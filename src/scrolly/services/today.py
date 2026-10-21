@@ -44,7 +44,8 @@ class TodayService:
     ) -> None:
         """Save trials whose timers may have started or stopped, keeping their segments in step.
 
-        `at` is when a timer really stopped, if that was before now (a focus that ended while away).
+        `at` is when a timer really stopped or started, if before now (a focus that ended or began
+        while away).
         """
         self._store.trials.save(trials, self._now)
         sync_segments(self._store, trials, at or self._now, discipline)
@@ -73,12 +74,20 @@ class TodayService:
         promoted = day_flow.promote_next(self._store.trials.list_for_day(self._today), parallel_id)
         self._store.trials.save(promoted, self._now)
 
-    def start_timer(self, trial_id: str, discipline: Discipline = Discipline.DASHBOARD) -> None:
-        self._save([timer.start(self._timed(trial_id), self._now)], discipline)
+    def start_timer(
+        self, trial_id: str, discipline: Discipline = Discipline.DASHBOARD, at: datetime | None = None
+    ) -> None:
+        """`at`: when the timer really started, if before now (a focus that began while away)."""
+        started = at or self._now
+        self._save([timer.start(self._timed(trial_id), started)], discipline, at=started)
 
     def pause_timer(self, trial_id: str, at: datetime | None = None) -> None:
         stopped = at or self._now
         self._save([timer.pause(self._timed(trial_id), stopped)], at=stopped)
+
+    def scrap_time(self, trial_id: str, seconds: int) -> None:
+        """The user's own correction: take time off the Immediate Trial's timer."""
+        self._save([timer.scrap(self._timed(trial_id), seconds, self._now)])
 
     def reset_timer(self, trial_id: str) -> None:
         self._save([timer.reset(self._timed(trial_id))])
@@ -107,6 +116,11 @@ class TodayService:
     def set_actual_qi(self, trial_id: str, qi: int) -> None:
         """What the user says a conquered trial took; conquering had recorded the estimate."""
         trial = day_flow.set_actual_qi(self._trial(trial_id), qi)
+        self._store.trials.save([trial], self._now)
+
+    def set_actual(self, trial_id: str, text: str) -> None:
+        """The user corrects the time a conquered trial took."""
+        trial = day_flow.set_actual_minutes(self._trial(trial_id), text)
         self._store.trials.save([trial], self._now)
 
     def revive(self, trial_id: str) -> None:

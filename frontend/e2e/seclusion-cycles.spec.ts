@@ -126,12 +126,11 @@ test('Flow: set the ratio, bank rest from focus, take the break, skip it', async
   await expect(field(page, 'rest')).toHaveValue('10');
   await button(page, 'Start').click();
   await expect(ring(page)).toContainText('elapsed');
-  await expect(room(page).getByRole('button', { name: 'Take a break' })).toHaveCount(0);
+  const takeBreak = room(page).getByRole('button', { name: 'Take a break' });
+  await expect(takeBreak).toHaveAttribute('aria-disabled', 'true');
 
   // One focused minute banks ten, so after a few seconds a break can start.
-  await expect(room(page).getByRole('button', { name: 'Take a break' })).toBeVisible({
-    timeout: 15_000,
-  });
+  await expect(takeBreak).not.toHaveAttribute('aria-disabled', 'true', { timeout: 15_000 });
   await room(page).getByRole('button', { name: 'Take a break' }).click();
   await expect(ring(page)).toHaveAttribute('data-tone', 'flow-break');
   await expect(ring(page)).toContainText('rest');

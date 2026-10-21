@@ -35,6 +35,14 @@ def reset(trial: Trial) -> Trial:
     return replace(trial, timer_started_at=None, timer_paused_at=None, timer_accumulated_s=0)
 
 
+def scrap(trial: Trial, seconds: int, now: datetime) -> Trial:
+    """Take `seconds` off the logged time: the user's own correction of a timer started too early or
+    left running. Never below zero. A running timer keeps running, from the corrected total."""
+    left = max(0, elapsed_seconds(trial, now) - max(0, seconds))
+    started = None if trial.timer_started_at is None else now
+    return replace(trial, timer_started_at=started, timer_accumulated_s=left)
+
+
 def timer_ran(trial: Trial) -> bool:
     return trial.timer_started_at is not None or trial.timer_accumulated_s > 0
 

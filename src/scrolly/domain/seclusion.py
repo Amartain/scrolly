@@ -26,6 +26,12 @@ def ring_elapsed(elapsed_s: int, baseline_s: int = 0) -> int:
     return elapsed_s - baseline_s if elapsed_s >= baseline_s else elapsed_s
 
 
+def since_mark(elapsed_s: int, mark_s: int | None) -> int:
+    """The trial's logged time since a mark (when it joined a run, or a stretch began); none
+    without a mark."""
+    return 0 if mark_s is None else ring_elapsed(elapsed_s, mark_s)
+
+
 def incense_view(ring_s: int, expected_s: int) -> IncenseView:
     """Counting down to the estimate, then counting up past it ("overfilled", never "overdue")."""
     if ring_s < expected_s:

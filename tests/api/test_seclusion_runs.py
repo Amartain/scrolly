@@ -36,13 +36,13 @@ def test_focus_ends_at_the_set_time_even_when_nobody_looked(
         "/api/ghost/keep"
     )  # three hours away with a timer running: the user says they count
     state = room(client)
-    assert logged(client) == 120  # the trial stopped at the end of focus, not three hours later
+    # Both focuses counted, not the three hours: the trial stopped at the end of each focus.
+    assert logged(client) == 240
     assert state["trial"]["timer"]["running"] is False
-    assert state["cycles"]["phase"] == "waiting"  # the break ran its course too
-    assert state["cycles"]["cycle"] == 2
+    assert state["cycles"]["phase"] == "done"
 
 
-def test_a_break_begins_by_itself_and_the_next_focus_waits(
+def test_a_break_begins_by_itself_and_so_does_the_next_focus(
     client: TestClient, clock: FixedClock
 ) -> None:
     enter_on(client, "cycles", "Write report")
@@ -52,8 +52,39 @@ def test_a_break_begins_by_itself_and_the_next_focus_waits(
     assert (state["cycles"]["phase"], state["cycles"]["remaining_s"]) == ("break", 30)
     assert state["trial"]["timer"]["running"] is False
     later(clock, 1)
-    assert room(client)["cycles"]["phase"] == "waiting"
-    assert room(client)["trial"]["timer"]["running"] is False
+    state = room(client)
+    assert (state["cycles"]["phase"], state["cycles"]["cycle"]) == ("focus", 2)
+    assert state["cycles"]["remaining_s"] == 90  # it began when the break ended, 30 s ago
+    assert state["trial"]["timer"]["running"] is True
+    assert logged(client) == 150
+
+
+def test_two_one_minute_cycles_run_focus_break_focus_break_with_no_start_between(
+    client: TestClient, clock: FixedClock
+) -> None:
+    enter_on(client, "cycles", "Write report")
+    client.post("/api/seclusion/timer/start", json={"focus_min": 1, "break_min": 1, "cycles": 2})
+    seen = []
+    for _ in range(5):
+        later(clock, 0.5)
+        seen.append(room(client)["cycles"]["phase"])
+        later(clock, 0.5)
+    assert seen == ["focus", "break", "focus", "break", "done"]
+    assert logged(client) == 120
+
+
+def test_a_trial_waiting_after_a_conquest_joins_the_next_focus_by_itself(
+    client: TestClient, clock: FixedClock
+) -> None:
+    enter_on(client, "cycles", "Write report", "Tidy desk")
+    client.post("/api/seclusion/timer/start", json=DIAL)
+    later(clock, 2.5)  # on the break
+    first = room(client)["trial"]["id"]
+    client.post("/api/seclusion/finish", json={"how": "conquered", "trial_id": first})
+    later(clock, 1)  # the second focus began 30 s ago
+    state = room(client)
+    assert state["trial"]["title"] == "Tidy desk"
+    assert (state["trial"]["timer"]["running"], logged(client)) == (True, 30)
 
 
 def test_the_last_cycle_ends_done_and_nothing_counts_on(
@@ -96,7 +127,7 @@ def test_unchosen_after_a_conquest_the_break_still_comes_on_schedule(
     assert room(client)["cycles"]["phase"] == "break"
 
 
-def test_taking_a_break_now_stops_the_trial_and_skipping_it_waits_for_start(
+def test_taking_a_break_now_stops_the_trial_and_skipping_it_starts_the_next_focus(
     client: TestClient, clock: FixedClock
 ) -> None:
     enter_on(client, "cycles", "Write report")
@@ -106,7 +137,9 @@ def test_taking_a_break_now_stops_the_trial_and_skipping_it_waits_for_start(
     assert (state["cycles"]["phase"], state["cycles"]["remaining_s"]) == ("break", 60)
     assert state["trial"]["timer"]["running"] is False
     assert logged(client) == 60
-    assert client.post("/api/seclusion/break/end").json()["cycles"]["phase"] == "waiting"
+    skipped = client.post("/api/seclusion/break/end").json()
+    assert (skipped["cycles"]["phase"], skipped["cycles"]["cycle"]) == ("focus", 2)
+    assert skipped["trial"]["timer"]["running"] is True
 
 
 def test_three_cycles_run_one_after_the_other_through_the_break_buttons(
@@ -121,8 +154,7 @@ def test_three_cycles_run_one_after_the_other_through_the_break_buttons(
         seen.append((state["cycles"]["cycle"], state["cycles"]["cycles"], state["cycles"]["phase"]))
         later(clock, 1)
         client.post("/api/seclusion/break/start")
-        assert client.post("/api/seclusion/break/end").json()["cycles"]["phase"] == "waiting"
-        state = client.post("/api/seclusion/timer/start").json()
+        state = client.post("/api/seclusion/break/end").json()
     seen.append((state["cycles"]["cycle"], state["cycles"]["cycles"], state["cycles"]["phase"]))
     assert seen == [(1, 3, "focus"), (2, 3, "focus"), (3, 3, "focus")]
     later(clock, 4)  # the third focus and its break run their course
@@ -150,14 +182,3 @@ def test_stepping_out_pauses_the_cycle_and_the_trial(client: TestClient, clock: 
     state = room(client)
     assert (state["cycles"]["phase"], state["cycles"]["remaining_s"]) == ("focus", 60)
     assert state["cycles"]["running"] is False
-
-
-def test_zero_out_returns_the_cycles_dial_and_keeps_the_logged_time(
-    client: TestClient, clock: FixedClock
-) -> None:
-    enter_on(client, "cycles", "Write report")
-    client.post("/api/seclusion/timer/start", json=DIAL)
-    later(clock, 1)
-    state = client.post("/api/seclusion/timer/zero").json()
-    assert state["cycles"]["phase"] == "idle"
-    assert state["trial"]["timer"]["elapsed_s"] == 60

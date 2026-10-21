@@ -28,13 +28,15 @@ test('conquering lists the trial with its minutes and promotes the next', async 
   await expect(section(page, 'Essence')).toContainText('45m / 45m');
 });
 
-test('a conquered row is read-only: only Revive can be clicked', async ({ page }) => {
+test('a conquered row offers its time to correct and Revive, and no field until asked', async ({
+  page,
+}) => {
   await sealWithEstimate(page);
   await page.getByRole('button', { name: 'Conquer Write report' }).click();
   const row = conquered(page).getByRole('listitem');
   await expect(row).toContainText('45m');
   await expect(row.getByRole('textbox')).toHaveCount(0);
-  await expect(row.getByRole('button')).toHaveText(['Revive']);
+  await expect(row.getByRole('button')).toHaveText(['45m', 'Revive']);
 });
 
 test('reviving puts the trial back on the scroll', async ({ page }) => {

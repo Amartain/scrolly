@@ -8,6 +8,9 @@
   import { SECLUSION } from '../../lib/copy-seclusion';
   import { view } from '../../lib/view.svelte';
 
+  /** `up`: the popover opens above the button (it sits low in the room). */
+  let { up = false }: { up?: boolean } = $props();
+
   let open = $state(false);
   let wrap: HTMLDivElement | undefined = $state();
   const sound = $derived(view.current?.sound ?? { volume: 60, muted: false });
@@ -35,7 +38,7 @@
     <GlyphIcon name={sound.muted ? 'muted' : 'speaker'} />
   </GlyphButton>
   {#if open}
-    <div class="popover" role="group" aria-label={SECLUSION.sound}>
+    <div class="popover" class:up role="group" aria-label={SECLUSION.sound}>
       <label class="volume display">
         {SECLUSION.volume}
         <input
@@ -75,6 +78,14 @@
     background: var(--surface-raised);
     border: var(--border-width) solid var(--line);
     box-shadow: var(--shadow-panel);
+  }
+
+  .popover.up {
+    top: auto;
+    bottom: calc(100% + var(--space-2));
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .volume input {

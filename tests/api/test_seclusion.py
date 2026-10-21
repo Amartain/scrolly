@@ -80,35 +80,6 @@ def test_entering_with_the_dashboard_timer_running_keeps_it_running(
     assert state["trial"]["timer"] == {"elapsed_s": 300, "running": True, "expected_s": None}
 
 
-def test_zero_out_clears_the_ring_but_keeps_the_logged_time(
-    client: TestClient, clock: FixedClock
-) -> None:
-    _seal(client, "Write report")
-    client.patch(f"/api/trials/{_id(client)}", json={"estimate": "45m"})
-    client.post("/api/seclusion/enter")
-    client.post("/api/seclusion/timer/start")
-    clock.set(clock.now() + timedelta(minutes=10))
-    state = client.post("/api/seclusion/timer/zero").json()
-    assert state["trial"]["timer"] == {"elapsed_s": 600, "running": False, "expected_s": 2700}
-    assert (state["ring_elapsed_s"], state["incense"]["remaining_s"]) == (0, 2700)
-
-
-def test_a_new_timer_starts_over_at_once_and_keeps_the_logged_time(
-    client: TestClient, clock: FixedClock
-) -> None:
-    _seal(client, "Write report")
-    client.patch(f"/api/trials/{_id(client)}", json={"estimate": "45m"})
-    client.post("/api/seclusion/enter")
-    client.post("/api/seclusion/timer/start")
-    clock.set(clock.now() + timedelta(minutes=10))
-    client.post("/api/seclusion/timer/new")
-    clock.set(clock.now() + timedelta(minutes=3))
-    state = _state(client)
-    assert state["trial"]["timer"]["elapsed_s"] == 13 * 60
-    assert state["trial"]["timer"]["running"] is True
-    assert state["ring_elapsed_s"] == 3 * 60
-
-
 def test_conquering_in_seclusion_promotes_the_next_trial_idle(client: TestClient) -> None:
     _seal(client, "Write report", "Tidy desk")
     client.post("/api/seclusion/enter")

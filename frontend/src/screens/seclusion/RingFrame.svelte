@@ -48,8 +48,11 @@
     --ring-fill: var(--cycles);
   }
 
+  /* A break fills the well with a shade of the hue; its words turn plain light ink. */
   .ring[data-tone='cycles-break'] {
     --ring-fill: var(--cycles-break);
+    --ring-disc: var(--cycles-break-disc);
+    --ring-words: var(--on-break-disc);
   }
 
   .ring[data-tone='flow'] {
@@ -58,6 +61,8 @@
 
   .ring[data-tone='flow-break'] {
     --ring-fill: var(--flow-break);
+    --ring-disc: var(--flow-break-disc);
+    --ring-words: var(--on-break-disc);
   }
 
   .inner {
@@ -69,6 +74,7 @@
     gap: var(--space-1);
     width: 70%;
     padding: var(--space-2);
+    color: var(--ring-words, inherit);
     text-align: center;
   }
 
@@ -76,8 +82,9 @@
     margin: 0;
   }
 
+  /* The numerals take the ring's own colour. */
   .inner :global(.big) {
-    color: var(--num);
+    color: var(--ring-words, var(--ring-fill));
     font-size: var(--text-numeral-ring);
     line-height: 1;
     text-shadow: var(--space-1) var(--space-1) 0 var(--num-shadow);
@@ -95,12 +102,12 @@
   }
 
   .inner :global(.small) {
-    color: var(--ink-muted);
+    color: var(--ring-words, var(--ink-muted));
     font-size: var(--text-body-sm);
   }
 
   .inner :global(.state) {
-    color: var(--ink-muted);
+    color: var(--ring-words, var(--ink-muted));
     font-size: var(--text-display-sm);
   }
 

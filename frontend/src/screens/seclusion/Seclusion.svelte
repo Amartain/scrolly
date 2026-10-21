@@ -1,5 +1,6 @@
 <!-- The focus room: the Immediate Trial, its timer and three release valves. Nothing else is shown. -->
 <script lang="ts">
+  import { tick } from 'svelte';
   import { playGong } from '../../lib/chime';
   import { onControl, typing } from '../../lib/keys';
   import { seclusion } from '../../lib/seclusion.svelte';
@@ -13,6 +14,7 @@
 
   const room = $derived(seclusion.state);
   const trial = $derived(room?.trial ?? null);
+  const folded = $derived(room?.sidebar_hidden ?? false);
 
   // The server says when the next gong is due; the browser only rings it, then asks again.
   $effect(() => {
@@ -40,11 +42,15 @@
     event.preventDefault();
   }
 
-  // N: jump to the Scribe box, as on the dashboard.
-  function onnote(event: KeyboardEvent) {
+  // N: jump to the Scribe box, as on the dashboard (opening the Parallel sidebar if it is folded).
+  async function onnote(event: KeyboardEvent) {
     const modified = event.altKey || event.ctrlKey || event.metaKey;
     if (modified || typing(event.target) || (event.key !== 'n' && event.key !== 'N')) return;
     event.preventDefault();
+    if (folded) {
+      await seclusion.hideSidebar(false);
+      await tick();
+    }
     document.getElementById('seclusion-scribe')?.focus();
   }
 </script>
@@ -53,7 +59,7 @@
 
 <div class="room">
   <TopBar {onleave} />
-  <div class="grid">
+  <div class="grid" class:folded>
     {#if room && trial}
       <FocusScroll {room} {trial} />
     {:else}
@@ -82,6 +88,11 @@
     padding: var(--space-4) var(--size-gutter) 0;
   }
 
+  /* The Parallel sidebar folded: a slim strip, and the focus scroll takes the rest. */
+  .grid.folded {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
   .notice {
     flex: none;
     min-height: var(--space-8);
@@ -95,7 +106,8 @@
       overflow-y: auto;
     }
 
-    .grid {
+    .grid,
+    .grid.folded {
       flex: none;
       grid-template-columns: minmax(0, 1fr);
     }

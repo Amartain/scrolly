@@ -69,6 +69,18 @@ def set_actual_qi(trial: Trial, qi: int) -> Trial:
     return replace(trial, qi_actual=check_qi(qi))
 
 
+def set_actual_minutes(trial: Trial, text: str) -> Trial:
+    """The time a conquered trial really took, as the user corrects it ("45m", "+1h5m").
+
+    The timer holds the same total, so a later Revive carries on from the corrected time.
+    """
+    _require(trial, TrialState.DONE, "Only a conquered trial's time can be corrected")
+    minutes = parse_duration(text.strip().removeprefix("+"))
+    if minutes is None:
+        raise TrialError("Write the time it took, for example 45m")
+    return replace(trial, essence_actual_min=minutes, timer_accumulated_s=minutes * 60)
+
+
 def postpone(
     trial: Trial, horizon: Sequence[HorizonItem], now: datetime
 ) -> tuple[Trial, list[HorizonItem]]:

@@ -46,6 +46,7 @@ def flow_out(bank: FlowBank) -> dict[str, Any]:
         "used_s": bank.used_s,
         "break_s": bank.break_s,
         "break_clock": _clock_out(bank.break_clock),
+        "stretch_from_s": bank.stretch_from_s,
     }
 
 
@@ -61,4 +62,5 @@ def flow_in(saved: dict[str, Any] | None, ratio: tuple[int, int]) -> FlowBank:
         int(saved.get("used_s", 0)),
         int(saved.get("break_s", 0)),
         _clock_in(saved.get("break_clock")),
+        int(saved.get("stretch_from_s", 0)),
     )

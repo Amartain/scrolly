@@ -4,7 +4,6 @@
   import GuidanceButton from '../../components/GuidanceButton.svelte';
   import GlyphIcon from '../../icons/GlyphIcon.svelte';
   import { SECLUSION } from '../../lib/copy-seclusion';
-  import SoundPopover from './SoundPopover.svelte';
 
   let { onleave }: { onleave: () => void } = $props();
 
@@ -34,7 +33,6 @@
   <GuidanceButton topic="seclusion" />
   <span class="tagline">{SECLUSION.tagline}</span>
   <span class="clock display digits">{time}</span>
-  <SoundPopover />
   <GlyphButton label={SECLUSION.fullScreen} onclick={toggleFullScreen}>
     <GlyphIcon name="fullscreen" />
   </GlyphButton>

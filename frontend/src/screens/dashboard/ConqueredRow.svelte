@@ -1,8 +1,11 @@
-<!-- A conquered trial is read-only. The one thing to do with it is Revive. -->
+<!-- A conquered trial is read-only, but for two things: Revive, and correcting the time it took
+     (double-click the time, or Enter on it). The time keeps its look while it is written. -->
 <script lang="ts">
   import Button from '../../components/Button.svelte';
+  import EditableText from '../../components/EditableText.svelte';
   import StateMark from '../../components/StateMark.svelte';
   import TypeMark from '../../components/TypeMark.svelte';
+  import { putTrialActual } from '../../lib/actual-api';
   import { today, type Conquered } from '../../lib/api';
   import { view } from '../../lib/view.svelte';
 
@@ -13,7 +16,15 @@
 
 <StateMark state="done" />
 <span class="title read">{trial.title}</span>
-<span class="figure digits">{trial.actual_text || '—'}</span>
+<span class="figure digits">
+  <EditableText
+    bare
+    value={trial.actual_text || '—'}
+    label="Actual time of {trial.title}"
+    hint="Double-click to correct"
+    onsave={(text) => view.act(() => putTrialActual(trial.id, text))}
+  />
+</span>
 {#if qiOn}
   <span class="figure digits">{trial.qi_text ? `${trial.qi_text} Qi` : '—'}</span>
 {/if}
@@ -35,6 +46,8 @@
 
   .figure {
     flex: none;
+    display: flex;
+    justify-content: flex-end;
     color: var(--ink-muted);
     font-size: var(--text-body-md);
     text-align: right;

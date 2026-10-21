@@ -1,16 +1,16 @@
-<!-- The left of the room: tabs, the trial at hand, the ring, the action bar. -->
+<!-- The left of the room: tabs, the trial at hand, the ring, the icon row, the action bar. -->
 <script lang="ts">
   import type { Immediate } from '../../lib/api';
   import { SECLUSION } from '../../lib/copy-seclusion';
   import { seclusion } from '../../lib/seclusion.svelte';
   import type { SeclusionState } from '../../lib/seclusion-api';
   import ActionBar from './ActionBar.svelte';
+  import ControlRow from './ControlRow.svelte';
   import CyclesRing from './CyclesRing.svelte';
   import CyclesSetup from './CyclesSetup.svelte';
   import FlowRing from './FlowRing.svelte';
   import Ring from './Ring.svelte';
   import Tabs from './Tabs.svelte';
-  import TimerRow from './TimerRow.svelte';
   import TrialHeader from './TrialHeader.svelte';
   import WhatNext from './WhatNext.svelte';
 
@@ -40,7 +40,7 @@
     {/if}
   </div>
   <p class="caption">{caption}</p>
-  <TimerRow {room} />
+  <ControlRow {room} />
   <ActionBar {room} {trial} />
 </section>
 

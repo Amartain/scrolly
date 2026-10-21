@@ -27,6 +27,10 @@ class SeclusionState:
     flow: FlowBank = field(default_factory=FlowBank)
     # The waiting trial run beside the one at hand. Stale once that trial is no longer waiting.
     parallel_id: str | None = None
+    # Cycles and Flow: each trial's logged seconds when it joined the run, and the stretch under way
+    # (a break ends a stretch). Restart and Zero out scrap the time since these marks.
+    run_marks: dict[str, int] = field(default_factory=dict)
+    stretch_marks: dict[str, int] = field(default_factory=dict)
 
 
 def read_state(store: Store) -> SeclusionState:
@@ -40,6 +44,8 @@ def read_state(store: Store) -> SeclusionState:
         cycles=cycles_in(saved.get("cycles")),
         flow=flow_in(saved.get("flow"), load_ratio(store)),
         parallel_id=saved.get("parallel_id"),
+        run_marks={k: int(v) for k, v in saved.get("run_marks", {}).items()},
+        stretch_marks={k: int(v) for k, v in saved.get("stretch_marks", {}).items()},
     )
 
 
@@ -52,6 +58,8 @@ def write_state(store: Store, state: SeclusionState, now: datetime) -> None:
         "cycles": cycles_out(state.cycles),
         "flow": flow_out(state.flow),
         "parallel_id": state.parallel_id,
+        "run_marks": state.run_marks,
+        "stretch_marks": state.stretch_marks,
     }
     store.settings.set(KEY, saved, now)
 

@@ -46,13 +46,13 @@ test('Cycles: Take a break now starts the break on the ring', async ({ page }) =
   await expect(room(page).locator('.ring[data-tone="cycles-break"]')).toContainText('break');
 });
 
-test('Cycles: Start new cycle returns to the dial, with the last settings', async ({ page }) => {
+test('Cycles: Start new cycle begins cycle 1 at once, with the last settings', async ({ page }) => {
   await underway(page, 'cycles', { focus_min: 7, break_min: 2, cycles: 2 });
   await room(page).getByRole('button', { name: 'Conquer Write report' }).click();
   await card(page).getByRole('button', { name: 'Start new cycle' }).click();
-  await expect(
-    room(page).getByRole('slider', { name: 'How long shall you cultivate?' }),
-  ).toHaveValue('7');
+  await expect(room(page).getByRole('timer')).toContainText('cycle 1 of 2');
+  await expect(room(page).getByRole('timer')).toContainText('06:');
+  await expect(room(page).getByRole('button', { name: 'Pause timer' })).toBeVisible();
 });
 
 test('Flow: Continue keeps the same bank, and the bank stops while nothing is worked on', async ({

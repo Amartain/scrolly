@@ -2,11 +2,11 @@ import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { section, sealDay } from './helpers';
 
-// The three release valves share one quiet frame; Bamboo Scraps can be folded away.
+// The Parallel sidebar: three cards on one scroll. It folds as a whole, as VS Code's side bar does.
 
 const pad = (page: Page) => page.getByRole('textbox', { name: 'Bamboo Scraps' });
-const column = (page: Page) =>
-  page.locator('.column').filter({ has: section(page, 'Parallel Flow') });
+const sidebar = (page: Page) => page.getByRole('complementary', { name: 'Parallel sidebar' });
+const strip = (page: Page) => page.getByRole('navigation', { name: 'Parallel sidebar' });
 
 async function enter(page: Page) {
   await sealDay(page, 'Write report');
@@ -15,42 +15,60 @@ async function enter(page: Page) {
   await expect(pad(page)).toBeVisible();
 }
 
-test('the valves sit in one frame, and Bamboo Scraps takes the height that is left', async ({
+test('three cards with header bands sit on one scroll; Bamboo Scraps takes the height left', async ({
   page,
 }) => {
   await enter(page);
-  await expect(column(page).locator('section')).toHaveCount(3);
-  // No box and no loud header of their own: the labels are small, in the body face.
-  await expect(page.locator('section.panel')).toHaveCount(0);
-  const frame = (await column(page).boundingBox())!;
+  await expect(sidebar(page).locator('section')).toHaveCount(3);
+  for (const name of ['Parallel Flow', 'Scribe Trial', 'Bamboo Scraps']) {
+    await expect(sidebar(page).getByRole('heading', { name })).toBeVisible();
+  }
+  // Headers are in capitals, as every other header.
+  const head = sidebar(page).getByRole('heading', { name: 'Scribe Trial' });
+  expect(await head.evaluate((el) => getComputedStyle(el).textTransform)).toBe('uppercase');
+  const frame = (await sidebar(page).boundingBox())!;
   const scraps = (await section(page, 'Bamboo Scraps').boundingBox())!;
-  expect(Math.abs(frame.y + frame.height - (scraps.y + scraps.height))).toBeLessThan(8);
-  // What is typed is in the pixel face like every other input, and fills the box.
+  expect(frame.y + frame.height - (scraps.y + scraps.height)).toBeLessThan(24);
   const font = await pad(page).evaluate((el) => getComputedStyle(el).fontFamily);
   expect(font).toContain('VT323');
-  const box = (await pad(page).boundingBox())!;
-  expect(box.height).toBeGreaterThan(scraps.height / 2);
 });
 
-test('Bamboo Scraps folds away, stays folded after a reload, and keeps what was written', async ({
+test('the whole sidebar folds to a strip, stays folded after a reload, and keeps the scrap', async ({
   page,
 }) => {
   await enter(page);
   await pad(page).fill('ask Sam about the invoice');
   await expect(page.getByRole('status').filter({ hasText: 'Saved' })).toBeVisible();
+  const scrollWidth = (await section(page, 'Focus Scroll').boundingBox())!.width;
 
-  const hide = page.getByRole('button', { name: 'Hide Bamboo Scraps' });
+  const hide = page.getByRole('button', { name: /Hide the Parallel sidebar/ });
   await expect(hide).toHaveAttribute('aria-expanded', 'true');
-  await hide.focus();
-  await page.keyboard.press('Enter');
-  await expect(pad(page)).toHaveCount(0);
-  const show = page.getByRole('button', { name: 'Show Bamboo Scraps' });
-  await expect(show).toHaveAttribute('aria-expanded', 'false');
+  await hide.click();
+  await expect(sidebar(page)).toHaveCount(0);
+  for (const name of ['Parallel Flow', 'Scribe Trial', 'Bamboo Scraps']) {
+    await expect(section(page, name)).toHaveCount(0);
+  }
+  await expect(strip(page)).toBeVisible();
+  // The focus scroll takes the width that was freed.
+  expect((await section(page, 'Focus Scroll').boundingBox())!.width).toBeGreaterThan(scrollWidth);
 
   await page.reload();
-  await expect(show).toBeVisible();
-  await expect(pad(page)).toHaveCount(0);
-
-  await show.click();
+  await expect(strip(page)).toBeVisible();
+  await page.keyboard.press('Control+b');
   await expect(pad(page)).toHaveValue('ask Sam about the invoice');
+  await page.keyboard.press('Control+b');
+  await expect(strip(page)).toBeVisible();
+});
+
+test('a mark on the strip opens the sidebar on its section; N opens it at Scribe', async ({
+  page,
+}) => {
+  await enter(page);
+  await page.getByRole('button', { name: /Hide the Parallel sidebar/ }).click();
+  await strip(page).getByRole('button', { name: 'Open Scribe Trial' }).click();
+  await expect(page.getByRole('textbox', { name: 'Scribe a sudden trial' })).toBeFocused();
+
+  await page.getByRole('button', { name: /Hide the Parallel sidebar/ }).click();
+  await page.keyboard.press('n');
+  await expect(page.getByRole('textbox', { name: 'Scribe a sudden trial' })).toBeFocused();
 });

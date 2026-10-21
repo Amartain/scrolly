@@ -14,8 +14,9 @@ from scrolly.ports import Clock, Store
 from scrolly.services.dashboard_view import TimerView
 from scrolly.services.day import run_rollover
 from scrolly.services.scraps import ScrapService
+from scrolly.services.seclusion_correct import TimerCorrection, scrap_preview
 from scrolly.services.seclusion_parallel import ParallelControl, ParallelView
-from scrolly.services.seclusion_prefs import load_plan, load_scraps_hidden
+from scrolly.services.seclusion_prefs import load_plan, load_sidebar_hidden
 from scrolly.services.seclusion_runs import RunControl
 from scrolly.services.seclusion_state import read_state, working_day, write_state
 from scrolly.services.today import TodayService
@@ -35,7 +36,9 @@ class SeclusionView:
     flow: FlowView | None  # only on the Flow tab
     remaining: list[Trial]
     parallel: ParallelView | None = None  # the trial run beside this one
-    scraps_hidden: bool = False  # Bamboo Scraps is folded away
+    sidebar_hidden: bool = False  # the Parallel sidebar is folded to a strip
+    restart_scrap_s: int = 0  # what Restart would take off the trial now
+    zero_scrap_s: int = 0  # what Zero out would take off the trial now
 
 
 class SeclusionService:
@@ -48,6 +51,7 @@ class SeclusionService:
         self._runs = RunControl(store, clock, self._today)
         self._scraps = ScrapService(store, clock)
         self.parallel = ParallelControl(store, clock, self._today, self._scraps)
+        self.timer = TimerCorrection(store, clock, self._today, self._runs)
 
     @property
     def _now(self) -> datetime:
@@ -120,33 +124,9 @@ class SeclusionService:
         }[how]
         end(trial_id)
 
-    def new_timer(self) -> None:
-        """A fresh timer on the same trial: the ring starts over, the logged time stays."""
-        if read_state(self._store).discipline is not Discipline.INCENSE:
-            self._runs.reset()
-            return
-        trial = self._immediate()
-        self._set_baseline(trial)
-        self._today.pause_timer(trial.id)
-        self._today.start_timer(trial.id, Discipline.INCENSE)
-
-    def zero_out(self) -> None:
-        """Stop and clear the ring. The time already logged on the trial stays."""
-        if read_state(self._store).discipline is not Discipline.INCENSE:
-            self._runs.reset()
-            return
-        trial = self._immediate()
-        self._today.pause_timer(trial.id)
-        self._set_baseline(trial)
-
-    def _set_baseline(self, trial: Trial) -> None:
-        state = read_state(self._store)
-        baselines = {**state.baselines, trial.id: elapsed_seconds(trial, self._now)}
-        write_state(self._store, replace(state, baselines=baselines), self._now)
-
     def view(self) -> SeclusionView:
-        hidden = load_scraps_hidden(self._store)
-        return replace(self._room_view(), parallel=self.parallel.view(), scraps_hidden=hidden)
+        hidden = load_sidebar_hidden(self._store)
+        return replace(self._room_view(), parallel=self.parallel.view(), sidebar_hidden=hidden)
 
     def _room_view(self) -> SeclusionView:
         state = self._runs.settle()
@@ -154,9 +134,10 @@ class SeclusionService:
         trials = self._trials()
         trial = immediate_of(trials)
         plan = load_plan(self._store)
-        remaining = sorted(
-            (t for t in trials if t.state is TrialState.REMAINING), key=lambda t: t.position
-        )
+        # The trial run beside is not offered: one trial is never both main and parallel.
+        beside = state.parallel_id
+        waiting = (t for t in trials if t.state is TrialState.REMAINING and t.id != beside)
+        remaining = sorted(waiting, key=lambda t: t.position)
         cycles = (
             cycles_view(state.cycles, plan, now) if state.discipline is Discipline.CYCLES else None
         )
@@ -180,6 +161,7 @@ class SeclusionService:
         expected = None if trial.essence_expected_min is None else trial.essence_expected_min * 60
         ring = ring_elapsed(elapsed, state.baselines.get(trial.id, 0))
         incense = state.discipline is Discipline.INCENSE
+        restart_scrap, zero_scrap = scrap_preview(state, trial, now)
         return SeclusionView(
             active=state.active,
             discipline=state.discipline,
@@ -192,4 +174,6 @@ class SeclusionService:
             cycles=cycles,
             flow=flow,
             remaining=remaining,
+            restart_scrap_s=restart_scrap,
+            zero_scrap_s=zero_scrap,
         )

@@ -1,13 +1,16 @@
 import { DAY_GUIDES } from './copy-guidance-day';
 import { SCROLL_GUIDES } from './copy-guidance-scroll';
+import { SECLUSION_GUIDES } from './copy-guidance-seclusion';
 
-/** One `?` scroll: a short tip on hover, then why (the Dao), how (the Art) and the words in plain language. */
+/** One `?` scroll: a short tip on hover, then why (the Dao), how (the Art) and the words in plain
+ *  language; where a screen has shortcuts, its keys. */
 export interface Guide {
   name: string;
   tip: string;
   dao: string;
   art: string;
   terms: readonly (readonly [string, string])[];
+  keys?: readonly (readonly [string, string])[];
 }
 
 /** DRAFT, proposed 2026-10-21: the words around every `?` scroll. */
@@ -15,6 +18,7 @@ export const GUIDANCE = {
   dao: 'The Dao of Practice',
   art: 'Artisan Execution',
   terms: 'In plain words',
+  keys: 'Keys',
   close: 'Roll Up Guidance Scroll',
   button: (name: string) => `Guidance: ${name}`,
   title: (name: string) => `${name}: Guidance`,
@@ -31,14 +35,7 @@ const OTHER_GUIDES = {
       ['Sent to the Horizon', 'a trial postponed, or a Mandate returned, to wait there.'],
     ],
   },
-  seclusion: {
-    name: 'Seclusion',
-    tip: 'Three ways to focus.',
-    dao: 'A narrow room makes work easier to begin. Choose the way that fits the day.',
-    art: 'Incense: the trial’s estimate burns down. Harmonious Cycles: focus, rest, repeat. River Flow: count up and bank rest as you go. Esc steps out and pauses the trial.',
-    terms: [['Seclusion', 'the focus room, where only the trial at hand is shown.']],
-  },
 } as const satisfies Record<string, Guide>;
 
-export const GUIDE = { ...DAY_GUIDES, ...SCROLL_GUIDES, ...OTHER_GUIDES };
+export const GUIDE = { ...DAY_GUIDES, ...SCROLL_GUIDES, ...OTHER_GUIDES, ...SECLUSION_GUIDES };
 export type GuideKey = keyof typeof GUIDE;

@@ -9,14 +9,14 @@ from scrolly.api.schemas.seclusion import (
     DisciplineIn,
     FinishIn,
     RatioIn,
-    ScrapsHiddenIn,
     SeclusionOut,
+    SidebarHiddenIn,
 )
 from scrolly.domain.cycles import make_plan
 from scrolly.ports import Clock, Store
 from scrolly.services.day import DayService
 from scrolly.services.seclusion import SeclusionService
-from scrolly.services.seclusion_prefs import save_scraps_hidden
+from scrolly.services.seclusion_prefs import save_sidebar_hidden
 
 router = APIRouter(prefix="/api/seclusion")
 
@@ -119,12 +119,12 @@ def finish_parallel(body: ParallelFinishIn, seclusion: SeclusionDep) -> Seclusio
     return SeclusionOut.from_view(seclusion.view())
 
 
-@router.put("/scraps-hidden")
-def hide_scraps(
-    body: ScrapsHiddenIn, seclusion: SeclusionDep, store: StoreDep, clock: ClockDep
+@router.put("/sidebar-hidden")
+def hide_sidebar(
+    body: SidebarHiddenIn, seclusion: SeclusionDep, store: StoreDep, clock: ClockDep
 ) -> SeclusionOut:
-    """Fold Bamboo Scraps away in the focus room, or unfold it. The choice is kept."""
-    save_scraps_hidden(store, body.hidden, clock.now())
+    """Fold the Parallel sidebar to a strip, or open it again. The choice is kept."""
+    save_sidebar_hidden(store, body.hidden, clock.now())
     return SeclusionOut.from_view(seclusion.view())
 
 
@@ -135,12 +135,21 @@ def pause_timer(seclusion: SeclusionDep) -> SeclusionOut:
 
 
 @router.post("/timer/new")
-def new_timer(seclusion: SeclusionDep) -> SeclusionOut:
-    seclusion.new_timer()
+def restart_timer(seclusion: SeclusionDep) -> SeclusionOut:
+    """Restart: from zero, at once. The time on this timer is scrapped (the screen asked)."""
+    seclusion.timer.restart()
     return SeclusionOut.from_view(seclusion.view())
 
 
 @router.post("/timer/zero")
 def zero_out(seclusion: SeclusionDep) -> SeclusionOut:
-    seclusion.zero_out()
+    """The focus or break under way starts over; a focus's time is scrapped (the screen asked)."""
+    seclusion.timer.zero_out()
+    return SeclusionOut.from_view(seclusion.view())
+
+
+@router.post("/timer/stop")
+def stop_timer(seclusion: SeclusionDep) -> SeclusionOut:
+    """End the Cycles or Flow run and go back to its setup. The time is kept."""
+    seclusion.timer.stop()
     return SeclusionOut.from_view(seclusion.view())

@@ -141,6 +141,12 @@ class QiActualIn(BaseModel):
     qi: int
 
 
+class ActualIn(BaseModel):
+    """The time a conquered trial took, as written: "45m", "1h5m"."""
+
+    text: str
+
+
 class TrialPatchIn(BaseModel):
     """Only the fields that are sent change. A conquered trial is read-only."""
 

@@ -9,7 +9,7 @@
   const room = $derived(seclusion.state);
 </script>
 
-<Valve title={SECLUSION.parallelTitle}>
+<Valve id="valve-parallel" title={SECLUSION.parallelTitle} icon="parallel">
   {#if !room?.trial}
     <p class="empty">{SECLUSION.parallelLine}</p>
   {:else if room.parallel}

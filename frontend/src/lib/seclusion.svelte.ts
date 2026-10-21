@@ -174,12 +174,14 @@ class SeclusionStore {
     this.ratios = done;
     return done;
   };
-  newTimer = () => {
+  /** From zero, at once. The screen has asked before any time is scrapped. */
+  restart = () => {
     this.finished = null;
-    return this.act(api.newTimer);
+    return this.act(api.restart);
   };
   zeroOut = () => this.act(api.zeroOut);
-  hideScraps = (hidden: boolean) => this.act(() => api.hideScraps(hidden));
+  stop = () => this.act(api.stop);
+  hideSidebar = (hidden: boolean) => this.act(() => api.hideSidebar(hidden));
 }
 
 export const seclusion = new SeclusionStore();
