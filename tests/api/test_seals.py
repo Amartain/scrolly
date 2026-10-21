@@ -51,6 +51,8 @@ def test_a_day_number_returns_that_days_milestone(client: TestClient) -> None:
     )
     assert _words(client, "21")["view"]["milestone"]["cycles"] == 21
     assert _words(client, "arise")["view"]["milestone"]["quote"] == "Arise."
+    assert _words(client, "arise")["view"]["milestone"]["style"] == "glitch"
+    assert _words(client, "99")["view"]["milestone"]["style"] == "plain"
 
 
 def test_the_4am_seal_settles_todays_open_trials_like_the_rollover(client: TestClient) -> None:

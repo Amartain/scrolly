@@ -23,6 +23,7 @@
 
 <Panel
   title="Remaining Trials"
+  guide="remaining"
   count={remaining.length}
   hint="drag a row or Alt+↑↓ to reorder"
   scroll

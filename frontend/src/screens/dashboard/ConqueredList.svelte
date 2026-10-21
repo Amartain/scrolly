@@ -14,7 +14,14 @@
   <ConqueredRow {trial} />
 {/snippet}
 
-<Panel title="Conquered Today" tone="conquered" count={conquered.length} scroll striped>
+<Panel
+  title="Conquered Today"
+  tone="conquered"
+  guide="conquered"
+  count={conquered.length}
+  scroll
+  striped
+>
   {#if view.notice}<p class="notice" role="status"><NoticeText /></p>{/if}
   <RowList items={conquered} {row} empty={EMPTY.conquered} />
 </Panel>

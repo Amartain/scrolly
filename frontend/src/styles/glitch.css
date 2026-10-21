@@ -1,0 +1,72 @@
+/* The Day 100 glitch (components/GlitchOverlay.svelte). Kept apart so the component stays short.
+   A short tear and jitter, then still: hard steps, so it reads as a fault and not as a slide. */
+@keyframes glitch-in {
+  0% {
+    opacity: 0;
+    transform: translate(-0.75rem, 0) skewX(10deg);
+    clip-path: inset(40% 0 30% 0);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(0.75rem, 0.125rem) skewX(-6deg);
+    clip-path: inset(5% 0 65% 0);
+    filter: hue-rotate(90deg);
+  }
+  24% {
+    transform: translate(-0.375rem, -0.125rem);
+    clip-path: inset(60% 0 8% 0);
+  }
+  36% {
+    transform: translate(0.5rem, 0) skewX(4deg);
+    clip-path: inset(0 0 0 0);
+    filter: none;
+  }
+  48% {
+    transform: translate(-0.25rem, 0.0625rem);
+    filter: hue-rotate(-60deg);
+  }
+  62% {
+    transform: translate(0.125rem, 0);
+    filter: none;
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+  }
+}
+
+@keyframes glitch-split {
+  0%,
+  30%,
+  55% {
+    text-shadow:
+      -0.25rem 0 var(--glitch-split-a),
+      0.25rem 0 var(--glitch-split-b);
+  }
+  15%,
+  45%,
+  70%,
+  100% {
+    text-shadow: var(--glitch-text-glow);
+  }
+}
+
+@keyframes glitch-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@keyframes glitch-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

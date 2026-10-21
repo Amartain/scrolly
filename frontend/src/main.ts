@@ -8,5 +8,6 @@ import './styles/tokens/pavilion-teal.css';
 import './styles/tokens/pavilion-crimson.css';
 import './styles/tokens/pavilion-purple.css';
 import './styles/global.css';
+import './styles/glitch.css';
 
 mount(App, { target: document.getElementById('app')! });

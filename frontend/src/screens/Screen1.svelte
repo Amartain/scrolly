@@ -47,7 +47,7 @@
       {:else if dashboard?.immediate}
         <ImmediateCard trial={dashboard.immediate} {onseclusion} />
       {:else}
-        <Panel title="The Immediate Trial" empty={EMPTY.immediate} />
+        <Panel title="The Immediate Trial" guide="immediate" empty={EMPTY.immediate} />
       {/if}
     </div>
     <ConqueredList />
@@ -58,7 +58,7 @@
       <StatCard title="Heavenly Cycles" value={dashboard?.heavenly_cycles ?? 0} />
     </div>
     {#if series}
-      <Panel title="Cumulative Momentum">
+      <Panel title="Cumulative Momentum" guide="momentum">
         {#snippet actions()}
           {#if live}
             <MetricToggle
@@ -71,7 +71,7 @@
         {/snippet}
         <MomentumChart {series} />
       </Panel>
-      <Panel title="Rhythm">
+      <Panel title="Rhythm" guide="rhythm">
         {#snippet actions()}
           {#if live}
             <MetricToggle

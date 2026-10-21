@@ -2,6 +2,10 @@
 
 from collections.abc import Sequence
 from dataclasses import dataclass
+from typing import Literal
+
+# "glitch" is Day 100: the scroll breaks into a system window (the one style exception).
+MilestoneStyle = Literal["plain", "glitch"]
 
 
 @dataclass(frozen=True)
@@ -19,6 +23,7 @@ class MilestoneRow:
     day: int
     quote: Quote | None = None
     banner: str | None = None
+    style: MilestoneStyle = "plain"
 
 
 @dataclass(frozen=True)
@@ -26,10 +31,16 @@ class Milestone:
     cycles: int
     quote: Quote
     banner: str | None
+    style: MilestoneStyle = "plain"
 
 
 def milestone_for(cycles: int, rows: Sequence[MilestoneRow], quotes: Sequence[Quote]) -> Milestone:
     """What to show after sealing the `cycles`-th day. The same day always gets the same quote."""
     row = next((r for r in rows if r.day == cycles), None)
     quote = row.quote if row is not None and row.quote is not None else quotes[cycles % len(quotes)]
-    return Milestone(cycles=cycles, quote=quote, banner=row.banner if row is not None else None)
+    return Milestone(
+        cycles=cycles,
+        quote=quote,
+        banner=row.banner if row is not None else None,
+        style=row.style if row is not None else "plain",
+    )

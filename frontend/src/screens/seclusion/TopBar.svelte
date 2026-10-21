@@ -1,6 +1,7 @@
 <script lang="ts">
   import Button from '../../components/Button.svelte';
   import GlyphButton from '../../components/GlyphButton.svelte';
+  import GuidanceButton from '../../components/GuidanceButton.svelte';
   import GlyphIcon from '../../icons/GlyphIcon.svelte';
   import { SECLUSION } from '../../lib/copy-seclusion';
   import SoundPopover from './SoundPopover.svelte';
@@ -30,6 +31,7 @@
 <header class="bar">
   <Button label={SECLUSION.stepOut} description="Step out of Seclusion" onclick={onleave} />
   <h1 class="title display">{SECLUSION.title}</h1>
+  <GuidanceButton topic="seclusion" />
   <span class="tagline">{SECLUSION.tagline}</span>
   <span class="clock display digits">{time}</span>
   <SoundPopover />

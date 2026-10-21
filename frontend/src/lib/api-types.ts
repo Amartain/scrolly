@@ -58,6 +58,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/archives": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Archives
+         * @description The Grand Archives: fourteen past days, newest first. `before` asks for older ones.
+         */
+        get: operations["archives_api_archives_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/arts": {
         parameters: {
             query?: never;
@@ -1377,6 +1397,54 @@ export interface components {
             reading_font: components["schemas"]["ReadingFont"];
             theme: components["schemas"]["Theme"];
         };
+        /**
+         * ArchiveCardOut
+         * @description One past day: its Essence, the quiet days before it, and what became of each trial.
+         */
+        ArchiveCardOut: {
+            /** Actual Text */
+            actual_text: string;
+            /** Conquered */
+            conquered: components["schemas"]["ArchiveRowOut"][];
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Day Text */
+            day_text: string;
+            /** Expected Text */
+            expected_text: string;
+            /** Lost */
+            lost: components["schemas"]["ArchiveRowOut"][];
+            /** Rest Days */
+            rest_days: number;
+            /** Sent Back */
+            sent_back: components["schemas"]["ArchiveRowOut"][];
+        };
+        /** ArchivePageOut */
+        ArchivePageOut: {
+            /** Cards */
+            cards: components["schemas"]["ArchiveCardOut"][];
+            /** Older */
+            older: string | null;
+        };
+        /** ArchiveRowOut */
+        ArchiveRowOut: {
+            /** Actual Text */
+            actual_text: string;
+            /** At Text */
+            at_text: string;
+            /** Expected Text */
+            expected_text: string;
+            /** Id */
+            id: string;
+            /** Qi Text */
+            qi_text: string;
+            /** Title */
+            title: string;
+            type: components["schemas"]["TrialType"];
+        };
         /** ArtAddIn */
         ArtAddIn: {
             /**
@@ -1814,6 +1882,11 @@ export interface components {
             quote: string;
             /** Stand In */
             stand_in: boolean;
+            /**
+             * Style
+             * @enum {string}
+             */
+            style: "plain" | "glitch";
         };
         /** OrderIn */
         OrderIn: {
@@ -2398,6 +2471,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    archives_api_archives_get: {
+        parameters: {
+            query?: {
+                before?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ArchivePageOut"];
                 };
             };
             /** @description Validation Error */

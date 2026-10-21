@@ -60,6 +60,26 @@ test('Cycles: Enter does what Next and Start do', async ({ page }) => {
   await expect(room(page)).toContainText('cycle 1 of 3');
 });
 
+test('Cycles: two cycles set on the dial run two, with the break buttons between', async ({
+  page,
+}) => {
+  await enterOn(page, 'Harmonious Cycles', 'Write report');
+  await button(page, 'Next').click();
+  await button(page, 'Next').click();
+  await room(page).getByRole('button', { name: 'Fewer cycles' }).click();
+  await expect(field(page, 'cycles')).toHaveValue('2');
+  await button(page, 'Start').click();
+  await expect(room(page)).toContainText('cycle 1 of 2');
+
+  await button(page, 'Take a break').click();
+  await expect(ring(page)).toHaveAttribute('data-tone', 'cycles-break');
+  await button(page, 'Skip break').click();
+  await expect(ring(page)).toContainText('ready');
+  await button(page, 'Start').click();
+  await expect(room(page)).toContainText('cycle 2 of 2');
+  await expect(ring(page)).toHaveAttribute('data-tone', 'cycles');
+});
+
 test('Cycles: a time typed over the limit stops at the limit', async ({ page }) => {
   await enterOn(page, 'Harmonious Cycles', 'Write report');
   await room(page)

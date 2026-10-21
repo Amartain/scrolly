@@ -21,7 +21,7 @@
   }
 </script>
 
-<Panel title="Scribe Trial">
+<Panel title="Scribe Trial" guide="scribe">
   <form class="scribe" onsubmit={inscribe}>
     <input
       id="scribe-title"

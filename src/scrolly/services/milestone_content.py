@@ -28,7 +28,9 @@ def load_quotes() -> list[Quote]:
 @cache
 def load_milestones() -> list[MilestoneRow]:
     return [
-        MilestoneRow(raw["day"], _quote(raw.get("quote")), raw.get("banner"))
+        MilestoneRow(
+            raw["day"], _quote(raw.get("quote")), raw.get("banner"), raw.get("style", "plain")
+        )
         for raw in _read("milestones.json")
     ]
 

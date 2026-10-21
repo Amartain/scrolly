@@ -81,6 +81,24 @@
 
   --motion-fast: 150ms;
 
+  /* The Day 100 glitch is a sci-fi system window, the same in every theme (features.md): dark
+     surfaces, cyan light, and the one motion that may exceed the limits. Its fade under reduced
+     motion is still a plain fade, as features.md asks. */
+  --glitch-bg: #020617;
+  --glitch-bg-raised: #0b132b;
+  --glitch-line: #00e5ff;
+  --glitch-ink: #d6f6ff;
+  --glitch-ink-muted: #8bb7c6;
+  --glitch-split-a: #ff2d6f;
+  --glitch-split-b: #00e5ff;
+  --glitch-glow: 0 0 1.5rem #00e5ff, inset 0 0 1rem rgba(0, 229, 255, 0.25);
+  --glitch-text-glow: 0 0 0.75rem #00e5ff;
+  --glitch-fade: 150ms;
+  --glitch-run: 1.1s;
+  --size-guide-button: 1.75rem;
+  --size-glitch: 34rem;
+  --text-glitch-numeral: 7.5rem;
+
   /* The three theme orbs show every theme at once, so these do not follow the active theme. */
   --swatch-serene: #f3eed0;
   --swatch-teal: #007a6f;

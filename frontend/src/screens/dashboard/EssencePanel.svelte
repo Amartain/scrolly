@@ -7,7 +7,7 @@
   const qi = $derived(view.planning?.qi);
 </script>
 
-<Panel title="Essence">
+<Panel title="Essence" guide="essence">
   {#if essence}
     <div class="essence">
       <span class="figure digits">{essence.actual_text} / {essence.expected_text}</span>

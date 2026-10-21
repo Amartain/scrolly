@@ -1,5 +1,6 @@
 <script lang="ts">
   import Button from '../components/Button.svelte';
+  import { ARCHIVES } from '../lib/copy-archives';
   import { DISPATCH } from '../lib/copy';
   import { SECLUSION } from '../lib/copy-seclusion';
   import { SCREEN_TWO_ID } from '../lib/screens';
@@ -9,7 +10,11 @@
   import RemainingPanel from './screen2/RemainingPanel.svelte';
   import ScribePanel from './screen2/ScribePanel.svelte';
 
-  let { ondispatch, onscraps }: { ondispatch: () => void; onscraps: () => void } = $props();
+  let {
+    ondispatch,
+    onscraps,
+    onarchives,
+  }: { ondispatch: () => void; onscraps: () => void; onarchives: () => void } = $props();
 </script>
 
 <div class="screen" id={SCREEN_TWO_ID}>
@@ -22,6 +27,7 @@
   <div class="column right">
     <HorizonPanel />
     <div class="tools">
+      <Button label={ARCHIVES.open} tone="archives" onclick={onarchives} />
       <Button label={SECLUSION.scrapsTitle} onclick={onscraps} />
       <Button label={DISPATCH.open} onclick={ondispatch} />
     </div>

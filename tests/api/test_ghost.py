@@ -3,6 +3,7 @@ from typing import Any
 from fastapi.testclient import TestClient
 
 from scrolly.clock import FixedClock
+from scrolly.storage.store import SqliteStores
 from tests.api.seclusion_helpers import enter_on, later, room, seal
 
 TEN_MINUTES = 10 * 60
@@ -24,6 +25,24 @@ def _run_dashboard_timer_for_ten_minutes(client: TestClient, clock: FixedClock) 
     client.post(f"/api/trials/{trial}/timer/start")
     later(clock, 10)
     _view(client)  # the user is still here at the ten-minute mark
+
+
+def _last_seen(stores: SqliteStores) -> str:
+    with stores() as store:
+        return str((store.settings.get("ghost") or {})["last_seen"])
+
+
+def test_requests_close_together_write_last_seen_once(
+    client: TestClient, clock: FixedClock, stores: SqliteStores
+) -> None:
+    _view(client)
+    first = _last_seen(stores)
+    later(clock, 0.1)  # six seconds on
+    _view(client)
+    assert _last_seen(stores) == first
+    later(clock, 1)
+    _view(client)
+    assert _last_seen(stores) != first
 
 
 def test_a_long_silence_with_a_timer_running_pauses_it_and_asks(

@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import type { GuideKey } from '../lib/copy-guidance';
+  import GuidanceButton from './GuidanceButton.svelte';
 
   type Tone = 'neutral' | 'horizon' | 'foundational' | 'restorative' | 'conquered';
 
@@ -11,6 +13,7 @@
     striped = false,
     count,
     hint,
+    guide,
     actions,
     children,
   }: {
@@ -23,6 +26,8 @@
     count?: number;
     /** A short line in the header, for example how to reorder. */
     hint?: string;
+    /** The `?` after the title: which guidance scroll it opens. */
+    guide?: GuideKey;
     /** Small controls at the right of the header, for example the expand button. */
     actions?: Snippet;
     children?: Snippet;
@@ -31,7 +36,10 @@
 
 <section class="panel {tone}" aria-label={title}>
   <div class="head">
-    <h2 class="display">{title}{count === undefined ? '' : ` · ${count}`}</h2>
+    <div class="heading">
+      <h2 class="display">{title}{count === undefined ? '' : ` · ${count}`}</h2>
+      {#if guide}<GuidanceButton topic={guide} />{/if}
+    </div>
     {#if hint}<span class="hint">{hint}</span>{/if}
     {#if actions}<span class="actions">{@render actions()}</span>{/if}
   </div>
@@ -67,6 +75,13 @@
     background: var(--head-bg);
     color: var(--head-ink);
     border-bottom: var(--border-width) solid var(--line);
+  }
+
+  .heading {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-width: 0;
   }
 
   .head h2 {

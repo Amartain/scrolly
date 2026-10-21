@@ -24,7 +24,7 @@
     view.act(() => today.update(trial.id, { is_mandate: !trial.is_mandate }));
 </script>
 
-<Panel title="The Immediate Trial" scroll>
+<Panel title="The Immediate Trial" guide="immediate" scroll>
   <div class="card">
     <div class="top">
       <span class="mark"><StateMark state="immediate" /></span>

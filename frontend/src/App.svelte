@@ -4,6 +4,7 @@
   import { seclusion } from './lib/seclusion.svelte';
   import { view } from './lib/view.svelte';
   import Header from './screens/Header.svelte';
+  import ArchivesPage from './screens/archives/ArchivesPage.svelte';
   import ScrapsPage from './screens/scraps/ScrapsPage.svelte';
   import Seclusion from './screens/seclusion/Seclusion.svelte';
   import Phase1 from './screens/Phase1.svelte';
@@ -13,6 +14,7 @@
   import Screen2 from './screens/Screen2.svelte';
   import MilestoneOverlay from './components/MilestoneOverlay.svelte';
   import GhostCard from './components/GhostCard.svelte';
+  import GuidanceScroll from './components/GuidanceScroll.svelte';
   import QiCard from './components/QiCard.svelte';
   import PlanningTimer from './components/PlanningTimer.svelte';
   import SunsetAdvisor from './components/SunsetAdvisor.svelte';
@@ -22,7 +24,9 @@
   import Settings from './screens/Settings.svelte';
   import ZeroState from './screens/ZeroState.svelte';
 
-  let mode = $state<'dashboard' | 'settings' | 'dispatch' | 'scraps' | 'seclusion'>('dashboard');
+  let mode = $state<'dashboard' | 'settings' | 'dispatch' | 'scraps' | 'archives' | 'seclusion'>(
+    'dashboard',
+  );
 
   $effect(() => view.start());
 
@@ -96,6 +100,9 @@
   {:else if mode === 'scraps'}
     <Header settingsOpen={false} onsettings={toggleSettings} />
     <ScrapsPage onback={() => (mode = 'dashboard')} />
+  {:else if mode === 'archives'}
+    <Header settingsOpen={false} onsettings={toggleSettings} />
+    <ArchivesPage onback={() => (mode = 'dashboard')} />
   {:else if status === 'zero'}
     <ZeroState />
   {:else if status === 'inscribe'}
@@ -111,8 +118,13 @@
 </div>
 <QiCard />
 <GhostCard />
+<GuidanceScroll />
 {#if onDashboard}
-  <Screen2 ondispatch={() => (mode = 'dispatch')} onscraps={() => (mode = 'scraps')} />
+  <Screen2
+    ondispatch={() => (mode = 'dispatch')}
+    onscraps={() => (mode = 'scraps')}
+    onarchives={() => (mode = 'archives')}
+  />
   <MilestoneOverlay />
   <SunsetAdvisor />
   <SunsetPoem />

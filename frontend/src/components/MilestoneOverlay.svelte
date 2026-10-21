@@ -3,13 +3,21 @@
   import { MILESTONE } from '../lib/copy';
   import { view } from '../lib/view.svelte';
   import Button from './Button.svelte';
+  import GlitchOverlay from './GlitchOverlay.svelte';
   import Modal from './Modal.svelte';
 
   const milestone = $derived(view.milestone);
   const close = () => view.dismissMilestone();
 </script>
 
-{#if milestone}
+{#if milestone?.style === 'glitch'}
+  <GlitchOverlay
+    cycles={milestone.cycles}
+    quote={milestone.quote}
+    attribution={milestone.attribution}
+    onclose={close}
+  />
+{:else if milestone}
   <Modal title={MILESTONE.title} onclose={close}>
     <div class="sheet">
       {#if milestone.banner}<p class="banner display">{milestone.banner}</p>{/if}

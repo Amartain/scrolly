@@ -32,7 +32,7 @@
   <HorizonRow {item} onsummon={() => view.act(() => today.summon('horizon', item.id))} />
 {/snippet}
 
-<Panel title="The Horizon" tone="horizon" count={order.shown.length} scroll striped>
+<Panel title="The Horizon" tone="horizon" guide="horizon" count={order.shown.length} scroll striped>
   {#snippet actions()}
     <ExpandButton label="Expand The Horizon" onclick={() => (expanded = true)} />
   {/snippet}

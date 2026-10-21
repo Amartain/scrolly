@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from scrolly.domain.milestones import Milestone
+from scrolly.domain.milestones import Milestone, MilestoneStyle
 
 
 class MilestoneOut(BaseModel):
@@ -11,6 +11,7 @@ class MilestoneOut(BaseModel):
     quote: str
     attribution: str | None
     stand_in: bool
+    style: MilestoneStyle
 
     @classmethod
     def from_milestone(cls, milestone: Milestone) -> "MilestoneOut":
@@ -20,4 +21,5 @@ class MilestoneOut(BaseModel):
             quote=milestone.quote.text,
             attribution=milestone.quote.attribution,
             stand_in=milestone.quote.stand_in,
+            style=milestone.style,
         )

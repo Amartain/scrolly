@@ -52,6 +52,7 @@
   {
     "day": 100,
     "quote": { "text": "Arise.", "attribution": "Sung Jinwoo" },
-    "banner": null
+    "banner": null,
+    "style": "glitch"
   }
 ]

@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 
 from scrolly.api.routes import (
     advisor,
+    archives,
     arts,
     dispatch,
     export,
@@ -109,6 +110,7 @@ def create_app(
     app.include_router(trials.router)
     app.include_router(seclusion.router)
     app.include_router(scraps.router)
+    app.include_router(archives.router)
     app.include_router(horizon.router)
     app.include_router(arts.router)
     if static_dir is not None and static_dir.is_dir():

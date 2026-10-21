@@ -24,13 +24,13 @@
 {/snippet}
 
 <div class="pair">
-  <Panel title="Postponed Today" count={postponed.length}>
+  <Panel title="Postponed Today" guide="postponed" count={postponed.length}>
     {#snippet actions()}
       <ExpandButton label="Expand Postponed Today" onclick={() => (open = 'postponed')} />
     {/snippet}
     {@render line(postponed, 'postponed', EMPTY.postponed)}
   </Panel>
-  <Panel title="Fallen Leaves" count={lost.length}>
+  <Panel title="Fallen Leaves" guide="fallen" count={lost.length}>
     {#snippet actions()}
       <ExpandButton label="Expand Fallen Leaves" onclick={() => (open = 'lost')} />
     {/snippet}

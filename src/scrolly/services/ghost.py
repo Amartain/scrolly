@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from scrolly.domain.duration import format_duration
-from scrolly.domain.ghost import is_ghost_gap
+from scrolly.domain.ghost import is_ghost_gap, needs_note
 from scrolly.ports import Clock, Store
 from scrolly.services.ghost_freeze import Frozen, freeze, thaw
 
@@ -74,11 +74,14 @@ class GhostService:
         """Note the user is here. After a long silence, pause what ran when they left."""
         now = self._clock.now()
         seen, ghost = _read(self._store)
+        found = False
         if ghost is None and seen is not None and is_ghost_gap(seen, now):
             frozen = freeze(self._store, seen, now)
             if frozen:
                 ghost = Ghost(seen, now, frozen)
-        _write(self._store, now, ghost, now)
+                found = True
+        if found or needs_note(seen, now, ghost is not None):
+            _write(self._store, now, ghost, now)
 
     def keep(self) -> None:
         """The silence counts: every timer carries on as if it had never stopped."""

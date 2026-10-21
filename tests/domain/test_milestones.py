@@ -30,5 +30,12 @@ def test_other_days_rotate_through_the_quotes_and_never_change_for_a_day() -> No
     assert milestone_for(5, ROWS, QUOTES).banner is None
 
 
+def test_only_a_row_marked_glitch_breaks_the_scroll() -> None:
+    rows = [*ROWS, MilestoneRow(100, Quote("Arise."), style="glitch")]
+    assert milestone_for(100, rows, QUOTES).style == "glitch"
+    assert milestone_for(99, rows, QUOTES).style == "plain"
+    assert milestone_for(10, rows, QUOTES).style == "plain"
+
+
 def test_the_cycle_count_travels_with_the_milestone() -> None:
     assert milestone_for(12, ROWS, QUOTES).cycles == 12

@@ -32,7 +32,7 @@
 {/snippet}
 
 <div class="pair">
-  <Panel title="Foundational Arts" tone="foundational" scroll striped>
+  <Panel title="Foundational Arts" tone="foundational" guide="foundational" scroll striped>
     {#snippet actions()}
       <GlyphButton label="Add a Foundational Art" onclick={() => (expanded = 'foundational')}>
         <GlyphIcon name="plus" />
@@ -49,7 +49,7 @@
       />
     {/if}
   </Panel>
-  <Panel title="Restorative Arts" tone="restorative" scroll striped>
+  <Panel title="Restorative Arts" tone="restorative" guide="restorative" scroll striped>
     {#snippet actions()}
       <GlyphButton label="Add a Restorative Art" onclick={() => (expanded = 'restorative')}>
         <GlyphIcon name="plus" />

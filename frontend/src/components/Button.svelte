@@ -1,6 +1,13 @@
 <script lang="ts">
   type Tone =
-    'default' | 'primary' | 'gold' | 'strong' | 'horizon' | 'foundational' | 'restorative';
+    | 'default'
+    | 'primary'
+    | 'gold'
+    | 'strong'
+    | 'horizon'
+    | 'foundational'
+    | 'restorative'
+    | 'archives';
 
   let {
     label,
@@ -71,6 +78,12 @@
   .button[data-tone='restorative'] {
     --tone-bg: var(--card-restorative-action-bg);
     --tone-ink: var(--card-restorative-action-ink);
+  }
+
+  .button[data-tone='archives'] {
+    --tone-bg: var(--entry-archives-bg);
+    --tone-ink: var(--entry-archives-ink);
+    background-image: none;
   }
 
   .button:active:not(:disabled) {

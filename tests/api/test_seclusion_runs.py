@@ -109,6 +109,26 @@ def test_taking_a_break_now_stops_the_trial_and_skipping_it_waits_for_start(
     assert client.post("/api/seclusion/break/end").json()["cycles"]["phase"] == "waiting"
 
 
+def test_three_cycles_run_one_after_the_other_through_the_break_buttons(
+    client: TestClient, clock: FixedClock
+) -> None:
+    enter_on(client, "cycles", "Write report")
+    state = client.post(
+        "/api/seclusion/timer/start", json={"focus_min": 2, "break_min": 1, "cycles": 3}
+    ).json()
+    seen = []
+    for _ in range(2):
+        seen.append((state["cycles"]["cycle"], state["cycles"]["cycles"], state["cycles"]["phase"]))
+        later(clock, 1)
+        client.post("/api/seclusion/break/start")
+        assert client.post("/api/seclusion/break/end").json()["cycles"]["phase"] == "waiting"
+        state = client.post("/api/seclusion/timer/start").json()
+    seen.append((state["cycles"]["cycle"], state["cycles"]["cycles"], state["cycles"]["phase"]))
+    assert seen == [(1, 3, "focus"), (2, 3, "focus"), (3, 3, "focus")]
+    later(clock, 4)  # the third focus and its break run their course
+    assert room(client)["cycles"]["phase"] == "done"
+
+
 def test_settings_outside_their_limits_are_refused(client: TestClient) -> None:
     enter_on(client, "cycles", "Write report")
     for bad in (
