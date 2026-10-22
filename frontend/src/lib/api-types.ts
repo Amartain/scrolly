@@ -369,26 +369,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/panel-style": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Choose Panel Style
-         * @description How the panels' header bands are drawn: a lacquer plaque, or a scroll's rod.
-         */
-        put: operations["choose_panel_style_api_panel_style_put"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/planning/abandon": {
         parameters: {
             query?: never;
@@ -1507,7 +1487,6 @@ export interface components {
             header: components["schemas"]["HeaderChoice"];
             /** Header Version */
             header_version: number;
-            panel_style: components["schemas"]["PanelStyle"];
             phase: components["schemas"]["scrolly__domain__appearance__Phase"];
             reading_font: components["schemas"]["ReadingFont"];
             theme: components["schemas"]["Theme"];
@@ -1617,6 +1596,11 @@ export interface components {
             /** Value Text */
             value_text: string;
         };
+        /**
+         * Body
+         * @enum {string}
+         */
+        Body: "sun" | "moon";
         /** Body_import_file_api_import_post */
         Body_import_file_api_import_post: {
             /** File */
@@ -2016,16 +2000,6 @@ export interface components {
          * @enum {string}
          */
         OriginType: "brain_dump" | "horizon" | "foundational_art" | "restorative_art" | "quick_add";
-        /**
-         * PanelStyle
-         * @description How every panel's header band is drawn. Paint only: both keep the same height and places.
-         * @enum {string}
-         */
-        PanelStyle: "plaque" | "rod";
-        /** PanelStyleIn */
-        PanelStyleIn: {
-            style: components["schemas"]["PanelStyle"];
-        };
         /** ParallelFinishIn */
         ParallelFinishIn: {
             /**
@@ -2347,6 +2321,15 @@ export interface components {
             hidden: boolean;
         };
         /**
+         * SkyOut
+         * @description The sun or the moon on Seclusion's arc: how far along its crossing (0 to 1).
+         */
+        SkyOut: {
+            body: components["schemas"]["Body"];
+            /** Progress */
+            progress: number;
+        };
+        /**
          * SoundIn
          * @description Only what is given changes.
          */
@@ -2547,6 +2530,7 @@ export interface components {
             now: string;
             planning: components["schemas"]["PlanningOut"];
             poem: components["schemas"]["PoemOut"] | null;
+            sky: components["schemas"]["SkyOut"];
             sound: components["schemas"]["SoundOut"];
             sunset: components["schemas"]["SunsetOut"];
         };
@@ -3282,39 +3266,6 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["SymbolIn"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ViewOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    choose_panel_style_api_panel_style_put: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PanelStyleIn"];
             };
         };
         responses: {

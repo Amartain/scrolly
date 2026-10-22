@@ -46,6 +46,8 @@
 />
 <Button
   label="Promote"
+  tone="gold"
+  chip
   description="Promote {trial.title}"
   onclick={() => view.act(() => today.promote(trial.id))}
 />

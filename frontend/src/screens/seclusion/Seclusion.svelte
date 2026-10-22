@@ -5,6 +5,7 @@
   import { onControl, typing } from '../../lib/keys';
   import { seclusion } from '../../lib/seclusion.svelte';
   import { view } from '../../lib/view.svelte';
+  import MorningScene from '../../components/morning/MorningScene.svelte';
   import FocusScroll from './FocusScroll.svelte';
   import RestScroll from './RestScroll.svelte';
   import TopBar from './TopBar.svelte';
@@ -58,6 +59,8 @@
 <svelte:window {onkeydown} onkeydowncapture={onnote} />
 
 <div class="room">
+  <!-- The theme's morning painting, very faint behind the room (art-direction › Illustration, exception). -->
+  <MorningScene still backdrop />
   <TopBar {onleave} />
   <div class="grid" class:folded>
     {#if room && trial}
@@ -72,6 +75,8 @@
 
 <style>
   .room {
+    position: relative;
+    isolation: isolate;
     flex: 1;
     min-height: 0;
     display: flex;

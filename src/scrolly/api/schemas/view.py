@@ -10,11 +10,11 @@ from scrolly.api.schemas.poem import PoemOut
 from scrolly.domain.appearance import (
     DayVariant,
     HeaderChoice,
-    PanelStyle,
     Phase,
     ReadingFont,
     Theme,
 )
+from scrolly.domain.sky import Body
 from scrolly.services.view import ViewData
 
 
@@ -23,7 +23,6 @@ class AppearanceOut(BaseModel):
     day_variant: DayVariant | None
     phase: Phase
     reading_font: ReadingFont
-    panel_style: PanelStyle
     header: HeaderChoice
     # Changes with each upload of the user's own picture, so the browser fetches it afresh.
     header_version: int
@@ -60,6 +59,13 @@ class GhostOut(BaseModel):
     gap_text: str
 
 
+class SkyOut(BaseModel):
+    """The sun or the moon on Seclusion's arc: how far along its crossing (0 to 1)."""
+
+    body: Body
+    progress: float
+
+
 class ViewOut(BaseModel):
     now: datetime
     logical_day: date
@@ -72,6 +78,7 @@ class ViewOut(BaseModel):
     planning: PlanningOut
     dashboard: DashboardOut
     sound: SoundOut
+    sky: SkyOut
     # Present until the user says whether the time away counts.
     ghost: GhostOut | None = None
     # Only the response to the day's first seal carries one.
@@ -88,7 +95,6 @@ class ViewOut(BaseModel):
                 day_variant=a.day_variant,
                 phase=a.phase,
                 reading_font=a.reading_font,
-                panel_style=a.panel_style,
                 header=a.header,
                 header_version=a.header_version,
             ),
@@ -110,6 +116,7 @@ class ViewOut(BaseModel):
             ),
             dashboard=DashboardOut.from_data(data.dashboard),
             sound=SoundOut(volume=data.sound.volume, muted=data.sound.muted),
+            sky=SkyOut(body=data.sky.body, progress=round(data.sky.progress, 3)),
             ghost=None
             if data.ghost is None
             else GhostOut(left_text=data.ghost.left_text, gap_text=data.ghost.gap_text),
@@ -123,10 +130,6 @@ class AppearanceIn(BaseModel):
 
 class ReadingFontIn(BaseModel):
     font: ReadingFont
-
-
-class PanelStyleIn(BaseModel):
-    style: PanelStyle
 
 
 class SoundIn(BaseModel):

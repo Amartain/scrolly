@@ -53,3 +53,14 @@
     transform: translate(var(--dx), var(--dy));
   }
 }
+
+/* Seclusion's ring breathing while its timer runs (screens/seclusion/RingFrame.svelte). */
+@keyframes ring-breathe {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}

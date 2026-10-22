@@ -18,13 +18,8 @@ TOKENS = Path(__file__).resolve().parent.parent / "frontend" / "src" / "styles" 
 SURFACES = ("--surface-panel", "--surface-raised")
 TEXT = ("--ink", "--ink-muted", "--mandate", "--growth-text")
 GAUGE = (
-    "--qi-calm",
-    "--qi-surge",
-    "--qi-redline",
-    "--cycles",
-    "--cycles-break",
-    "--flow",
-    "--flow-break",
+    *("--qi-calm", "--qi-surge", "--qi-redline", "--cycles", "--cycles-break", "--flow"),
+    *("--flow-break", "--essence-ink", "--qi-ink"),
 )
 # The selected Seclusion tab: its words on its colour.
 TAB_INK = (("--on-cycles", "--cycles"), ("--on-flow", "--flow"))

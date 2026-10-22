@@ -113,16 +113,25 @@
 }
 
 .serene-morning .pine,
-.serene-morning .seal,
+.serene-morning .seal-hand,
+.serene-morning .seal-bloom,
 .serene-morning .crane {
   transform-box: fill-box;
+}
+
+.serene-morning .seal-bloom {
+  fill: none;
+  stroke: var(--morning-seal);
+  stroke-width: 3px;
+  opacity: 0;
 }
 
 .serene-morning .pine {
   transform-origin: 20% 100%;
 }
 
-.serene-morning .seal,
+.serene-morning .seal-hand,
+.serene-morning .seal-bloom,
 .serene-morning .crane {
   transform-origin: center;
 }
@@ -174,8 +183,13 @@
   animation: morning-fade 1100ms 2000ms ease-out both;
 }
 
-.serene-morning .seal {
-  animation: morning-stamp 320ms 2600ms ease-out both;
+/* The stamp: brought down from above for most of its time, a hard press, a faint ring of ink. */
+.serene-morning .seal-hand {
+  animation: morning-stamp 1400ms 2600ms both;
+}
+
+.serene-morning .seal-bloom {
+  animation: morning-ink-bloom 800ms 3410ms ease-out both;
 }
 
 .morning.still *,

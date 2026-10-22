@@ -2,6 +2,7 @@
      big Start or Conquered!, then Postpone (a Mandate) or Abandon. -->
 <script lang="ts">
   import Button from '../../components/Button.svelte';
+  import ConquerButton from '../../components/ConquerButton.svelte';
   import GlyphButton from '../../components/GlyphButton.svelte';
   import GlyphIcon from '../../icons/GlyphIcon.svelte';
   import type { Immediate } from '../../lib/api';
@@ -63,12 +64,7 @@
   {#if showStart}
     <Button label={SECLUSION.start} tone="primary" onclick={seclusion.start} />
   {:else}
-    <Button
-      label={SECLUSION.conquered}
-      tone="gold"
-      description="Conquer {trial.title}"
-      onclick={conquer}
-    />
+    <ConquerButton label={SECLUSION.conquered} title={trial.title} onclick={conquer} />
   {/if}
   <div class="side end">
     {#if trial.is_mandate}

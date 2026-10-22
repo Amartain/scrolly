@@ -1,7 +1,6 @@
 <script lang="ts">
   import Panel from '../components/Panel.svelte';
   import type { DayVariant, ReadingFont, Theme } from '../lib/api';
-  import type { PanelStyle } from '../lib/panel-style-api';
   import { view } from '../lib/view.svelte';
 
   const themes: { value: Theme; label: string }[] = [
@@ -16,12 +15,6 @@
   const fonts: { value: ReadingFont; label: string }[] = [
     { value: 'atkinson', label: 'Atkinson' },
     { value: 'opendyslexic', label: 'OpenDyslexic' },
-  ];
-
-  // DRAFT copy, proposed 2026-10-22 (docs/copy-queue.md).
-  const panelStyles: { value: PanelStyle; label: string }[] = [
-    { value: 'plaque', label: 'Lacquer plaque' },
-    { value: 'rod', label: 'Scroll rod' },
   ];
 
   const appearance = $derived(view.current?.appearance);
@@ -72,21 +65,6 @@
             onchange={() => view.chooseReadingFont(font.value)}
           />
           {font.label}
-        </label>
-      {/each}
-    </fieldset>
-    <fieldset class="group">
-      <legend class="display">Panel headers</legend>
-      {#each panelStyles as style (style.value)}
-        <label class="choice display">
-          <input
-            type="radio"
-            name="panel-style"
-            value={style.value}
-            checked={appearance?.panel_style === style.value}
-            onchange={() => view.choosePanelStyle(style.value)}
-          />
-          {style.label}
         </label>
       {/each}
     </fieldset>

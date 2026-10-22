@@ -2,7 +2,7 @@
 export const DASHBOARD = {
   /** The Essence panel before anything is estimated or spent, in place of "0m / 0m". */
   essenceBlank: 'Estimates fill this scroll as you set them.',
-  essence: 'Time',
+  essence: 'Essence',
   qi: 'Qi',
   /** A row's reading: what is done of what the scroll holds. */
   of: (done: string, planned: string) => `${done} of ${planned}`,

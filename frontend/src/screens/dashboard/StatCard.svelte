@@ -3,8 +3,8 @@
   let { title, value }: { title: string; value: number } = $props();
 </script>
 
-<section class="card" aria-label={title}>
-  <h2 class="label display">{title}</h2>
+<section class="card lacquer-frame" aria-label={title}>
+  <h2 class="label display curled">{title}</h2>
   <p class="figure display">{value}</p>
 </section>
 
@@ -21,6 +21,7 @@
   }
 
   .label {
+    align-self: flex-start;
     margin: 0;
     color: var(--ink-muted);
     font-size: var(--text-display-sm);

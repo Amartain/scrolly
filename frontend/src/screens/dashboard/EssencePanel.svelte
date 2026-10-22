@@ -2,6 +2,7 @@
      solid ink. The Qi row shows only with the Golden Core on. Before anything is estimated or spent
      (Python says so), the Essence row is one quiet line. -->
 <script lang="ts">
+  import GuidanceButton from '../../components/GuidanceButton.svelte';
   import Panel from '../../components/Panel.svelte';
   import type { components } from '../../lib/api-types';
   import { DASHBOARD } from '../../lib/copy-dashboard';
@@ -21,8 +22,9 @@
     DASHBOARD.tile(tile.title, qiText(tile.taken), qiText(tile.planned));
 </script>
 
-<Panel title="Essence" guide="essence">
+<Panel title="Essence" bare>
   <div class="rows" class:single={!qi?.enabled}>
+    <span class="guide"><GuidanceButton topic="essence" /></span>
     {#if essence?.blank}
       <p class="hint">{DASHBOARD.essenceBlank}</p>
     {:else if essence && dashboard}
@@ -48,11 +50,19 @@
 
 <style>
   .rows {
+    position: relative;
     display: grid;
     align-content: center;
-    gap: var(--space-1);
+    gap: var(--space-3);
     height: 100%;
-    padding: 0 var(--space-4);
+    padding: var(--space-2) var(--space-12) var(--space-2) var(--space-4);
+  }
+
+  .guide {
+    position: absolute;
+    top: 50%;
+    right: var(--space-4);
+    translate: 0 -50%;
   }
 
   .single {

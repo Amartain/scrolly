@@ -41,6 +41,9 @@
   --qi-calm: #7a5c00;
   --qi-surge: #9c5200;
   --qi-redline: #6e2f00;
+  /* The dashboard's Essence and Qi rows: what is done, in solid colour (3:1 on --inset). */
+  --essence-ink: #6f5700;
+  --qi-ink: #1d6b5a;
   --postponed: #46607a;
   --icon-paper: #fbf3d9;
   --icon-wood: #8a5a2b;

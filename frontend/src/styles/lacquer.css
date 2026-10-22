@@ -1,0 +1,54 @@
+/* The lacquer look, shared (art-direction › Components): a title on a plaque between two gold cloud
+   curls, a gold rule along the foot of a band, and a frame of gold just inside an edge. Paint only:
+   none of them changes a size or a place. Used by Panel, the stat cards, the header, Seclusion. */
+
+/* A title between two cloud curls (`curled`), or also on a raised plaque edged in gold (`plaque`, for a
+   title on a header band; on a light card the plaque's shade would dim the words, so it stays curled). */
+.plaque,
+.curled {
+  position: relative;
+  padding: 0 var(--space-6);
+}
+
+.plaque {
+  background: var(--plaque-shade);
+  border: var(--border-width) solid var(--plaque-rule);
+  box-shadow: var(--shadow-button);
+}
+
+.plaque::before,
+.plaque::after,
+.curled::before,
+.curled::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: var(--space-4);
+  height: var(--space-4);
+  translate: 0 -50%;
+  background: var(--gold);
+  mask: var(--cloud-curl) center / contain no-repeat;
+}
+
+.plaque::before,
+.curled::before {
+  left: var(--space-1);
+}
+
+.plaque::after,
+.curled::after {
+  right: var(--space-1);
+  scale: -1 1;
+}
+
+/* A thin gold rule along the foot of a band (drawn inside it, so the band keeps its height). */
+.gold-foot {
+  box-shadow: inset 0 calc(-1 * var(--space-1)) 0 var(--plaque-rule);
+}
+
+/* A gold rule just inside an element's edge, as on a lacquered box. A gold element sets --frame-rule to
+   a dark one, or its rule would vanish into it. */
+.lacquer-frame {
+  outline: var(--border-width) solid var(--frame-rule, var(--plaque-rule));
+  outline-offset: calc(-1 * var(--space-1) - var(--border-width));
+}

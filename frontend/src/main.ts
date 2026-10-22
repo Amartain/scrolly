@@ -17,6 +17,7 @@ import './styles/flourish.css';
 import './styles/morning-serene.css';
 import './styles/morning-pavilion.css';
 import './styles/morning-keyframes.css';
-import './styles/panel-headers.css';
+import './styles/morning-backdrop.css';
+import './styles/lacquer.css';
 
 mount(App, { target: document.getElementById('app')! });

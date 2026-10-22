@@ -6,6 +6,7 @@ from scrolly.domain.day_budget import DayBudget
 from scrolly.domain.legend import Legend
 from scrolly.domain.logical_day import logical_day
 from scrolly.domain.poems import PoemPick
+from scrolly.domain.sky import Sky, sky_at
 from scrolly.domain.sunset import SunsetPrefs, phase_at
 from scrolly.ports import Clock, Store
 from scrolly.services.advisor import AdvisorView, build_advisor
@@ -39,6 +40,7 @@ class ViewData:
     planning_timer: PlanningTimerView
     sound: SoundPrefs
     ghost: GhostView | None
+    sky: Sky
 
 
 def build_view(store: Store, clock: Clock) -> ViewData:
@@ -64,4 +66,5 @@ def build_view(store: Store, clock: Clock) -> ViewData:
         dashboard=build_dashboard_view(store, now),
         sound=load_sound(store),
         ghost=build_ghost_view(store),
+        sky=sky_at(now, sunset),
     )

@@ -44,7 +44,7 @@
     <GlyphIcon name="x" />
   </GlyphButton>
 {:else if onsummon}
-  <Button label="Summon" tone="horizon" description="Summon {item.title}" onclick={onsummon} />
+  <Button label="Summon" tone="horizon" chip description="Summon {item.title}" onclick={onsummon} />
 {/if}
 
 <style>

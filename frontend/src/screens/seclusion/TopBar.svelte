@@ -4,6 +4,7 @@
   import GuidanceButton from '../../components/GuidanceButton.svelte';
   import GlyphIcon from '../../icons/GlyphIcon.svelte';
   import { SECLUSION } from '../../lib/copy-seclusion';
+  import SkyArc from './SkyArc.svelte';
 
   let { onleave }: { onleave: () => void } = $props();
 
@@ -27,11 +28,12 @@
   }
 </script>
 
-<header class="bar">
+<header class="bar gold-foot">
   <Button label={SECLUSION.stepOut} description="Step out of Seclusion" onclick={onleave} />
   <h1 class="title display">{SECLUSION.title}</h1>
   <GuidanceButton topic="seclusion" />
   <span class="tagline">{SECLUSION.tagline}</span>
+  <SkyArc />
   <span class="clock display digits">{time}</span>
   <GlyphButton label={SECLUSION.fullScreen} onclick={toggleFullScreen}>
     <GlyphIcon name="fullscreen" />

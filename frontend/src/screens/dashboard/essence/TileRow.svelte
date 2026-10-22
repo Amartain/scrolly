@@ -1,5 +1,5 @@
-<!-- One row of the Essence panel: the day's trials as tiles, sized by Python. The plan is a pale ink wash,
-     the trial at hand is outlined in gold, a conquered trial is inked solid. Qi's zones lie faintly
+<!-- One row of the Essence panel: the day's trials as tiles, sized by Python. A planned trial is an empty
+     outline, the trial at hand a soft fill in a gold outline, a conquered trial solid colour. Qi's zones lie faintly
      behind its tiles. Pointing at a tile puts that trial's numbers in the reading; nothing floats. -->
 <script lang="ts">
   import type { components } from '../../../lib/api-types';
@@ -66,7 +66,7 @@
 
 <style>
   .row {
-    --ink-fill: var(--gold);
+    --ink-fill: var(--essence-ink);
     display: grid;
     grid-template-columns: var(--size-tile-label) minmax(0, 1fr) var(--size-tile-reading);
     align-items: center;
@@ -76,7 +76,7 @@
   }
 
   .row[data-tone='qi'] {
-    --ink-fill: var(--qi-calm);
+    --ink-fill: var(--qi-ink);
   }
 
   .label {
@@ -120,33 +120,30 @@
     min-width: var(--border-width);
   }
 
-  /* The plan: a pale wash with a faint brush hatch. */
-  .waiting,
-  .now {
-    background:
-      repeating-linear-gradient(
-        135deg,
-        transparent 0 var(--space-1),
-        color-mix(in srgb, var(--ink-fill) 22%, transparent) var(--space-1) var(--space-2)
-      ),
-      color-mix(in srgb, var(--ink-fill) 24%, transparent);
+  /* The plan: an empty outline in the row's colour. */
+  .waiting {
+    outline: var(--border-width) solid color-mix(in srgb, var(--ink-fill) 55%, transparent);
+    outline-offset: calc(-1 * var(--border-width));
   }
 
+  /* The trial at hand: a soft fill, outlined in gold. */
   .now {
+    background: color-mix(in srgb, var(--ink-fill) 32%, transparent);
     outline: var(--border-width) solid var(--gold);
     outline-offset: calc(-1 * var(--border-width));
   }
 
-  /* What is done: solid ink. */
+  /* What is done: the solid colour with its sheen, a hard seam after each. */
   .done {
     background: var(--ink-fill);
     background-image: var(--gloss);
+    border-right: var(--border-width) solid var(--line);
   }
 
   .reading {
     overflow: hidden;
     color: var(--num-text);
-    font-size: var(--text-body-sm);
+    font-size: var(--text-body-md);
     text-overflow: ellipsis;
     white-space: nowrap;
   }

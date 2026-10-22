@@ -34,7 +34,7 @@
 </script>
 
 <header class="header" style:background-image={picture}>
-  <div class="plate">
+  <div class="plate lacquer-frame">
     <HandscrollIcon />
     <div class="titles">
       <div class="name display">Scrolly</div>
@@ -42,13 +42,15 @@
     </div>
   </div>
   <div class="tools">
-    <div class="clock">
+    <div class="clock lacquer-frame">
       <div class="time display digits">{time}</div>
       <div class="date">{date}</div>
     </div>
-    <IconButton label="Settings" pressed={settingsOpen} onclick={onsettings}>
-      <SlidersIcon />
-    </IconButton>
+    <span class="settings lacquer-frame">
+      <IconButton label="Settings" pressed={settingsOpen} onclick={onsettings}>
+        <SlidersIcon />
+      </IconButton>
+    </span>
   </div>
 </header>
 
@@ -115,6 +117,10 @@
     align-items: flex-end;
     justify-content: center;
     padding: var(--space-2) var(--space-3);
+  }
+
+  .settings {
+    display: flex;
   }
 
   .time {

@@ -16,6 +16,7 @@
     disabled = false,
     description,
     size = 'normal',
+    chip = false,
   }: {
     label: string;
     onclick: () => void;
@@ -24,11 +25,15 @@
     description?: string;
     /** `large` is for the one button a screen is built around (the landing screen). */
     size?: 'normal' | 'large';
+    /** A lacquer chip: a row's own action (Promote, Summon), with a gold rule inside its edge. */
+    chip?: boolean;
   } = $props();
 </script>
 
 <button
   class="button display"
+  class:lacquer-frame={chip}
+  class:chip
   type="button"
   data-tone={tone}
   data-size={size}
@@ -49,6 +54,13 @@
     box-shadow: var(--shadow-button);
     font-size: var(--text-display-sm);
     white-space: nowrap;
+  }
+
+  .chip {
+    --frame-rule: color-mix(in srgb, var(--tone-ink, var(--ink)) 40%, transparent);
+    padding: var(--space-1) var(--space-4);
+    font-size: var(--text-body-sm);
+    letter-spacing: 0.06em;
   }
 
   .button[data-size='large'] {

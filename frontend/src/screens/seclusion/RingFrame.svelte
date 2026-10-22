@@ -6,6 +6,7 @@
 
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import { seclusion } from '../../lib/seclusion.svelte';
   import RingArt from './RingArt.svelte';
 
   let {
@@ -19,6 +20,7 @@
 
 <div
   class="ring"
+  class:breathing={seclusion.running}
   style:--fill={fill}
   data-tone={tone}
   data-over={tone === 'over' || undefined}
@@ -63,6 +65,29 @@
     --ring-fill: var(--flow-break);
     --ring-disc: var(--flow-break-disc);
     --ring-words: var(--on-break-disc);
+  }
+
+  /* While the timer runs the ring breathes: a glow of its own colour swells and fades every 6 s
+     (art-direction › Motion, exception). Opacity only; still when paused and under reduced motion. */
+  .ring::before {
+    content: '';
+    position: absolute;
+    inset: calc(-1 * var(--space-4));
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      transparent 58%,
+      color-mix(in srgb, var(--ring-fill) 40%, transparent) 68%,
+      transparent 74%
+    );
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ring.breathing::before {
+      animation: ring-breathe 6s ease-in-out infinite;
+    }
   }
 
   .inner {

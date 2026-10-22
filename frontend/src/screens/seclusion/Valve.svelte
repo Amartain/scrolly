@@ -26,9 +26,9 @@
 </script>
 
 <section class="valve {accent}" class:grow {id} aria-label={title}>
-  <h2 class="head display">
+  <h2 class="head display gold-foot">
     <span class="icon"><GlyphIcon name={icon} /></span>
-    {title}
+    <span class="plaque">{title}</span>
   </h2>
   {@render children()}
 </section>

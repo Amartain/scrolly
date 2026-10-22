@@ -58,10 +58,53 @@
   }
 }
 
+/* A seal stamped by hand: it appears high above the paper and large, its shadow soft and far; it comes
+   down slowly, then faster; it hits and squashes a touch as the shadow closes in; it settles. */
 @keyframes morning-stamp {
-  from {
+  0% {
     opacity: 0;
-    transform: scale(1.35);
+    transform: translateY(-70px) scale(1.7);
+    filter: drop-shadow(0 48px 18px transparent);
+    animation-timing-function: ease-out;
+  }
+  18% {
+    opacity: 0.55;
+    transform: translateY(-58px) scale(1.55);
+    filter: drop-shadow(0 40px 16px color-mix(in srgb, var(--scene-ink) 18%, transparent));
+    animation-timing-function: ease-in;
+  }
+  58% {
+    opacity: 1;
+    transform: translateY(0) scale(0.94);
+    filter: drop-shadow(0 2px 2px color-mix(in srgb, var(--scene-ink) 35%, transparent));
+    animation-timing-function: ease-out;
+  }
+  68% {
+    transform: scale(1.025);
+  }
+  80% {
+    transform: none;
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* The ink pressed out at the edge as the seal lands: a ring that widens and fades. */
+@keyframes morning-ink-bloom {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  8% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.32);
   }
 }
 

@@ -9,6 +9,7 @@
     title,
     tone = 'neutral',
     empty = 'Nothing here yet.',
+    bare = false,
     scroll = false,
     striped = false,
     count,
@@ -20,6 +21,8 @@
     title: string;
     tone?: Tone;
     empty?: string;
+    /** No header band: the panel's content needs the height (it keeps its name for screen readers). */
+    bare?: boolean;
     scroll?: boolean;
     /** Alternate row bands that fill the whole body, even below the last row. */
     striped?: boolean;
@@ -35,14 +38,14 @@
 </script>
 
 <section class="panel {tone}" aria-label={title}>
-  <div class="head panel-head">
-    <div class="heading">
-      <h2 class="display panel-title">{title}{count === undefined ? '' : ` · ${count}`}</h2>
-      {#if guide}<GuidanceButton topic={guide} />{/if}
-    </div>
-    {#if hint}<span class="hint">{hint}</span>{/if}
-    {#if actions}<span class="actions">{@render actions()}</span>{/if}
-  </div>
+  {#if !bare}<div class="head gold-foot">
+      <div class="heading">
+        <h2 class="display plaque">{title}{count === undefined ? '' : ` · ${count}`}</h2>
+        {#if guide}<GuidanceButton topic={guide} />{/if}
+      </div>
+      {#if hint}<span class="hint">{hint}</span>{/if}
+      {#if actions}<span class="actions">{@render actions()}</span>{/if}
+    </div>{/if}
   <div class="body" class:scroll class:striped>
     {#if children}
       {@render children()}

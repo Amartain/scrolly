@@ -19,13 +19,6 @@ class ReadingFont(StrEnum):
     OPENDYSLEXIC = "opendyslexic"
 
 
-class PanelStyle(StrEnum):
-    """How every panel's header band is drawn. Paint only: both keep the same height and places."""
-
-    PLAQUE = "plaque"  # the band, with the title on a lacquer plaque between cloud curls
-    ROD = "rod"  # the band as a scroll's wooden rod with gold end caps
-
-
 class HeaderChoice(StrEnum):
     """Which picture fills the header band. `auto` follows the theme and the time of day."""
 
@@ -51,7 +44,6 @@ class Preferences:
     theme: Theme = Theme.SERENE
     day_variant: DayVariant = DayVariant.TEAL
     reading_font: ReadingFont = ReadingFont.ATKINSON
-    panel_style: PanelStyle = PanelStyle.PLAQUE
     header: HeaderChoice = HeaderChoice.AUTO
     # Counts the user's uploads (0 = none yet), so a new picture is fetched afresh.
     header_version: int = 0
@@ -63,7 +55,6 @@ class Appearance:
     day_variant: DayVariant | None
     phase: Phase
     reading_font: ReadingFont = ReadingFont.ATKINSON
-    panel_style: PanelStyle = PanelStyle.PLAQUE
     header: HeaderChoice = HeaderChoice.AUTO
     header_version: int = 0
 
@@ -79,7 +70,6 @@ def resolve_appearance(prefs: Preferences, phase: Phase = Phase.DAY) -> Appearan
         day_variant=variant,
         phase=phase,
         reading_font=prefs.reading_font,
-        panel_style=prefs.panel_style,
         header=prefs.header,
         header_version=prefs.header_version,
     )

@@ -34,6 +34,23 @@
       <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
       <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.07 0" />
     </filter>
+    <!-- A chop's imprint: rough edges and a speckle where the ink did not take. -->
+    <filter id="morning-chop" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.9"
+        numOctaves="2"
+        seed="7"
+        result="noise"
+      />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" result="edge" />
+      <feColorMatrix
+        in="noise"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.95"
+        result="speckle"
+      />
+      <feComposite in="edge" in2="speckle" operator="in" />
+    </filter>
     <filter id="morning-mist" x="-20%" y="-100%" width="140%" height="300%">
       <feGaussianBlur stdDeviation="18" />
     </filter>
@@ -87,10 +104,16 @@
   </g>
   <!-- Kept inside x 240–1360: on a 4:3 screen the sliced painting shows only that much. -->
   <text class="verse" x="1320" y="110">峰靜心明</text>
-  <g class="seal" transform="translate(1250,700)">
-    <rect width="92" height="92" rx="6" />
-    <text x="46" y="40">靜</text>
-    <text x="46" y="80">峰</text>
+  <!-- The seal is stamped: the hand brings it down, it presses, ink spreads a little and it settles. -->
+  <g class="seal-stamp" transform="translate(1250,700)">
+    <rect class="seal-bloom" width="92" height="92" rx="6" />
+    <g class="seal-hand">
+      <g class="seal" filter="url(#morning-chop)">
+        <rect width="92" height="92" rx="6" />
+        <text x="46" y="40">靜</text>
+        <text x="46" y="80">峰</text>
+      </g>
+    </g>
   </g>
   <rect class="grain" width="1600" height="900" filter="url(#morning-grain)" />
 </svg>

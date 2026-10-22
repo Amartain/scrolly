@@ -64,10 +64,10 @@
   --size-tab: 3.5rem;
   --size-short-panel: 7rem;
   /* The Essence panel's ink-on-wash rows: a slim tile row, taller when it is the only row. */
-  --size-tile: 1.1rem;
-  --size-tile-tall: 1.75rem;
-  --size-tile-label: 5.5rem;
-  --size-tile-reading: 14rem;
+  --size-tile: 2rem;
+  --size-tile-tall: 3rem;
+  --size-tile-label: 6.5rem;
+  --size-tile-reading: 16rem;
   --size-stat: 7rem;
   --size-orb: 2rem;
   --shadow-room: var(--space-3);
@@ -78,6 +78,9 @@
   --canvas-fill: var(--surface-canvas);
   /* Seclusion's own backdrop: the canvas, but a deeper blue after dark in Serene (art-direction.md). */
   --seclusion-canvas: var(--surface-canvas);
+  /* The morning painting behind Seclusion, very faint (art-direction › Illustration, exception). */
+  --seclusion-scene-opacity: 0.12;
+  --size-sky-arc: 7.5rem;
   --icon-highlight: rgba(255, 255, 255, 0.6);
 
   --shadow-panel:

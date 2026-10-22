@@ -41,9 +41,7 @@ test('the clock of the Immediate Trial wears a gold frame while it runs', async 
   await expect(clock).toHaveClass(/running/);
 });
 
-test('Time and Qi are ink on wash: one tile per trial, the conquered ones inked', async ({
-  page,
-}) => {
+test('Essence and Qi: one tile per trial, the conquered ones solid', async ({ page }) => {
   await sealDay(page, 'Write report', 'Tidy desk');
   await page.request.put('/api/golden-core', { data: { enabled: true } });
   const view = await (await page.request.get('/api/view')).json();
@@ -52,7 +50,7 @@ test('Time and Qi are ink on wash: one tile per trial, the conquered ones inked'
   await page.request.post(`/api/trials/${first}/conquer`);
   await page.request.put(`/api/trials/${first}/actual`, { data: { text: '25m' } });
   await page.goto('/');
-  const time = section(page, 'Essence').getByRole('meter', { name: 'Time' });
+  const time = section(page, 'Essence').getByRole('meter', { name: 'Essence' });
   await expect(time.locator('.tile')).toHaveCount(2);
   await expect(time.locator('.tile.done')).toHaveCount(1);
   await expect(time.locator('.tile.now')).toHaveCount(1);

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Button from '../../components/Button.svelte';
+  import ConquerButton from '../../components/ConquerButton.svelte';
   import GlyphButton from '../../components/GlyphButton.svelte';
   import GlyphIcon from '../../icons/GlyphIcon.svelte';
   import { today, type Immediate } from '../../lib/api';
@@ -32,12 +32,7 @@
   {#if trial.expected_text}<span class="of">of {trial.expected_text}</span>{/if}
   {#if flow}<span class="of">{flow}</span>{/if}
   <span class="spacer"></span>
-  <Button
-    label="Conquered!"
-    tone="gold"
-    description="Conquer {trial.title}"
-    onclick={() => conquer(trial)}
-  />
+  <ConquerButton label="Conquered!" title={trial.title} onclick={() => conquer(trial)} />
   <span class="postpone">
     <GlyphButton
       label="Postpone {trial.title} to the Horizon"
