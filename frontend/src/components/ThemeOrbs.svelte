@@ -1,11 +1,31 @@
+<!-- The three theme orbs: Serene Peak, Pavilion teal, Pavilion crimson. In onboarding they sit fixed in the
+     corner, so choosing a theme never moves anything; in the header, bare, beside the clock. The Serene orb
+     shows the look a click gives: in Serene it switches between the scroll colours and green (the bright
+     green while the scroll look shows, the cream one while green shows); from Pavilion it brings back the
+     Serene look last chosen. -->
 <script lang="ts">
   import { view } from '../lib/view.svelte';
   import type { DayVariant, Theme } from '../lib/api';
 
-  type Orb = { label: string; swatch: string; theme: Theme; variant: DayVariant | null };
+  let { placement = 'corner' }: { placement?: 'corner' | 'header' } = $props();
 
-  const orbs: Orb[] = [
-    { label: 'Serene Peak theme', swatch: 'var(--swatch-serene)', theme: 'serene', variant: null },
+  type Orb = { label: string; swatch: string; theme: Theme; variant: DayVariant };
+
+  const current = $derived(view.current?.appearance);
+
+  const sereneTarget = $derived.by((): DayVariant => {
+    const saved = current?.serene_variant ?? 'scroll';
+    if (current?.theme !== 'serene') return saved;
+    return saved === 'green' ? 'scroll' : 'green';
+  });
+
+  const orbs = $derived<Orb[]>([
+    {
+      label: 'Serene Peak theme',
+      swatch: sereneTarget === 'green' ? 'var(--swatch-serene-green)' : 'var(--swatch-serene)',
+      theme: 'serene',
+      variant: sereneTarget,
+    },
     {
       label: 'Hidden Pavilion teal theme',
       swatch: 'var(--swatch-teal)',
@@ -18,24 +38,25 @@
       theme: 'pavilion',
       variant: 'crimson',
     },
-  ];
-
-  const current = $derived(view.current?.appearance);
+  ]);
 
   function active(orb: Orb): boolean {
     if (current?.theme !== orb.theme) return false;
     return orb.theme === 'serene' || current.day_variant === orb.variant;
   }
+
+  const hint = (orb: Orb) =>
+    orb.theme === 'serene' ? `Serene Peak, ${orb.variant === 'green' ? 'green' : 'scroll'}` : '';
 </script>
 
-<!-- Onboarding only. Fixed in the corner so choosing a theme never moves anything. -->
-<div class="orbs">
+<div class="orbs" data-placement={placement}>
   {#each orbs as orb (orb.label)}
     <button
       class="orb"
       style:background={orb.swatch}
       aria-label={orb.label}
       aria-pressed={active(orb)}
+      title={hint(orb) || undefined}
       onclick={() => view.choose(orb.theme, orb.variant)}
     ></button>
   {/each}
@@ -43,12 +64,19 @@
 
 <style>
   .orbs {
+    display: flex;
+    gap: var(--space-3);
+  }
+
+  .orbs[data-placement='corner'] {
     position: fixed;
     right: var(--size-gutter);
     bottom: var(--size-gutter);
     z-index: 10;
-    display: flex;
-    gap: var(--space-3);
+  }
+
+  .orbs[data-placement='header'] {
+    align-self: center;
   }
 
   .orb {

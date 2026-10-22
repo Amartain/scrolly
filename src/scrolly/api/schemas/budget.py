@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 
-from scrolly.api.schemas.tiles import TileOut
 from scrolly.domain.day_budget import DayBudget
 from scrolly.domain.duration import format_duration
 from scrolly.domain.qi import LINEAR_SPAN, QiZone, gauge_fill, qi_zone
 from scrolly.services.golden_core import QiView
+from scrolly.services.qi_card import QiCardView
 
 
 def _pct(part: int, whole: int) -> int:
@@ -84,9 +84,6 @@ class QiOut(BaseModel):
     spent_fill: QiFillOut
     planned_zone: QiZone
     spent_zone: QiZone
-    tiles: list[TileOut]
-    harmonious_pct: float
-    igniting_pct: float
 
     @classmethod
     def from_view(cls, view: QiView) -> "QiOut":
@@ -108,7 +105,35 @@ class QiOut(BaseModel):
             spent_fill=QiFillOut.of(view.spent, view.start, view.redline),
             planned_zone=qi_zone(view.planned, view.start),
             spent_zone=qi_zone(view.spent, view.start),
-            tiles=[TileOut.from_tile(t) for t in view.row.tiles],
-            harmonious_pct=round(view.row.harmonious_pct, 2),
-            igniting_pct=round(view.row.igniting_pct, 2),
+        )
+
+
+class QiChoicesOut(BaseModel):
+    lighter: int
+    foreseen: int
+    heavier: int
+
+
+class QiCardOut(BaseModel):
+    """The card after a conquest: its three choices, and the day's Qi if the asked answer is kept,
+    on the dashboard bar's scale (shares of the redline)."""
+
+    choices: QiChoicesOut
+    spent: int
+    start: int
+    zone: QiZone
+    fill_pct: int
+    calm_end_pct: int
+    surge_end_pct: int
+
+    @classmethod
+    def from_view(cls, view: QiCardView) -> "QiCardOut":
+        return cls(
+            choices=QiChoicesOut(**vars(view.choices)),
+            spent=view.spent,
+            start=view.start,
+            zone=qi_zone(view.spent, view.start),
+            fill_pct=_pct(view.spent, view.redline),
+            calm_end_pct=_pct(view.start, view.redline),
+            surge_end_pct=_pct(view.start + LINEAR_SPAN, view.redline),
         )

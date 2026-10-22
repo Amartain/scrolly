@@ -38,12 +38,15 @@
   --strong: #2d4731;
   --on-strong: #f3eed0;
   --mandate: #a43425;
-  --qi-calm: #7a5c00;
-  --qi-surge: #9c5200;
-  --qi-redline: #6e2f00;
-  /* The dashboard's Essence and Qi rows: what is done, in solid colour (3:1 on --inset). */
-  --essence-ink: #6f5700;
-  --qi-ink: #1d6b5a;
+  /* Qi's zones: green Harmonious, gold Igniting the Blood, crimson Strain (its own, never --mandate). */
+  --qi-calm: #1d6b5a;
+  --qi-surge: #7a5c00;
+  --qi-redline: #9b1b30;
+  /* The dashboard's Essence bar (3:1 on --inset), and each chart series (3:1 on the panel). */
+  --essence-ink: #3f6b24;
+  --chart-trials: #9c5200;
+  --chart-essence: #3f6b24;
+  --chart-qi: #1f4d2b;
   --postponed: #46607a;
   --icon-paper: #fbf3d9;
   --icon-wood: #8a5a2b;

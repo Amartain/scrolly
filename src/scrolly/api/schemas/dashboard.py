@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 from scrolly.api.schemas.charts import SeriesOut
-from scrolly.api.schemas.tiles import TileOut
+from scrolly.api.schemas.essence_bar import EssenceBarOut
 from scrolly.domain.duration import format_duration
 from scrolly.domain.essence import EssenceSummary
 from scrolly.domain.legend import TrialType, type_of
@@ -135,7 +135,7 @@ class DashboardOut(BaseModel):
     postponed: list[LetGoOut]
     lost: list[LetGoOut]
     essence: EssenceOut
-    essence_tiles: list[TileOut]
+    essence_bar: EssenceBarOut
     victory: VictoryOut | None
     lifetime_conquered: int
     heavenly_cycles: int
@@ -152,7 +152,7 @@ class DashboardOut(BaseModel):
             postponed=[LetGoOut.from_trial(t) for t in data.postponed],
             lost=[LetGoOut.from_trial(t) for t in data.lost],
             essence=EssenceOut.from_summary(data.essence),
-            essence_tiles=[TileOut.from_tile(t) for t in data.essence_tiles],
+            essence_bar=EssenceBarOut.from_bar(data.essence_bar, data.light_left_min),
             victory=VictoryOut.from_view(data.victory) if data.victory else None,
             lifetime_conquered=data.lifetime_conquered,
             heavenly_cycles=data.heavenly_cycles,

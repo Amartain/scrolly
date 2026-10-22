@@ -1,6 +1,6 @@
-"""Keep the theme-independent surfaces readable: the finished-day ceremony card (`--scene-*`) and
-the Dispatch's Discord preview (`--discord-*`). Their colours are the same in every theme, so they
-live in styles/moment-tokens.css and are checked once here, by the rules of check_contrast.py."""
+"""Keep the theme-independent surface readable: the finished-day ceremony card (`--scene-*`). Its
+colours are the same in every theme, so they live in styles/moment-tokens.css and are checked once
+here, by the rules of check_contrast.py."""
 
 import sys
 
@@ -16,9 +16,6 @@ PAIRS = (
     ("--scene-mandate", "--scene-card-raised", 4.5),
     ("--scene-card-num", "--scene-card", 3.0),
     ("--scene-card-num", "--scene-card-raised", 3.0),
-    ("--discord-text", "--discord-bg", 4.5),
-    ("--discord-muted", "--discord-bg", 4.5),
-    ("--discord-heading", "--discord-bg", 4.5),
 )
 
 

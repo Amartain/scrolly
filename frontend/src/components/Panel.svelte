@@ -129,8 +129,6 @@
   .body.scroll {
     overflow-y: auto;
     scrollbar-gutter: stable;
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   }
 
   .empty {

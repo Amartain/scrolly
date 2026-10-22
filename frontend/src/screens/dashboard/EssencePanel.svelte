@@ -1,25 +1,20 @@
-<!-- Essence over Qi, two slim rows of ink on wash: the whole day's plan in a pale wash, what is done in
-     solid ink. The Qi row shows only with the Golden Core on. Before anything is estimated or spent
-     (Python says so), the Essence row is one quiet line. -->
+<!-- Essence over Qi, one bar each and no numbers until asked (hover or focus): solid is what is done, a faint
+     wash what is planned. Essence carries the sunset as a gold notch; Qi is on the Phase 3 gauge's scale, coloured
+     by the zone reached, and shows only with the Golden Core on. Before anything is estimated or spent (Python says
+     so), the Essence row is one quiet line. -->
 <script lang="ts">
   import GuidanceButton from '../../components/GuidanceButton.svelte';
   import Panel from '../../components/Panel.svelte';
-  import type { components } from '../../lib/api-types';
+  import type { QiFill } from '../../lib/api';
   import { DASHBOARD } from '../../lib/copy-dashboard';
   import { QI_ZONE } from '../../lib/copy-qi';
   import { view } from '../../lib/view.svelte';
-  import TileRow from './essence/TileRow.svelte';
+  import BarRow from './essence/BarRow.svelte';
 
-  type Tile = components['schemas']['TileOut'];
-
-  const dashboard = $derived(view.current?.dashboard);
-  const essence = $derived(dashboard?.essence);
+  const essence = $derived(view.current?.dashboard.essence);
+  const bar = $derived(view.current?.dashboard.essence_bar);
   const qi = $derived(view.planning?.qi);
-
-  const describeTime = (tile: Tile) => DASHBOARD.tile(tile.title, tile.taken, tile.planned);
-  const qiText = (value: string | null) => (value === null ? null : `${value} Qi`);
-  const describeQi = (tile: Tile) =>
-    DASHBOARD.tile(tile.title, qiText(tile.taken), qiText(tile.planned));
+  const whole = (fill: QiFill) => fill.calm_pct + fill.surge_pct + fill.redline_pct;
 </script>
 
 <Panel title="Essence" bare>
@@ -27,22 +22,24 @@
     <span class="guide"><GuidanceButton topic="essence" /></span>
     {#if essence?.blank}
       <p class="hint">{DASHBOARD.essenceBlank}</p>
-    {:else if essence && dashboard}
-      <TileRow
+    {:else if essence && bar}
+      <BarRow
         label={DASHBOARD.essence}
-        tiles={dashboard.essence_tiles}
-        reading={DASHBOARD.of(essence.actual_text, essence.expected_text)}
-        describe={describeTime}
+        done={bar.done_pct}
+        plan={bar.plan_pct}
+        sunset={bar.sunset_pct}
+        tip={DASHBOARD.essenceTip(essence.actual_text, essence.remaining_text, bar.light_text)}
       />
     {/if}
     {#if qi?.enabled}
-      <TileRow
+      <BarRow
         label={DASHBOARD.qi}
-        tone="qi"
-        tiles={qi.tiles}
-        reading="{DASHBOARD.of(String(qi.spent), String(qi.planned))} · {QI_ZONE[qi.spent_zone]}"
-        describe={describeQi}
-        bands={{ harmonious: qi.harmonious_pct, igniting: qi.igniting_pct }}
+        done={whole(qi.spent_fill)}
+        plan={whole(qi.planned_fill)}
+        tone={qi.spent_zone}
+        planTone={qi.planned_zone}
+        ticks={[qi.calm_end_pct, qi.surge_end_pct]}
+        tip={DASHBOARD.qiTip(qi.spent, qi.start, qi.planned, QI_ZONE[qi.spent_zone])}
       />
     {/if}
   </div>

@@ -18,7 +18,7 @@ test('backup, purge, then restore the zip brings the trials back', async ({ page
   await page.getByRole('button', { name: "Purge Today's Scroll" }).click();
   await purge.getByRole('button', { name: 'Purge', exact: true }).click();
   await expect(page.getByRole('status')).toHaveText("Today's scroll is clear.");
-  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: 'Settings' }).click();
   await expect(section(page, 'The Immediate Trial')).not.toContainText('Write the report');
 
   await page.getByRole('button', { name: 'Settings' }).click();
@@ -27,7 +27,7 @@ test('backup, purge, then restore the zip brings the trials back', async ({ page
   await expect(replace).toBeVisible();
   await replace.getByRole('button', { name: 'Replace', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Restored');
-  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: 'Settings' }).click();
   await expect(section(page, 'The Immediate Trial')).toContainText('Write the report');
   await expect(section(page, 'Remaining Trials')).toContainText('Tidy the desk');
 });

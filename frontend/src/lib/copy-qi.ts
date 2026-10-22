@@ -1,10 +1,16 @@
 /** DRAFT, proposed 2026-10-21: the card that follows every conquest. */
 export const QI_CARD = {
   title: 'How much qi did this take?',
-  amount: (qi: number) => `${qi} qi`,
-  hint: 'It starts at what you first estimated.',
+  /** The three choices; a Restorative Art's Qi is what it gave back. */
+  choices: { lighter: 'Lighter', foreseen: 'As foreseen', heavier: 'Heavier' },
+  restoreChoices: { lighter: 'Restored less', foreseen: 'As foreseen', heavier: 'Restored more' },
+  exact: 'Qi it took',
+  less: 'One Qi less',
+  more: 'One Qi more',
+  today: 'Today',
+  move: (from: number, to: number) => (from === to ? `${to}` : `${from} → ${to}`),
   confirm: 'Done',
-  back: 'Back',
+  back: 'Take it back',
   backDescription: 'Take the conquest back',
 };
 

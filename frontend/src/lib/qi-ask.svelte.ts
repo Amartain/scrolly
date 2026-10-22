@@ -5,8 +5,10 @@ import { view } from './view.svelte';
 export interface QiQuestion {
   id: string;
   title: string;
-  /** The Qi first estimated: where the slider starts. */
+  /** The Qi first estimated: the card opens on it ("As foreseen"). */
   estimate: number;
+  /** A Restorative Art: its Qi is what it gave back, and the choices say so. */
+  restores: boolean;
   undo: () => Promise<unknown>;
 }
 

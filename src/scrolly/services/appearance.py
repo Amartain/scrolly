@@ -7,6 +7,7 @@ from scrolly.domain.appearance import (
     ReadingFont,
     Theme,
     choose_header,
+    choose_theme,
     with_uploaded_header,
 )
 from scrolly.ports import Clock, Store
@@ -26,15 +27,15 @@ class AppearanceService:
         return Preferences(
             theme=Theme(saved["theme"]),
             day_variant=DayVariant(saved["day_variant"]),
+            serene_variant=DayVariant(saved.get("serene_variant", DayVariant.SCROLL)),
             reading_font=ReadingFont(saved.get("reading_font", ReadingFont.ATKINSON)),
             header=HeaderChoice(saved.get("header", HeaderChoice.AUTO)),
             header_version=int(saved.get("header_version", 0)),
         )
 
     def choose(self, theme: Theme, day_variant: DayVariant | None) -> Preferences:
-        """Remember the user's pick. Without a variant, the previous one is kept."""
-        current = self.preferences()
-        prefs = replace(current, theme=theme, day_variant=day_variant or current.day_variant)
+        """Remember the user's pick. Without a variant, the theme's previous one is kept."""
+        prefs = choose_theme(self.preferences(), theme, day_variant)
         self._save(prefs)
         return prefs
 
@@ -58,6 +59,7 @@ class AppearanceService:
         value = {
             "theme": prefs.theme.value,
             "day_variant": prefs.day_variant.value,
+            "serene_variant": prefs.serene_variant.value,
             "reading_font": prefs.reading_font.value,
             "header": prefs.header.value,
             "header_version": prefs.header_version,

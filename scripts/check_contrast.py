@@ -6,8 +6,9 @@
 - Cards: each card's ink (and the Mandate on the Horizon) needs 4.5:1 on its head and row overlays
   laid over both gradient stops.
 - Serene themes: no surface is brighter than `--surface-canvas`. Highlights (inset top line,
-  button sheen, icon highlight shapes) are not surfaces and are not checked. Dusk is dark, so its
-  coloured accent fills (cards, action and entry buttons) are exempt; only neutral surfaces count.
+  button sheen, icon highlight shapes) are not surfaces and are not checked. The dark looks (dusk,
+  and the green day look) have their coloured accent fills (cards, action and entry buttons)
+  exempt; only neutral surfaces count.
 """
 
 import re
@@ -19,8 +20,10 @@ SURFACES = ("--surface-panel", "--surface-raised")
 TEXT = ("--ink", "--ink-muted", "--mandate", "--growth-text")
 GAUGE = (
     *("--qi-calm", "--qi-surge", "--qi-redline", "--cycles", "--cycles-break", "--flow"),
-    *("--flow-break", "--essence-ink", "--qi-ink"),
+    *("--flow-break", "--essence-ink"),
 )
+# Each chart series, a line or bars on the panel.
+CHART = ("--chart-trials", "--chart-essence", "--chart-qi")
 # The selected Seclusion tab: its words on its colour.
 TAB_INK = (("--on-cycles", "--cycles"), ("--on-flow", "--flow"))
 # The ring's numerals in its own colour on the well (display size: 3:1), a break's words on its
@@ -35,6 +38,7 @@ ACCENTS = (
     ("--entry-dispatch-ink", "--entry-dispatch-bg", 4.5),
 )
 CONQUERED_ROWS = ("--conquered-row-a", "--conquered-row-b")
+DARK_LOOKS = ("serene-dusk.css", "serene-green.css")  # accents may outshine the canvas
 CONQUERED_TEXT = ("--ink", "--ink-muted")
 DECLARATION = re.compile(r"(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{6})\s*;")
 OVERLAY = re.compile(r"(--[\w-]+)\s*:\s*rgba\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)\s*;")
@@ -97,6 +101,7 @@ def ratio(first: str, second: str) -> float:
 def contrast_problems(name: str, values: dict[str, str]) -> list[str]:
     found = []
     pairs = [(t, s, 4.5) for t in TEXT for s in SURFACES] + [(g, "--inset", 3.0) for g in GAUGE]
+    pairs += [(c, "--surface-panel", 3.0) for c in CHART]
     pairs += [(t, s, 4.5) for t in CONQUERED_TEXT for s in CONQUERED_ROWS]
     pairs += [(ink, tab, 4.5) for ink, tab in TAB_INK] + list(ACCENTS)
     pairs.append(("--head-ink", "--head-bg", 4.5))  # a panel's title on its header bar
@@ -112,10 +117,10 @@ def contrast_problems(name: str, values: dict[str, str]) -> list[str]:
 
 def brightness_problems(name: str, text: str, values: dict[str, str]) -> list[str]:
     limit = luminance(values["--surface-canvas"])
-    day = "dusk" not in name
-    tokens = NEUTRAL_SURFACES + (COLOR_SURFACES if day else ())
+    light = name not in DARK_LOOKS
+    tokens = NEUTRAL_SURFACES + (COLOR_SURFACES if light else ())
     fills = {token: rgb(values[token]) for token in tokens if token in values}
-    if not day:
+    if not light:
         return _too_bright(name, fills, limit)
     for token, band in card_bands(text, values):
         fills[token] = band

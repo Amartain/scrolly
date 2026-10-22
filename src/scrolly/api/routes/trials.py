@@ -3,11 +3,13 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from scrolly.api.deps import get_clock, get_store
+from scrolly.api.schemas.budget import QiCardOut
 from scrolly.api.schemas.dashboard import ActualIn, QiActualIn, ScribeIn, TrialPatchIn
 from scrolly.api.schemas.planning import OrderIn, SummonIn
 from scrolly.api.schemas.view import ViewOut
 from scrolly.ports import Clock, Store
 from scrolly.services.day import DayService
+from scrolly.services.qi_card import build_qi_card
 from scrolly.services.today import TodayService
 from scrolly.services.victory import VictoryService
 from scrolly.services.view import build_view
@@ -103,6 +105,12 @@ def set_qi(
     """The Qi a conquered trial took. Until it is told, the estimate stands."""
     today.set_actual_qi(trial_id, body.qi)
     return _view(store, clock)
+
+
+@router.get("/{trial_id}/qi-card")
+def qi_card(trial_id: str, qi: int, store: StoreDep, clock: ClockDep) -> QiCardOut:
+    """The card after a conquest: its choices, and the day's Qi if `qi` were the answer."""
+    return QiCardOut.from_view(build_qi_card(store, clock.now(), trial_id, qi))
 
 
 @router.put("/{trial_id}/actual")

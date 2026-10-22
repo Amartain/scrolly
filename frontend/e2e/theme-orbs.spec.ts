@@ -54,13 +54,35 @@ test('the orbs stay inside the viewport and keep typed text', async ({ page }) =
   );
 });
 
-test('the dashboard and Settings have no orbs', async ({ page }) => {
+test('the header carries the orbs beside the clock, on the dashboard and in Settings', async ({
+  page,
+}) => {
   await sealDay(page);
   await page.goto('/');
-  await expect(page.getByRole('banner')).toBeVisible();
-  await expect(page.getByRole('button', { name: serene })).toHaveCount(0);
+  const banner = page.getByRole('banner');
+  for (const name of [serene, teal, crimson]) {
+    await expect(banner.getByRole('button', { name })).toBeVisible();
+  }
   await page.getByRole('button', { name: 'Settings' }).click();
-  await expect(page.getByRole('button', { name: serene })).toHaveCount(0);
+  await expect(banner.getByRole('button', { name: serene })).toBeVisible();
+});
+
+test('in Serene the Serene orb switches between the scroll look and green', async ({ page }) => {
+  await sealDay(page);
+  await page.goto('/');
+  const orb = page.getByRole('banner').getByRole('button', { name: serene });
+  await expect(root(page)).toHaveAttribute('data-day-variant', 'scroll');
+  await expect(orb).toHaveAttribute('title', 'Serene Peak, green');
+  await orb.click();
+  await expect(root(page)).toHaveAttribute('data-day-variant', 'green');
+  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(67, 106, 70)');
+  await expect(orb).toHaveAttribute('title', 'Serene Peak, scroll');
+
+  // From Pavilion, the Serene orb brings green back.
+  await page.getByRole('banner').getByRole('button', { name: teal }).click();
+  await expect(orb).toHaveAttribute('title', 'Serene Peak, green');
+  await orb.click();
+  await expect(root(page)).toHaveAttribute('data-day-variant', 'green');
 });
 
 test('Phase 2 has the orbs too', async ({ page }) => {

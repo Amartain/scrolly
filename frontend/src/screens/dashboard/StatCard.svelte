@@ -12,6 +12,8 @@
   .card {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: var(--space-1);
     padding: var(--space-2) var(--space-4);
     background: var(--surface-panel);
@@ -21,7 +23,6 @@
   }
 
   .label {
-    align-self: flex-start;
     margin: 0;
     color: var(--ink-muted);
     font-size: var(--text-display-sm);

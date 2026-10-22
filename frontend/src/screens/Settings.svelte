@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Button from '../components/Button.svelte';
   import DataPanel from './DataPanel.svelte';
   import FeedbackPanel from './FeedbackPanel.svelte';
   import GoldenCorePanel from './GoldenCorePanel.svelte';
@@ -12,11 +11,9 @@
   let { onback }: { onback: () => void } = $props();
 </script>
 
+<!-- No title or Back: the pressed ⚙ in the header (or Esc) goes back. The heading stays for screen readers. -->
 <div class="settings">
-  <div class="bar">
-    <h1 class="display title">Settings</h1>
-    <Button label="Back" onclick={onback} />
-  </div>
+  <h1 class="sr-only">Settings</h1>
   <div class="column">
     <ThemePanel />
     <HeaderPanel />
@@ -37,21 +34,9 @@
     min-height: 0;
     display: grid;
     grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
     gap: var(--space-4) var(--space-5);
     padding: var(--space-4) var(--size-gutter);
-  }
-
-  .bar {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .title {
-    margin: 0;
-    font-size: var(--text-display-lg);
   }
 
   .column {
@@ -63,8 +48,6 @@
     padding-bottom: var(--shadow-room);
     overflow-y: auto;
     scrollbar-gutter: stable;
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   }
 
   /* Panels keep their full height; the column scrolls instead of squeezing them. */

@@ -4,10 +4,9 @@
   import SetOnce from '../../components/SetOnce.svelte';
   import StateMark from '../../components/StateMark.svelte';
   import TypeMark from '../../components/TypeMark.svelte';
-  import Button from '../../components/Button.svelte';
   import { today, type Immediate } from '../../lib/api';
-  import { SECLUSION } from '../../lib/copy-seclusion';
   import { view } from '../../lib/view.svelte';
+  import SeclusionGate from './SeclusionGate.svelte';
   import TimerControls from './TimerControls.svelte';
 
   let { trial, onseclusion }: { trial: Immediate; onseclusion?: () => void } = $props();
@@ -56,40 +55,24 @@
       >
     </div>
     <TimerControls {trial} />
-    {#if onseclusion}
-      <div class="enter">
-        <!-- A raised secondary button: the trial and its clock lead, not the way out to Seclusion. -->
-        <Button
-          label={SECLUSION.enter}
-          description="{SECLUSION.enterNamed}: {trial.title}"
-          onclick={onseclusion}
-        />
-      </div>
-    {/if}
+    {#if onseclusion}<SeclusionGate title={trial.title} onclick={onseclusion} />{/if}
   </div>
 </Panel>
 
 <style>
+  /* Tight enough to fit the short panel at every window size (the rem rounds to whole pixels, so the
+     slack moves): checked by the "fits without scrolling" spec. */
   .card {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-3) var(--space-4);
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
   }
 
   .top {
     display: flex;
     align-items: center;
     gap: var(--space-4);
-  }
-
-  .enter {
-    display: grid;
-  }
-
-  .enter :global(.button) {
-    padding-block: var(--space-2);
-    letter-spacing: 0.15em;
   }
 
   .mark {
@@ -106,7 +89,7 @@
   }
 
   .title {
-    --editable-size: var(--text-read-hero);
+    --editable-size: var(--text-read-lg);
     display: flex;
     color: var(--ink);
     line-height: 1.1;

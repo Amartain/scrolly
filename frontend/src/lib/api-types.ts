@@ -1362,6 +1362,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/trials/{trial_id}/qi-card": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Qi Card
+         * @description The card after a conquest: its choices, and the day's Qi if `qi` were the answer.
+         */
+        get: operations["qi_card_api_trials__trial_id__qi_card_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/trials/{trial_id}/revive": {
         parameters: {
             query?: never;
@@ -1489,6 +1509,7 @@ export interface components {
             header_version: number;
             phase: components["schemas"]["scrolly__domain__appearance__Phase"];
             reading_font: components["schemas"]["ReadingFont"];
+            serene_variant: components["schemas"]["DayVariant"];
             theme: components["schemas"]["Theme"];
         };
         /**
@@ -1695,8 +1716,7 @@ export interface components {
             /** Conquered */
             conquered: components["schemas"]["ConqueredOut"][];
             essence: components["schemas"]["EssenceOut"];
-            /** Essence Tiles */
-            essence_tiles: components["schemas"]["TileOut"][];
+            essence_bar: components["schemas"]["EssenceBarOut"];
             /** Heavenly Cycles */
             heavenly_cycles: number;
             immediate: components["schemas"]["ImmediateOut"] | null;
@@ -1710,9 +1730,10 @@ export interface components {
         };
         /**
          * DayVariant
+         * @description A theme's look by day. Pavilion: teal or crimson. Serene: scroll-coloured or green.
          * @enum {string}
          */
-        DayVariant: "teal" | "crimson";
+        DayVariant: "teal" | "crimson" | "scroll" | "green";
         /**
          * Discipline
          * @enum {string}
@@ -1747,6 +1768,20 @@ export interface components {
             include_postponed: boolean;
             /** Text */
             text: string;
+        };
+        /**
+         * EssenceBarOut
+         * @description The Essence bar's shares of one scale, and the light left (None without a sunset).
+         */
+        EssenceBarOut: {
+            /** Done Pct */
+            done_pct: number;
+            /** Light Text */
+            light_text: string | null;
+            /** Plan Pct */
+            plan_pct: number;
+            /** Sunset Pct */
+            sunset_pct: number | null;
         };
         /** EssenceOut */
         EssenceOut: {
@@ -2114,6 +2149,34 @@ export interface components {
             qi: number;
         };
         /**
+         * QiCardOut
+         * @description The card after a conquest: its three choices, and the day's Qi if the asked answer is kept,
+         *     on the dashboard bar's scale (shares of the redline).
+         */
+        QiCardOut: {
+            /** Calm End Pct */
+            calm_end_pct: number;
+            choices: components["schemas"]["QiChoicesOut"];
+            /** Fill Pct */
+            fill_pct: number;
+            /** Spent */
+            spent: number;
+            /** Start */
+            start: number;
+            /** Surge End Pct */
+            surge_end_pct: number;
+            zone: components["schemas"]["QiZone"];
+        };
+        /** QiChoicesOut */
+        QiChoicesOut: {
+            /** Foreseen */
+            foreseen: number;
+            /** Heavier */
+            heavier: number;
+            /** Lighter */
+            lighter: number;
+        };
+        /**
          * QiFillOut
          * @description How much of each gauge zone a Qi value fills, as shares of the redline.
          */
@@ -2138,12 +2201,8 @@ export interface components {
             calm_end_pct: number;
             /** Enabled */
             enabled: boolean;
-            /** Harmonious Pct */
-            harmonious_pct: number;
             /** High */
             high: number;
-            /** Igniting Pct */
-            igniting_pct: number;
             /** Invited */
             invited: boolean;
             /** Low */
@@ -2164,8 +2223,6 @@ export interface components {
             surge_end: number;
             /** Surge End Pct */
             surge_end_pct: number;
-            /** Tiles */
-            tiles: components["schemas"]["TileOut"][];
             /** Tomorrow Start */
             tomorrow_start: number;
         };
@@ -2433,26 +2490,6 @@ export interface components {
          * @enum {string}
          */
         Theme: "serene" | "pavilion";
-        /**
-         * TileOut
-         * @description One trial on the dashboard's Essence or Qi row: its share of the row, and its numbers.
-         */
-        TileOut: {
-            /** Planned */
-            planned: string | null;
-            /** Share Pct */
-            share_pct: number;
-            state: components["schemas"]["TileState"];
-            /** Taken */
-            taken: string | null;
-            /** Title */
-            title: string;
-        };
-        /**
-         * TileState
-         * @enum {string}
-         */
-        TileState: "done" | "now" | "waiting";
         /**
          * TimerOut
          * @description The timer as of this view: the browser animates the seconds until the next one.
@@ -4793,6 +4830,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    qi_card_api_trials__trial_id__qi_card_get: {
+        parameters: {
+            query: {
+                qi: number;
+            };
+            header?: never;
+            path: {
+                trial_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QiCardOut"];
                 };
             };
             /** @description Validation Error */

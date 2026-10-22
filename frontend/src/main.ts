@@ -4,6 +4,7 @@ import './styles/fonts.css';
 import './styles/tokens/base.css';
 import './styles/moment-tokens.css';
 import './styles/tokens/serene-day.css';
+import './styles/tokens/serene-green.css';
 import './styles/tokens/serene-dusk.css';
 import './styles/tokens/pavilion-teal.css';
 import './styles/tokens/pavilion-crimson.css';

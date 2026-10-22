@@ -23,7 +23,7 @@ test('saved titles use Atkinson, then OpenDyslexic once chosen, and keep it acro
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-reading-font', 'opendyslexic');
   await page.getByRole('button', { name: 'Settings' }).click();
-  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: 'Settings' }).click();
   await expect(page.locator('.read').first()).toBeVisible();
   expect(await titleFamily(page)).toContain('OpenDyslexic');
 });

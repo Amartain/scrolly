@@ -22,6 +22,7 @@ class AppearanceOut(BaseModel):
     theme: Theme
     day_variant: DayVariant | None
     phase: Phase
+    serene_variant: DayVariant
     reading_font: ReadingFont
     header: HeaderChoice
     # Changes with each upload of the user's own picture, so the browser fetches it afresh.
@@ -94,6 +95,7 @@ class ViewOut(BaseModel):
                 theme=a.theme,
                 day_variant=a.day_variant,
                 phase=a.phase,
+                serene_variant=a.serene_variant,
                 reading_font=a.reading_font,
                 header=a.header,
                 header_version=a.header_version,

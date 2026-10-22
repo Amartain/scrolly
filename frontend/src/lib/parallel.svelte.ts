@@ -23,6 +23,7 @@ export const parallel = {
       id: trial.id,
       title: trial.title,
       estimate: Number(trial.qi_text) || 0,
+      restores: trial.type === 'restorative',
       undo: async () => {
         if (await seclusion.trial(() => today.revive(trial.id)))
           await parallel.pick('remaining', trial.id);

@@ -1,33 +1,64 @@
-<!-- After a conquest: how much qi it took, on a slider that starts at the estimate. Closing it keeps the
-     estimate; the back arrow takes the conquest back. Shown wherever a trial is conquered. -->
+<!-- After a conquest: how much qi it took. It opens on "As foreseen" (the estimate), so Enter alone answers it;
+     Lighter and Heavier are one press away, and the exact number can be stepped or typed. Below, today's Qi bar
+     shows where the answer lands (Python works it out; nothing is saved until Done). Closing keeps the estimate;
+     "Take it back" undoes the conquest. Shown wherever a trial is conquered. -->
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { QI_CARD } from '../lib/copy-qi';
   import { qiAsk } from '../lib/qi-ask.svelte';
+  import { getQiCard, type QiCard } from '../lib/qi-api';
+  import { view } from '../lib/view.svelte';
   import Button from './Button.svelte';
   import Modal from './Modal.svelte';
+  import QiChoices from './qi/QiChoices.svelte';
+  import QiLanding from './qi/QiLanding.svelte';
 
   const question = $derived(qiAsk.question);
-  // The thumb follows the hand; the number is only sent on Done.
   let shown = $state(0);
+  let card = $state<QiCard | null>(null);
+  // The day's spent Qi as it stands (the estimate is recorded on conquest), for "60 → 80".
+  let from = $state(0);
+
+  // A new question starts the card afresh; a refresh of the view while it is open changes nothing.
   $effect(() => {
     shown = question?.estimate ?? 0;
+    from = untrack(() => view.planning?.qi.spent ?? 0);
+    card = null;
   });
+
+  // Ask Python again whenever the answer changes; only the newest reply is kept.
+  let asked = 0;
+  $effect(() => {
+    if (!question) return;
+    const ticket = ++asked;
+    void getQiCard(question.id, shown)
+      .then((reply) => {
+        if (ticket === asked) card = reply;
+      })
+      .catch(() => {});
+  });
+
+  function onkeydown(event: KeyboardEvent) {
+    if (event.key !== 'Enter' || event.target instanceof HTMLButtonElement) return;
+    event.preventDefault();
+    void qiAsk.confirm(shown);
+  }
 </script>
 
 {#if question}
   <Modal title={QI_CARD.title} striped={false} onclose={qiAsk.keep}>
-    <div class="sheet">
+    <!-- svelte-ignore a11y_no_static_element_interactions (Enter anywhere on the card answers it) -->
+    <div class="sheet" {onkeydown}>
       <p class="what read">{question.title}</p>
-      <p class="amount display digits" aria-live="polite">{QI_CARD.amount(shown)}</p>
-      <input
-        type="range"
-        min={0}
-        max={100}
-        step={1}
-        aria-label={QI_CARD.title}
-        bind:value={shown}
-      />
-      <p class="hint">{QI_CARD.hint}</p>
+      {#if card}
+        <QiChoices
+          choices={card.choices}
+          value={shown}
+          restores={question.restores}
+          onchange={(next) => (shown = next)}
+        />
+        <QiLanding {card} {from} />
+      {/if}
       <div class="actions">
         <button
           class="link display"
@@ -46,9 +77,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-3);
-    min-width: min(24rem, 80vw);
-    padding: var(--space-6) var(--space-8);
+    gap: var(--space-4);
+    width: min(30rem, 86vw);
+    padding: var(--space-5) var(--space-6);
     text-align: center;
   }
 
@@ -60,29 +91,11 @@
     font-size: var(--text-read-lg);
   }
 
-  .amount {
-    color: var(--num);
-    font-size: var(--text-display-lg);
-    line-height: 1;
-  }
-
-  input {
-    width: 100%;
-    height: var(--size-slider-thumb);
-    margin: 0;
-    accent-color: var(--growth);
-    cursor: pointer;
-  }
-
-  .hint {
-    color: var(--ink-muted);
-    font-size: var(--text-body-sm);
-  }
-
   .actions {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    align-self: stretch;
     gap: var(--space-5);
   }
 

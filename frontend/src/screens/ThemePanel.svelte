@@ -7,10 +7,17 @@
     { value: 'serene', label: 'Serene Peak' },
     { value: 'pavilion', label: 'Hidden Pavilion' },
   ];
-  const variants: { value: DayVariant; label: string }[] = [
-    { value: 'teal', label: 'Teal' },
-    { value: 'crimson', label: 'Crimson' },
-  ];
+  // Each theme's own looks by day; the group shows the current theme's.
+  const variants: Record<Theme, { value: DayVariant; label: string }[]> = {
+    serene: [
+      { value: 'scroll', label: 'Scroll' },
+      { value: 'green', label: 'Green' },
+    ],
+    pavilion: [
+      { value: 'teal', label: 'Teal' },
+      { value: 'crimson', label: 'Crimson' },
+    ],
+  };
 
   const fonts: { value: ReadingFont; label: string }[] = [
     { value: 'atkinson', label: 'Atkinson' },
@@ -18,7 +25,7 @@
   ];
 
   const appearance = $derived(view.current?.appearance);
-  const isPavilion = $derived(appearance?.theme === 'pavilion');
+  const theme = $derived<Theme>(appearance?.theme ?? 'serene');
 </script>
 
 <Panel title="Theme">
@@ -38,16 +45,16 @@
         </label>
       {/each}
     </fieldset>
-    <fieldset class="group" disabled={!isPavilion}>
-      <legend class="display">Pavilion by day</legend>
-      {#each variants as variant (variant.value)}
+    <fieldset class="group">
+      <legend class="display">{theme === 'serene' ? 'Serene' : 'Pavilion'} by day</legend>
+      {#each variants[theme] as variant (variant.value)}
         <label class="choice display">
           <input
             type="radio"
             name="day-variant"
             value={variant.value}
             checked={appearance?.day_variant === variant.value}
-            onchange={() => view.choose('pavilion', variant.value)}
+            onchange={() => view.choose(theme, variant.value)}
           />
           {variant.label}
         </label>
@@ -86,10 +93,6 @@
     padding: 0;
     border: 0;
     min-width: 0;
-  }
-
-  .group:disabled {
-    color: var(--ink-faint);
   }
 
   legend {
@@ -138,12 +141,5 @@
   .choice:has(input:focus-visible) {
     outline: var(--border-width) solid var(--gold);
     outline-offset: var(--space-1);
-  }
-
-  .group:disabled .choice {
-    cursor: default;
-    box-shadow: none;
-    background: var(--surface-stripe);
-    color: var(--ink-faint);
   }
 </style>

@@ -6,6 +6,7 @@
   import HandscrollIcon from '../icons/HandscrollIcon.svelte';
   import SlidersIcon from '../icons/SlidersIcon.svelte';
   import IconButton from '../components/IconButton.svelte';
+  import ThemeOrbs from '../components/ThemeOrbs.svelte';
 
   let { settingsOpen, onsettings }: { settingsOpen: boolean; onsettings: () => void } = $props();
 
@@ -42,6 +43,7 @@
     </div>
   </div>
   <div class="tools">
+    <ThemeOrbs placement="header" />
     <div class="clock lacquer-frame">
       <div class="time display digits">{time}</div>
       <div class="date">{date}</div>

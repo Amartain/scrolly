@@ -39,8 +39,6 @@
     padding: 0;
     overflow-y: auto;
     list-style: none;
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   }
 
   .row {

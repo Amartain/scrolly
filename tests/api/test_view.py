@@ -6,8 +6,9 @@ def test_view_shape(client: TestClient) -> None:
     assert body["logical_day"] == "2026-10-18"
     assert body["appearance"] == {
         "theme": "serene",
-        "day_variant": None,
+        "day_variant": "scroll",
         "phase": "day",
+        "serene_variant": "scroll",
         "reading_font": "atkinson",
         "header": "auto",
         "header_version": 0,
@@ -18,6 +19,19 @@ def test_choosing_a_theme_is_returned_and_kept(client: TestClient) -> None:
     reply = client.put("/api/appearance", json={"theme": "pavilion", "day_variant": "crimson"})
     assert reply.json()["appearance"]["day_variant"] == "crimson"
     assert client.get("/api/view").json()["appearance"]["theme"] == "pavilion"
+
+
+def test_serene_green_is_kept_apart_from_pavilions_variant(client: TestClient) -> None:
+    client.put("/api/appearance", json={"theme": "pavilion", "day_variant": "crimson"})
+    reply = client.put("/api/appearance", json={"theme": "serene", "day_variant": "green"})
+    assert reply.json()["appearance"]["day_variant"] == "green"
+    back = client.put("/api/appearance", json={"theme": "pavilion"})
+    assert back.json()["appearance"]["day_variant"] == "crimson"
+
+
+def test_a_variant_of_the_other_theme_is_refused(client: TestClient) -> None:
+    reply = client.put("/api/appearance", json={"theme": "serene", "day_variant": "teal"})
+    assert reply.status_code == 422
 
 
 def test_unknown_theme_is_rejected(client: TestClient) -> None:

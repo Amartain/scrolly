@@ -63,11 +63,10 @@
   --size-seclusion-bar: 3.5rem;
   --size-tab: 3.5rem;
   --size-short-panel: 7rem;
-  /* The Essence panel's ink-on-wash rows: a slim tile row, taller when it is the only row. */
+  /* The Essence panel's bars: slim, taller when Essence is the only row; the label column beside them. */
   --size-tile: 2rem;
   --size-tile-tall: 3rem;
   --size-tile-label: 6.5rem;
-  --size-tile-reading: 16rem;
   --size-stat: 7rem;
   --size-orb: 2rem;
   --shadow-room: var(--space-3);
@@ -112,8 +111,10 @@
   --size-glitch: 34rem;
   --text-glitch-numeral: 7.5rem;
 
-  /* The three theme orbs show every theme at once, so these do not follow the active theme. */
+  /* The three theme orbs show every theme at once, so these do not follow the active theme. The Serene
+     orb shows the look a click gives: the cream scroll, or the brighter green. */
   --swatch-serene: #f3eed0;
+  --swatch-serene-green: #3f6b24;
   --swatch-teal: #007a6f;
   --swatch-crimson: #8e001d;
 }

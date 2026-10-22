@@ -41,14 +41,6 @@
   /* A cloud curl, as a mask shape (the ceremony card's corner curl); it takes the colour it is laid on. */
   --cloud-curl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 18c0-6 4-10 9-10 4 0 6 3 6 5.5 0 2-1.5 3.5-3.5 3.5S11 15.5 11 14s1-2 2-2' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
 
-  /* The Dispatch preview: a Discord message, in Discord's own dark colours in every theme, so it looks
-     as it will when posted. Text pairs checked by check_scene_contrast.py. */
-  --discord-bg: #313338;
-  --discord-text: #dbdee1;
-  --discord-muted: #a3a9b3;
-  --discord-heading: #f2f3f5;
-  --discord-avatar: #5865f2;
-
   /* The morning scenes on the zero state (components/morning/). Everything else in them is mixed from
      the theme's own canvas, ink and gold. The seal is vermilion as in a real painting (owner,
      2026-10-22: an exception to hard rule 6 for this painting only; never `--mandate`). */

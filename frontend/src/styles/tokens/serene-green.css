@@ -1,0 +1,118 @@
+/* serene-green: Serene by day with its colours turned round (owner, 2026-10-22). The scroll's dark green
+   is the panels, its brighter green the header bands, the cream becomes the ink, gold stays gold. The
+   canvas, a soft sage-forest, is the lightest surface, as in every Serene look. At dusk Serene Dusk
+   takes over, as for the scroll look. */
+:root[data-theme='serene'][data-day-variant='green']:not([data-phase='dusk']) {
+  --surface-canvas: #436a46;
+  --surface-panel: #2d4731;
+  --surface-stripe: #314d35;
+  --surface-raised: #283f2c;
+  --inset: #1c2e20;
+  --btn: #3a5c3d;
+  --ink: #f3eed0;
+  --ink-muted: #cfd3b6;
+  --ink-faint: #a7b296;
+  --line: #16251a;
+  --shadow: #142218;
+  --grid: #3c5a42;
+  --icon-line: #121f16;
+  --head-bg: #3f6b24;
+  --head-ink: #f3eed0;
+  --growth: #a8cf7a;
+  --on-growth: #1b2c1f;
+  --growth-text: #a8cf7a;
+  --conquered-row-a: #2f4f36;
+  --conquered-row-b: #36583c;
+  --gold: #d8b21c;
+  --on-gold: #1b2c1f;
+  --num: #e3c23a;
+  --num-shadow: #142218;
+  --num-text: #e3c23a;
+  --ring-over: #f2d44e;
+  --cycles: #a8cf7a;
+  --on-cycles: #1b2c1f;
+  --cycles-break: #6f9a52;
+  --flow: #7fd1b4;
+  --on-flow: #1b2c1f;
+  --flow-break: #4a9a82;
+  --cycles-break-disc: #3d5a2d;
+  --flow-break-disc: #2c5e50;
+  --on-break-disc: #f3eed0;
+  --strong: #1b2c1f;
+  --on-strong: #f3eed0;
+  /* Lightened so it reads on green, as at dusk. */
+  --mandate: #eb9a85;
+  /* Qi's zones: green Harmonious, gold Igniting the Blood, crimson Strain (its own, never --mandate). */
+  --qi-calm: #5fd4b8;
+  --qi-surge: #ecd452;
+  --qi-redline: #f0566a;
+  /* The dashboard's Essence bar (3:1 on --inset), and each chart series (3:1 on the panel). */
+  --essence-ink: #b5d67f;
+  --chart-trials: #f0a030;
+  --chart-essence: #b5d67f;
+  --chart-qi: #6cc3a0;
+  --postponed: #9fb4c9;
+  --icon-paper: #e8e0c4;
+  --icon-wood: #b07a45;
+  --highlight: rgba(255, 255, 255, 0.14);
+  --icon-shadow: rgba(0, 0, 0, 0.5);
+  --promote-bg: #3f6b24;
+  --promote-ink: #f3eed0;
+  --gloss: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.05) 48%,
+    rgba(0, 0, 0, 0.08) 52%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  --gloss-side: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.05) 45%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  --gloss-faint: linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0) 60%);
+  --gloss-btn: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0) 55%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  --card-horizon-ink: #f3eed0;
+  --card-horizon-head: rgba(0, 0, 0, 0.25);
+  --card-horizon-row-a: rgba(0, 0, 0, 0.1);
+  --card-horizon-row-b: rgba(0, 0, 0, 0.22);
+  --card-horizon-mandate: #f5b5a8;
+  --card-foundational-ink: #f3eed0;
+  --card-foundational-head: rgba(0, 0, 0, 0.25);
+  --card-foundational-row-a: rgba(0, 0, 0, 0.1);
+  --card-foundational-row-b: rgba(0, 0, 0, 0.22);
+  --card-restorative-ink: #f3eed0;
+  --card-restorative-head: rgba(0, 0, 0, 0.25);
+  --card-restorative-row-a: rgba(0, 0, 0, 0.1);
+  --card-restorative-row-b: rgba(0, 0, 0, 0.22);
+  --card-horizon-a: #6f5038;
+  --card-horizon-b: #644638;
+  --card-horizon-action-bg: #4f6b4f;
+  --card-horizon-action-ink: #f3eed0;
+  --card-foundational-a: #5f5a2e;
+  --card-foundational-b: #66532c;
+  --card-foundational-action-bg: #4f6b4f;
+  --card-foundational-action-ink: #f3eed0;
+  --card-restorative-a: #2c5545;
+  --card-restorative-b: #36634f;
+  --card-restorative-action-bg: #5b6b3e;
+  --card-restorative-action-ink: #f3eed0;
+  --entry-archives-bg: #9fb4c9;
+  --entry-archives-ink: #1b2c1f;
+  --entry-dispatch-bg: #b9a0d9;
+  --entry-dispatch-ink: #1b2c1f;
+  --entry-settings-bg: #a8cf7a;
+  --entry-settings-ink: #1b2c1f;
+  --header-image: url('../../assets/headers/serene-day.webp');
+}
+
+/* Golden hour warms the green canvas towards olive, not the scroll look's cream. */
+:root[data-theme='serene'][data-day-variant='green'][data-phase='golden'] {
+  --canvas-fill: linear-gradient(180deg, var(--surface-canvas), #4a5a34);
+}

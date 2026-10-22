@@ -19,16 +19,49 @@ body {
   box-sizing: border-box;
 }
 
+/* Every scroll is the theme's own, never the browser's default (owner, 2026-10-22), set here once and
+   nowhere else. Chromium and Safari draw a slim bar without arrows: a thumb in the theme's line colour,
+   inset in its track. They ignore these rules wherever the standard `scrollbar-color` is set, so the
+   standard properties are given only to browsers without them (Firefox). */
+::-webkit-scrollbar {
+  width: var(--space-3);
+  height: var(--space-3);
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border: var(--border-width) solid var(--scrollbar-track);
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  :root {
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+
+  * {
+    scrollbar-width: thin;
+  }
+}
+
+/* Heard by a screen reader, not seen. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 button,
 input {
   font: inherit;
   color: inherit;
-}
-
-/* A text box that scrolls looks like every other scrolling panel, not like the browser's own. */
-textarea {
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 :focus-visible {

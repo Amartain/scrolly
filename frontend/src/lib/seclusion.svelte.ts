@@ -121,6 +121,7 @@ class SeclusionStore {
         id: trial.id,
         title: trial.title,
         estimate: Number(trial.qi_text) || 0,
+        restores: trial.type === 'restorative',
         undo: () => this.undo(),
       });
   }

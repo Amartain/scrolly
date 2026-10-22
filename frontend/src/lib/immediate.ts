@@ -38,6 +38,7 @@ export async function conquer(trial: Immediate): Promise<boolean> {
       id: trial.id,
       title: trial.title,
       estimate: Number(trial.qi_text) || 0,
+      restores: trial.type === 'restorative',
       undo: () => revive(trial),
     });
   if (won || flourish.reduced()) ask();

@@ -4,11 +4,12 @@ export const DASHBOARD = {
   essenceBlank: 'Estimates fill this scroll as you set them.',
   essence: 'Essence',
   qi: 'Qi',
-  /** A row's reading: what is done of what the scroll holds. */
-  of: (done: string, planned: string) => `${done} of ${planned}`,
-  /** The reading while the pointer is on a tile: that trial's own numbers. */
-  tile: (title: string, taken: string | null, planned: string | null) => {
-    const plan = planned ? `planned ${planned}` : 'no estimate';
-    return taken ? `${title} · ${taken} (${plan})` : `${title} · ${plan}`;
-  },
+  /** The Essence bar's numbers, shown on hover or focus: done, still planned, and the light left. */
+  essenceTip: (done: string, toGo: string, light: string | null) =>
+    [`${done} done`, `${toGo} to go`, light ? `${light} of light left` : null]
+      .filter(Boolean)
+      .join(' · '),
+  /** The Qi bar's numbers: spent of the day's Qi, what the scroll plans, and the zone reached. */
+  qiTip: (spent: number, start: number, planned: number, zone: string) =>
+    `${spent} of ${start} spent · ${planned} planned · ${zone}`,
 } as const;

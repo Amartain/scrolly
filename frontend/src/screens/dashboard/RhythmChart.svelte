@@ -27,6 +27,7 @@
   <!-- svelte-ignore a11y_no_noninteractive_tabindex, a11y_no_noninteractive_element_interactions -->
   <ul
     class="rhythm"
+    style:--series="var(--chart-{series.metric})"
     aria-label={CHART.hint('Rhythm, the last seven days')}
     tabindex={live ? 0 : undefined}
     onkeydown={reader.onkeydown}
@@ -98,14 +99,14 @@
     inset-inline: 0;
     bottom: 0;
     box-sizing: border-box;
-    background: color-mix(in srgb, var(--gold) 55%, var(--surface-panel));
+    background: color-mix(in srgb, var(--series) 55%, var(--surface-panel));
     background-image: var(--gloss-side);
     border: var(--border-width) solid var(--line);
     box-shadow: var(--shadow-button);
   }
 
   .today .bar {
-    background-color: var(--gold);
+    background-color: var(--series);
   }
 
   .rest {

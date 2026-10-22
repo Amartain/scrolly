@@ -75,8 +75,6 @@
     gap: var(--space-4);
     padding-right: var(--shadow-room);
     overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   }
 
   .empty {

@@ -76,7 +76,8 @@
 </script>
 
 <FoggedChart foggy={series.placeholder} invite={INVITE.momentum}>
-  <div class="momentum">
+  <!-- Each series has its own colour: Trials gold, Essence and Qi per theme (--chart-*). -->
+  <div class="momentum" style:--series="var(--chart-{series.metric})">
     <!-- svelte-ignore a11y_no_noninteractive_tabindex, a11y_no_noninteractive_element_interactions -->
     <div
       class="plot"
@@ -152,18 +153,18 @@
 
   .line {
     fill: none;
-    stroke: var(--growth-text);
+    stroke: var(--series);
     stroke-width: calc(var(--border-width) * 2);
     vector-effect: non-scaling-stroke;
   }
 
   .fill-top {
-    stop-color: var(--growth-text);
+    stop-color: var(--series);
     stop-opacity: 0.55;
   }
 
   .fill-bottom {
-    stop-color: var(--growth-text);
+    stop-color: var(--series);
     stop-opacity: 0.08;
   }
 

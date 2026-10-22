@@ -1,15 +1,17 @@
 from dataclasses import dataclass
 from datetime import datetime
 
+from scrolly.domain.day_budget import light_left
 from scrolly.domain.day_flow import immediate_of
-from scrolly.domain.day_tiles import Tile, essence_tiles
-from scrolly.domain.essence import EssenceSummary, essence_summary
+from scrolly.domain.essence import EssenceBar, EssenceSummary, essence_bar, essence_summary
 from scrolly.domain.logical_day import logical_day
 from scrolly.domain.models import Trial, TrialState
 from scrolly.domain.stats import heavenly_cycles, lifetime_conquered
+from scrolly.domain.sunset import budget_sunset
 from scrolly.domain.timer import elapsed_seconds
 from scrolly.ports import Store
 from scrolly.services.charts_view import Series, build_charts
+from scrolly.services.sunset import load_prefs
 from scrolly.services.victory import VictoryView, build_victory
 
 
@@ -30,7 +32,8 @@ class DashboardView:
     postponed: list[Trial]
     lost: list[Trial]
     essence: EssenceSummary
-    essence_tiles: list[Tile]
+    essence_bar: EssenceBar
+    light_left_min: int | None  # None without a kept sunset, or once it has passed
     victory: VictoryView | None
     lifetime_conquered: int
     heavenly_cycles: int
@@ -42,6 +45,9 @@ def build_dashboard_view(store: Store, now: datetime) -> DashboardView:
     trials = store.trials.list_for_day(today)
     immediate = immediate_of(trials)
     expected = None if immediate is None else immediate.essence_expected_min
+    essence = essence_summary(trials)
+    sunset = budget_sunset(load_prefs(store))
+    light = None if sunset is None else light_left(now, sunset)
     return DashboardView(
         immediate=immediate,
         timer=None
@@ -57,8 +63,9 @@ def build_dashboard_view(store: Store, now: datetime) -> DashboardView:
         ),
         postponed=[t for t in trials if t.state is TrialState.POSTPONED],
         lost=[t for t in trials if t.state is TrialState.LOST],
-        essence=essence_summary(trials),
-        essence_tiles=essence_tiles(trials),
+        essence=essence,
+        essence_bar=essence_bar(essence, light),
+        light_left_min=light,
         victory=build_victory(store.days.get(today), trials, today),
         lifetime_conquered=lifetime_conquered(store.trials.list_all()),
         heavenly_cycles=heavenly_cycles(store.days.list_all()),

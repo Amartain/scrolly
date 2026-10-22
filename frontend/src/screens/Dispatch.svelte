@@ -1,17 +1,18 @@
-<!-- The Dispatch: today's scroll as your companions will see it in Discord, with the options and Clip to
-     Scroll beside it. The raw markdown waits behind "Show markdown". -->
+<!-- The Dispatch: today's scroll as markdown, exactly as it will be pasted, with the options and Clip to Scroll
+     beside it. The options are switches marked with their emoji (postponed and abandoned use the Legend's). -->
 <script lang="ts">
   import Button from '../components/Button.svelte';
-  import ToggleChoice from '../components/ToggleChoice.svelte';
+  import ToggleSwitch from '../components/ToggleSwitch.svelte';
   import { dispatch, type DispatchData } from '../lib/api';
   import { DISPATCH } from '../lib/copy';
   import { DISPATCH_PREVIEW } from '../lib/copy-dispatch';
-  import DiscordMessage from './dispatch/DiscordMessage.svelte';
+  import { view } from '../lib/view.svelte';
 
   let { onback }: { onback: () => void } = $props();
 
   let scroll = $state<DispatchData | null>(null);
   let message = $state('');
+  const states = $derived(view.current?.legend.states);
 
   $effect(() => {
     void dispatch.get().then((data) => (scroll = data));
@@ -39,21 +40,24 @@
   </div>
   <div class="columns">
     <div class="stage">
-      {#if scroll}<DiscordMessage text={scroll.text} />{/if}
+      <pre aria-label="Scroll text">{scroll?.text ?? ''}</pre>
     </div>
     <aside class="side" aria-label={DISPATCH_PREVIEW.options}>
-      <ToggleChoice
+      <ToggleSwitch
         label={DISPATCH.dnd}
+        emoji="🌙"
         checked={scroll?.dnd ?? false}
         onchange={(dnd) => choose({ dnd })}
       />
-      <ToggleChoice
+      <ToggleSwitch
         label={DISPATCH.postponed}
+        emoji={states?.postponed?.emoji ?? '💤'}
         checked={scroll?.include_postponed ?? false}
         onchange={(include_postponed) => choose({ include_postponed })}
       />
-      <ToggleChoice
+      <ToggleSwitch
         label={DISPATCH.abandoned}
+        emoji={states?.lost?.emoji ?? '🍂'}
         checked={scroll?.include_abandoned ?? false}
         onchange={(include_abandoned) => choose({ include_abandoned })}
       />
@@ -61,10 +65,6 @@
         <Button label={DISPATCH.clip} tone="primary" size="large" onclick={clip} />
       </div>
       <p class="note" role="status">{message}</p>
-      <details class="raw">
-        <summary class="display">{DISPATCH_PREVIEW.markdown}</summary>
-        <pre aria-label="Scroll text">{scroll?.text ?? ''}</pre>
-      </details>
     </aside>
   </div>
 </div>
@@ -98,19 +98,19 @@
     gap: var(--space-6);
   }
 
+  /* The scroll is as tall as its text; only a very long day scrolls, on the theme's own scrollbar. */
   .stage {
     min-height: 0;
     overflow-y: auto;
     padding-right: var(--shadow-room);
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    padding-bottom: var(--shadow-room);
   }
 
   .side {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: var(--space-3);
+    gap: var(--space-2);
     min-height: 0;
     padding-right: var(--shadow-room);
   }
@@ -126,25 +126,15 @@
     color: var(--ink-muted);
   }
 
-  .raw {
-    min-height: 0;
-    overflow-y: auto;
-  }
-
-  summary {
-    color: var(--ink-muted);
-    font-size: var(--text-display-sm);
-    cursor: pointer;
-  }
-
   pre {
-    margin: var(--space-2) 0 0;
-    padding: var(--space-3);
+    margin: 0;
+    padding: var(--space-4);
     background: var(--surface-raised);
     border: var(--border-width) solid var(--line);
     box-shadow: var(--shadow-sunken);
     font-family: var(--font-body);
-    font-size: var(--text-body-sm);
+    font-size: var(--text-body-md);
+    line-height: 1.4;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
   }
