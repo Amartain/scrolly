@@ -14,6 +14,13 @@
     { cls: 'fill', r: R, w: BAND },
     { cls: 'shine', r: R - BAND * 0.2, w: BAND * 0.22 },
   ];
+
+  // A round end reaches half the stroke past the dash, on both ends. Drawn as is, a full ring that
+  // has begun to drain still looks closed until the two ends part (52 s of a 30m trial). So the dash
+  // is shortened by the widest end, and starts that far in: the arc shows exactly `fill`.
+  const CAP = ((BAND + EDGE * 2) / 2 / (2 * Math.PI * R)) * 100;
+  const dash = $derived(fill >= 100 ? 'none' : `${Math.max(fill - 2 * CAP, 0.01)} 100`);
+  const offset = $derived(fill >= 100 ? 0 : -CAP);
 </script>
 
 <svg class="art" viewBox="0 0 100 100" aria-hidden="true">
@@ -31,7 +38,8 @@
           r={part.r}
           stroke-width={part.w}
           pathLength="100"
-          stroke-dasharray="{fill} 100"
+          stroke-dasharray={dash}
+          stroke-dashoffset={offset}
         />
       {/each}
     </g>

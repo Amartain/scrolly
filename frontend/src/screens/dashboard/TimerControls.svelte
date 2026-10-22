@@ -1,16 +1,33 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import ConquerButton from '../../components/ConquerButton.svelte';
   import GlyphButton from '../../components/GlyphButton.svelte';
   import GlyphIcon from '../../icons/GlyphIcon.svelte';
   import { today, type Immediate } from '../../lib/api';
   import { conquer, toggleTimer } from '../../lib/immediate';
+  import { useRoomClock } from '../../lib/room-clock.svelte';
+  import { seclusion } from '../../lib/seclusion.svelte';
   import { clockText, flowText, useTimerDisplay } from '../../lib/timer.svelte';
   import { view } from '../../lib/view.svelte';
 
   let { trial }: { trial: Immediate } = $props();
 
   const display = useTimerDisplay(() => trial.timer);
-  const running = $derived(trial.timer.running);
+  // The room's Cycles or Flow run goes on after stepping out: this card shows its clock and drives it.
+  const room = $derived(seclusion.state?.run_under_way ? seclusion.state : null);
+  const roomClock = useRoomClock(
+    () => room,
+    () => trial,
+  );
+  const running = $derived(room ? seclusion.running : trial.timer.running);
+  // A conquest or a start here can move the room's run: read the room again after each new view.
+  $effect(() => {
+    void trial.id;
+    void trial.timer;
+    untrack(() => {
+      if (seclusion.state?.run_under_way || seclusion.state?.parallel) void seclusion.load();
+    });
+  });
   const flow = $derived(flowText(display.seconds, trial.timer.expected_s));
 </script>
 
@@ -23,14 +40,25 @@
   >
     <span class="big-glyph"><GlyphIcon name={running ? 'pause' : 'play'} /></span>
   </button>
-  <span class="clock digits" class:running role="timer" aria-label="Elapsed time"
-    >{clockText(display.seconds)}</span
-  >
-  <GlyphButton label="Reset timer" onclick={() => view.act(() => today.resetTimer(trial.id))}>
-    <GlyphIcon name="reset" />
-  </GlyphButton>
-  {#if trial.expected_text}<span class="of">of {trial.expected_text}</span>{/if}
-  {#if flow}<span class="of">{flow}</span>{/if}
+  {#if room}
+    <span
+      class="clock digits"
+      class:running
+      style:border-color={roomClock.tone ? `var(--${roomClock.tone})` : undefined}
+      role="timer"
+      aria-label="The room's clock">{roomClock.text}</span
+    >
+    <span class="of">{roomClock.label}</span>
+  {:else}
+    <span class="clock digits" class:running role="timer" aria-label="Elapsed time"
+      >{clockText(display.seconds)}</span
+    >
+    <GlyphButton label="Reset timer" onclick={() => view.act(() => today.resetTimer(trial.id))}>
+      <GlyphIcon name="reset" />
+    </GlyphButton>
+    {#if trial.expected_text}<span class="of">of {trial.expected_text}</span>{/if}
+    {#if flow}<span class="of">{flow}</span>{/if}
+  {/if}
   <span class="spacer"></span>
   <ConquerButton label="Conquered!" title={trial.title} onclick={() => conquer(trial)} />
   <span class="postpone">

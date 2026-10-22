@@ -5,6 +5,7 @@
   import StateMark from '../../components/StateMark.svelte';
   import TypeMark from '../../components/TypeMark.svelte';
   import { today, type Immediate } from '../../lib/api';
+  import { seclusion } from '../../lib/seclusion.svelte';
   import { view } from '../../lib/view.svelte';
   import SeclusionGate from './SeclusionGate.svelte';
   import TimerControls from './TimerControls.svelte';
@@ -12,6 +13,9 @@
   let { trial, onseclusion }: { trial: Immediate; onseclusion?: () => void } = $props();
 
   const qiOn = $derived(view.planning?.qi.enabled ?? false);
+  // The room's run and the trial beside go on after stepping out; the gate says so.
+  const room = $derived(seclusion.state);
+  const beside = $derived(room?.parallel?.timer.running ? room.parallel : null);
   const meta = $derived(
     [view.current?.legend.types[trial.type]?.label].filter(Boolean).join(' · '),
   );
@@ -55,7 +59,12 @@
       >
     </div>
     <TimerControls {trial} />
-    {#if onseclusion}<SeclusionGate title={trial.title} onclick={onseclusion} />{/if}
+    {#if onseclusion}<SeclusionGate
+        title={trial.title}
+        onclick={onseclusion}
+        live={!!room?.run_under_way || !!beside}
+        {beside}
+      />{/if}
   </div>
 </Panel>
 

@@ -172,13 +172,28 @@ def test_settings_outside_their_limits_are_refused(client: TestClient) -> None:
     assert room(client)["cycles"]["phase"] == "idle"
 
 
-def test_stepping_out_pauses_the_cycle_and_the_trial(client: TestClient, clock: FixedClock) -> None:
+def test_on_the_dashboard_the_trial_stops_when_the_cycle_s_focus_ends(
+    client: TestClient, clock: FixedClock
+) -> None:
+    enter_on(client, "cycles", "Write report")
+    client.post("/api/seclusion/timer/start", json=DIAL)
+    client.post("/api/seclusion/leave")
+    later(clock, 2.5)
+    timer = client.get("/api/view").json()["dashboard"]["immediate"]["timer"]
+    assert (timer["running"], timer["elapsed_s"]) == (False, 120)
+
+
+def test_stepping_out_leaves_the_cycle_running_and_coming_back_finds_it(
+    client: TestClient, clock: FixedClock
+) -> None:
     enter_on(client, "cycles", "Write report")
     client.post("/api/seclusion/timer/start", json=DIAL)
     later(clock, 1)
     client.post("/api/seclusion/leave")
-    later(clock, 30)
+    later(clock, 0.5)
     client.post("/api/seclusion/enter")
     state = room(client)
-    assert (state["cycles"]["phase"], state["cycles"]["remaining_s"]) == ("focus", 60)
-    assert state["cycles"]["running"] is False
+    assert (state["discipline"], state["run_under_way"]) == ("cycles", True)
+    assert (state["cycles"]["phase"], state["cycles"]["remaining_s"]) == ("focus", 30)
+    assert state["cycles"]["running"] is True
+    assert logged(client) == 90

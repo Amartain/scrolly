@@ -2348,6 +2348,11 @@ export interface components {
             /** Ring Elapsed S */
             ring_elapsed_s: number;
             /**
+             * Run Under Way
+             * @default false
+             */
+            run_under_way: boolean;
+            /**
              * Sidebar Hidden
              * @default false
              */

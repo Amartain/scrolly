@@ -15,7 +15,9 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/');
 });
 
-test('F opens Seclusion with only the trial at hand, and Step out pauses it', async ({ page }) => {
+test('F opens Seclusion with only the trial at hand; Step out leaves it running', async ({
+  page,
+}) => {
   await expect(page.getByRole('button', { name: /Enter Seclusion/ })).toBeVisible();
   await page.keyboard.press('f');
   await expect(room(page)).toContainText('Write report');
@@ -23,7 +25,7 @@ test('F opens Seclusion with only the trial at hand, and Step out pauses it', as
   await room(page).getByRole('button', { name: 'Start', exact: true }).click();
   await expect(room(page).getByRole('button', { name: 'Pause timer' })).toBeVisible();
   await page.getByRole('button', { name: 'Step out' }).click();
-  await expect(page.getByRole('button', { name: 'Start timer' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Pause timer' })).toBeVisible();
   await expect(page.getByRole('button', { name: /Enter Seclusion/ })).toBeVisible();
 });
 
@@ -77,6 +79,28 @@ test('the ring drains: full before the start, shrinking while it runs', async ({
   await room(page).getByRole('button', { name: 'Start', exact: true }).click();
   await expect.poll(fill).toBeLessThan(100);
   expect(await fill()).toBeGreaterThan(80);
+});
+
+test('the drawn arc is exactly the time left: its round ends stay inside it', async ({ page }) => {
+  await enter(page);
+  await room(page).getByLabel('Estimate for Write report').fill('2m');
+  await room(page).getByRole('button', { name: 'Set the time for Write report' }).click();
+  await room(page).getByRole('button', { name: 'Start', exact: true }).click();
+  const shape = () =>
+    ring(page).evaluate((el) => {
+      const arc = el.querySelector('circle.edge[stroke-dasharray]');
+      const dash = parseFloat(arc?.getAttribute('stroke-dasharray') ?? '0');
+      const width = Number(arc?.getAttribute('stroke-width'));
+      const length = 2 * Math.PI * Number(arc?.getAttribute('r'));
+      // The dash plus a round end of half the stroke on each side, in the ring's 100 units.
+      return {
+        fill: Number(el.style.getPropertyValue('--fill')),
+        drawn: dash + (width / length) * 100,
+      };
+    });
+  await expect.poll(async () => (await shape()).fill).toBeLessThan(100);
+  const { fill, drawn } = await shape();
+  expect(drawn).toBeCloseTo(fill, 1);
 });
 
 test('the icon row: Incense has restart, start and sound; Cycles adds zero out, break and stop', async ({

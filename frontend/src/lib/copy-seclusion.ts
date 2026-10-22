@@ -4,6 +4,8 @@ export const SECLUSION = {
   tagline: 'the world waits outside',
   enter: 'Enter Seclusion',
   enterNamed: 'Enter Seclusion with this trial',
+  /** The gate while the room's run or the trial beside goes on (owner, 2026-10-23). */
+  returnTo: 'Return to Seclusion',
   stepOut: 'Step out',
   fullScreen: 'Full screen',
   sound: 'Sound',

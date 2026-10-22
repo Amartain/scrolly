@@ -59,15 +59,17 @@ def test_a_trial_without_an_estimate_has_no_incense_yet(client: TestClient) -> N
     assert (state["incense"], state["gong_in_s"]) == (None, None)
 
 
-def test_stepping_out_pauses_the_trial(client: TestClient, clock: FixedClock) -> None:
+def test_stepping_out_leaves_the_trial_running(client: TestClient, clock: FixedClock) -> None:
     _seal(client, "Write report")
     client.post("/api/seclusion/enter")
     client.post("/api/seclusion/timer/start")
     clock.set(clock.now() + timedelta(minutes=5))
     state = client.post("/api/seclusion/leave").json()
     assert state["active"] is False
-    assert state["trial"]["timer"]["running"] is False
-    assert state["trial"]["timer"]["elapsed_s"] == 300
+    assert state["trial"]["timer"]["running"] is True
+    clock.set(clock.now() + timedelta(minutes=5))
+    timer = client.get("/api/view").json()["dashboard"]["immediate"]["timer"]
+    assert (timer["running"], timer["elapsed_s"]) == (True, 600)
 
 
 def test_entering_with_the_dashboard_timer_running_keeps_it_running(

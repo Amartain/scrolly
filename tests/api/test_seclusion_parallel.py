@@ -143,16 +143,19 @@ def test_a_paused_parallel_trial_stays_paused_when_it_takes_the_ring(
     assert (_elapsed(done["trial"]), done["trial"]["timer"]["running"]) == (4 * 60, False)
 
 
-def test_stepping_out_pauses_the_parallel_trial_too(client: TestClient, clock: FixedClock) -> None:
+def test_stepping_out_leaves_the_parallel_trial_running_too(
+    client: TestClient, clock: FixedClock
+) -> None:
     _enter(client, "Write report")
     _pick_new(client, "Tend the tea")
     client.post("/api/seclusion/timer/start")
     client.post(f"{PARALLEL}/start")
     later(clock, 6)
     left = client.post("/api/seclusion/leave").json()
-    assert left["trial"]["timer"]["running"] is False
-    assert left["parallel"]["timer"]["running"] is False
-    assert _elapsed(left["parallel"]) == 6 * 60
+    assert left["trial"]["timer"]["running"] is True
+    assert left["parallel"]["timer"]["running"] is True
+    later(clock, 4)
+    assert _elapsed(room(client)["parallel"]) == 10 * 60
 
 
 def test_the_parallel_trial_logs_its_own_segments(

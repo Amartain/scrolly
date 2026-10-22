@@ -1,6 +1,7 @@
 import { today, type Immediate } from './api';
 import { flourish } from './flourish.svelte';
 import { qiAsk } from './qi-ask.svelte';
+import { seclusion } from './seclusion.svelte';
 import { view } from './view.svelte';
 
 const CARD = 'section[aria-label="The Immediate Trial"]';
@@ -9,6 +10,12 @@ const QI_WAIT_MS = 800;
 
 /** The Immediate Trial's buttons and the Space/Enter keys do the same thing through these. */
 export async function toggleTimer(trial: Immediate): Promise<boolean> {
+  // A run of the room goes on after stepping out: pause and resume reach that run, not the trial alone.
+  if (seclusion.state?.run_under_way) {
+    const done = await seclusion.toggle();
+    if (done) await view.refresh();
+    return done;
+  }
   if (trial.timer.running) return view.act(() => today.pauseTimer(trial.id));
   const button = document.querySelector(`${CARD} [aria-label="Start timer"]`);
   const done = await view.act(() => today.startTimer(trial.id));

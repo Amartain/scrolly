@@ -21,7 +21,9 @@ from scrolly.services.planning_timer import PlanningTimerView, build_planning_ti
 from scrolly.services.planning_view import PlanningView, build_planning_view
 from scrolly.services.poem import build_poem
 from scrolly.services.seclusion_prefs import SoundPrefs, load_sound
+from scrolly.services.seclusion_runs import RunControl
 from scrolly.services.sunset import load_prefs
+from scrolly.services.today import TodayService
 
 
 @dataclass(frozen=True)
@@ -46,6 +48,8 @@ class ViewData:
 def build_view(store: Store, clock: Clock) -> ViewData:
     """Everything the frontend renders, already computed."""
     DayService(store, clock).ensure_today()
+    # The room's run goes on after the user steps out: a focus may have ended while they were away.
+    RunControl(store, clock, TodayService(store, clock)).settle()
     now = clock.now()
     prefs = AppearanceService(store, clock).preferences()
     sunset = load_prefs(store)

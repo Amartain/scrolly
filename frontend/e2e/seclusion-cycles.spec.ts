@@ -73,11 +73,11 @@ test('Cycles: two cycles set on the dial run two, with the break buttons between
 
   await button(page, 'Take a break').click();
   await expect(ring(page)).toHaveAttribute('data-tone', 'cycles-break');
+  // The cycles run straight through (owner, 2026-10-22): skipping the break begins the next focus.
   await button(page, 'Skip break').click();
-  await expect(ring(page)).toContainText('ready');
-  await button(page, 'Start').click();
   await expect(room(page)).toContainText('cycle 2 of 2');
   await expect(ring(page)).toHaveAttribute('data-tone', 'cycles');
+  await expect(room(page).getByRole('button', { name: 'Pause timer' })).toBeVisible();
 });
 
 test('Cycles: a time typed over the limit stops at the limit', async ({ page }) => {
