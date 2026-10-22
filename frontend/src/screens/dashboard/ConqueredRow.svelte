@@ -1,12 +1,12 @@
 <!-- A conquered trial is read-only, but for two things: Revive, and correcting the time it took
-     (double-click the time, or Enter on it). The time keeps its look while it is written. -->
+     (double-click the time, or Enter on it: a small field with a check mark opens). -->
 <script lang="ts">
   import Button from '../../components/Button.svelte';
-  import EditableText from '../../components/EditableText.svelte';
   import StateMark from '../../components/StateMark.svelte';
   import TypeMark from '../../components/TypeMark.svelte';
   import { putTrialActual } from '../../lib/actual-api';
   import { today, type Conquered } from '../../lib/api';
+  import ActualTime from './ActualTime.svelte';
   import { view } from '../../lib/view.svelte';
 
   let { trial }: { trial: Conquered } = $props();
@@ -17,11 +17,9 @@
 <StateMark state="done" />
 <span class="title read">{trial.title}</span>
 <span class="figure digits">
-  <EditableText
-    bare
+  <ActualTime
     value={trial.actual_text || '—'}
-    label="Actual time of {trial.title}"
-    hint="Double-click to correct"
+    title={trial.title}
     onsave={(text) => view.act(() => putTrialActual(trial.id, text))}
   />
 </span>
