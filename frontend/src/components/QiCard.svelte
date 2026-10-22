@@ -15,7 +15,7 @@
 </script>
 
 {#if question}
-  <Modal title={QI_CARD.title} onclose={qiAsk.keep}>
+  <Modal title={QI_CARD.title} striped={false} onclose={qiAsk.keep}>
     <div class="sheet">
       <p class="what read">{question.title}</p>
       <p class="amount display digits" aria-live="polite">{QI_CARD.amount(shown)}</p>

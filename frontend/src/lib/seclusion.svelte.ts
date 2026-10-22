@@ -106,7 +106,8 @@ class SeclusionStore {
     if (!(await this.act(() => api.finish(how, trial.id)))) return;
     await view.refresh();
     this.finished = { how, id: trial.id, title: trial.title };
-    if (this.state?.trial == null) playGong();
+    // The last trial of a won day has its own sound (Tribulation Weathered), so no gong beside it.
+    if (this.state?.trial == null && !view.current?.dashboard.victory?.due) playGong();
     if (how === 'conquered')
       qiAsk.ask({
         id: trial.id,

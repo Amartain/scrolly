@@ -75,7 +75,10 @@ class TodayService:
         self._store.trials.save(promoted, self._now)
 
     def start_timer(
-        self, trial_id: str, discipline: Discipline = Discipline.DASHBOARD, at: datetime | None = None
+        self,
+        trial_id: str,
+        discipline: Discipline = Discipline.DASHBOARD,
+        at: datetime | None = None,
     ) -> None:
         """`at`: when the timer really started, if before now (a focus that began while away)."""
         started = at or self._now

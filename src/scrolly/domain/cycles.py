@@ -2,8 +2,8 @@
 
 The run has its own clock, apart from any trial's timer. Only the first focus waits for Start; then
 it runs straight through: focus, break, focus, break, for every cycle, each phase beginning when the
-last one ends (owner, 2026-10-22). Every boundary is found by timestamp, so a closed tab or a sleeping
-machine loses nothing.
+last one ends (owner, 2026-10-22). Every boundary is found by timestamp, so a closed tab or a
+sleeping machine loses nothing.
 """
 
 from dataclasses import dataclass, field, replace
@@ -151,7 +151,7 @@ def zero_phase(run: CyclesRun, now: datetime) -> CyclesRun:
 
 
 def skip_break(run: CyclesRun, plan: CyclesPlan, now: datetime) -> CyclesRun:
-    """End the break early: the next focus begins now (or, after the last cycle, the run is done)."""
+    """End the break early: the next focus begins now (after the last cycle, the run is done)."""
     if run.phase is not Phase.BREAK:
         raise RunError("There is no break to skip")
     return _after_break(run, plan, now)

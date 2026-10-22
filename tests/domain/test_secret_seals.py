@@ -6,6 +6,7 @@ from scrolly.domain.models import ArtKind, Day, OriginType, TrialState
 from scrolly.domain.restart import restart_today
 from scrolly.domain.secret_seals import Seal, SealKind, parse_seal
 from scrolly.domain.timer import start
+from scrolly.domain.victory import Scene
 from tests.factories import make_item, make_trial
 
 NOW = datetime.fromisoformat("2026-10-18T13:00:00+02:00")
@@ -21,6 +22,8 @@ NOW = datetime.fromisoformat("2026-10-18T13:00:00+02:00")
         ("4am", Seal(SealKind.ROLLOVER)),
         ("restart-today", Seal(SealKind.RESTART)),
         ("Restart-Today", Seal(SealKind.RESTART)),
+        ("Tribulation", Seal(SealKind.CEREMONY, scene=Scene.THUNDER)),
+        ("Another Day!", Seal(SealKind.CEREMONY, scene=Scene.WIND)),
         ("arise", Seal(SealKind.DAY, 100)),
         ("Arise.", Seal(SealKind.DAY, 100)),
         ("ARISE!", Seal(SealKind.DAY, 100)),

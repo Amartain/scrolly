@@ -27,6 +27,20 @@ def test_unknown_words_do_nothing(client: TestClient) -> None:
     assert reply["view"]["planning"]["status"] == "active"
 
 
+def test_the_ceremony_seals_preview_a_scene_on_any_day_and_change_nothing(
+    client: TestClient,
+) -> None:
+    _seal(client, "Still open")  # not a won day: nothing is conquered
+    before = client.get("/api/view").json()
+    thunder = _words(client, "tribulation")
+    assert thunder["recognized"] and thunder["victory_preview"]["scene"] == "thunder"
+    assert thunder["victory_preview"]["conquered"] == 0
+    assert _words(client, "Another day")["victory_preview"]["scene"] == "wind"
+    after = client.get("/api/view").json()
+    assert after["dashboard"] == before["dashboard"]  # a preview stores nothing
+    assert _words(client, "dusk")["victory_preview"] is None
+
+
 def test_dusk_forces_the_palette_and_brings_the_poem_back_and_sunrise_clears_it(
     client: TestClient,
 ) -> None:

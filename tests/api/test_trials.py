@@ -72,7 +72,22 @@ def test_conquering_lists_the_trial_and_promotes_the_next(
 def test_the_last_conquest_is_a_victory(client: TestClient) -> None:
     _seal(client, "Only one")
     dashboard = client.post(f"/api/trials/{_id(client, 'Only one')}/conquer").json()["dashboard"]
-    assert (dashboard["victory"], dashboard["immediate"]) == (True, None)
+    assert dashboard["immediate"] is None
+    victory = dashboard["victory"]
+    assert (victory["conquered"], victory["mandates"], victory["due"]) == (1, 0, True)
+
+
+def test_closing_the_ceremony_clears_it_until_another_conquest(
+    client: TestClient, clock: FixedClock
+) -> None:
+    _seal(client, "Only one")
+    client.post(f"/api/trials/{_id(client, 'Only one')}/conquer")
+    closed = client.post("/api/trials/victory-seen").json()["dashboard"]
+    assert closed["victory"]["due"] is False  # the banner stays, the ceremony is done
+    client.post("/api/trials", json={"title": "One more"})
+    clock.set(clock.now() + timedelta(minutes=5))
+    again = client.post(f"/api/trials/{_id(client, 'One more')}/conquer").json()["dashboard"]
+    assert (again["victory"]["conquered"], again["victory"]["due"]) == (2, True)
 
 
 def test_a_conquered_trial_is_read_only_until_it_is_revived(client: TestClient) -> None:

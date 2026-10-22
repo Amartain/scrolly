@@ -3,6 +3,7 @@
   import Panel from '../../components/Panel.svelte';
   import ReorderList from '../../components/ReorderList.svelte';
   import { EMPTY } from '../../lib/copy';
+  import { VICTORY } from '../../lib/copy-victory';
   import { today, type PlanTrial } from '../../lib/api';
   import { useOrder } from '../../lib/order.svelte';
   import { view } from '../../lib/view.svelte';
@@ -31,7 +32,7 @@
 >
   {#if view.notice}<p class="notice" role="status"><NoticeText /></p>{/if}
   {#if remaining.length === 0}
-    <p class="empty">{EMPTY.remaining}</p>
+    <p class="empty">{view.current?.dashboard.victory ? VICTORY.arenaEmpty : EMPTY.remaining}</p>
   {:else}
     <ReorderList items={order.shown} label="Remaining trials" onreorder={order.reorder} {row} />
   {/if}

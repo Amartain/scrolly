@@ -5,7 +5,9 @@ from scrolly.domain.duration import format_duration
 from scrolly.domain.essence import EssenceSummary
 from scrolly.domain.legend import TrialType, type_of
 from scrolly.domain.models import OriginType, Trial
+from scrolly.domain.victory import Scene
 from scrolly.services.dashboard_view import DashboardView, TimerView
+from scrolly.services.victory import VictoryView
 
 
 def _minutes(minutes: int | None) -> str:
@@ -102,13 +104,35 @@ class LetGoOut(BaseModel):
         return cls(id=trial.id, title=trial.title, type=type_of(trial.is_mandate, trial.art_kind))
 
 
+class VictoryOut(BaseModel):
+    """The finished-day ceremony. `due` is true until it has been closed."""
+
+    scene: Scene
+    conquered: int
+    mandates: int
+    essence_text: str
+    line: str
+    due: bool
+
+    @classmethod
+    def from_view(cls, view: VictoryView) -> "VictoryOut":
+        return cls(
+            scene=view.scene,
+            conquered=view.tally.conquered,
+            mandates=view.tally.mandates,
+            essence_text=view.tally.essence_text,
+            line=view.line,
+            due=view.due,
+        )
+
+
 class DashboardOut(BaseModel):
     immediate: ImmediateOut | None
     conquered: list[ConqueredOut]
     postponed: list[LetGoOut]
     lost: list[LetGoOut]
     essence: EssenceOut
-    victory: bool
+    victory: VictoryOut | None
     lifetime_conquered: int
     heavenly_cycles: int
     charts: list[SeriesOut]
@@ -124,7 +148,7 @@ class DashboardOut(BaseModel):
             postponed=[LetGoOut.from_trial(t) for t in data.postponed],
             lost=[LetGoOut.from_trial(t) for t in data.lost],
             essence=EssenceOut.from_summary(data.essence),
-            victory=data.victory,
+            victory=VictoryOut.from_view(data.victory) if data.victory else None,
             lifetime_conquered=data.lifetime_conquered,
             heavenly_cycles=data.heavenly_cycles,
             charts=[SeriesOut.from_series(s) for s in data.charts],

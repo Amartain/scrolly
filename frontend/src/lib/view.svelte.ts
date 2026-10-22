@@ -12,13 +12,13 @@ import {
   type ReadingFont,
   type Theme,
   TitleRefused,
+  type Victory,
   type View,
 } from './api';
 import { refusalNote, type Segment } from './copy';
 import { putSound } from './sound-api';
 
 const REFRESH_MS = 60_000;
-const FADE_MS = 60_000;
 
 /** The latest server view. Also the only place the theme attributes on <html> are set. */
 class ViewStore {
@@ -36,6 +36,8 @@ class ViewStore {
   }
   /** The milestone to show after the first seal of the day, until it is closed. */
   milestone = $state<Milestone | null>(null);
+  /** A finished-day ceremony asked for by a secret seal: shown once, it changes nothing. */
+  preview = $state<Victory | null>(null);
   /** `performance.now()` when `current` arrived. Only the ticking display reads it. */
   receivedAt = $state(0);
 
@@ -61,23 +63,21 @@ class ViewStore {
     if (view.milestone) this.milestone = view.milestone;
   }
 
+  /**
+   * The whole screen crossfades to the new phase (art-direction › Motion), so the canvas, the panels
+   * and the text change together. Without the browser's view transitions, or under reduced motion,
+   * it switches at once.
+   */
   private setPhase(phase: string, fade: boolean) {
     const root = document.documentElement;
-    if (fade && root.dataset.phase !== phase) {
-      root.dataset.fading = '';
-      clearTimeout(this.fadeTimer);
-      this.fadeTimer = setTimeout(() => this.stopFading(), FADE_MS + 1000);
-    }
-    root.dataset.phase = phase;
+    const change = () => {
+      root.dataset.phase = phase;
+    };
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (fade && root.dataset.phase !== phase && !still && document.startViewTransition)
+      document.startViewTransition(change);
+    else change();
   }
-
-  /** End a fade at once, so a theme chosen during it shows immediately. */
-  private stopFading() {
-    clearTimeout(this.fadeTimer);
-    delete document.documentElement.dataset.fading;
-  }
-
-  private fadeTimer: ReturnType<typeof setTimeout> | undefined;
 
   dismissMilestone() {
     this.milestone = null;
@@ -110,7 +110,6 @@ class ViewStore {
   }
 
   async choose(theme: Theme, dayVariant: DayVariant | null) {
-    this.stopFading();
     this.apply(await putAppearance(theme, dayVariant));
   }
 

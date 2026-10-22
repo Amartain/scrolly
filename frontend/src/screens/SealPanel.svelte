@@ -16,6 +16,7 @@
     if (!words.trim()) return;
     const result = await inscribeSeal(words);
     view.show(result.view);
+    view.preview = result.victory_preview ?? null;
     if (result.recognized) {
       words = '';
       message = '';

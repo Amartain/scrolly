@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { sealDay, section } from './helpers';
+import { sealDay, section, sheathe } from './helpers';
 
 const view = async (page: Page) => (await page.request.get('/api/view')).json();
 
@@ -72,7 +72,8 @@ test('conquering the last trial brings the victory banner', async ({ page }) => 
   await sealDay(page, 'Only one');
   await page.goto('/');
   await page.getByRole('button', { name: 'Conquer Only one' }).click();
-  await expect(page.getByRole('heading', { name: 'The Sun Sets on the Peak' })).toBeVisible();
+  await sheathe(page);
+  await expect(page.getByRole('heading', { name: 'Another Day Conquered' })).toBeVisible();
   await expect(conquered(page).getByText('Only one')).toBeVisible();
 });
 

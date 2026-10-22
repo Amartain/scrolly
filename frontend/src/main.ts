@@ -9,5 +9,8 @@ import './styles/tokens/pavilion-crimson.css';
 import './styles/tokens/pavilion-purple.css';
 import './styles/global.css';
 import './styles/glitch.css';
+import './styles/ceremony-thunder.css';
+import './styles/ceremony-thunder-motion.css';
+import './styles/ceremony-keyframes.css';
 
 mount(App, { target: document.getElementById('app')! });

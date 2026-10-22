@@ -9,6 +9,7 @@ from scrolly.api.schemas.view import ViewOut
 from scrolly.ports import Clock, Store
 from scrolly.services.day import DayService
 from scrolly.services.today import TodayService
+from scrolly.services.victory import VictoryService
 from scrolly.services.view import build_view
 
 router = APIRouter(prefix="/api/trials")
@@ -118,4 +119,11 @@ def update(
     trial_id: str, body: TrialPatchIn, today: TodayDep, store: StoreDep, clock: ClockDep
 ) -> ViewOut:
     today.update(trial_id, **body.model_dump())
+    return _view(store, clock)
+
+
+@router.post("/victory-seen")
+def victory_seen(store: StoreDep, clock: ClockDep) -> ViewOut:
+    """Tribulation Weathered was read and closed (Sheathe the Sword)."""
+    VictoryService(store, clock).settle()
     return _view(store, clock)

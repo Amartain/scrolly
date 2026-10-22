@@ -1217,6 +1217,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/trials/victory-seen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Victory Seen
+         * @description Tribulation Weathered was read and closed (Sheathe the Sword).
+         */
+        post: operations["victory_seen_api_trials_victory_seen_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/trials/{trial_id}": {
         parameters: {
             query?: never;
@@ -1679,8 +1699,7 @@ export interface components {
             lost: components["schemas"]["LetGoOut"][];
             /** Postponed */
             postponed: components["schemas"]["LetGoOut"][];
-            /** Victory */
-            victory: boolean;
+            victory: components["schemas"]["VictoryOut"] | null;
         };
         /**
          * DayVariant
@@ -2155,6 +2174,12 @@ export interface components {
         ReadingFontIn: {
             font: components["schemas"]["ReadingFont"];
         };
+        /**
+         * Scene
+         * @description What plays before the card: heavenly lightning, or the wind and the rising sun.
+         * @enum {string}
+         */
+        Scene: "thunder" | "wind";
         /** ScrapIn */
         ScrapIn: {
             /** Text */
@@ -2209,10 +2234,13 @@ export interface components {
         /**
          * SealOut
          * @description `recognized` is false when the words name no seal; nothing changed then.
+         *
+         *     `victory_preview` is the finished-day ceremony a seal asked to see once (it changes nothing).
          */
         SealOut: {
             /** Recognized */
             recognized: boolean;
+            victory_preview?: components["schemas"]["VictoryOut"] | null;
             view: components["schemas"]["ViewOut"];
         };
         /** SeclusionOut */
@@ -2412,6 +2440,23 @@ export interface components {
             msg: string;
             /** Error Type */
             type: string;
+        };
+        /**
+         * VictoryOut
+         * @description The finished-day ceremony. `due` is true until it has been closed.
+         */
+        VictoryOut: {
+            /** Conquered */
+            conquered: number;
+            /** Due */
+            due: boolean;
+            /** Essence Text */
+            essence_text: string;
+            /** Line */
+            line: string;
+            /** Mandates */
+            mandates: number;
+            scene: components["schemas"]["Scene"];
         };
         /** ViewOut */
         ViewOut: {
@@ -4455,6 +4500,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    victory_seen_api_trials_victory_seen_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
                 };
             };
         };

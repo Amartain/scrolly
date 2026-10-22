@@ -45,10 +45,10 @@ def test_conquered_trials_read_in_the_order_they_were_conquered(
 
 def test_conquering_the_last_trial_is_a_victory(store: Store, clock: FixedClock) -> None:
     today = seal_day(store, clock, "A")
-    assert not build_dashboard_view(store, clock.now()).victory
+    assert build_dashboard_view(store, clock.now()).victory is None
     today.conquer(by_title(store)["A"].id)
     view = build_dashboard_view(store, clock.now())
-    assert (view.victory, view.immediate) == (True, None)
+    assert (view.victory is not None, view.immediate) == (True, None)
 
 
 def test_conquered_qi_counts_as_spent_and_reviving_gives_it_back(

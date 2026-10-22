@@ -85,3 +85,11 @@ export async function sealAndClose(page: Page) {
   await page.keyboard.press('Escape');
   await expect(milestone).toHaveCount(0);
 }
+
+/** Close the finished-day ceremony that follows the conquest of a day's last trial. */
+export async function sheathe(page: Page) {
+  await page.getByRole('button', { name: 'Sheathe the Sword' }).click();
+  await expect(
+    page.getByRole('dialog', { name: /Tribulation Weathered|Another Day Conquered/ }),
+  ).toHaveCount(0);
+}

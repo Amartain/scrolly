@@ -53,3 +53,18 @@ test('no Settings panel is squeezed: each shows all of its content', async ({ pa
   );
   expect(clipped).toEqual([]);
 });
+
+test('finishing the day turns canvas and panels to dusk together, with no slow canvas', async ({
+  page,
+}) => {
+  await sealDay(page, 'Only one');
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Conquer Only one' }).click();
+  await expect
+    .poll(() => look(page), { timeout: 1000 })
+    .toEqual({
+      fading: false,
+      phase: 'dusk',
+      matches: true,
+    });
+});

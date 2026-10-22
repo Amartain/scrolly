@@ -127,6 +127,7 @@ def day_from_row(row: DayRow) -> Day:
         advisor_silenced=row.advisor_silenced,
         qi_start=row.qi_start,
         poem_shown_at=from_iso(row.poem_shown_at),
+        victory_seen_at=from_iso(row.victory_seen_at),
         planning_started_at=from_iso(row.planning_started_at),
         planning_accumulated_s=row.planning_accumulated_s,
     )
@@ -140,5 +141,6 @@ def apply_day(row: DayRow, day: Day) -> None:
     row.advisor_silenced = day.advisor_silenced
     row.qi_start = day.qi_start
     row.poem_shown_at = _iso(day.poem_shown_at)
+    row.victory_seen_at = _iso(day.victory_seen_at)
     row.planning_started_at = _iso(day.planning_started_at)
     row.planning_accumulated_s = day.planning_accumulated_s

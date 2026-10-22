@@ -7,8 +7,12 @@
   import Button from './Button.svelte';
   import Modal from './Modal.svelte';
 
-  // One modal at a time: the milestone after a first seal goes first.
-  const poem = $derived(view.milestone ? null : (view.current?.poem ?? null));
+  // One modal at a time: the milestone after a first seal goes first, then Tribulation Weathered.
+  const poem = $derived(
+    view.milestone || view.preview || view.current?.dashboard.victory?.due
+      ? null
+      : (view.current?.poem ?? null),
+  );
   let chimed = '';
 
   $effect(() => {
@@ -22,7 +26,7 @@
 </script>
 
 {#if poem}
-  <Modal title={POEM.title} onclose={settle}>
+  <Modal title={POEM.title} striped={false} onclose={settle}>
     <div
       class="page {poem.archetype}"
       data-pairing={poem.pairing}
@@ -45,9 +49,12 @@
 <style>
   /* Every layout is the same four pieces placed differently: the seal, the couplet, the translation
      and the button. The class english-first swaps the two languages. */
+  /* --paint fills a seal; --paint-text is the same colour family as text on the panel, for the
+     layouts where the ideogram stands without its seal (a fill colour can vanish on the panel). */
   .page {
     --paint: var(--growth);
     --on-paint: var(--on-growth);
+    --paint-text: var(--growth-text);
     display: grid;
     grid-template-columns: auto 1fr;
     gap: var(--space-4) var(--space-6);
@@ -59,11 +66,15 @@
   .page[data-pairing='gold'] {
     --paint: var(--gold);
     --on-paint: var(--on-gold);
+    --paint-text: var(
+      --ink
+    ); /* gold is a fill colour: on a cream panel it would not read as text */
   }
 
   .page[data-pairing='ink'] {
     --paint: var(--strong);
     --on-paint: var(--on-strong);
+    --paint-text: var(--ink);
   }
 
   p {
@@ -147,7 +158,7 @@
     background: none;
     border: 0;
     box-shadow: none;
-    color: var(--paint);
+    color: var(--paint-text);
   }
 
   .mountain-hermit-asymmetry {

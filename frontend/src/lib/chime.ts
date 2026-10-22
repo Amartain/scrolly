@@ -8,7 +8,7 @@ import { view } from './view.svelte';
 type Tones = [hz: number, level: number][];
 
 /** One struck sound: tones that start together `at` seconds in and fade over `seconds`. */
-interface Strike {
+export interface Strike {
   at: number;
   tones: Tones;
   seconds: number;
@@ -21,13 +21,13 @@ interface Strike {
 /** Level 60 is the loudness the sounds were first made at, so the default changes nothing. */
 const DEFAULT_VOLUME = 60;
 
-function loudness(followsMute: boolean): number {
+export function loudness(followsMute: boolean): number {
   const sound = view.current?.sound;
   if (!sound) return 1;
   return followsMute && sound.muted ? 0 : sound.volume / DEFAULT_VOLUME;
 }
 
-function play(strikes: Strike[], followsMute = true): void {
+export function play(strikes: Strike[], followsMute = true): void {
   const Context = window.AudioContext;
   const factor = loudness(followsMute);
   if (!Context || factor <= 0) return;

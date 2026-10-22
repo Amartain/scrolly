@@ -86,6 +86,8 @@ class Day:
     advisor_silenced: bool = False
     qi_start: int | None = None
     poem_shown_at: datetime | None = None
+    # When the user last closed Tribulation Weathered; a later conquest earns it again.
+    victory_seen_at: datetime | None = None
     # Time spent planning this day: a running stretch and the total before it (planning_timer.py).
     planning_started_at: datetime | None = None
     planning_accumulated_s: int = 0

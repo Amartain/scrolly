@@ -107,6 +107,7 @@ sequence = [
     { cmd = "pytest" },
     { cmd = "python scripts/check_tokens.py" },
     { cmd = "python scripts/check_contrast.py" },
+    { cmd = "python scripts/check_scene_contrast.py" },
     { cmd = "python scripts/check_file_length.py" },
     { cmd = "python scripts/gen_types.py --check" },
     { cmd = "python scripts/code_map.py --check" },

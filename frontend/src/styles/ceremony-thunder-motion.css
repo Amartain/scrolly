@@ -1,0 +1,69 @@
+/* The Thunder scene in motion: each part plays from the storm into the last frame that
+   ceremony-thunder.css draws. Removed by `.still` (reduced motion, or a key pressed to skip). */
+
+.thunder-scene .clouds-left {
+  animation:
+    clouds-left-in 450ms ease-out both,
+    clouds-left-part 900ms 900ms ease-in-out forwards;
+}
+
+.thunder-scene .clouds-right {
+  animation:
+    clouds-right-in 450ms ease-out both,
+    clouds-right-part 900ms 900ms ease-in-out forwards;
+}
+
+.thunder-scene .kneel {
+  animation: hold-then-go 900ms linear both;
+}
+
+.thunder-scene .bolt {
+  animation: bolt-flicker 520ms 550ms linear both;
+}
+
+.thunder-scene .bolt path {
+  animation: bolt-draw 130ms 550ms linear both;
+}
+
+.thunder-scene .flash {
+  animation: flash 260ms 640ms ease-out both;
+}
+
+.thunder-scene .shake {
+  animation: shake 120ms 660ms steps(1, end) both;
+}
+
+.thunder-scene .ring {
+  animation: ring 650ms 660ms ease-out both;
+}
+
+.thunder-scene .smoke {
+  animation: smoke 900ms 680ms ease-out both;
+}
+
+.thunder-scene .halo {
+  animation: fade-in 700ms 850ms ease-out both;
+}
+
+.thunder-scene .rays {
+  animation:
+    fade-in 800ms 950ms ease-out both,
+    rays-turn 8s 950ms linear forwards;
+}
+
+.thunder-scene .aura {
+  animation: aura 700ms 800ms ease-out both;
+}
+
+.thunder-scene .stand {
+  animation: rise 500ms 850ms ease-out both;
+}
+
+.thunder-scene .sparkle {
+  animation: sparkle 600ms calc(1200ms + var(--delay)) ease-out both;
+}
+
+.thunder-scene.still,
+.thunder-scene.still * {
+  animation: none !important;
+}

@@ -30,7 +30,10 @@
 
   .words {
     margin: 0;
-    font-size: var(--text-display-lg);
+    max-width: 36rem;
+    padding-inline: var(--space-4);
+    font-size: var(--text-display-md);
+    line-height: 1.5;
     text-align: center;
   }
 

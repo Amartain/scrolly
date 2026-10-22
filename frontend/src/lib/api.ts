@@ -9,6 +9,7 @@ export type Qi = components['schemas']['QiOut'];
 export type Sunset = components['schemas']['SunsetOut'];
 export type QiFill = components['schemas']['QiFillOut'];
 export type Dashboard = components['schemas']['DashboardOut'];
+export type Victory = components['schemas']['VictoryOut'];
 export type Immediate = components['schemas']['ImmediateOut'];
 export type Timer = components['schemas']['TimerOut'];
 export type Conquered = components['schemas']['ConqueredOut'];

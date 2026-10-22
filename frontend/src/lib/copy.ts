@@ -3,9 +3,10 @@
  * (nothing here is a quote or a poem).
  */
 export const EMPTY = {
-  immediate: 'The path lies quiet. No trial is underway.',
+  immediate: 'The sword rests across your knees; no trial stands before you.',
   conquered: 'No trial conquered yet. The day waits for your first step.',
-  remaining: 'The queue rests. Scribe a trial, or call one down from the Horizon.',
+  remaining:
+    'No disciple waits at the mountain gate. Scribe a trial, or call one down from beyond the Horizon.',
   postponed: 'Nothing was sent to the Horizon today.',
   fallen: 'No leaf has fallen today.',
   foundational: 'No foundational art practised here yet.',

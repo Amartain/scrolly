@@ -43,7 +43,7 @@
     <EssencePanel />
     <div class="immediate">
       {#if dashboard?.victory}
-        <VictoryBanner />
+        <VictoryBanner victory={dashboard.victory} />
       {:else if dashboard?.immediate}
         <ImmediateCard trial={dashboard.immediate} {onseclusion} />
       {:else}

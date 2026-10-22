@@ -9,9 +9,17 @@
   let {
     title,
     tone = 'neutral',
+    striped = true,
     onclose,
     children,
-  }: { title: string; tone?: Tone; onclose: () => void; children: Snippet } = $props();
+  }: {
+    title: string;
+    tone?: Tone;
+    /** Rows of a list get stripes; a card to read (a poem, a milestone) does not. */
+    striped?: boolean;
+    onclose: () => void;
+    children: Snippet;
+  } = $props();
 
   let dialog = $state<HTMLDialogElement>();
 
@@ -44,7 +52,7 @@
     if (event.target === dialog) onclose();
   }}
 >
-  <Panel {title} {tone} scroll striped>
+  <Panel {title} {tone} scroll {striped}>
     {#snippet actions()}
       <GlyphButton label="Close {title}" onclick={onclose}>
         <GlyphIcon name="x" />

@@ -53,11 +53,11 @@ textarea {
   font-variant-numeric: tabular-nums;
 }
 
-/* A circadian shift (day, golden hour, dusk) fades over about a minute (art-direction › Motion).
-   Only the canvas fades. Panels and text switch at once: if ink and surface faded together, they
-   would pass through grey on grey, below the contrast every text must keep. */
-@media (prefers-reduced-motion: no-preference) {
-  :root[data-fading] body {
-    transition: background-color 60s linear;
-  }
+/* A circadian shift (day, golden hour, dusk) crossfades the whole screen (art-direction › Motion):
+   the old picture fades out over the new one, so canvas, panels and text change together and no
+   text passes through grey on grey. view.svelte.ts starts it; reduced motion never does. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--phase-crossfade);
+  animation-timing-function: linear;
 }

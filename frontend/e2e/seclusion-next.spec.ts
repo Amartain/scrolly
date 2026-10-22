@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { sealDay, section } from './helpers';
+import { sealDay, section, sheathe } from './helpers';
 
 const room = (page: Page) => section(page, 'Focus Scroll');
 const card = (page: Page) => page.getByRole('group', { name: 'What next?' });
@@ -85,7 +85,8 @@ test('the last trial ends in rest: dusk comes, and Undo brings the trial back', 
   await enter(page, 'Write report');
   await room(page).getByRole('button', { name: 'Start', exact: true }).click();
   await room(page).getByRole('button', { name: 'Conquer Write report' }).click();
-  await expect(page.getByText('Well done, time to rest.')).toBeVisible();
+  await sheathe(page);
+  await expect(page.getByText('closed-door cultivation is complete')).toBeVisible();
   await expect(page.locator('html')).toHaveAttribute('data-phase', 'dusk');
   await page.getByRole('button', { name: 'Undo' }).click();
   await expect(room(page)).toContainText('Write report');

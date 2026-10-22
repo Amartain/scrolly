@@ -69,3 +69,9 @@ test('a click on the backdrop closes the milestone', async ({ page }) => {
   await page.mouse.click(4, 4);
   await expect(overlay).toHaveCount(0);
 });
+
+test('the milestone is a card to read, not a list: no row stripes behind it', async ({ page }) => {
+  await seal(page);
+  const overlay = page.getByRole('dialog', { name: 'Heavenly Cycles' });
+  await expect(overlay.locator('.body')).toHaveCSS('background-image', 'none');
+});

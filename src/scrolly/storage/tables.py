@@ -88,6 +88,7 @@ class DayRow(_Audited, Base):
     advisor_silenced: Mapped[bool] = mapped_column(Boolean, default=False)
     qi_start: Mapped[int | None] = mapped_column(Integer, default=None)
     poem_shown_at: Mapped[str | None] = mapped_column(String(40), default=None)
+    victory_seen_at: Mapped[str | None] = mapped_column(String(40), default=None)
     planning_started_at: Mapped[str | None] = mapped_column(String(40), default=None)
     planning_accumulated_s: Mapped[int] = mapped_column(Integer, default=0)
 

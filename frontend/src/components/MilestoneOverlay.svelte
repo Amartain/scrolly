@@ -18,7 +18,7 @@
     onclose={close}
   />
 {:else if milestone}
-  <Modal title={MILESTONE.title} onclose={close}>
+  <Modal title={MILESTONE.title} striped={false} onclose={close}>
     <div class="sheet">
       {#if milestone.banner}<p class="banner display">{milestone.banner}</p>{/if}
       <p class="count display">{milestone.cycles}</p>

@@ -4,6 +4,8 @@ import re
 from dataclasses import dataclass
 from enum import StrEnum
 
+from scrolly.domain.victory import Scene
+
 ARISE_DAY = 100
 MAX_DAY = 9999
 
@@ -14,12 +16,14 @@ class SealKind(StrEnum):
     DAY = "day"  # the milestone overlay for a day number
     ROLLOVER = "4am"  # run today's rollover now
     RESTART = "restart-today"  # today starts over at the zero state
+    CEREMONY = "ceremony"  # show the finished-day ceremony once, as a preview; nothing changes
 
 
 @dataclass(frozen=True)
 class Seal:
     kind: SealKind
     day: int | None = None  # only for SealKind.DAY
+    scene: Scene | None = None  # only for SealKind.CEREMONY
 
 
 _WORDS = {
@@ -27,6 +31,8 @@ _WORDS = {
     "sunrise": Seal(SealKind.SUNRISE),
     "4am": Seal(SealKind.ROLLOVER),
     "restart-today": Seal(SealKind.RESTART),
+    "tribulation": Seal(SealKind.CEREMONY, scene=Scene.THUNDER),
+    "another day": Seal(SealKind.CEREMONY, scene=Scene.WIND),
     "arise": Seal(SealKind.DAY, ARISE_DAY),
 }
 _DAY = re.compile(r"(?:day\s+)?([0-9]{1,4})")

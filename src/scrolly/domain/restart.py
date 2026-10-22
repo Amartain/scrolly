@@ -39,5 +39,6 @@ def restart_today(
         dusk_override=None,
         advisor_silenced=False,
         poem_shown_at=None,
+        victory_seen_at=None,
     )
     return Restarted(removed=[t.id for t in trials], horizon=items, day=fresh)

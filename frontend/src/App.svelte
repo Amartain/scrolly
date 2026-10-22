@@ -20,6 +20,7 @@
   import SunsetAdvisor from './components/SunsetAdvisor.svelte';
   import SunsetPoem from './components/SunsetPoem.svelte';
   import ThemeOrbs from './components/ThemeOrbs.svelte';
+  import TribulationOverlay from './components/TribulationOverlay.svelte';
   import Dispatch from './screens/Dispatch.svelte';
   import Settings from './screens/Settings.svelte';
   import ZeroState from './screens/ZeroState.svelte';
@@ -117,6 +118,7 @@
   {/if}
 </div>
 <QiCard />
+<TribulationOverlay />
 <GhostCard />
 <GuidanceScroll />
 {#if onDashboard}

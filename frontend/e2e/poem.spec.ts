@@ -1,10 +1,11 @@
 import { expect, test } from './fixtures';
-import { sealDay } from './helpers';
+import { sealDay, sheathe } from './helpers';
 
 async function finishTheDay(page: import('@playwright/test').Page) {
   await sealDay(page, 'Only trial');
   await page.goto('/');
   await page.getByRole('button', { name: 'Conquer Only trial' }).click();
+  await sheathe(page);
 }
 
 test('finishing the day opens the sunset poem once; Settle Qi closes it for the day', async ({
