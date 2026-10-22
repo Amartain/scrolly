@@ -2,6 +2,7 @@ from dataclasses import dataclass, replace
 from datetime import date, datetime, timedelta
 
 from scrolly.domain import qi
+from scrolly.domain.day_tiles import QiRow, qi_row
 from scrolly.domain.logical_day import logical_day
 from scrolly.domain.models import PlanningDraft, PlanPhase
 from scrolly.domain.qi import QiDay, QiOutlook
@@ -27,6 +28,7 @@ class QiView:
     high: int
     redline: int
     tomorrow_start: int
+    row: QiRow  # the day's trials as Qi tiles on the dashboard
 
 
 def read_setting(store: Store) -> GoldenCoreSetting:
@@ -79,6 +81,7 @@ def build_qi_view(store: Store, now: datetime) -> QiView:
         high=available.high,
         redline=qi.redline(start),
         tomorrow_start=qi.next_start(available.strain, start, planned),
+        row=qi_row(trials, start),
     )
 
 

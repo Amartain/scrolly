@@ -25,7 +25,7 @@ test('conquering lists the trial with its minutes and promotes the next', async 
   await expect(conquered(page).getByText('Write report')).toBeVisible();
   await expect(conquered(page).getByRole('listitem')).toContainText('45m');
   await expect(immediate(page).getByText('Tidy desk')).toBeVisible();
-  await expect(section(page, 'Essence')).toContainText('45m / 45m');
+  await expect(section(page, 'Essence')).toContainText('45m of 45m');
 });
 
 test('a conquered row offers its time to correct and Revive, and no field until asked', async ({

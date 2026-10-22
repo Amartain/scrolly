@@ -1,6 +1,7 @@
 from datetime import date, datetime
 
-from scrolly.domain.dispatch import DispatchOptions, render_dispatch
+from scrolly.domain.beside import Beside
+from scrolly.domain.dispatch import BESIDE, DispatchOptions, render_dispatch
 from scrolly.domain.legend import DEFAULT_LEGEND, build_legend, with_symbol
 from scrolly.domain.models import ArtKind, TrialState
 from scrolly.io.import_discord_md import parse_discord_md
@@ -95,3 +96,26 @@ def test_the_importer_reads_the_scroll_back() -> None:
         ("Breakfast", 30),
     ]
     assert all(t.logical_day == DAY for t in batch.trials)
+
+
+def test_time_run_beside_another_trial_is_marked_counted_and_reads_back() -> None:
+    trials = _trials()
+    podcast, breakfast = trials[0], trials[1]
+    beside = {breakfast.id: Beside(minutes=25, partner_id=podcast.id)}
+    text = render_dispatch(DAY, trials, DEFAULT_LEGEND, DispatchOptions(), beside, focus_min=45)
+    lines = text.splitlines()
+    assert "PROGRESS: 1h10m / 2h40m (25m beside)" in lines
+    assert "FOCUS: 45m" in lines
+    assert f":leaves: :herb: Breakfast (30m) >> 30m {BESIDE} Swedish podcast + coffee" in lines
+    assert ":leaves: :scroll: Swedish podcast + coffee (40m) >> 40m" in lines
+    batch = parse_discord_md(text)
+    assert [(t.title, t.essence_actual_min) for t in batch.trials] == [
+        ("Swedish podcast + coffee", 40),
+        ("Breakfast", 30),
+    ]
+
+
+def test_without_time_beside_the_summary_stays_as_it_was() -> None:
+    text = render_dispatch(DAY, _trials(), DEFAULT_LEGEND, DispatchOptions(), {}, focus_min=70)
+    assert "FOCUS" not in text
+    assert "beside" not in text

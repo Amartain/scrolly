@@ -7,3 +7,10 @@ export const QI_CARD = {
   back: 'Back',
   backDescription: 'Take the conquest back',
 };
+
+/** The three stretches of the Qi gauge, named where the reading reaches them (Python says which). */
+export const QI_ZONE = {
+  harmonious: 'Harmonious',
+  igniting: 'Igniting the Blood',
+  strain: 'Strain',
+} as const;

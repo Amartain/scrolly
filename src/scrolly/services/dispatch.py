@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from scrolly.domain.beside import focus_minutes, time_beside
 from scrolly.domain.dispatch import DispatchOptions, render_dispatch
 from scrolly.domain.logical_day import logical_day
 from scrolly.ports import Clock, Store
@@ -18,10 +19,19 @@ def load_options(store: Store) -> DispatchOptions:
 
 
 def build_dispatch(store: Store, now: datetime) -> str:
-    """Today's scroll as Discord markdown, in the user's symbols and with their options."""
+    """Today's scroll as Discord markdown, in the user's symbols and with their options. Time run
+    beside another trial and the day's focus on the clock come from the trials' timer segments."""
     today = logical_day(now)
+    trials = store.trials.list_for_day(today)
+    segments = {t.id: store.segments.list_for_trial(t.id) for t in trials}
+    every = [s for runs in segments.values() for s in runs]
     return render_dispatch(
-        today, store.trials.list_for_day(today), load_legend(store), load_options(store)
+        today,
+        trials,
+        load_legend(store),
+        load_options(store),
+        beside=time_beside(segments, now),
+        focus_min=focus_minutes(every, now),
     )
 
 

@@ -369,6 +369,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/panel-style": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Choose Panel Style
+         * @description How the panels' header bands are drawn: a lacquer plaque, or a scroll's rod.
+         */
+        put: operations["choose_panel_style_api_panel_style_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/planning/abandon": {
         parameters: {
             query?: never;
@@ -1487,6 +1507,7 @@ export interface components {
             header: components["schemas"]["HeaderChoice"];
             /** Header Version */
             header_version: number;
+            panel_style: components["schemas"]["PanelStyle"];
             phase: components["schemas"]["scrolly__domain__appearance__Phase"];
             reading_font: components["schemas"]["ReadingFont"];
             theme: components["schemas"]["Theme"];
@@ -1690,6 +1711,8 @@ export interface components {
             /** Conquered */
             conquered: components["schemas"]["ConqueredOut"][];
             essence: components["schemas"]["EssenceOut"];
+            /** Essence Tiles */
+            essence_tiles: components["schemas"]["TileOut"][];
             /** Heavenly Cycles */
             heavenly_cycles: number;
             immediate: components["schemas"]["ImmediateOut"] | null;
@@ -1993,6 +2016,16 @@ export interface components {
          * @enum {string}
          */
         OriginType: "brain_dump" | "horizon" | "foundational_art" | "restorative_art" | "quick_add";
+        /**
+         * PanelStyle
+         * @description How every panel's header band is drawn. Paint only: both keep the same height and places.
+         * @enum {string}
+         */
+        PanelStyle: "plaque" | "rod";
+        /** PanelStyleIn */
+        PanelStyleIn: {
+            style: components["schemas"]["PanelStyle"];
+        };
         /** ParallelFinishIn */
         ParallelFinishIn: {
             /**
@@ -2131,8 +2164,12 @@ export interface components {
             calm_end_pct: number;
             /** Enabled */
             enabled: boolean;
+            /** Harmonious Pct */
+            harmonious_pct: number;
             /** High */
             high: number;
+            /** Igniting Pct */
+            igniting_pct: number;
             /** Invited */
             invited: boolean;
             /** Low */
@@ -2140,17 +2177,21 @@ export interface components {
             /** Planned */
             planned: number;
             planned_fill: components["schemas"]["QiFillOut"];
+            planned_zone: components["schemas"]["QiZone"];
             /** Redline */
             redline: number;
             /** Spent */
             spent: number;
             spent_fill: components["schemas"]["QiFillOut"];
+            spent_zone: components["schemas"]["QiZone"];
             /** Start */
             start: number;
             /** Surge End */
             surge_end: number;
             /** Surge End Pct */
             surge_end_pct: number;
+            /** Tiles */
+            tiles: components["schemas"]["TileOut"][];
             /** Tomorrow Start */
             tomorrow_start: number;
         };
@@ -2159,6 +2200,12 @@ export interface components {
             /** Value */
             value: number;
         };
+        /**
+         * QiZone
+         * @description Which stretch of the gauge a Qi value has reached (the gauge's three colours).
+         * @enum {string}
+         */
+        QiZone: "harmonious" | "igniting" | "strain";
         /** RatioIn */
         RatioIn: {
             /** Rest */
@@ -2403,6 +2450,26 @@ export interface components {
          * @enum {string}
          */
         Theme: "serene" | "pavilion";
+        /**
+         * TileOut
+         * @description One trial on the dashboard's Essence or Qi row: its share of the row, and its numbers.
+         */
+        TileOut: {
+            /** Planned */
+            planned: string | null;
+            /** Share Pct */
+            share_pct: number;
+            state: components["schemas"]["TileState"];
+            /** Taken */
+            taken: string | null;
+            /** Title */
+            title: string;
+        };
+        /**
+         * TileState
+         * @enum {string}
+         */
+        TileState: "done" | "now" | "waiting";
         /**
          * TimerOut
          * @description The timer as of this view: the browser animates the seconds until the next one.
@@ -3215,6 +3282,39 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["SymbolIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    choose_panel_style_api_panel_style_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PanelStyleIn"];
             };
         };
         responses: {

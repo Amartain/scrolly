@@ -3,7 +3,14 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from scrolly.api.deps import get_clock, get_store
-from scrolly.api.schemas.view import AppearanceIn, HealthOut, ReadingFontIn, SoundIn, ViewOut
+from scrolly.api.schemas.view import (
+    AppearanceIn,
+    HealthOut,
+    PanelStyleIn,
+    ReadingFontIn,
+    SoundIn,
+    ViewOut,
+)
 from scrolly.ports import Clock, Store
 from scrolly.services.appearance import AppearanceService
 from scrolly.services.seclusion_prefs import SoundPrefs, load_sound, save_sound
@@ -37,6 +44,13 @@ def choose_sound(body: SoundIn, store: StoreDep, clock: ClockDep) -> ViewOut:
     volume = saved.volume if body.volume is None else body.volume
     muted = saved.muted if body.muted is None else body.muted
     save_sound(store, SoundPrefs(volume, muted), clock.now())
+    return ViewOut.from_data(build_view(store, clock))
+
+
+@router.put("/panel-style")
+def choose_panel_style(body: PanelStyleIn, store: StoreDep, clock: ClockDep) -> ViewOut:
+    """How the panels' header bands are drawn: a lacquer plaque, or a scroll's rod."""
+    AppearanceService(store, clock).choose_panel_style(body.style)
     return ViewOut.from_data(build_view(store, clock))
 
 

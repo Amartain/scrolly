@@ -3,6 +3,7 @@ from dataclasses import replace
 from scrolly.domain.appearance import (
     DayVariant,
     HeaderChoice,
+    PanelStyle,
     Preferences,
     ReadingFont,
     Theme,
@@ -27,6 +28,7 @@ class AppearanceService:
             theme=Theme(saved["theme"]),
             day_variant=DayVariant(saved["day_variant"]),
             reading_font=ReadingFont(saved.get("reading_font", ReadingFont.ATKINSON)),
+            panel_style=PanelStyle(saved.get("panel_style", PanelStyle.PLAQUE)),
             header=HeaderChoice(saved.get("header", HeaderChoice.AUTO)),
             header_version=int(saved.get("header_version", 0)),
         )
@@ -40,6 +42,11 @@ class AppearanceService:
 
     def choose_reading_font(self, font: ReadingFont) -> Preferences:
         prefs = replace(self.preferences(), reading_font=font)
+        self._save(prefs)
+        return prefs
+
+    def choose_panel_style(self, style: PanelStyle) -> Preferences:
+        prefs = replace(self.preferences(), panel_style=style)
         self._save(prefs)
         return prefs
 
@@ -59,6 +66,7 @@ class AppearanceService:
             "theme": prefs.theme.value,
             "day_variant": prefs.day_variant.value,
             "reading_font": prefs.reading_font.value,
+            "panel_style": prefs.panel_style.value,
             "header": prefs.header.value,
             "header_version": prefs.header_version,
         }

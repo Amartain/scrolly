@@ -44,7 +44,13 @@
       {#if qi}
         <Panel title="The Golden Core">
           <div class="core">
-            <QiGauge {qi} value={qi.planned} fill={qi.planned_fill} caption="planned today" />
+            <QiGauge
+              {qi}
+              value={qi.planned}
+              fill={qi.planned_fill}
+              zone={qi.planned_zone}
+              caption="planned today"
+            />
             <CoreSlider {qi} />
             <p class="tomorrow">
               If today goes as planned, tomorrow's core begins at

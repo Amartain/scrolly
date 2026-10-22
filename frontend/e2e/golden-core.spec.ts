@@ -123,14 +123,12 @@ test('conquered Qi fills the gauge on the dashboard', async ({ page }) => {
   await toWeigh(page, 'Write report', 'Tidy desk');
   await setQi(page, 'Write report', '60');
   await sealAndClose(page);
-  const gauge = page.locator('section[aria-label="Essence"]').getByRole('meter', {
-    name: 'Qi conquered today',
-  });
-  await expect(gauge).toHaveAttribute('aria-valuenow', '0');
+  const gauge = page.locator('section[aria-label="Essence"]').getByRole('meter', { name: 'Qi' });
+  await expect(gauge).toHaveAttribute('aria-valuetext', /^0 of 60/);
   const body = page.locator('section[aria-label="Essence"] .body');
   expect(await body.evaluate((node) => node.scrollHeight <= node.clientHeight)).toBe(true);
   await page.getByRole('button', { name: 'Conquer Write report' }).click();
-  await expect(gauge).toHaveAttribute('aria-valuenow', '60');
+  await expect(gauge).toHaveAttribute('aria-valuetext', /^60 of 60/);
   await page.getByRole('button', { name: 'Revive Write report' }).click();
-  await expect(gauge).toHaveAttribute('aria-valuenow', '0');
+  await expect(gauge).toHaveAttribute('aria-valuetext', /^0 of 60/);
 });

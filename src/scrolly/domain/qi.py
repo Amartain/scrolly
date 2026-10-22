@@ -9,6 +9,7 @@ import re
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import date, timedelta
+from enum import StrEnum
 
 from scrolly.domain.models import OPEN_STATES, ArtKind, Trial, TrialState
 
@@ -167,3 +168,18 @@ def gauge_fill(value: int, start: int) -> GaugeFill:
         surge=max(0, min(value, surge_end) - start),
         redline=max(0, min(value, redline(start)) - surge_end),
     )
+
+
+class QiZone(StrEnum):
+    """Which stretch of the gauge a Qi value has reached (the gauge's three colours)."""
+
+    HARMONIOUS = "harmonious"
+    IGNITING = "igniting"
+    STRAIN = "strain"
+
+
+def qi_zone(value: int, start: int) -> QiZone:
+    """Harmonious up to the day's start, Igniting the Blood for the next stretch, Strain beyond."""
+    if value <= start:
+        return QiZone.HARMONIOUS
+    return QiZone.IGNITING if value <= start + LINEAR_SPAN else QiZone.STRAIN

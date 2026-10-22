@@ -46,3 +46,27 @@ test('a symbol chosen in Settings shows in the scroll and on the dashboard', asy
   await page.getByRole('button', { name: 'DISPATCH' }).click();
   await expect(page.getByLabel('Scroll text')).toContainText(':fire: :white_circle: Write');
 });
+
+test('the preview shows the scroll as Discord will: emoji, headings, the time in bold', async ({
+  page,
+}) => {
+  await sealDay(page, 'Write the report', 'Tidy the desk');
+  const view = await (await page.request.get('/api/view')).json();
+  const id = view.dashboard.immediate.id;
+  await page.request.post(`/api/trials/${id}/conquer`);
+  await page.request.put(`/api/trials/${id}/actual`, { data: { text: '40m' } });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'DISPATCH' }).click();
+  const message = page.getByRole('article', { name: 'As your companions will see it' });
+  await expect(
+    message.getByRole('heading', { name: /Scroll of Heavenly Tribulations/ }),
+  ).toBeVisible();
+  await expect(message).toContainText('🍃 ⚪ Write the report');
+  await expect(message.locator('.strong')).toHaveText('40m');
+  await expect(message).not.toContainText(':leaves:');
+  await expect(page.getByLabel('Scroll text')).toBeHidden();
+  await page.getByText('Show markdown').click();
+  await expect(page.getByLabel('Scroll text')).toContainText(
+    ':leaves: :white_circle: Write the report',
+  );
+});

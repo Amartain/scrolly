@@ -63,6 +63,11 @@
   --size-seclusion-bar: 3.5rem;
   --size-tab: 3.5rem;
   --size-short-panel: 7rem;
+  /* The Essence panel's ink-on-wash rows: a slim tile row, taller when it is the only row. */
+  --size-tile: 1.1rem;
+  --size-tile-tall: 1.75rem;
+  --size-tile-label: 5.5rem;
+  --size-tile-reading: 14rem;
   --size-stat: 7rem;
   --size-orb: 2rem;
   --shadow-room: var(--space-3);
@@ -100,52 +105,6 @@
   --glitch-fade: 150ms;
   --glitch-run: 1.1s;
   --phase-crossfade: 2s;
-
-  /* The finished-day ceremony (components/ceremony/). One night sky for every theme, like the glitch
-     window: a storm or a dawn, then a lacquer card in gold. The bolt is pale gold, never white
-     (design-principles 16, owner's exception). Card text pairs are checked by check_contrast.py. */
-  --scene-sky-top: #0c0b22;
-  --scene-sky-mid: #251a4a;
-  --scene-sky-low: #4b2b5c;
-  --scene-ridge-far: #2a2350;
-  --scene-ridge-near: #1b1838;
-  --scene-cloud: #2c2b55;
-  --scene-cloud-light: #4a4880;
-  --scene-ink: #07060f;
-  --scene-rock: #1a1733;
-  --scene-rock-light: #2e2a52;
-  --scene-figure: #0b0a18;
-  --scene-smoke: #5b5680;
-  --scene-bolt: #fff3c4;
-  --scene-bolt-glow: #f2c14e;
-  --scene-gold: #f2c14e;
-  --scene-gold-deep: #c8871e;
-  --scene-flash: #f6cf63;
-  --scene-flash-peak: 0.5;
-  --scene-card: #17122c;
-  --scene-card-raised: #221a3e;
-  --scene-card-ink: #f5ecd0;
-  --scene-card-muted: #c9bc9c;
-  --scene-card-line: #e8b84a;
-  --scene-card-num: #f2c14e;
-  --scene-card-num-shadow: #5a320c;
-  --scene-mandate: #ff9a8f;
-  --scene-backdrop: rgba(7, 6, 15, 0.92);
-  /* The start and conquest flourishes (components/Flourish.svelte) glow in the same gold. */
-  --scene-glow: 0 0 1rem #f2c14e;
-  --scene-glow-strong: 0 0 1rem 0.5rem #f2c14e;
-  /* The morning scenes on the zero state (components/morning/). Everything else in them is mixed from
-     the theme's own canvas, ink and gold. The seal is vermilion as in a real painting (owner,
-     2026-10-22: an exception to hard rule 6 for this painting only; never `--mandate`). */
-  --morning-seal: #c8321e;
-  --morning-seal-ink: #f6efd9;
-  --morning-lantern: #f08a24;
-  --morning-pillar: #c4471c;
-  /* Timing: the scene, then the card rises, then the tally counts. */
-  --scene-card-rise: 300ms;
-  --size-ceremony-card: 40rem;
-  /* After the storm the card stands to the right, so the cultivator on the peak stays in view. */
-  --size-ceremony-inset: 7vw;
   --size-guide-button: 1.75rem;
   --size-glitch: 34rem;
   --text-glitch-numeral: 7.5rem;

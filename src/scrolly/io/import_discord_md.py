@@ -27,7 +27,8 @@ _BOARD = re.compile(
 )
 _DATE = re.compile(r"(\d{1,2})/(\d{1,2})/(\d{4})")
 _SHORTCODE = re.compile(r":(\w+):\s*(.*)")
-_DONE_LINE = re.compile(r"(.+?)\s*\(([^()]*)\)\s*>>\s*(\S+)")
+# A Done line may end with "⇄ partner" (time run beside another trial); the tail is not read.
+_DONE_LINE = re.compile(r"(.+?)\s*\(([^()]*)\)\s*>>\s*(\S+)(?:\s*⇄.*)?")
 # Old boards wrote "45m", "1h", "1.5h", "1h15m" or bare minutes; imports read more than the form.
 _OLD_TIME = re.compile(r"(?:([0-9]+(?:\.[0-9]+)?)h)?(?:([0-9]+)m)?")
 

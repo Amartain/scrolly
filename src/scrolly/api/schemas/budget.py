@@ -1,8 +1,9 @@
 from pydantic import BaseModel
 
+from scrolly.api.schemas.tiles import TileOut
 from scrolly.domain.day_budget import DayBudget
 from scrolly.domain.duration import format_duration
-from scrolly.domain.qi import LINEAR_SPAN, gauge_fill
+from scrolly.domain.qi import LINEAR_SPAN, QiZone, gauge_fill, qi_zone
 from scrolly.services.golden_core import QiView
 
 
@@ -81,6 +82,11 @@ class QiOut(BaseModel):
     surge_end_pct: int
     planned_fill: QiFillOut
     spent_fill: QiFillOut
+    planned_zone: QiZone
+    spent_zone: QiZone
+    tiles: list[TileOut]
+    harmonious_pct: float
+    igniting_pct: float
 
     @classmethod
     def from_view(cls, view: QiView) -> "QiOut":
@@ -100,4 +106,9 @@ class QiOut(BaseModel):
             surge_end_pct=_pct(surge_end, view.redline),
             planned_fill=QiFillOut.of(view.planned, view.start, view.redline),
             spent_fill=QiFillOut.of(view.spent, view.start, view.redline),
+            planned_zone=qi_zone(view.planned, view.start),
+            spent_zone=qi_zone(view.spent, view.start),
+            tiles=[TileOut.from_tile(t) for t in view.row.tiles],
+            harmonious_pct=round(view.row.harmonious_pct, 2),
+            igniting_pct=round(view.row.igniting_pct, 2),
         )

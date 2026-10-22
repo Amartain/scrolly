@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from scrolly.domain.day_flow import immediate_of
+from scrolly.domain.day_tiles import Tile, essence_tiles
 from scrolly.domain.essence import EssenceSummary, essence_summary
 from scrolly.domain.logical_day import logical_day
 from scrolly.domain.models import Trial, TrialState
@@ -29,6 +30,7 @@ class DashboardView:
     postponed: list[Trial]
     lost: list[Trial]
     essence: EssenceSummary
+    essence_tiles: list[Tile]
     victory: VictoryView | None
     lifetime_conquered: int
     heavenly_cycles: int
@@ -56,6 +58,7 @@ def build_dashboard_view(store: Store, now: datetime) -> DashboardView:
         postponed=[t for t in trials if t.state is TrialState.POSTPONED],
         lost=[t for t in trials if t.state is TrialState.LOST],
         essence=essence_summary(trials),
+        essence_tiles=essence_tiles(trials),
         victory=build_victory(store.days.get(today), trials, today),
         lifetime_conquered=lifetime_conquered(store.trials.list_all()),
         heavenly_cycles=heavenly_cycles(store.days.list_all()),

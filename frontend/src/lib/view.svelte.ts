@@ -16,6 +16,7 @@ import {
   type View,
 } from './api';
 import { refusalNote, type Segment } from './copy';
+import { putPanelStyle, type PanelStyle } from './panel-style-api';
 import { putSound } from './sound-api';
 
 const REFRESH_MS = 60_000;
@@ -55,6 +56,7 @@ class ViewStore {
     root.dataset.theme = view.appearance.theme;
     this.setPhase(view.appearance.phase, fade && this.current !== null);
     root.dataset.readingFont = view.appearance.reading_font;
+    root.dataset.panelStyle = view.appearance.panel_style;
     if (view.appearance.day_variant) root.dataset.dayVariant = view.appearance.day_variant;
     else delete root.dataset.dayVariant;
     this.current = view;
@@ -130,6 +132,10 @@ class ViewStore {
 
   async chooseReadingFont(font: ReadingFont) {
     this.apply(await putReadingFont(font));
+  }
+
+  async choosePanelStyle(style: PanelStyle) {
+    this.apply(await putPanelStyle(style));
   }
 
   /** Show a view that arrived some other way (the answer to a secret seal). */

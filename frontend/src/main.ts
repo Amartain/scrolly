@@ -2,6 +2,7 @@ import { mount } from 'svelte';
 import App from './App.svelte';
 import './styles/fonts.css';
 import './styles/tokens/base.css';
+import './styles/moment-tokens.css';
 import './styles/tokens/serene-day.css';
 import './styles/tokens/serene-dusk.css';
 import './styles/tokens/pavilion-teal.css';
@@ -16,5 +17,6 @@ import './styles/flourish.css';
 import './styles/morning-serene.css';
 import './styles/morning-pavilion.css';
 import './styles/morning-keyframes.css';
+import './styles/panel-headers.css';
 
 mount(App, { target: document.getElementById('app')! });

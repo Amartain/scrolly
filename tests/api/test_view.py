@@ -9,6 +9,7 @@ def test_view_shape(client: TestClient) -> None:
         "day_variant": None,
         "phase": "day",
         "reading_font": "atkinson",
+        "panel_style": "plaque",
         "header": "auto",
         "header_version": 0,
     }
@@ -47,3 +48,13 @@ def test_the_view_carries_the_legend_and_each_trial_its_type(client: TestClient)
     assert body["legend"]["types"]["mortal"]["shortcode"] == ":white_circle:"
     assert body["dashboard"]["immediate"]["type"] == "mortal"
     assert body["planning"]["trials"][0]["type"] == "mortal"
+
+
+def test_the_panel_headers_are_a_plaque_until_the_rod_is_chosen_and_kept(
+    client: TestClient,
+) -> None:
+    assert client.get("/api/view").json()["appearance"]["panel_style"] == "plaque"
+    reply = client.put("/api/panel-style", json={"style": "rod"})
+    assert reply.json()["appearance"]["panel_style"] == "rod"
+    assert client.get("/api/view").json()["appearance"]["panel_style"] == "rod"
+    assert client.put("/api/panel-style", json={"style": "neon"}).status_code == 422

@@ -35,9 +35,9 @@
 </script>
 
 <section class="panel {tone}" aria-label={title}>
-  <div class="head">
+  <div class="head panel-head">
     <div class="heading">
-      <h2 class="display">{title}{count === undefined ? '' : ` · ${count}`}</h2>
+      <h2 class="display panel-title">{title}{count === undefined ? '' : ` · ${count}`}</h2>
       {#if guide}<GuidanceButton topic={guide} />{/if}
     </div>
     {#if hint}<span class="hint">{hint}</span>{/if}

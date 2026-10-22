@@ -1,20 +1,22 @@
 <script lang="ts">
   import type { Qi, QiFill } from '../lib/api';
+  import { QI_ZONE } from '../lib/copy-qi';
 
-  // `value` and `fill` are the Qi to show: planned in Phase 3, conquered on the dashboard.
-  // `compact` drops the legend (the zones stay readable through the meter's label).
+  // `value` and `fill` are the Qi to show (planned, in Phase 3); `zone` is the stretch it reaches, as
+  // Python names it. No legend: the reading names only the zone reached, with its colour beside it.
   let {
     qi,
     value,
     fill,
+    zone,
     caption,
-    compact = false,
-  }: { qi: Qi; value: number; fill: QiFill; caption: string; compact?: boolean } = $props();
+  }: { qi: Qi; value: number; fill: QiFill; zone: Qi['planned_zone']; caption: string } = $props();
 </script>
 
-<div class="gauge" class:compact>
+<div class="gauge">
   <p class="reading">
-    <span class="digits big">{value}</span> Qi{compact ? '' : ` ${caption}`}
+    <span class="digits big">{value}</span> Qi {caption}
+    <span class="zone"><span class="swatch {zone}"></span>{QI_ZONE[zone]}</span>
   </p>
   <div
     class="track"
@@ -32,13 +34,6 @@
     <span class="tick" style:left="{qi.calm_end_pct}%"></span>
     <span class="tick" style:left="{qi.surge_end_pct}%"></span>
   </div>
-  {#if !compact}
-    <ul class="legend">
-      <li><span class="swatch calm"></span>Harmonious to {qi.start}</li>
-      <li><span class="swatch surge"></span>Igniting the Blood to {qi.surge_end}</li>
-      <li><span class="swatch redline"></span>Strain to {qi.redline}</li>
-    </ul>
-  {/if}
 </div>
 
 <style>
@@ -47,27 +42,18 @@
   }
 
   .reading {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
     margin: 0;
     margin-bottom: var(--space-2);
   }
 
-  .compact {
-    display: flex;
+  .zone {
+    display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
-  }
-
-  .compact .reading {
-    margin: 0;
-    white-space: nowrap;
-  }
-
-  .compact .big {
-    font-size: var(--text-body-md);
-  }
-
-  .compact .track {
-    flex: 1;
+    margin-left: auto;
+    font-weight: 700;
   }
 
   .big {
@@ -95,26 +81,19 @@
     border-left: var(--border-width) solid var(--line);
   }
 
-  .calm {
+  .calm,
+  .harmonious {
     background: var(--qi-calm);
   }
 
-  .surge {
+  .surge,
+  .igniting {
     background: var(--qi-surge);
   }
 
-  .redline {
+  .redline,
+  .strain {
     background: var(--qi-redline);
-  }
-
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-1) var(--space-4);
-    margin: var(--space-2) 0 0;
-    padding: 0;
-    list-style: none;
-    color: var(--ink-muted);
   }
 
   .swatch {
