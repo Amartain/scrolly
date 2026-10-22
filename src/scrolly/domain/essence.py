@@ -15,6 +15,11 @@ class EssenceSummary:
     remaining_min: int
     meter_pct: int
 
+    @property
+    def blank(self) -> bool:
+        """Nothing estimated and nothing spent yet: there is nothing for the meter to show."""
+        return self.expected_min == 0 and self.actual_min == 0
+
 
 def essence_summary(trials: Sequence[Trial]) -> EssenceSummary:
     """Minutes spent (conquered, or timed before being let go) against the estimates of everything

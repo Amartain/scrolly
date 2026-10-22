@@ -142,14 +142,15 @@
     padding: 0;
     border: 0;
     border-top: var(--border-width) solid var(--line);
-    background: var(--surface-stripe);
-    color: var(--ink-muted);
+    background: var(--head-bg);
+    color: var(--head-ink);
     font-size: var(--text-display-sm);
     cursor: pointer;
   }
 
+  /* The band is a button: it wears the panel headers' colours, so it reads as one (a hover dims it). */
   .fold:hover {
-    color: var(--ink);
+    opacity: 0.9;
   }
 
   kbd {

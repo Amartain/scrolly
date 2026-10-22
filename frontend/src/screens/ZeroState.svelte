@@ -1,25 +1,38 @@
+<!-- The first screen of each day: the morning scene of the theme, then the one button. The button appears
+     early and works at any moment; the title soaks in like ink as the scene ends. Any key or click shows
+     the last frame at once (a key also puts the focus on the button). Under reduced motion it is still. -->
 <script lang="ts">
   import Button from '../components/Button.svelte';
+  import MorningScene from '../components/morning/MorningScene.svelte';
   import { planning } from '../lib/api';
   import { view } from '../lib/view.svelte';
-  import Header from './Header.svelte';
-  import Screen1 from './Screen1.svelte';
+
+  let still = $state(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  let message = $state<HTMLElement>();
+
+  function skip(event: KeyboardEvent | PointerEvent) {
+    if (still) return;
+    still = true;
+    if (event instanceof KeyboardEvent && event.key !== 'Tab')
+      message?.querySelector('button')?.focus();
+  }
 </script>
 
+<svelte:window onkeydown={skip} onpointerdown={skip} />
+
 <div class="zero">
-  <div class="fogged" inert>
-    <Header settingsOpen={false} onsettings={() => {}} />
-    <Screen1 />
-  </div>
+  <MorningScene {still} />
   <div class="veil">
-    <section class="message" aria-label="The Peak is Serene">
+    <section class="message" class:still aria-label="The Peak is Serene" bind:this={message}>
       <h1 class="display title">The Peak is Serene</h1>
-      <Button
-        label="Cultivate Your Focus"
-        tone="primary"
-        size="large"
-        onclick={() => view.act(planning.start)}
-      />
+      <div class="begin">
+        <Button
+          label="Cultivate Your Focus"
+          tone="primary"
+          size="large"
+          onclick={() => view.act(planning.start)}
+        />
+      </div>
     </section>
   </div>
 </div>
@@ -33,23 +46,14 @@
     flex-direction: column;
   }
 
-  .fogged {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-  }
-
   .veil {
     position: absolute;
     inset: 0;
     display: grid;
     place-items: center;
-    background: color-mix(in srgb, var(--surface-canvas) 80%, transparent);
-    backdrop-filter: blur(var(--space-2));
   }
 
-  /* No frame: the title and the one button float on the fog, a little above the middle. */
+  /* No frame: the title and the one button float on the painting, a little above the middle. */
   .message {
     display: flex;
     flex-direction: column;
@@ -62,5 +66,15 @@
     margin: 0;
     font-size: var(--text-display-xl);
     text-shadow: var(--space-1) var(--space-1) 0 var(--surface-canvas);
+    animation: morning-soak 1000ms 2300ms ease-out both;
+  }
+
+  .begin {
+    animation: morning-fade 400ms 1200ms ease-out both;
+  }
+
+  .still .title,
+  .still .begin {
+    animation: none;
   }
 </style>

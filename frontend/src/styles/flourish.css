@@ -1,0 +1,55 @@
+/* The flourishes of a trial begun and a trial conquered (components/Flourish.svelte). Under 1 s each,
+   in a layer that moves nothing (art-direction › Motion). Reduced motion never draws them. */
+
+@keyframes flourish-ring {
+  from {
+    opacity: 1;
+    scale: 0.6;
+  }
+  to {
+    opacity: 0;
+    scale: 2.6;
+  }
+}
+
+@keyframes flourish-spark {
+  from {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(calc(var(--side) * 1.6rem), -3.5rem);
+  }
+}
+
+@keyframes flourish-seal {
+  0% {
+    opacity: 0;
+    scale: 1.4;
+  }
+  20% {
+    opacity: 1;
+    scale: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes flourish-comet {
+  from {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  85% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy));
+  }
+}

@@ -1745,6 +1745,8 @@ export interface components {
         EssenceOut: {
             /** Actual Text */
             actual_text: string;
+            /** Blank */
+            blank: boolean;
             /** Expected Text */
             expected_text: string;
             /** Meter Pct */

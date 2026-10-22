@@ -58,9 +58,9 @@
     <TimerControls {trial} />
     {#if onseclusion}
       <div class="enter">
+        <!-- A raised secondary button: the trial and its clock lead, not the way out to Seclusion. -->
         <Button
           label={SECLUSION.enter}
-          tone="strong"
           description="{SECLUSION.enterNamed}: {trial.title}"
           onclick={onseclusion}
         />
@@ -88,7 +88,7 @@
   }
 
   .enter :global(.button) {
-    padding-block: var(--space-3);
+    padding-block: var(--space-2);
     letter-spacing: 0.15em;
   }
 
@@ -106,7 +106,7 @@
   }
 
   .title {
-    --editable-size: var(--text-read-lg);
+    --editable-size: var(--text-read-hero);
     display: flex;
     color: var(--ink);
     line-height: 1.1;

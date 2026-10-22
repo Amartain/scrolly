@@ -1,6 +1,7 @@
 import { today, type Immediate, type View } from './api';
 import { playGong } from './chime';
 import { SECLUSION } from './copy-seclusion';
+import { flourish } from './flourish.svelte';
 import { askNotifyPermission, notify } from './notify';
 import { qiAsk } from './qi-ask.svelte';
 import { scrapPad } from './scrap-pad.svelte';
@@ -13,6 +14,9 @@ import {
   type SeclusionState,
 } from './seclusion-api';
 import { view } from './view.svelte';
+
+/** The ring of the trial at hand: where a start or a conquest flourishes in the room. */
+const RING = 'section[aria-label="Focus Scroll"] .ring';
 
 /** How the trial at hand ended, so the "What next?" card can say so and offer Undo. */
 export interface Finished {
@@ -103,11 +107,15 @@ class SeclusionStore {
 
   /** Conquer, abandon or postpone the trial at hand. The next one waits, idle. Nothing left: a gong. */
   async finish(how: EndedHow, trial: Immediate): Promise<void> {
+    const ring = document.querySelector(RING)?.getBoundingClientRect() ?? null;
     if (!(await this.act(() => api.finish(how, trial.id)))) return;
     await view.refresh();
     this.finished = { how, id: trial.id, title: trial.title };
-    // The last trial of a won day has its own sound (Tribulation Weathered), so no gong beside it.
-    if (this.state?.trial == null && !view.current?.dashboard.victory?.due) playGong();
+    const dashboard = view.current?.dashboard;
+    // The last trial of a won day has its own ceremony and sound, so no gong or flourish beside it.
+    if (this.state?.trial == null && !dashboard?.victory?.due) playGong();
+    if (how === 'conquered' && !dashboard?.victory?.due)
+      void flourish.conquer(ring, dashboard?.conquered.length ?? 1);
     if (how === 'conquered')
       qiAsk.ask({
         id: trial.id,
@@ -149,7 +157,10 @@ class SeclusionStore {
     this.finished = null;
     askNotifyPermission(); // Flow's break notice needs it too; a click is what lets the browser ask
     await this.ratios; // a ratio still on its way must land before the bank opens
-    return this.act(api.start);
+    const fresh = this.state?.trial?.timer.elapsed_s === 0;
+    const done = await this.act(api.start);
+    if (done) flourish.begin(document.querySelector(RING), document.querySelector(RING), fresh);
+    return done;
   };
   /** Start the first focus of the Cycles with what the dial holds. */
   startCycles = (plan: CyclesPlan) => {

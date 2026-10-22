@@ -33,14 +33,14 @@ test('planning has no header and no Settings, in Phase 1 and Phase 2', async ({ 
   await expect(page.getByRole('button', { name: 'Settings' })).toHaveCount(0);
 });
 
-test('the zero state shows the header under the fog, out of reach', async ({ page }) => {
+test('the zero state is the morning scene and its one button: no header, no Settings', async ({
+  page,
+}) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'The Peak is Serene' })).toBeVisible();
-  const header = page.locator('header');
-  await expect(header).toHaveCount(1);
-  expect(await header.evaluate((el) => !!el.closest('[inert]'))).toBe(true);
-  const gear = page.getByRole('button', { name: 'Settings' });
-  expect(await gear.evaluate((el) => !!el.closest('[inert]'))).toBe(true);
+  await expect(page.locator('.morning')).toBeVisible();
+  await expect(page.locator('header')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Settings' })).toHaveCount(0);
 });
 
 test('the dashboard has the header and Settings, and the planning text survives the trip', async ({

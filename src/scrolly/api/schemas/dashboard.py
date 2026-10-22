@@ -81,6 +81,7 @@ class EssenceOut(BaseModel):
     expected_text: str
     remaining_text: str
     meter_pct: int
+    blank: bool
 
     @classmethod
     def from_summary(cls, summary: EssenceSummary) -> "EssenceOut":
@@ -89,6 +90,7 @@ class EssenceOut(BaseModel):
             expected_text=format_duration(summary.expected_min),
             remaining_text=format_duration(summary.remaining_min),
             meter_pct=summary.meter_pct,
+            blank=summary.blank,
         )
 
 

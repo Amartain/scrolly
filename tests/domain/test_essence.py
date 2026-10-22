@@ -45,3 +45,10 @@ def test_abandoned_minutes_count_as_expended_but_not_as_planned() -> None:
     ]
     summary = essence_summary(trials)
     assert (summary.actual_min, summary.expected_min) == (50, 30)
+
+
+def test_a_day_with_nothing_estimated_or_spent_is_blank_until_either_comes() -> None:
+    assert essence_summary([make_trial("A")]).blank
+    assert not essence_summary([make_trial("A", essence_expected_min=30)]).blank
+    spent = make_trial("A", state=TrialState.DONE, essence_actual_min=5)
+    assert not essence_summary([spent]).blank

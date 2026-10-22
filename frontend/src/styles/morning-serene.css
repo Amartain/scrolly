@@ -1,0 +1,184 @@
+/* The Serene morning painting (components/morning/SereneMorning.svelte). Ink tones are the theme's
+   ink washed into its paper (the canvas), so day is ink on cream and dusk a moonlit painting. The plain
+   rules are the last frame; the animations paint the morning into it. `.still` (reduced motion, or
+   a key pressed) drops every animation. Lengths are SVG user units, hence px.
+
+   0–1.6 s the ranges wash in, far to near · 0.8–2 s the contour stroke, the pine
+   1.2–3 s mist and sunrise · 1.6–3.4 s the cranes · 2–2.9 s the verse and the seal */
+
+.serene-morning {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.serene-morning .paper {
+  fill: var(--surface-canvas);
+}
+
+.serene-morning .sun {
+  fill: color-mix(in srgb, var(--gold) 55%, var(--surface-canvas));
+}
+
+/* At dusk the sun of the painting is a pale moon. */
+:root[data-phase='dusk'] .serene-morning .sun {
+  fill: color-mix(in srgb, var(--ink) 80%, var(--surface-canvas));
+}
+
+.serene-morning .far {
+  fill: color-mix(in srgb, var(--ink) 18%, var(--surface-canvas));
+}
+
+.serene-morning .mid {
+  fill: color-mix(in srgb, var(--ink) 34%, var(--surface-canvas));
+}
+
+.serene-morning .bank {
+  fill: color-mix(in srgb, var(--ink) 52%, var(--surface-canvas));
+}
+
+.serene-morning .cliff {
+  fill: color-mix(in srgb, var(--ink) 80%, var(--surface-canvas));
+}
+
+.serene-morning .contour {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 9px;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+}
+
+.serene-morning .mist rect {
+  fill: var(--surface-canvas);
+  opacity: 0.8;
+}
+
+.serene-morning .trunk,
+.serene-morning .branch {
+  fill: none;
+  stroke: var(--ink);
+  stroke-linecap: round;
+}
+
+.serene-morning .trunk {
+  stroke-width: 14px;
+}
+
+.serene-morning .branch {
+  stroke-width: 8px;
+}
+
+.serene-morning .pine ellipse {
+  fill: color-mix(in srgb, var(--ink) 88%, var(--surface-canvas));
+}
+
+.serene-morning .wings {
+  fill: var(--surface-panel);
+  stroke: var(--ink);
+  stroke-width: 3px;
+}
+
+.serene-morning .neck {
+  stroke: var(--ink);
+  stroke-width: 3px;
+}
+
+.serene-morning .head {
+  fill: var(--ink);
+}
+
+.serene-morning .verse {
+  fill: color-mix(in srgb, var(--ink) 75%, var(--surface-canvas));
+  font-family: serif;
+  font-size: 46px;
+  letter-spacing: 8px;
+  writing-mode: vertical-rl;
+}
+
+.serene-morning .seal rect {
+  fill: var(--morning-seal);
+}
+
+.serene-morning .seal text {
+  fill: var(--morning-seal-ink);
+  font-family: serif;
+  font-size: 34px;
+  text-anchor: middle;
+}
+
+.serene-morning .grain {
+  pointer-events: none;
+}
+
+.serene-morning .pine,
+.serene-morning .seal,
+.serene-morning .crane {
+  transform-box: fill-box;
+}
+
+.serene-morning .pine {
+  transform-origin: 20% 100%;
+}
+
+.serene-morning .seal,
+.serene-morning .crane {
+  transform-origin: center;
+}
+
+/* The morning, painted into the last frame. */
+.serene-morning .far {
+  animation: morning-wash 1000ms ease-out both;
+}
+
+.serene-morning .mid {
+  animation: morning-wash 900ms 300ms ease-out both;
+}
+
+.serene-morning .bank {
+  animation: morning-wash 900ms 500ms ease-out both;
+}
+
+.serene-morning .cliff {
+  animation: morning-wash 900ms 700ms ease-out both;
+}
+
+.serene-morning .contour {
+  animation: morning-stroke 1200ms 800ms ease-in-out both;
+}
+
+.serene-morning .pine {
+  animation: morning-grow 900ms 1100ms ease-out both;
+}
+
+.serene-morning .mist {
+  animation:
+    morning-fade 1200ms 1200ms ease-out both,
+    morning-drift 14s 1200ms ease-in-out infinite alternate;
+}
+
+.serene-morning .sun {
+  animation: morning-rise 1800ms 1200ms ease-out both;
+}
+
+.serene-morning .cranes {
+  animation: morning-fly 1800ms 1600ms ease-out both;
+}
+
+.serene-morning .crane {
+  animation: morning-flap 450ms 1600ms ease-in-out 4 alternate;
+}
+
+.serene-morning .verse {
+  animation: morning-fade 1100ms 2000ms ease-out both;
+}
+
+.serene-morning .seal {
+  animation: morning-stamp 320ms 2600ms ease-out both;
+}
+
+.morning.still *,
+.morning.still {
+  animation: none !important;
+}

@@ -1,0 +1,157 @@
+/* The Pavilion morning city (components/morning/PavilionMorning.svelte, PavilionGate.svelte). Bold flat
+   colours mixed from the theme's canvas and the night ink (`--scene-ink`), thick ink outlines, gold light. The plain
+   rules are the last frame; the animations wake the city into it. `.still` drops every animation.
+   Lengths are SVG user units, hence px.
+
+   0–1 s the skyline rises · 0.8–2.2 s windows light, lanterns ignite and sway
+   1.8–3 s the great lantern, the dawn · 2.5–3.5 s sparks over the gate */
+
+.pavilion-morning {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.pavilion-morning .star {
+  fill: var(--ink);
+  opacity: 0.2;
+}
+
+.pavilion-morning .skyline {
+  fill: color-mix(in srgb, var(--surface-canvas) 45%, var(--scene-ink));
+}
+
+.pavilion-morning .tower rect {
+  fill: color-mix(in srgb, var(--surface-canvas) 28%, var(--scene-ink));
+  stroke: var(--scene-ink);
+  stroke-width: 6px;
+}
+
+.pavilion-morning .antenna,
+.pavilion-morning .wire,
+.pavilion-morning .cord {
+  fill: none;
+  stroke: var(--scene-ink);
+  stroke-width: 4px;
+}
+
+.pavilion-morning .windows rect {
+  fill: var(--gold);
+  opacity: 0.85;
+}
+
+.pavilion-morning .windows rect.off {
+  opacity: 0.1;
+  animation: none;
+}
+
+.pavilion-morning .pillar {
+  fill: var(--morning-pillar);
+  stroke: var(--scene-ink);
+  stroke-width: 6px;
+}
+
+.pavilion-morning .lintel,
+.pavilion-morning .roof {
+  fill: var(--scene-ink);
+  stroke: var(--gold);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+.pavilion-morning .plaque {
+  fill: var(--gold);
+  stroke: var(--scene-ink);
+  stroke-width: 4px;
+}
+
+.pavilion-morning .plaque-word {
+  fill: var(--scene-ink);
+  font-family: serif;
+  font-size: 26px;
+  text-anchor: middle;
+}
+
+.pavilion-morning .body {
+  fill: var(--morning-lantern);
+  stroke: var(--scene-ink);
+  stroke-width: 4px;
+}
+
+.pavilion-morning .cap {
+  fill: var(--scene-ink);
+}
+
+.pavilion-morning .spark {
+  fill: var(--gold);
+  stroke: var(--scene-ink);
+  stroke-width: 2px;
+}
+
+.pavilion-morning .tower,
+.pavilion-morning .skyline,
+.pavilion-morning .gate {
+  --rise: 240px;
+}
+
+.pavilion-morning .lantern,
+.pavilion-morning .spark {
+  transform-box: fill-box;
+}
+
+.pavilion-morning .lantern {
+  transform-origin: 50% 0;
+}
+
+.pavilion-morning .spark {
+  transform-origin: center;
+}
+
+/* The city wakes into the last frame. */
+.pavilion-morning .skyline {
+  animation: morning-rise-up 900ms ease-out both;
+}
+
+.pavilion-morning .tower {
+  animation: morning-rise-up 800ms var(--delay) ease-out both;
+}
+
+.pavilion-morning .gate {
+  animation: morning-rise-up 800ms 300ms ease-out both;
+}
+
+.pavilion-morning .windows rect {
+  animation: morning-light 200ms var(--delay) steps(1, end) both;
+}
+
+.pavilion-morning .lantern {
+  animation: morning-sway 1100ms var(--delay) ease-in-out both;
+}
+
+.pavilion-morning .lantern .body,
+.pavilion-morning .lantern .halo {
+  animation: morning-light 250ms var(--delay) ease-out both;
+}
+
+.pavilion-morning .great-lantern {
+  animation: morning-fade 900ms 1800ms ease-out both;
+}
+
+.pavilion-morning .dawn {
+  animation: morning-fade 1400ms 1700ms ease-in-out both;
+}
+
+.pavilion-morning .star {
+  animation: morning-star 1600ms 1500ms ease-in both;
+}
+
+.pavilion-morning .spark {
+  animation: morning-twinkle 600ms calc(2500ms + var(--delay)) ease-out both;
+}
+
+@keyframes morning-star {
+  from {
+    opacity: 0.85;
+  }
+}

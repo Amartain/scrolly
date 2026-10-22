@@ -23,7 +23,7 @@
   >
     <span class="big-glyph"><GlyphIcon name={running ? 'pause' : 'play'} /></span>
   </button>
-  <span class="clock digits" role="timer" aria-label="Elapsed time"
+  <span class="clock digits" class:running role="timer" aria-label="Elapsed time"
     >{clockText(display.seconds)}</span
   >
   <GlyphButton label="Reset timer" onclick={() => view.act(() => today.resetTimer(trial.id))}>
@@ -94,15 +94,23 @@
     height: 100%;
   }
 
+  /* The clock is the card's big number, gold with a hard shadow like the counters. Its frame turns gold
+     while it runs: still, so it can be read at a glance without anything moving. */
   .clock {
     padding: var(--space-1) var(--space-3);
     background: var(--surface-raised);
     border: var(--border-width) solid var(--line);
     box-shadow: var(--shadow-sunken);
+    color: var(--num);
     font-family: var(--font-display);
-    font-size: var(--text-display-lg);
+    font-size: var(--text-display-xl);
     line-height: 1;
+    text-shadow: var(--space-1) var(--space-1) 0 var(--num-shadow);
     white-space: nowrap;
+  }
+
+  .clock.running {
+    border-color: var(--gold);
   }
 
   .of {

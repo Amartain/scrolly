@@ -12,6 +12,7 @@
   import Phase3 from './screens/Phase3.svelte';
   import Screen1 from './screens/Screen1.svelte';
   import Screen2 from './screens/Screen2.svelte';
+  import Flourish from './components/Flourish.svelte';
   import MilestoneOverlay from './components/MilestoneOverlay.svelte';
   import GhostCard from './components/GhostCard.svelte';
   import GuidanceScroll from './components/GuidanceScroll.svelte';
@@ -117,6 +118,7 @@
     <Screen1 onseclusion={enterSeclusion} />
   {/if}
 </div>
+<Flourish />
 <QiCard />
 <TribulationOverlay />
 <GhostCard />

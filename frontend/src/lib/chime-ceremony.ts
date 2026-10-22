@@ -71,3 +71,54 @@ export const playTribulation = () =>
 /** One tile of the tally lands: a soft tick, each a little higher than the last. */
 export const playTallyTick = (step: number) =>
   play([{ at: 0, seconds: 0.25, tones: [[523 * 1.1225 ** step, 0.06]] }]);
+
+/** A trial begins from nothing: a match strikes, then a warm bowl swells as the incense catches. */
+export function playIgnite(): void {
+  const factor = loudness(true);
+  const Context = window.AudioContext;
+  if (!Context || factor <= 0) return;
+  const audio = new Context();
+  void audio.resume();
+  noise(audio, audio.currentTime, 0.14, 0.18 * factor, 6000);
+  setTimeout(() => void audio.close(), 1000);
+  play([
+    {
+      at: 0.08,
+      seconds: 2.2,
+      attack: 0.25,
+      tones: [
+        [196, 0.12],
+        [392, 0.05],
+        [588, 0.02],
+      ],
+    },
+  ]);
+}
+
+/** A paused trial goes on: one soft, short tick. */
+export const playResumeTick = () => play([{ at: 0, seconds: 0.18, tones: [[1047, 0.04]] }]);
+
+// A major pentatonic scale from C5: every phrase in it sounds bright, whatever step it starts on.
+const PENTATONIC = [
+  523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66, 1318.51, 1567.98, 1760, 2093,
+];
+const TOP_STEP = 7;
+
+/**
+ * A trial conquered: a rising three-note phrase. `count` is how many trials are conquered today;
+ * each conquest starts a step higher than the last, so the day builds like a melody (from the 8th
+ * the top phrase repeats). It begins again each morning and never steps down.
+ */
+export function playConquest(count: number): void {
+  const step = Math.min(Math.max(count, 1) - 1, TOP_STEP);
+  const notes = [PENTATONIC[step], PENTATONIC[step + 2], PENTATONIC[step + 3]];
+  play([
+    { at: 0, seconds: 1.2, tones: [[PENTATONIC[step] / 2, 0.05]] },
+    ...notes.map((hz, i) => ({
+      at: i * 0.09,
+      seconds: i === 2 ? 1.6 : 0.9,
+      attack: 0.01,
+      tones: [[hz, 0.055] as [number, number]],
+    })),
+  ]);
+}

@@ -1,0 +1,112 @@
+/* The keyframes of the morning scenes on the zero state (morning-serene.css, morning-pavilion.css). */
+
+@keyframes morning-wash {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes morning-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes morning-stroke {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes morning-grow {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes morning-drift {
+  from {
+    transform: translateX(-40px);
+  }
+  to {
+    transform: translateX(40px);
+  }
+}
+
+@keyframes morning-rise {
+  from {
+    opacity: 0;
+    transform: translateY(140px);
+  }
+}
+
+@keyframes morning-fly {
+  from {
+    opacity: 0;
+    transform: translate(420px, 70px);
+  }
+}
+
+@keyframes morning-flap {
+  to {
+    transform: scaleY(-0.35);
+  }
+}
+
+@keyframes morning-stamp {
+  from {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+@keyframes morning-rise-up {
+  from {
+    transform: translateY(var(--rise, 240px));
+  }
+}
+
+@keyframes morning-light {
+  from {
+    opacity: 0.08;
+  }
+}
+
+@keyframes morning-sway {
+  0% {
+    transform: rotate(-9deg);
+  }
+  45% {
+    transform: rotate(6deg);
+  }
+  75% {
+    transform: rotate(-3deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes morning-twinkle {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-45deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
+
+/* The title and the button on the zero state: the button appears early, the title soaks in like ink. */
+@keyframes morning-soak {
+  from {
+    opacity: 0;
+    filter: blur(0.4rem);
+  }
+}

@@ -31,6 +31,8 @@
   /* The Horizon and Arts side lists: long titles fit better (ui-craft 8, exception of 2026-10-21). */
   --text-read-sm: 1rem;
   --text-read-lg: 1.75rem;
+  /* The Immediate Trial's title: the one trial the dashboard is built around (design principle 3). */
+  --text-read-hero: 2.25rem;
   --tracking-display: 0.0625em;
 
   --size-header: 11.25rem;
@@ -129,6 +131,16 @@
   --scene-card-num-shadow: #5a320c;
   --scene-mandate: #ff9a8f;
   --scene-backdrop: rgba(7, 6, 15, 0.92);
+  /* The start and conquest flourishes (components/Flourish.svelte) glow in the same gold. */
+  --scene-glow: 0 0 1rem #f2c14e;
+  --scene-glow-strong: 0 0 1rem 0.5rem #f2c14e;
+  /* The morning scenes on the zero state (components/morning/). Everything else in them is mixed from
+     the theme's own canvas, ink and gold. The seal is vermilion as in a real painting (owner,
+     2026-10-22: an exception to hard rule 6 for this painting only; never `--mandate`). */
+  --morning-seal: #c8321e;
+  --morning-seal-ink: #f6efd9;
+  --morning-lantern: #f08a24;
+  --morning-pillar: #c4471c;
   /* Timing: the scene, then the card rises, then the tally counts. */
   --scene-card-rise: 300ms;
   --size-ceremony-card: 40rem;
@@ -182,4 +194,5 @@
   --text-read-md: 1rem;
   --text-read-sm: 0.875rem;
   --text-read-lg: 1.4rem;
+  --text-read-hero: 1.8rem;
 }

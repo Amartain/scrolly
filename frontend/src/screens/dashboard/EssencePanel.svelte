@@ -1,6 +1,7 @@
 <script lang="ts">
   import Panel from '../../components/Panel.svelte';
   import QiGauge from '../../components/QiGauge.svelte';
+  import { DASHBOARD } from '../../lib/copy-dashboard';
   import { view } from '../../lib/view.svelte';
 
   const essence = $derived(view.current?.dashboard.essence);
@@ -8,7 +9,17 @@
 </script>
 
 <Panel title="Essence" guide="essence">
-  {#if essence}
+  {#if essence?.blank}
+    <!-- Nothing estimated or spent yet (Python says so): one quiet line instead of "0m / 0m". -->
+    <div class="essence">
+      <p class="hint">{DASHBOARD.essenceBlank}</p>
+      {#if qi?.enabled}
+        <div class="qi">
+          <QiGauge {qi} value={qi.spent} fill={qi.spent_fill} caption="conquered today" compact />
+        </div>
+      {/if}
+    </div>
+  {:else if essence}
     <div class="essence">
       <span class="figure digits">{essence.actual_text} / {essence.expected_text}</span>
       <div
@@ -49,6 +60,12 @@
   .label {
     font-size: var(--text-display-sm);
     white-space: nowrap;
+  }
+
+  .hint {
+    flex: 1;
+    margin: 0;
+    color: var(--ink-muted);
   }
 
   .meter {

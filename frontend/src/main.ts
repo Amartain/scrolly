@@ -12,5 +12,9 @@ import './styles/glitch.css';
 import './styles/ceremony-thunder.css';
 import './styles/ceremony-thunder-motion.css';
 import './styles/ceremony-keyframes.css';
+import './styles/flourish.css';
+import './styles/morning-serene.css';
+import './styles/morning-pavilion.css';
+import './styles/morning-keyframes.css';
 
 mount(App, { target: document.getElementById('app')! });

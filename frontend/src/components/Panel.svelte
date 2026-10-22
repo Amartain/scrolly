@@ -117,6 +117,12 @@
     background-attachment: local;
   }
 
+  /* An empty list is one quiet line on a plain surface, not a ruled table with nothing in it
+     (design principle 8). Stripes come back with the first row. */
+  .body.striped:has(:global(.empty)) {
+    background-image: none;
+  }
+
   .body.scroll {
     overflow-y: auto;
     scrollbar-gutter: stable;
