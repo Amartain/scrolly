@@ -110,6 +110,7 @@ export const today = {
   postpone: (id: string) => trial(id, 'postpone'),
   abandon: (id: string) => trial(id, 'abandon'),
   revive: (id: string) => trial(id, 'revive'),
+  resummon: (id: string) => trial(id, 'resummon'),
   promote: (id: string) => trial(id, 'promote'),
   update: (
     id: string,

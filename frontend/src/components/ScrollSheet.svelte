@@ -1,13 +1,19 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import type { GuideKey } from '../lib/copy-guidance';
+  import GuidanceButton from './GuidanceButton.svelte';
 
-  let { title, children }: { title: string; children: Snippet } = $props();
+  let { title, guide, children }: { title: string; guide?: GuideKey; children: Snippet } = $props();
 </script>
 
-<!-- Onboarding sits on the background as one framed scroll, like a sheet laid on a table. -->
+<!-- Onboarding sits on the background as one framed scroll, like a sheet laid on a table. Its guidance
+     is a `?` beside the heading, a scroll that pops out (owner, 2026-10-23), not a box on the sheet. -->
 <div class="table">
   <section class="sheet" aria-label={title}>
-    <h1 class="display heading">{title}</h1>
+    <div class="head">
+      <h1 class="display heading">{title}</h1>
+      {#if guide}<GuidanceButton topic={guide} />{/if}
+    </div>
     {@render children()}
   </section>
 </div>
@@ -33,6 +39,12 @@
     background-image: var(--gloss-faint);
     border: var(--border-width) solid var(--line);
     box-shadow: var(--shadow-panel);
+  }
+
+  .head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
   }
 
   .heading {

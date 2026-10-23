@@ -15,13 +15,15 @@ from scrolly.domain.planning import (
 from scrolly.domain.segments import Discipline
 from scrolly.domain.uniqueness import require_free_trial_title
 from scrolly.ports import Clock, Store
+from scrolly.services.sealed_day import find_trial, sealed_trials
 from scrolly.services.seclusion_state import read_state, working_day
 from scrolly.services.segments import sync_segments
 from scrolly.services.sunset import settle_day
 
 
 class TodayService:
-    """What the user does to the trials of a sealed day: time them, conquer them, let them go."""
+    """What the user does to the trials of a sealed day: time them, conquer them, let them go.
+    Afterwards (corrections, Revive, summoning back) is services/finished_trials.py."""
 
     def __init__(self, store: Store, clock: Clock) -> None:
         self._store = store
@@ -51,16 +53,10 @@ class TodayService:
         sync_segments(self._store, trials, at or self._now, discipline)
 
     def _trials(self) -> list[Trial]:
-        day = self._store.days.get(self._today)
-        if day is None or day.first_sealed_at is None:
-            raise TrialError("The day has not begun yet")
-        return self._store.trials.list_for_day(self._today)
+        return sealed_trials(self._store, self._today)
 
     def _trial(self, trial_id: str) -> Trial:
-        trial = next((t for t in self._trials() if t.id == trial_id), None)
-        if trial is None:
-            raise TrialError("That trial is not on today's scroll")
-        return trial
+        return find_trial(self._trials(), trial_id)
 
     def _timed(self, trial_id: str) -> Trial:
         trial = self._trial(trial_id)
@@ -115,20 +111,6 @@ class TodayService:
         self._save([day_flow.abandon(self._trial(trial_id), self._now)])
         self._promote()
         settle_day(self._store, self._now)
-
-    def set_actual_qi(self, trial_id: str, qi: int) -> None:
-        """What the user says a conquered trial took; conquering had recorded the estimate."""
-        trial = day_flow.set_actual_qi(self._trial(trial_id), qi)
-        self._store.trials.save([trial], self._now)
-
-    def set_actual(self, trial_id: str, text: str) -> None:
-        """The user corrects the time a conquered trial took."""
-        trial = day_flow.set_actual_minutes(self._trial(trial_id), text)
-        self._store.trials.save([trial], self._now)
-
-    def revive(self, trial_id: str) -> None:
-        trial = self._trial(trial_id)
-        self._store.trials.save([day_flow.revive(trial, self._trials())], self._now)
 
     def update(
         self,

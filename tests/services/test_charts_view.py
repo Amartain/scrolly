@@ -2,6 +2,7 @@ from scrolly.clock import FixedClock
 from scrolly.domain.analytics import Metric
 from scrolly.ports import Store
 from scrolly.services.dashboard_view import build_dashboard_view
+from scrolly.services.finished_trials import FinishedTrials
 from scrolly.services.golden_core import GoldenCoreService
 from tests.factories import DAY
 from tests.services.flow import by_title, seal_day
@@ -36,7 +37,7 @@ def test_a_revived_trial_leaves_the_chart(store: Store, clock: FixedClock) -> No
     today = seal_day(store, clock, "Walk", "Read")
     walk = by_title(store)["Walk"]
     today.conquer(walk.id)
-    today.revive(walk.id)
+    FinishedTrials(store, clock).revive(walk.id)
     assert _charts(store, clock)[Metric.TRIALS][0] is True
 
 

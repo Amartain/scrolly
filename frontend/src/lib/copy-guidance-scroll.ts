@@ -20,14 +20,14 @@ export const SCROLL_GUIDES = {
     name: 'Postponed Today',
     tip: 'Sent to the Horizon today.',
     dao: 'Moving a trial is a decision, not a failure. It waits where you can find it.',
-    art: 'A postponed trial keeps the time already worked on it and rests on the Horizon until you summon it again.',
+    art: 'A postponed trial keeps the time already worked on it and rests on the Horizon until you summon it again. Changed your mind today? Double-click it here to bring it back.',
     terms: [['Postponed', 'sent to the Horizon for another day.']],
   },
   fallen: {
     name: 'Fallen Leaves',
     tip: 'Trials let go today.',
     dao: 'Some trials are not worth their hours. Letting them go keeps the scroll honest, and costs nothing.',
-    art: 'A Mortal Trial you abandon, or leave unfinished at 4 AM, rests here for the day and then joins the Archives as lost to time. A Heavenly Mandate is never lost: it returns to the Horizon.',
+    art: 'A Mortal Trial you abandon, or leave unfinished at 4 AM, rests here for the day and then joins the Archives as lost to time. Double-click one to bring it back to the scroll. A Heavenly Mandate is never lost: it returns to the Horizon.',
     terms: [
       ['Mortal Trial', 'an ordinary trial that dissolves at the day’s end if unfinished.'],
       ['Heavenly Mandate', 'a trial that must not be lost; it comes back to the Horizon.'],

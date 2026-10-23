@@ -8,6 +8,7 @@ from scrolly.domain.day_flow import TrialError
 from scrolly.domain.models import TrialState
 from scrolly.ports import Store
 from scrolly.services.dashboard_view import build_dashboard_view
+from scrolly.services.finished_trials import FinishedTrials
 from scrolly.services.golden_core import build_qi_view
 from scrolly.services.today import TodayService
 from tests.factories import DAY
@@ -60,7 +61,7 @@ def test_conquered_qi_counts_as_spent_and_reviving_gives_it_back(
     assert build_qi_view(store, clock.now()).spent == 0
     today.conquer(a.id)
     assert build_qi_view(store, clock.now()).spent == 40
-    today.revive(a.id)
+    FinishedTrials(store, clock).revive(a.id)
     assert build_qi_view(store, clock.now()).spent == 0
 
 
@@ -94,7 +95,7 @@ def test_reviving_with_another_underway_goes_to_the_top_of_the_queue(
     today = seal_day(store, clock, "A", "B", "C")
     a = by_title(store)["A"]
     today.conquer(a.id)
-    today.revive(a.id)
+    FinishedTrials(store, clock).revive(a.id)
     assert states(store) == {
         "A": TrialState.REMAINING,
         "B": TrialState.IMMEDIATE,
@@ -113,7 +114,7 @@ def test_a_conquered_trial_cannot_be_edited(store: Store, clock: FixedClock) -> 
     today.conquer(a.id)
     with pytest.raises(TrialError, match="read-only"):
         today.update(a.id, title="Other")
-    today.revive(a.id)
+    FinishedTrials(store, clock).revive(a.id)
     today.update(a.id, title="Other")
 
 

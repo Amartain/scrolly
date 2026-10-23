@@ -9,6 +9,7 @@ from scrolly.api.schemas.planning import OrderIn, SummonIn
 from scrolly.api.schemas.view import ViewOut
 from scrolly.ports import Clock, Store
 from scrolly.services.day import DayService
+from scrolly.services.finished_trials import FinishedTrials
 from scrolly.services.qi_card import build_qi_card
 from scrolly.services.today import TodayService
 from scrolly.services.victory import VictoryService
@@ -26,6 +27,14 @@ def get_today(store: StoreDep, clock: ClockDep) -> TodayService:
 
 
 TodayDep = Annotated[TodayService, Depends(get_today)]
+
+
+def get_finished(store: StoreDep, clock: ClockDep) -> FinishedTrials:
+    DayService(store, clock).ensure_today()
+    return FinishedTrials(store, clock)
+
+
+FinishedDep = Annotated[FinishedTrials, Depends(get_finished)]
 
 
 def _view(store: Store, clock: Clock) -> ViewOut:
@@ -93,17 +102,24 @@ def abandon(trial_id: str, today: TodayDep, store: StoreDep, clock: ClockDep) ->
 
 
 @router.post("/{trial_id}/revive")
-def revive(trial_id: str, today: TodayDep, store: StoreDep, clock: ClockDep) -> ViewOut:
-    today.revive(trial_id)
+def revive(trial_id: str, finished: FinishedDep, store: StoreDep, clock: ClockDep) -> ViewOut:
+    finished.revive(trial_id)
+    return _view(store, clock)
+
+
+@router.post("/{trial_id}/resummon")
+def resummon(trial_id: str, finished: FinishedDep, store: StoreDep, clock: ClockDep) -> ViewOut:
+    """A double-click on a trial postponed or let go today brings it back."""
+    finished.resummon(trial_id)
     return _view(store, clock)
 
 
 @router.put("/{trial_id}/qi")
 def set_qi(
-    trial_id: str, body: QiActualIn, today: TodayDep, store: StoreDep, clock: ClockDep
+    trial_id: str, body: QiActualIn, finished: FinishedDep, store: StoreDep, clock: ClockDep
 ) -> ViewOut:
     """The Qi a conquered trial took. Until it is told, the estimate stands."""
-    today.set_actual_qi(trial_id, body.qi)
+    finished.set_actual_qi(trial_id, body.qi)
     return _view(store, clock)
 
 
@@ -115,10 +131,10 @@ def qi_card(trial_id: str, qi: int, store: StoreDep, clock: ClockDep) -> QiCardO
 
 @router.put("/{trial_id}/actual")
 def set_actual(
-    trial_id: str, body: ActualIn, today: TodayDep, store: StoreDep, clock: ClockDep
+    trial_id: str, body: ActualIn, finished: FinishedDep, store: StoreDep, clock: ClockDep
 ) -> ViewOut:
     """The time a conquered trial really took, as the user corrects it."""
-    today.set_actual(trial_id, body.text)
+    finished.set_actual(trial_id, body.text)
     return _view(store, clock)
 
 

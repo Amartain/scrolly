@@ -30,13 +30,17 @@ class ReadingFont(StrEnum):
 
 
 class HeaderChoice(StrEnum):
-    """Which picture fills the header band. `auto` follows the theme and the time of day."""
+    """What fills the header band. `auto` is the theme's live peak (it follows the time of day);
+    `custom` is the user's own picture."""
 
     AUTO = "auto"
-    SERENE_DAY = "serene-day"
-    SERENE_DUSK = "serene-dusk"
-    PAVILION = "pavilion"
     CUSTOM = "custom"
+
+
+def read_header_choice(saved: str | None) -> HeaderChoice:
+    """A stored choice. The three built-in pictures were retired for the peak (owner, 2026-10-23):
+    a choice of one of them, or anything unknown, reads as the peak."""
+    return HeaderChoice.CUSTOM if saved == HeaderChoice.CUSTOM else HeaderChoice.AUTO
 
 
 class Phase(StrEnum):

@@ -1,4 +1,5 @@
-<!-- Settings › Header: the picture behind the title plate. One of ours, or your own. -->
+<!-- Settings › Header: behind the title plate, the theme's live peak, or a picture of your own. The three
+     built-in pictures were retired for the peak (owner, 2026-10-23). -->
 <script lang="ts">
   import Button from '../components/Button.svelte';
   import Panel from '../components/Panel.svelte';
@@ -7,12 +8,7 @@
   import { HEADER } from '../lib/copy';
   import { view } from '../lib/view.svelte';
 
-  const choices: { value: HeaderChoice; label: string }[] = [
-    { value: 'auto', label: HEADER.auto },
-    { value: 'serene-day', label: 'Serene Day' },
-    { value: 'serene-dusk', label: 'Serene Dusk' },
-    { value: 'pavilion', label: 'Pavilion' },
-  ];
+  const choices: { value: HeaderChoice; label: string }[] = [{ value: 'auto', label: HEADER.auto }];
 
   const appearance = $derived(view.current?.appearance);
   let picker: HTMLInputElement;

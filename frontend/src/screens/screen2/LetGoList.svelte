@@ -1,9 +1,10 @@
-<!-- Everything let go or postponed today, one per line, read-only. -->
+<!-- Everything let go or postponed today, one per line. A double-click summons one back. -->
 <script lang="ts">
   import Modal from '../../components/Modal.svelte';
   import RowList from '../../components/RowList.svelte';
   import StateMark from '../../components/StateMark.svelte';
   import type { LetGo } from '../../lib/api';
+  import LetGoName from './LetGoName.svelte';
 
   let {
     title,
@@ -17,7 +18,7 @@
 
 {#snippet row(item: LetGo)}
   <StateMark {state} />
-  <span class="read">{item.title}</span>
+  <span class="read"><LetGoName {item} /></span>
 {/snippet}
 
 <Modal title="{title}, expanded" {onclose}>

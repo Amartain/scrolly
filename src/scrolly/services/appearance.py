@@ -8,6 +8,7 @@ from scrolly.domain.appearance import (
     Theme,
     choose_header,
     choose_theme,
+    read_header_choice,
     with_uploaded_header,
 )
 from scrolly.ports import Clock, Store
@@ -29,7 +30,7 @@ class AppearanceService:
             day_variant=DayVariant(saved["day_variant"]),
             serene_variant=DayVariant(saved.get("serene_variant", DayVariant.SCROLL)),
             reading_font=ReadingFont(saved.get("reading_font", ReadingFont.ATKINSON)),
-            header=HeaderChoice(saved.get("header", HeaderChoice.AUTO)),
+            header=read_header_choice(saved.get("header")),
             header_version=int(saved.get("header_version", 0)),
         )
 

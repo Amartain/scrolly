@@ -5,6 +5,7 @@ from scrolly.domain.appearance import (
     HeaderChoice,
     Preferences,
     choose_header,
+    read_header_choice,
     resolve_appearance,
     with_uploaded_header,
 )
@@ -45,7 +46,16 @@ def test_the_users_own_picture_needs_an_upload_first() -> None:
         choose_header(Preferences(), HeaderChoice.CUSTOM)
     uploaded = with_uploaded_header(Preferences())
     assert (uploaded.header, uploaded.header_version) == (HeaderChoice.CUSTOM, 1)
-    assert choose_header(uploaded, HeaderChoice.PAVILION).header is HeaderChoice.PAVILION
+    assert choose_header(uploaded, HeaderChoice.AUTO).header is HeaderChoice.AUTO
     # Going back to it later works, and a second upload is a new version.
-    assert choose_header(uploaded, HeaderChoice.PAVILION).header_version == 1
+    assert choose_header(uploaded, HeaderChoice.AUTO).header_version == 1
     assert with_uploaded_header(uploaded).header_version == 2
+
+
+@pytest.mark.parametrize("saved", ["serene-day", "serene-dusk", "pavilion", "auto", None, "odd"])
+def test_a_retired_built_in_picture_reads_as_the_peak(saved: str | None) -> None:
+    assert read_header_choice(saved) is HeaderChoice.AUTO
+
+
+def test_the_users_own_picture_reads_as_itself() -> None:
+    assert read_header_choice("custom") is HeaderChoice.CUSTOM

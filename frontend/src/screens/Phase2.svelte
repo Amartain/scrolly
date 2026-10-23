@@ -7,7 +7,6 @@
   import { planning, type PlanTrial } from '../lib/api';
   import { view } from '../lib/view.svelte';
   import DaySummary from './plan/DaySummary.svelte';
-  import EstimateGuidance from './plan/EstimateGuidance.svelte';
   import EstimateRow from './plan/EstimateRow.svelte';
   import GoldenCoreInvite from './plan/GoldenCoreInvite.svelte';
   import Notice from './plan/Notice.svelte';
@@ -42,7 +41,7 @@
   <EstimateRow {trial} />
 {/snippet}
 
-<ScrollSheet title="Estimate the Journey">
+<ScrollSheet title="Estimate the Journey" guide="estimate">
   <div class="phase">
     <div class="column">
       <form class="add" onsubmit={add}>
@@ -81,7 +80,6 @@
     </div>
     <div class="aside">
       <DaySummary />
-      <EstimateGuidance />
     </div>
   </div>
 </ScrollSheet>

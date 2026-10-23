@@ -10,21 +10,16 @@ const PNG = Buffer.from(
 const picture = (page: import('@playwright/test').Page) =>
   page.locator('header.header').evaluate((el) => getComputedStyle(el).backgroundImage);
 
-test('a built-in picture can be chosen for the header, and the theme default restored', async ({
+test('the header is the live peak; the built-in pictures are gone from Settings', async ({
   page,
 }) => {
   await sealDay(page);
   await page.goto('/');
-  const themed = await picture(page);
+  await expect(page.locator('header.header .peak[data-frame="header"]')).toBeVisible();
+  expect(await picture(page)).toBe('none');
   await page.getByRole('button', { name: 'Settings' }).click();
-  await page.getByText('Serene Dusk', { exact: true }).click();
-  await expect.poll(() => picture(page)).toContain('serene-dusk');
-  await page.reload();
-  await page.getByRole('button', { name: 'Settings' }).click();
-  await expect.poll(() => picture(page)).toContain('serene-dusk');
-
-  await page.getByText('Match the theme').click();
-  await expect.poll(() => picture(page)).toBe(themed);
+  await expect(page.getByLabel('Match the theme')).toBeChecked();
+  await expect(page.getByText('Serene Dusk', { exact: true })).toHaveCount(0);
 });
 
 test('your own picture is uploaded, shown, and a wrong file is refused', async ({ page }) => {

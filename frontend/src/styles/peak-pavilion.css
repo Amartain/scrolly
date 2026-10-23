@@ -40,6 +40,20 @@
   opacity: var(--peak-window-opacity);
 }
 
+.peak .foot-gate {
+  transition: opacity 1.2s ease;
+}
+
+.peak .foot-gate.away {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .peak .foot-gate {
+    transition: none;
+  }
+}
+
 .peak .gate-plaque {
   fill: var(--gold);
   stroke: var(--peak-outline);

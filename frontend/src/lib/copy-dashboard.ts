@@ -13,3 +13,9 @@ export const DASHBOARD = {
   qiTip: (spent: number, start: number, planned: number, zone: string) =>
     `${spent} of ${start} spent · ${planned} planned · ${zone}`,
 } as const;
+
+/** DRAFT, proposed 2026-10-23: a trial postponed or let go today, summoned back by a double-click. */
+export const LET_GO = {
+  hint: 'Double-click to summon it back',
+  back: (title: string) => `Summon ${title} back to the scroll`,
+} as const;

@@ -9,7 +9,6 @@
   import { view } from '../lib/view.svelte';
   import CoreSlider from './plan/CoreSlider.svelte';
   import Notice from './plan/Notice.svelte';
-  import QiGuidance from './plan/QiGuidance.svelte';
   import QiRow from './plan/QiRow.svelte';
 
   const trials = $derived(view.planning?.trials ?? []);
@@ -24,7 +23,7 @@
   <QiRow {trial} />
 {/snippet}
 
-<ScrollSheet title="Weigh the Qi">
+<ScrollSheet title="Weigh the Qi" guide="weigh">
   <div class="phase">
     <div class="column">
       <Panel title="The Scroll" scroll striped>
@@ -59,7 +58,6 @@
           </div>
         </Panel>
       {/if}
-      <QiGuidance />
     </div>
   </div>
 </ScrollSheet>

@@ -5,8 +5,8 @@
 <svelte:options namespace="svg" />
 
 <script lang="ts">
-  /** The city stands behind the cliff; the gate in front of the path. */
-  let { part }: { part: 'city' | 'gate' } = $props();
+  /** The city stands behind the cliff; the gate in front of the path, `away` once they set off. */
+  let { part, away = false }: { part: 'city' | 'gate'; away?: boolean } = $props();
 
   // Each tower: left edge, top, width. They stand on the plain below the frame's foot.
   const TOWERS = [
@@ -53,7 +53,7 @@
     {/each}
   </g>
 {:else}
-  <g class="foot-gate paint-pine">
+  <g class="foot-gate paint-pine" class:away>
     <!-- Tall enough that the cultivator passes under the lintel; the plaque sits on the roof. -->
     <rect class="wood" x="156" y="776" width="12" height="134" />
     <rect class="wood" x="232" y="776" width="12" height="134" />

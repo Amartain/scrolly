@@ -1,7 +1,4 @@
 <script lang="ts">
-  import pavilion from '../assets/headers/pavilion.webp';
-  import sereneDay from '../assets/headers/serene-day.webp';
-  import sereneDusk from '../assets/headers/serene-dusk.webp';
   import { view } from '../lib/view.svelte';
   import HandscrollIcon from '../icons/HandscrollIcon.svelte';
   import SlidersIcon from '../icons/SlidersIcon.svelte';
@@ -17,12 +14,9 @@
     return () => clearInterval(timer);
   });
 
-  /** The user's choice of picture. Left undefined ("match the theme"), the live peak shows. */
+  /** The user's own picture, if chosen. Otherwise ("match the theme") the live peak shows. */
   const picture = $derived.by(() => {
     const a = view.current?.appearance;
-    if (a?.header === 'serene-day') return `url(${sereneDay})`;
-    if (a?.header === 'serene-dusk') return `url(${sereneDusk})`;
-    if (a?.header === 'pavilion') return `url(${pavilion})`;
     if (a?.header === 'custom') return `url(/api/header-image?v=${a.header_version})`;
     return undefined;
   });

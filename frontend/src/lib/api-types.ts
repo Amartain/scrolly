@@ -1399,6 +1399,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/trials/{trial_id}/resummon": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resummon
+         * @description A double-click on a trial postponed or let go today brings it back.
+         */
+        post: operations["resummon_api_trials__trial_id__resummon_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/trials/{trial_id}/revive": {
         parameters: {
             query?: never;
@@ -1875,10 +1895,11 @@ export interface components {
         };
         /**
          * HeaderChoice
-         * @description Which picture fills the header band. `auto` follows the theme and the time of day.
+         * @description What fills the header band. `auto` is the theme's live peak (it follows the time of day);
+         *     `custom` is the user's own picture.
          * @enum {string}
          */
-        HeaderChoice: "auto" | "serene-day" | "serene-dusk" | "pavilion" | "custom";
+        HeaderChoice: "auto" | "custom";
         /** HeaderIn */
         HeaderIn: {
             choice: components["schemas"]["HeaderChoice"];
@@ -4953,6 +4974,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["QiCardOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resummon_api_trials__trial_id__resummon_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trial_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
                 };
             };
             /** @description Validation Error */

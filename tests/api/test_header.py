@@ -10,21 +10,14 @@ def _upload(client: TestClient, name: str, content: bytes) -> object:
     return client.post("/api/header-image", files={"file": (name, content, "image/png")})
 
 
-def test_the_default_header_follows_the_theme(client: TestClient) -> None:
+def test_the_default_header_is_the_themes_peak(client: TestClient) -> None:
     appearance = client.get("/api/view").json()["appearance"]
     assert (appearance["header"], appearance["header_version"]) == ("auto", 0)
 
 
-def test_a_built_in_picture_can_be_chosen_and_the_theme_default_restored(
-    client: TestClient,
-) -> None:
-    chosen = client.put("/api/header", json={"choice": "serene-dusk"}).json()
-    assert chosen["appearance"]["header"] == "serene-dusk"
-    # Changing the theme keeps the header picture.
-    themed = client.put("/api/appearance", json={"theme": "pavilion"}).json()
-    assert themed["appearance"]["header"] == "serene-dusk"
-    restored = client.put("/api/header", json={"choice": "auto"}).json()
-    assert restored["appearance"]["header"] == "auto"
+def test_the_retired_built_in_pictures_cannot_be_chosen(client: TestClient) -> None:
+    assert client.put("/api/header", json={"choice": "serene-dusk"}).status_code == 422
+    assert client.get("/api/view").json()["appearance"]["header"] == "auto"
 
 
 def test_the_users_own_picture_cannot_be_chosen_before_it_is_uploaded(client: TestClient) -> None:
@@ -43,8 +36,8 @@ def test_an_uploaded_picture_becomes_the_header_and_is_served_back(
     assert served.status_code == 200
     assert served.headers["content-type"] == "image/png" and served.content == PNG
 
-    # Choosing a built-in picture keeps the upload for later.
-    app_client.put("/api/header", json={"choice": "pavilion"})
+    # Choosing the peak keeps the upload for later.
+    app_client.put("/api/header", json={"choice": "auto"})
     assert app_client.get("/api/header-image").content == PNG
     assert app_client.put("/api/header", json={"choice": "custom"}).status_code == 200
     # A second upload is a new version, and the old file is gone.

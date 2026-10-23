@@ -2,9 +2,10 @@
      ink outlines, swirl clouds, and a pavilion on the near cliff with two paper lanterns (lit at golden
      hour and dusk). Stone steps zigzag up the cliff to it; the cultivator sits under its roof. Colours
      are the scene's tokens (styles/peak-tokens.css), by variant and phase. The ranges and the cliff go
-     on left of the painting's edge, for the header's window. -->
+     on left of the painting's edge, for the header's window. The 隱 gate stands only in the header,
+     while the cultivator waits before it (owner, 2026-10-23); it fades as they set off. -->
 <script lang="ts">
-  import { viewBoxFor, type Frame } from '../../lib/peak.svelte';
+  import { peak, viewBoxFor, type Frame } from '../../lib/peak.svelte';
   import Climber from './Climber.svelte';
   import PavilionCity from './PavilionCity.svelte';
   import PeakSky from './PeakSky.svelte';
@@ -65,7 +66,7 @@
   <path class="contour paint-cliff" d={LEFT} />
   <path class="contour paint-contour" d={CLIFF} />
   <path class="trail steps paint-trail" d={STEPS} />
-  <PavilionCity part="gate" />
+  {#if frame === 'header'}<PavilionCity part="gate" away={peak.stage !== 'foot'} />{/if}
   <g class="pavilion paint-pine">
     <rect class="wood" x="178" y="447" width="222" height="10" />
     <rect class="wood" x="198" y="386" width="10" height="61" />

@@ -1,4 +1,5 @@
 import { DAY_GUIDES } from './copy-guidance-day';
+import { PLAN_GUIDES } from './copy-guidance-plan';
 import { SCROLL_GUIDES } from './copy-guidance-scroll';
 import { SECLUSION_GUIDES } from './copy-guidance-seclusion';
 
@@ -37,5 +38,11 @@ const OTHER_GUIDES = {
   },
 } as const satisfies Record<string, Guide>;
 
-export const GUIDE = { ...DAY_GUIDES, ...SCROLL_GUIDES, ...OTHER_GUIDES, ...SECLUSION_GUIDES };
+export const GUIDE = {
+  ...DAY_GUIDES,
+  ...SCROLL_GUIDES,
+  ...OTHER_GUIDES,
+  ...SECLUSION_GUIDES,
+  ...PLAN_GUIDES,
+};
 export type GuideKey = keyof typeof GUIDE;

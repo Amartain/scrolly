@@ -22,6 +22,27 @@ test('an Art copy has no Mandate switch', async ({ page }) => {
   await expect(page.getByRole('button', { name: /Make Stretch/ })).toHaveCount(0);
 });
 
+test('a first Phase 1 is the brain dump alone, its guidance a ? that pops out', async ({
+  page,
+}) => {
+  await begin(page);
+  await expect(page.locator('#dump')).toBeVisible();
+  for (const title of ['The Horizon', 'Foundational Arts', 'Restorative Arts'])
+    await expect(page.getByRole('heading', { name: title })).toHaveCount(0);
+  await expect(page.getByText('Guidance Scroll', { exact: true })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Guidance: Inscribe the Scroll' }).click();
+  await expect(page.getByRole('dialog', { name: /Inscribe the Scroll/ })).toBeVisible();
+});
+
+test('an Art shows in Phase 1 once there is one; the empty Horizon stays hidden', async ({
+  page,
+}) => {
+  await importFile(page, 'rituals.json', [art]);
+  await begin(page);
+  await expect(page.getByRole('button', { name: 'Summon Stretch' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'The Horizon' })).toHaveCount(0);
+});
+
 test('planning has no header and no Settings, in Phase 1 and Phase 2', async ({ page }) => {
   await begin(page);
   await expect(page.getByRole('banner')).toHaveCount(0);

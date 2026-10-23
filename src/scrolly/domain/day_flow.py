@@ -1,4 +1,5 @@
-"""What happens to trials once the day is sealed: conquer, postpone, abandon, revive. Pure."""
+"""What happens to trials once the day is sealed: conquer, postpone, abandon, revive, resummon.
+Pure."""
 
 from collections.abc import Sequence
 from dataclasses import replace
@@ -6,7 +7,7 @@ from datetime import datetime
 
 from scrolly.domain.art_match import with_title
 from scrolly.domain.duration import parse_duration
-from scrolly.domain.horizon import return_to_horizon
+from scrolly.domain.horizon import origin_key, return_to_horizon
 from scrolly.domain.models import OPEN_STATES, Art, Day, HorizonItem, Trial, TrialState
 from scrolly.domain.qi import check_qi, parse_qi
 from scrolly.domain.timer import actual_minutes, pause, timer_ran
@@ -109,10 +110,29 @@ def revive(trial: Trial, trials: Sequence[Trial]) -> Trial:
     """
     _require(trial, TrialState.DONE, "Only a conquered trial can be revived")
     cleared = replace(trial, essence_actual_min=None, qi_actual=None, completed_at=None)
+    return _back_on_scroll(cleared, trials)
+
+
+def resummon(
+    trial: Trial, trials: Sequence[Trial], horizon: Sequence[HorizonItem]
+) -> tuple[Trial, list[HorizonItem]]:
+    """Bring back a trial postponed or let go today (owner, 2026-10-23: a double-click), as Revive
+    does: Immediate if nothing is underway, else the top of Remaining. Its time stays; a postponed
+    trial leaves the Horizon again."""
+    if trial.state not in (TrialState.POSTPONED, TrialState.LOST):
+        raise TrialError("Only a postponed or abandoned trial can be summoned back")
+    key = origin_key(trial)
+    kept = [item for item in horizon if key not in (item.id, item.origin_id)]
+    back = _back_on_scroll(replace(trial, essence_actual_min=None), trials)
+    return back, kept if trial.state is TrialState.POSTPONED else list(horizon)
+
+
+def _back_on_scroll(trial: Trial, trials: Sequence[Trial]) -> Trial:
+    """Immediate if nothing is underway, else the top of the Remaining queue."""
     if immediate_of(trials) is None:
-        return replace(cleared, state=TrialState.IMMEDIATE)
+        return replace(trial, state=TrialState.IMMEDIATE)
     top = min(t.position for t in trials if t.state in OPEN_STATES)
-    return replace(cleared, state=TrialState.REMAINING, position=top - 1)
+    return replace(trial, state=TrialState.REMAINING, position=top - 1)
 
 
 def set_estimate(trial: Trial, text: str) -> Trial:

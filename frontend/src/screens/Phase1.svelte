@@ -5,12 +5,18 @@
   import { planning } from '../lib/api';
   import { cutLine } from '../lib/cut-line';
   import { view } from '../lib/view.svelte';
-  import Guidance from './plan/Guidance.svelte';
   import Notice from './plan/Notice.svelte';
   import OnScroll from './plan/OnScroll.svelte';
   import SourcePanels from './plan/SourcePanels.svelte';
 
   const SAVE_DELAY_MS = 400;
+
+  const sources = $derived(
+    (view.planning?.horizon.length ?? 0) +
+      (view.planning?.foundational.length ?? 0) +
+      (view.planning?.restorative.length ?? 0) >
+      0,
+  );
 
   // Read once: a refresh must never overwrite what is being typed.
   let text = $state(view.planning?.text ?? '');
@@ -49,11 +55,11 @@
   }
 </script>
 
-<ScrollSheet title="Inscribe the Scroll">
-  <div class="phase">
-    <SourcePanels />
+<ScrollSheet title="Inscribe the Scroll" guide="inscribe">
+  <!-- The Horizon and the Arts only once they hold something: a first day is the brain dump alone. -->
+  <div class="phase" class:alone={!sources}>
+    {#if sources}<SourcePanels />{/if}
     <div class="column">
-      <Guidance />
       <div class="write">
         <label class="prompt" for="dump">
           Empty your mind. Scribe every trial you must conquer today. <strong
@@ -87,9 +93,13 @@
     gap: var(--space-5);
   }
 
+  .phase.alone {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .column {
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr) var(--size-staged) auto auto;
+    grid-template-rows: minmax(0, 1fr) var(--size-staged) auto auto;
     gap: var(--space-3);
     min-height: 0;
     padding-right: var(--shadow-room);

@@ -6,6 +6,7 @@
   import type { LetGo } from '../../lib/api';
   import { view } from '../../lib/view.svelte';
   import LetGoList from './LetGoList.svelte';
+  import LetGoName from './LetGoName.svelte';
 
   const postponed = $derived(view.current?.dashboard.postponed ?? []);
   const lost = $derived(view.current?.dashboard.lost ?? []);
@@ -18,7 +19,10 @@
   {:else}
     <p class="line read">
       <StateMark {state} />
-      <span class="names">{items.map((item) => item.title).join(', ')}</span>
+      <span class="names"
+        >{#each items as item, i (item.id)}{#if i > 0},
+          {/if}<LetGoName {item} />{/each}</span
+      >
     </p>
   {/if}
 {/snippet}
