@@ -8,7 +8,7 @@
   import SerenePeak from './SerenePeak.svelte';
 
   /** How long the painting takes, after which the room's cards are fully there. */
-  const PAINT_MS = 4000;
+  const PAINT_MS = 4500;
 
   const theme = $derived(view.current?.appearance.theme ?? 'serene');
 

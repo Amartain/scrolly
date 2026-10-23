@@ -38,32 +38,22 @@
   }
 }
 
-@keyframes peak-stamp {
-  0% {
-    opacity: 0;
-    transform: scale(1.7);
-  }
-  60% {
-    opacity: 1;
-    transform: scale(0.94);
-  }
-}
-
 @keyframes peak-drift {
   from {
-    transform: translateX(-40px);
+    transform: translateX(-60px);
   }
   to {
-    transform: translateX(40px);
+    transform: translateX(60px);
   }
 }
 
+/* The wind in the ribbons and the hair. */
 @keyframes peak-sway {
   from {
-    transform: rotate(-4deg);
+    transform: rotate(-7deg);
   }
   to {
-    transform: rotate(5deg);
+    transform: rotate(8deg);
   }
 }
 
@@ -74,7 +64,8 @@
 }
 
 .peak .paint-pine,
-.peak .paint-seal,
+.peak .seal-hand,
+.peak .seal-bloom,
 .peak .sway {
   transform-box: fill-box;
 }
@@ -83,13 +74,21 @@
   transform-origin: 50% 100%;
 }
 
-.peak .paint-seal {
+.peak .seal-hand,
+.peak .seal-bloom {
   transform-origin: center;
+}
+
+.peak .seal-bloom {
+  fill: none;
+  stroke: var(--morning-seal);
+  stroke-width: 3px;
+  opacity: 0;
 }
 
 .peak .sway {
   transform-origin: 100% 0%;
-  animation: peak-sway 5s ease-in-out infinite alternate;
+  animation: peak-sway 4s ease-in-out infinite alternate;
 }
 
 .peak .drift {
@@ -167,8 +166,14 @@
   animation: peak-fade 1000ms 2800ms ease-out both;
 }
 
-.peak.painting .paint-seal {
-  animation: peak-stamp 500ms 3100ms ease-out both;
+/* The stamp, as on the landing page (styles/morning-keyframes.css): brought down from above for most
+   of its time, a hard press, a faint ring of ink. */
+.peak.painting .seal-hand {
+  animation: morning-stamp 1400ms 2700ms both;
+}
+
+.peak.painting .seal-bloom {
+  animation: morning-ink-bloom 800ms 3510ms ease-out both;
 }
 
 @media (prefers-reduced-motion: reduce) {

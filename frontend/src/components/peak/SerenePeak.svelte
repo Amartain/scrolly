@@ -9,7 +9,7 @@
   const CLIFF =
     'M0,470 C67,450 122,430 189,445 C244,458 267,500 322,506 C378,512 422,500 455,530 C500,570 489,650 522,720 C555,790 600,850 622,900';
   const PATH =
-    'M200,866 C222,830 178,800 233,776 C300,742 244,700 311,662 C378,626 322,590 367,556 C389,538 396,520 408,507';
+    'M200,866 C222,830 178,800 233,776 C300,742 244,700 311,662 C378,626 322,590 367,556 C380,544 386,528 382,513';
   const PADS = [
     [251, 366, 60, 16],
     [376, 418, 44, 13],
@@ -66,10 +66,14 @@
     <path class="branch" d="M296,432 C322,422 344,420 371,424" />
     {#each PADS as [cx, cy, rx, ry] (`${cx},${cy}`)}<ellipse {cx} {cy} {rx} {ry} />{/each}
   </g>
-  <g class="paint-figure"><Climber path={PATH} scale={1.1} sitScale={1.4} /></g>
+  <g class="paint-figure"><Climber path={PATH} scale={1.1} sitScale={1.3} /></g>
   <text class="verse paint-verse" x="1440" y="110">閉關</text>
-  <g class="seal paint-seal" transform="translate(1416,250)">
-    <rect width="50" height="50" rx="4" />
-    <text x="25" y="36">靜</text>
+  <!-- Stamped as on the landing page: brought down from above, a hard press, a faint ring of ink. -->
+  <g transform="translate(1416,250)">
+    <rect class="seal-bloom" width="50" height="50" rx="4" />
+    <g class="seal seal-hand">
+      <rect width="50" height="50" rx="4" />
+      <text x="25" y="36">靜</text>
+    </g>
   </g>
 </svg>

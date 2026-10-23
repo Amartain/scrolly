@@ -9,7 +9,7 @@
   {#if pose === 'sit'}<circle class="aura" cx="0" cy="-32" r="40" />{/if}
   <path
     class="ribbons sway"
-    d="M-4,-63 C-12,-66 -19,-61 -27,-64 M-4,-62 C-11,-62 -16,-57 -24,-57"
+    d="M-4,-63 C-13,-67 -21,-60 -32,-64 M-4,-62 C-12,-62 -18,-55 -28,-56"
   />
   {#if pose === 'walk'}
     <path class="staff" d="M14,-60 L18,0" />
@@ -26,7 +26,10 @@
       d="M3,-44 C12,-38 17,-29 16,-20 C11,-18 6,-20 2,-24 C4,-32 4,-38 3,-44 Z"
     />
   {:else}
-    <path class="body" d="M-32,0 C-30,-9 -22,-15 -12,-17 L14,-17 C24,-14 31,-7 33,0 Z" />
+    <!-- Seated on the ground: a soft shadow under the robe, and no rim along its base. -->
+    <ellipse class="ground" cx="1" cy="0" rx="36" ry="3" />
+    <path class="body seat" d="M-32,0 C-30,-9 -22,-15 -12,-17 L14,-17 C24,-14 31,-7 33,0 Z" />
+    <path class="edge" d="M-32,0 C-30,-9 -22,-15 -12,-17 L14,-17 C24,-14 31,-7 33,0" />
     <path class="body" d="M-11,-16 C-13,-29 -11,-39 -7,-46 L6,-46 C9,-39 11,-29 12,-16 Z" />
     <path
       class="body sway"

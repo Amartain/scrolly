@@ -11,11 +11,26 @@
   stroke: var(--peak-figure-line);
 }
 
+.peak .figure .seat {
+  stroke: none;
+}
+
+.peak .figure .edge {
+  fill: none;
+  stroke: var(--peak-figure-edge);
+  stroke-width: 1.4px;
+}
+
+.peak .figure .ground {
+  fill: var(--peak-contour);
+  opacity: 0.5;
+}
+
 .peak .figure .ribbons,
 .peak .figure .staff {
   fill: none;
   stroke: var(--peak-ribbon);
-  stroke-width: 1.8px;
+  stroke-width: 2.2px;
   stroke-linecap: round;
 }
 
