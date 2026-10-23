@@ -30,7 +30,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 0 var(--space-2);
+    column-gap: var(--space-2);
     max-width: var(--size-tour-card);
     margin: 0;
     padding: var(--space-2) var(--space-3);

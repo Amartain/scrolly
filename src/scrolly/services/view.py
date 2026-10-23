@@ -21,6 +21,7 @@ from scrolly.services.knowledge import KnowledgeView, build_knowledge
 from scrolly.services.legend import load_legend
 from scrolly.services.planning_timer import PlanningTimerView, build_planning_timer
 from scrolly.services.planning_view import PlanningView, build_planning_view
+from scrolly.services.player import PlayerView, build_player
 from scrolly.services.poem import build_poem
 from scrolly.services.seclusion_prefs import SoundPrefs, load_sound
 from scrolly.services.seclusion_runs import RunControl
@@ -49,6 +50,7 @@ class ViewData:
     on_peak: bool  # the cultivator meditates on the peak (the header's scene)
     travel: TravelView  # the way up to Seclusion
     knowledge: KnowledgeView  # the tour: Knowledge of the Dao
+    player: PlayerView  # the Solo Leveling easter egg: player status and aura
 
 
 def build_view(store: Store, clock: Clock) -> ViewData:
@@ -80,4 +82,5 @@ def build_view(store: Store, clock: Clock) -> ViewData:
         on_peak=on_peak(store, now),
         travel=build_travel(store),
         knowledge=build_knowledge(store),
+        player=build_player(store),
     )

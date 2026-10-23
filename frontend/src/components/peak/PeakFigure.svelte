@@ -6,7 +6,9 @@
 </script>
 
 <g class="figure" data-pose={pose}>
-  {#if pose === 'sit'}<circle class="aura" cx="0" cy="-32" r="40" />{/if}
+  <!-- Seated, the aura shows at golden hour, dusk and once enlightened; walking, only a player's
+       shining aura (peak-figure.css). -->
+  <circle class="aura" cx="0" cy="-32" r="40" />
   <path
     class="ribbons sway"
     d="M-4,-63 C-13,-67 -21,-60 -32,-64 M-4,-62 C-12,-62 -18,-55 -28,-56"
@@ -46,7 +48,7 @@
   <path
     class="trim"
     d={pose === 'sit'
-      ? 'M-9,-63 L8,-65.5 M-4,-45 L2,-35 L6,-45 M-11,-24 L12,-24'
-      : 'M-9,-63 L8,-65.5 M-4,-45 L2,-36 L6,-45 M-7,-30 L9,-30'}
+      ? 'M-9,-63 L8,-65.5 M-4,-45 L2,-35 L4,-40.5 M-11.2,-24 L4.4,-24'
+      : 'M-9,-63 L8,-65.5 M-4,-45 L2,-36 L3.8,-40 M-9.4,-30 L3.2,-30'}
   />
 </g>

@@ -119,7 +119,8 @@ test('summoning moves a Horizon item and copies an Art, and Abandon gives it all
 
   await page.getByRole('button', { name: 'Summon Plan the garden' }).click();
   await expect(section(page, 'On the Scroll')).toContainText('Plan the garden');
-  await expect(section(page, 'The Horizon')).not.toContainText('Plan the garden');
+  // The Horizon held only that item; Phase 1 shows it only while it holds something.
+  await expect(section(page, 'The Horizon')).toHaveCount(0);
 
   await page.getByRole('button', { name: 'Return Plan the garden to the Horizon' }).click();
   await expect(section(page, 'The Horizon')).toContainText('Plan the garden');

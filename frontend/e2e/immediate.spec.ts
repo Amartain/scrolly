@@ -34,7 +34,10 @@ test('a postponed trial keeps its worked time when it is summoned again', async 
   await page.getByRole('button', { name: 'Postpone Write report to the Horizon' }).click();
   await expect(immediate(page)).toContainText('Tidy desk');
 
-  await page.getByRole('button', { name: 'Summon Write report' }).click();
+  await page
+    .locator('section[aria-label="The Horizon"]')
+    .getByRole('button', { name: 'Summon Write report' })
+    .click();
   await page.getByRole('button', { name: 'Promote Write report' }).click();
   await expect(immediate(page)).toContainText('Write report');
   await expect(clock(page)).not.toHaveText('00:00:00');

@@ -36,7 +36,10 @@ const arise = async (page: import('@playwright/test').Page) => {
   return page.getByRole('dialog', { name: 'System notification' });
 };
 
-test('Day 100 breaks into a system window; either Yes closes it', async ({ page }) => {
+test('Day 100 breaks into a system window; a Yes the second time simply closes it', async ({
+  page,
+}) => {
+  await page.request.post('/api/player/accept'); // the reward was given before (player.spec)
   const window = await arise(page);
   await expect(window).toContainText('[ SYSTEM NOTIFICATION ]');
   await expect(window).toContainText('100');

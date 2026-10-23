@@ -1,5 +1,6 @@
 /* The cultivator (components/peak/PeakFigure.svelte): an ink silhouette in a Han robe, paper-rimmed on
-   Serene's dark cliff, gold-edged in Pavilion. The aura shows at golden hour and dusk. */
+   Serene's dark cliff, cream-edged in Pavilion; gold only once enlightened. The aura shows at golden
+   hour and dusk. */
 
 .peak .figure .body {
   fill: var(--peak-figure);
@@ -44,7 +45,7 @@
 
 .peak .figure .trim {
   fill: none;
-  stroke: var(--gold);
+  stroke: var(--peak-figure-line);
   stroke-width: 1.8px;
   stroke-linecap: round;
 }
@@ -54,12 +55,40 @@
   opacity: var(--peak-aura-opacity);
 }
 
-/* Enlightened (the tour complete, owner 2026-10-23): a gold-trimmed robe and an aura, always. */
-.peak[data-enlightened='true'] .figure .body {
+/* Enlightened (the tour complete, owner 2026-10-23): a gold-trimmed robe, gold ribbons and an aura,
+   always. Before it the trim is paper or cream in every theme, so the change is seen. */
+.peak[data-enlightened='true'] .figure .body,
+.peak[data-enlightened='true'] .figure .edge,
+.peak[data-enlightened='true'] .figure .ribbons,
+.peak[data-enlightened='true'] .figure .trim {
   stroke: var(--gold);
+}
+
+.peak[data-enlightened='true'] .figure .body {
   stroke-width: 1.8px;
 }
 
-.peak[data-enlightened='true'] .figure .aura {
+/* A player's aura (domain/player.py; owner, 2026-10-23): their robe colour wins over Enlightenment's
+   gold; their glow colours the aura; shining shows it always, as Enlightenment does. */
+.peak[data-robe] .figure .body,
+.peak[data-robe] .figure .edge,
+.peak[data-robe] .figure .ribbons,
+.peak[data-robe] .figure .trim,
+.peak[data-robe] .figure .sleeve {
+  stroke: var(--robe);
+}
+
+.peak[data-glow] .figure .aura {
+  fill: var(--glow);
+}
+
+/* On the path no aura shows, but a player's who lets it shine: like Sung Jinwoo, they hold their
+   aura at any moment (owner, 2026-10-23). Enlightenment's aura stays for the seated cultivator. */
+.peak .figure[data-pose='walk'] .aura {
+  opacity: 0;
+}
+
+.peak[data-enlightened='true'] .figure[data-pose='sit'] .aura,
+.peak[data-shining='true'] .figure .aura {
   opacity: max(var(--peak-aura-opacity), 0.32);
 }

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1024" height="1024">
+  <!-- The app icon: the header's handscroll mark (icons/HandscrollIcon.svelte) in Serene Green's
+       colours on a rounded tile. Rendered once to scrolly-icon.png (1024 px, in a browser); then
+       scripts/build_icons.py makes scrolly.ico and scrolly.icns from that PNG. -->
+  <rect x="1" y="1" width="30" height="30" rx="7" fill="#2d4731" />
+  <g transform="translate(4 4)" stroke="#121f16" stroke-width="1.1" stroke-linejoin="round">
+    <path d="M5.6 6.2h12.8v11.6H5.6z" fill="#e8e0c4" />
+    <path
+      d="M3 4.6c0-.6.5-1 1.1-1h1.4c.6 0 1.1.4 1.1 1v14.8c0 .6-.5 1-1.1 1H4.1c-.6 0-1.1-.4-1.1-1zM17.4 4.6c0-.6.5-1 1.1-1h1.4c.6 0 1.1.4 1.1 1v14.8c0 .6-.5 1-1.1 1h-1.4c-.6 0-1.1-.4-1.1-1z"
+      fill="#b07a45"
+    />
+    <path
+      d="M4.8 2.4v1.2M4.8 20.4v1.2M19.2 2.4v1.2M19.2 20.4v1.2M7.6 15.4l2.6-3.6 1.6 2 1.4-1.6 2.6 3.2M13.6 8.6c.6-.3 1.2.1 1 .7M15.9 8v2.2"
+      fill="none"
+      stroke-linecap="round"
+    />
+    <path d="M7 7.2h3.6v1H7z" fill="#ffffff" fill-opacity="0.6" stroke="none" />
+  </g>
+</svg>

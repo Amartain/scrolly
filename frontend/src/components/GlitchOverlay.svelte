@@ -2,15 +2,30 @@
      (features.md). Under reduced motion it is a plain fade. Both Yes buttons, Esc and the backdrop close it. -->
 <script lang="ts">
   import { GLITCH } from '../lib/copy-glitch';
+  import { REWARD } from '../lib/copy-player';
 
   let {
     cycles,
     quote,
     attribution,
+    onaccept,
     onclose,
-  }: { cycles: number; quote: string; attribution: string | null; onclose: () => void } = $props();
+  }: {
+    cycles: number;
+    quote: string;
+    attribution: string | null;
+    /** [ Yes ]: the user is a player. True when the System's reward is due (the first time). */
+    onaccept: () => Promise<boolean>;
+    onclose: () => void;
+  } = $props();
 
   let dialog = $state<HTMLDialogElement>();
+  let rewarded = $state(false);
+
+  async function accept() {
+    if (await onaccept()) rewarded = true;
+    else onclose();
+  }
 
   $effect(() => {
     const opener = document.activeElement;
@@ -39,18 +54,30 @@
     if (event.target === dialog) onclose();
   }}
 >
-  <div class="window">
-    <p class="head display"><span class="dot" aria-hidden="true"></span>{GLITCH.header}</p>
-    <p class="count display">{cycles}</p>
-    <p class="distortion display">{GLITCH.distortion}</p>
-    <p class="arise display">{quote}</p>
-    {#if attribution}<p class="by">— {attribution}</p>{/if}
-    <p class="prompt">{GLITCH.prompt}</p>
-    <div class="choices">
-      <button class="yes display" type="button" onclick={onclose}>{GLITCH.yes}</button>
-      <button class="yes display" type="button" onclick={onclose}>{GLITCH.yes}</button>
+  {#if rewarded}
+    <!-- The System rewards the accepted quest (owner, 2026-10-23), in the same window. -->
+    <div class="window" role="group" aria-label={REWARD.header}>
+      <p class="head display"><span class="dot" aria-hidden="true"></span>{REWARD.header}</p>
+      <p class="distortion display">{REWARD.quest}</p>
+      <p class="prompt">{REWARD.granted}</p>
+      {#each REWARD.items as item (item)}<p class="arise display">{item}</p>{/each}
+      <p class="prompt">{REWARD.hint}</p>
+      <button class="yes display" type="button" onclick={onclose}>{REWARD.confirm}</button>
     </div>
-  </div>
+  {:else}
+    <div class="window">
+      <p class="head display"><span class="dot" aria-hidden="true"></span>{GLITCH.header}</p>
+      <p class="count display">{cycles}</p>
+      <p class="distortion display">{GLITCH.distortion}</p>
+      <p class="arise display">{quote}</p>
+      {#if attribution}<p class="by">— {attribution}</p>{/if}
+      <p class="prompt">{GLITCH.prompt}</p>
+      <div class="choices">
+        <button class="yes display" type="button" onclick={accept}>{GLITCH.yes}</button>
+        <button class="yes display" type="button" onclick={accept}>{GLITCH.yes}</button>
+      </div>
+    </div>
+  {/if}
 </dialog>
 
 <style>

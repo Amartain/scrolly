@@ -1,6 +1,7 @@
 <!-- Knowledge of the Dao: how much of Scrolly has been learned (domain/knowledge.py). In the planning
      corner, or in the header's title plate under the tagline. The user may hide it: then it shows only
-     for a moment, while it moves. All learned and the ceremony seen: a gold 悟 seal. -->
+     for a moment, while it moves. All learned and the ceremony seen: nothing, the path is walked
+     (owner, 2026-10-23; the gold 悟 block that once stood here "doesn't fit"). -->
 <script lang="ts">
   import { KNOWLEDGE } from '../lib/copy-knowledge';
   import { knowledge } from '../lib/knowledge.svelte';
@@ -9,7 +10,9 @@
   let { place }: { place: 'corner' | 'plate' } = $props();
 
   const known = $derived(view.current?.knowledge);
-  const shown = $derived(!!known && (!known.bar_hidden || knowledge.flashing));
+  const shown = $derived(
+    !!known && !known.enlightened && (!known.bar_hidden || knowledge.flashing),
+  );
   const fill = $derived(known ? (known.count / known.total) * 100 : 0);
 </script>
 
@@ -21,24 +24,20 @@
     role="group"
     aria-label={KNOWLEDGE.title}
   >
-    {#if known.enlightened}
-      <span class="seal display" title={KNOWLEDGE.title}>悟</span>
-    {:else}
-      <div class="label">
-        <span class="name display">{KNOWLEDGE.title}</span>
-        <span class="count digits">{KNOWLEDGE.count(known.count, known.total)}</span>
-      </div>
-      <div
-        class="track"
-        role="progressbar"
-        aria-label={KNOWLEDGE.title}
-        aria-valuemin={0}
-        aria-valuemax={known.total}
-        aria-valuenow={known.count}
-      >
-        <div class="fill" style:width="{fill}%"></div>
-      </div>
-    {/if}
+    <div class="label">
+      <span class="name display">{KNOWLEDGE.title}</span>
+      <span class="count digits">{KNOWLEDGE.count(known.count, known.total)}</span>
+    </div>
+    <div
+      class="track"
+      role="progressbar"
+      aria-label={KNOWLEDGE.title}
+      aria-valuemin={0}
+      aria-valuemax={known.total}
+      aria-valuenow={known.count}
+    >
+      <div class="fill" style:width="{fill}%"></div>
+    </div>
   </div>
 {/if}
 
@@ -91,16 +90,6 @@
 
   .flash .fill {
     box-shadow: var(--shadow-glow-gold);
-  }
-
-  .seal {
-    align-self: flex-start;
-    padding: var(--space-1) var(--space-2);
-    background: var(--gold);
-    color: var(--on-gold);
-    border: var(--border-width) solid var(--line);
-    box-shadow: var(--shadow-button);
-    font-size: var(--text-display-md);
   }
 
   @media (prefers-reduced-motion: reduce) {

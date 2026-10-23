@@ -4,6 +4,7 @@
      cultivator climbs, sits and walks down as lib/peak.svelte.ts says. -->
 <script lang="ts">
   import { peak, type Frame } from '../../lib/peak.svelte';
+  import { auraToken } from '../../lib/player-api';
   import { view } from '../../lib/view.svelte';
   import PavilionPeak from './PavilionPeak.svelte';
   import SerenePeak from './SerenePeak.svelte';
@@ -14,6 +15,11 @@
   const PAINT_MS = 5000;
 
   const theme = $derived(view.current?.appearance.theme ?? 'serene');
+  // A player's own robe and glow (domain/player.py); without a choice, the theme's own.
+  const player = $derived(view.current?.player);
+  const robe = $derived(player?.is_player && player.robe ? auraToken(player.robe) : undefined);
+  const glow = $derived(player?.is_player && player.glow ? auraToken(player.glow) : undefined);
+  const shining = $derived(!!(player?.is_player && player.glow_on));
 
   let shown = '';
   $effect(() => {
@@ -36,6 +42,11 @@
   data-frame={frame}
   data-stage={peak.stage}
   data-enlightened={view.current?.knowledge.enlightened ?? false}
+  data-robe={robe ? 'own' : undefined}
+  data-glow={glow ? 'own' : undefined}
+  data-shining={shining}
+  style:--robe={robe}
+  style:--glow={glow}
   aria-hidden="true"
 >
   {#key theme}

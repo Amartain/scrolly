@@ -7,6 +7,7 @@ from scrolly.api.schemas.knowledge import KnowledgeOut
 from scrolly.api.schemas.legend import LegendOut
 from scrolly.api.schemas.milestone import MilestoneOut
 from scrolly.api.schemas.planning import PlanningOut
+from scrolly.api.schemas.player import PlayerOut
 from scrolly.api.schemas.poem import PoemOut
 from scrolly.domain.appearance import (
     DayVariant,
@@ -102,6 +103,7 @@ class ViewOut(BaseModel):
     on_peak: bool = False
     travel: TravelOut
     knowledge: KnowledgeOut
+    player: PlayerOut
     # Present until the user says whether the time away counts.
     ghost: GhostOut | None = None
     # Only the response to the day's first seal carries one.
@@ -148,6 +150,7 @@ class ViewOut(BaseModel):
                 room_focus=data.travel.room_focus,
             ),
             knowledge=KnowledgeOut.from_view(data.knowledge),
+            player=PlayerOut.from_view(data.player),
             ghost=None
             if data.ghost is None
             else GhostOut(left_text=data.ghost.left_text, gap_text=data.ghost.gap_text),

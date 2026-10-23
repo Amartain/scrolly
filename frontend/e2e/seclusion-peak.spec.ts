@@ -59,6 +59,8 @@ test('in the header the dashboard timer sends them up, and the last conquest wal
   page,
 }) => {
   const header = page.locator('.peak[data-frame="header"]');
+  // Two climbs, ticked frame by frame (about 17 s alone): under load it needs more than 30 s.
+  test.slow();
   await page.clock.install();
   await sealDay(page, 'Write report');
   await page.goto('/');

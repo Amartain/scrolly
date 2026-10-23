@@ -1,6 +1,7 @@
 <!-- After the day's first seal: how many days are sealed, and a line to carry into the day. -->
 <script lang="ts">
   import { MILESTONE } from '../lib/copy';
+  import { playerApi } from '../lib/player-api';
   import { view } from '../lib/view.svelte';
   import Button from './Button.svelte';
   import GlitchOverlay from './GlitchOverlay.svelte';
@@ -8,6 +9,12 @@
 
   const milestone = $derived(view.milestone);
   const close = () => view.dismissMilestone();
+
+  /** [ Yes ] on the Arise window: a player now. The reward is due the first time only. */
+  async function accept(): Promise<boolean> {
+    const due = !view.current?.player.rewarded;
+    return (await view.act(playerApi.accept)) && due;
+  }
 </script>
 
 {#if milestone?.style === 'glitch'}
@@ -15,6 +22,7 @@
     cycles={milestone.cycles}
     quote={milestone.quote}
     attribution={milestone.attribution}
+    onaccept={accept}
     onclose={close}
   />
 {:else if milestone}

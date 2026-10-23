@@ -1,4 +1,5 @@
 <script lang="ts">
+  import AuraPanel from './AuraPanel.svelte';
   import DataPanel from './DataPanel.svelte';
   import FeedbackPanel from './FeedbackPanel.svelte';
   import GoldenCorePanel from './GoldenCorePanel.svelte';
@@ -18,6 +19,7 @@
   <h1 class="sr-only">Settings</h1>
   <div class="column">
     <ThemePanel />
+    <AuraPanel />
     <HeaderPanel />
     <TourPanel />
     <SymbolsPanel />

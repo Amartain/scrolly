@@ -741,6 +741,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/player/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Accept
+         * @description [ Yes ] on the Arise window: a player for good; the first time, the System's reward.
+         */
+        post: operations["accept_api_player_accept_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/player/aura": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Choose Aura */
+        put: operations["choose_aura_api_player_aura_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/purge": {
         parameters: {
             query?: never;
@@ -1738,6 +1775,19 @@ export interface components {
             /** Title */
             title?: string | null;
         };
+        /**
+         * AuraColour
+         * @description The colours a player can wear: one from each theme, and the System's own blue.
+         * @enum {string}
+         */
+        AuraColour: "system-blue" | "gold" | "jade" | "teal" | "crimson" | "violet" | "cream";
+        /** AuraIn */
+        AuraIn: {
+            glow: components["schemas"]["AuraColour"] | null;
+            /** Glow On */
+            glow_on: boolean;
+            robe: components["schemas"]["AuraColour"] | null;
+        };
         /** BarOut */
         BarOut: {
             /**
@@ -2280,6 +2330,23 @@ export interface components {
             running: boolean;
         };
         /**
+         * PlayerOut
+         * @description The player of the Solo Leveling easter egg. `robe`/`glow`: null is the theme's own;
+         *     `glow_on`: the glow shows always; `rewarded`: the System's reward card was given.
+         */
+        PlayerOut: {
+            /** Colours */
+            colours: components["schemas"]["AuraColour"][];
+            glow: components["schemas"]["AuraColour"] | null;
+            /** Glow On */
+            glow_on: boolean;
+            /** Is Player */
+            is_player: boolean;
+            /** Rewarded */
+            rewarded: boolean;
+            robe: components["schemas"]["AuraColour"] | null;
+        };
+        /**
          * PoemOut
          * @description The sunset poem until it is settled. Layout and language order are chosen in Python.
          */
@@ -2782,6 +2849,7 @@ export interface components {
              */
             on_peak: boolean;
             planning: components["schemas"]["PlanningOut"];
+            player: components["schemas"]["PlayerOut"];
             poem: components["schemas"]["PoemOut"] | null;
             sky: components["schemas"]["SkyOut"];
             sound: components["schemas"]["SoundOut"];
@@ -4083,6 +4151,59 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    accept_api_player_accept_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+        };
+    };
+    choose_aura_api_player_aura_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuraIn"];
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {

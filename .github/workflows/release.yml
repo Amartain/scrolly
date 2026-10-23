@@ -1,0 +1,58 @@
+name: release
+
+# Push a tag like v0.2.0: GitHub builds Scrolly on Windows and macOS (Apple Silicon), starts each
+# build once to check it serves, and opens a DRAFT release with the zips and the wheel attached.
+# Nothing is public until the draft is published by hand. Run it from the Actions tab
+# (workflow_dispatch) to get the builds as downloadable artifacts without a release.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: uv python install 3.12
+      - run: uv sync
+      - run: uv run poe exe
+      - run: uv run python scripts/smoke_exe.py
+      - if: runner.os == 'Windows'
+        run: uv run poe build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scrolly-${{ matrix.os }}
+          path: |
+            dist/*.zip
+            dist/*.whl
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Draft the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh release create "${{ github.ref_name }}" dist/*
+          --repo "${{ github.repository }}" --draft --generate-notes
+          --title "Scrolly ${{ github.ref_name }}"

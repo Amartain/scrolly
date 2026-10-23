@@ -21,6 +21,24 @@ Made for this project by its owner with AI tools.
 The state and type symbols (leaves, droplet, cloud, lotus, circle, scroll, herb) are Unicode emoji. Your operating
 system draws them with its own emoji font; nothing is bundled for them.
 
+The app icon of the downloadable Scrolly (`packaging/scrolly-icon.svg`) is the handscroll mark above on a tile.
+
+## Bundled in the downloadable app
+
+The Windows and macOS downloads are made with PyInstaller and include Python and the libraries Scrolly runs on.
+Their licences permit this; each library's full licence text is in its `*.dist-info` folder inside the app
+(`_internal` on Windows, `Scrolly.app/Contents/Frameworks` on macOS).
+
+| Component | License |
+|---|---|
+| Python 3.12 | PSF License Agreement |
+| Tcl/Tk (the small Scrolly window) | Tcl/Tk License (BSD-style) |
+| FastAPI, Pydantic, pydantic-core, annotated-types, annotated-doc, typing-inspection, AnyIO, h11, SQLAlchemy, Alembic, Mako | MIT |
+| Starlette, Uvicorn, Click, idna, MarkupSafe, colorama (Windows) | BSD-3-Clause |
+| python-multipart, opentelemetry-api | Apache-2.0 |
+| typing-extensions | PSF-2.0 |
+| PyInstaller bootloader | GPL-2.0-or-later with the PyInstaller exception, which allows bundling any program |
+
 ## SIL Open Font License, Version 1.1
 
 SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007

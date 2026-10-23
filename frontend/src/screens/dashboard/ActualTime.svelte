@@ -2,6 +2,7 @@
      its place, as for a late estimate. Enter or ✓ saves, Esc keeps the old time. -->
 <script lang="ts">
   import { tick } from 'svelte';
+  import { knowledge } from '../../lib/knowledge.svelte';
 
   let {
     value,
@@ -13,7 +14,9 @@
   let draft = $state('');
   let field = $state<HTMLInputElement>();
 
-  async function open() {
+  /** Opened by a double-click or by Enter: either teaches the tour's lesson. */
+  async function open(event: Event) {
+    knowledge.learn('correct-time', event.currentTarget as Element);
     draft = value === '—' ? '' : value;
     editing = true;
     await tick();
@@ -57,7 +60,7 @@
     aria-label="Actual time of {title}"
     title="Double-click to correct"
     ondblclick={open}
-    onclick={(event) => event.detail === 0 && open()}>{value}</button
+    onclick={(event) => event.detail === 0 && open(event)}>{value}</button
   >
 {/if}
 

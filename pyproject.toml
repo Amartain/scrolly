@@ -1,6 +1,6 @@
 [project]
 name = "scrolly"
-version = "0.2.0.dev0"
+version = "1.0.0"
 description = "Local, offline, neurodivergent-friendly task manager."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -27,6 +27,7 @@ dev = [
     "httpx>=0.27",
     "pillow>=10",
     "build>=1.2",
+    "pyinstaller>=6.10",
 ]
 
 [build-system]
@@ -95,6 +96,7 @@ test = "pytest"
 types = "python scripts/gen_types.py"
 map = "python scripts/code_map.py"
 build = "python scripts/build.py"
+exe = "python scripts/build_exe.py"
 try-mine = "python scripts/try_instance.py mine"
 try-blank = "python scripts/try_instance.py blank"
 

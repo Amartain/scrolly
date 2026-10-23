@@ -91,10 +91,11 @@
   --peak-birds-opacity: 1;
   --peak-city: #002823;
   --peak-window-opacity: 0.35;
+  /* Cream, not gold: gold is the robe of Enlightenment (peak-figure.css). */
   --peak-figure: #141414;
-  --peak-figure-edge: #e1c227;
-  --peak-figure-line: #e1c227;
-  --peak-ribbon: #e1c227;
+  --peak-figure-edge: #f2ede2;
+  --peak-figure-line: #f2ede2;
+  --peak-ribbon: #f2ede2;
   --peak-trail: rgba(242, 237, 226, 0.45);
 }
 

@@ -129,7 +129,10 @@ test('Restart asks before it scraps a minute or more; Keep and Esc change nothin
   await room(page).getByLabel('Estimate for Write report').fill('45m');
   await room(page).getByRole('button', { name: 'Set the time for Write report' }).click();
   await room(page).getByRole('button', { name: 'Start', exact: true }).click();
-  await page.clock.runFor(125_000); // the screen counts two minutes on
+  // Just over a minute on, frame by frame: the screen counts from its last answer, and a jump would
+  // fire the minute's refresh and start that count again. Ticking frames is slow, so it stays short.
+  test.slow();
+  await page.clock.runFor(65_000);
   const restart = room(page).getByRole('button', { name: 'Restart' });
   await restart.click();
   // The browser's clock is faked and the server's is not, so only the shape of the question is fixed.

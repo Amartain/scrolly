@@ -63,6 +63,8 @@ test('the last lesson brings Enlightenment, once, and a golden cultivator after'
     'data-enlightened',
     'true',
   );
+  // The path is walked: nothing of the tour stays on the plate, neither the bar nor a 悟 block.
+  await expect(page.getByRole('group', { name: 'Knowledge of the Dao' })).toHaveCount(0);
   await page.reload();
   await expect(page.getByRole('dialog', { name: 'Enlightenment' })).toHaveCount(0);
 });

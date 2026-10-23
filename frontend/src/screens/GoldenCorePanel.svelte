@@ -8,7 +8,8 @@
 
 <Panel title="Golden Core">
   <div class="body">
-    <label class="choice display">
+    <!-- The tour's Golden Core lesson: after the one-time invitation, only this switch is left. -->
+    <label class="choice display" data-tour="golden-core">
       <input
         type="checkbox"
         checked={enabled}

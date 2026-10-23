@@ -52,10 +52,12 @@
   });
 </script>
 
+<!-- Clicks are read on the way down (capture): a control may replace itself when it handles one
+     (the conquered time becomes a field), and then nothing marked is left to look up from. -->
 <svelte:document
-  onclick={(event) => learnFrom(event, 'click')}
+  onclickcapture={(event) => learnFrom(event, 'click')}
   oninput={(event) => learnFrom(event, 'input')}
-  ondblclick={(event) => learnFrom(event, 'dblclick')}
+  ondblclickcapture={(event) => learnFrom(event, 'dblclick')}
   onpointerover={(event) => learnFrom(event, 'hover')}
   onfocusin={(event) => learnFrom(event, 'hover')}
 />

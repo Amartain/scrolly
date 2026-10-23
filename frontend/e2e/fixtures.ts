@@ -34,7 +34,8 @@ async function waitUntilHealthy(url: string, timeoutMs = 30_000): Promise<void> 
  * After a conquest the qi card asks how much qi it took: unless a test is about that card
  * (`test.use({ autoQi: false })`), it is answered with Done, which keeps the estimate.
  * The tour's step cards would stand beside the buttons a test clicks: off, unless a test is about
- * the tour (`test.use({ tour: true })`). Learning goes on either way.
+ * the tour (`test.use({ tour: true })`). Learning goes on either way, but a find's "+1" is hidden
+ * too: it is a second `status`, and under the fake clock it never goes away.
  */
 export const test = base.extend<{ server: string; autoQi: boolean; tour: boolean }>({
   autoQi: [true, { option: true }],
@@ -43,6 +44,13 @@ export const test = base.extend<{ server: string; autoQi: boolean; tour: boolean
     if (!tour) {
       const off = await page.request.put('/api/knowledge', { data: { tour: false } });
       expect(off.ok(), 'tour off').toBeTruthy();
+      await page.addInitScript(() => {
+        document.addEventListener('DOMContentLoaded', () => {
+          const style = document.createElement('style');
+          style.textContent = ".find[role='status'] { display: none !important; }";
+          document.head.append(style);
+        });
+      });
     }
     if (autoQi) {
       await page.addLocatorHandler(
@@ -69,7 +77,12 @@ export const test = base.extend<{ server: string; autoQi: boolean; tour: boolean
       await use(url);
     } finally {
       child.kill();
-      rmSync(home, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+      try {
+        rmSync(home, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+      } catch {
+        // Windows may hold a file of the stopped server a while longer: a temp folder left
+        // behind is no failure of the test.
+      }
     }
   },
   baseURL: async ({ server }, use) => {
