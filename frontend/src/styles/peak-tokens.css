@@ -1,0 +1,146 @@
+/* The colours of the peak behind Seclusion (components/peak/), by theme, Pavilion variant and phase.
+   Day, golden hour (an hour before the sunset: a big low sun, warm ranges) and dusk (moon, stars,
+   lanterns lit). Serene's green look keeps the day painting. Values from the approved mockup. */
+
+:root {
+  --peak-sky-top: #f3eed0;
+  --peak-sky-low: #e4ddb8;
+  --peak-sun: #dcc261;
+  --peak-sun-r: 62px;
+  --peak-far-1: #d3cfb0;
+  --peak-far-2: #b8b999;
+  --peak-far-3: #99a085;
+  --peak-near: #4e6148;
+  --peak-contour: #2d4731;
+  --peak-pine: #3d5640;
+  --peak-mist: #f3eed0;
+  --peak-mist-opacity: 0.8;
+  --peak-birds-opacity: 1;
+  --peak-stars-opacity: 0;
+  --peak-aura-opacity: 0;
+  --peak-figure: #2d4731;
+  /* A paper rim, so the ink figure reads on the dark cliff while it climbs. */
+  --peak-figure-edge: rgba(243, 238, 208, 0.55);
+  --peak-figure-line: rgba(243, 238, 208, 0.4);
+  --peak-ribbon: #2d4731;
+  --peak-trail: rgba(243, 238, 208, 0.6);
+  --peak-verse: #2d4731;
+  --peak-outline: #141414;
+  --peak-wood: #8e001d;
+  --peak-lantern: #ff7e00;
+  --peak-lantern-glow: 0.18;
+  --peak-cloud: #f2ede2;
+  --peak-cloud-opacity: 0.95;
+  --peak-plaque: #141414;
+}
+
+:root[data-theme='serene'][data-phase='golden'] {
+  --peak-sky-top: #f1dda8;
+  --peak-sky-low: #edb58c;
+  --peak-sun: #e58f4c;
+  --peak-sun-r: 80px;
+  --peak-far-1: #ddb79c;
+  --peak-far-2: #c29a86;
+  --peak-far-3: #9c7e72;
+  --peak-near: #4a4a3c;
+  --peak-contour: #2b3026;
+  --peak-pine: #3c4634;
+  --peak-mist: #f4d9b4;
+  --peak-mist-opacity: 0.75;
+  --peak-birds-opacity: 0.9;
+  --peak-aura-opacity: 0.18;
+  --peak-trail: rgba(245, 225, 190, 0.55);
+}
+
+:root[data-theme='serene'][data-phase='dusk'] {
+  --peak-sky-top: #1a2333;
+  --peak-sky-low: #3b4f5e;
+  --peak-sun: #e8e0c4;
+  --peak-sun-r: 42px;
+  --peak-far-1: #4a5c72;
+  --peak-far-2: #394a5e;
+  --peak-far-3: #2b394b;
+  --peak-near: #1b222c;
+  --peak-contour: #0f141b;
+  --peak-pine: #222a38;
+  --peak-mist: #8696a8;
+  --peak-mist-opacity: 0.35;
+  --peak-birds-opacity: 0;
+  --peak-stars-opacity: 1;
+  --peak-aura-opacity: 0.3;
+  --peak-figure: #10151d;
+  --peak-figure-edge: rgba(243, 238, 208, 0.35);
+  --peak-figure-line: rgba(243, 238, 208, 0.3);
+  --peak-ribbon: #10151d;
+  --peak-trail: rgba(150, 165, 185, 0.35);
+  --peak-verse: #f3eed0;
+}
+
+:root[data-theme='pavilion'] {
+  --peak-sky-top: #005e55;
+  --peak-sky-low: #2a9c8e;
+  --peak-sun: #e1c227;
+  --peak-sun-r: 54px;
+  --peak-far-1: #00544b;
+  --peak-far-2: #00443e;
+  --peak-far-3: #00332e;
+  --peak-near: #00241f;
+  --peak-contour: #141414;
+  --peak-mist: #bfe0da;
+  --peak-mist-opacity: 0.3;
+  --peak-birds-opacity: 1;
+  --peak-figure: #141414;
+  --peak-figure-edge: #e1c227;
+  --peak-figure-line: #e1c227;
+  --peak-ribbon: #e1c227;
+  --peak-trail: rgba(242, 237, 226, 0.45);
+}
+
+:root[data-theme='pavilion'][data-day-variant='crimson'] {
+  --peak-sky-top: #6e0017;
+  --peak-sky-low: #b3263c;
+  --peak-far-1: #66001a;
+  --peak-far-2: #4e0012;
+  --peak-far-3: #33000b;
+  --peak-near: #1f0007;
+  --peak-wood: #006b61;
+  --peak-mist: #f0c9cd;
+}
+
+:root[data-theme='pavilion'][data-phase='golden'] {
+  --peak-sky-top: #0e7a6e;
+  --peak-sky-low: #f09a4a;
+  --peak-sun: #ffb347;
+  --peak-sun-r: 74px;
+  --peak-lantern-glow: 0.5;
+  --peak-cloud: #ffd9a8;
+  --peak-cloud-opacity: 0.85;
+  --peak-aura-opacity: 0.15;
+}
+
+:root[data-theme='pavilion'][data-day-variant='crimson'][data-phase='golden'] {
+  --peak-sky-top: #8e1a2e;
+}
+
+:root[data-theme='pavilion'][data-phase='dusk'] {
+  --peak-sky-top: #1e1530;
+  --peak-sky-low: #4a3766;
+  --peak-sun: #f2ede2;
+  --peak-sun-r: 44px;
+  --peak-far-1: #3a2c53;
+  --peak-far-2: #33264a;
+  --peak-far-3: #251b37;
+  --peak-near: #170f24;
+  --peak-contour: #120c1c;
+  --peak-outline: #120c1c;
+  --peak-wood: #8e001d;
+  --peak-lantern: #ffb347;
+  --peak-lantern-glow: 0.55;
+  --peak-cloud: #a597bc;
+  --peak-cloud-opacity: 0.5;
+  --peak-stars-opacity: 1;
+  --peak-mist: #d3c7e4;
+  --peak-mist-opacity: 0.2;
+  --peak-aura-opacity: 0.3;
+  --peak-plaque: #120c1c;
+}

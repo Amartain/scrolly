@@ -3,11 +3,11 @@ from fastapi.testclient import TestClient
 from tests.api.seclusion_helpers import room, seal
 
 
-def test_the_parallel_sidebar_is_shown_until_it_is_hidden(client: TestClient) -> None:
-    assert room(client)["sidebar_hidden"] is False
+def test_the_parallel_sidebar_is_folded_until_it_is_opened(client: TestClient) -> None:
+    assert room(client)["sidebar_hidden"] is True
     seal(client, "Write")
     client.post("/api/seclusion/enter")
-    assert room(client)["sidebar_hidden"] is False
+    assert room(client)["sidebar_hidden"] is True
 
 
 def test_hiding_it_is_kept_and_showing_it_again_undoes_it(client: TestClient) -> None:

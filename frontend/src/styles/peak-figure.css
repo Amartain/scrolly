@@ -1,0 +1,40 @@
+/* The cultivator (components/peak/PeakFigure.svelte): an ink silhouette in a Han robe, paper-rimmed on
+   Serene's dark cliff, gold-edged in Pavilion. The aura shows at golden hour and dusk. */
+
+.peak .figure .body {
+  fill: var(--peak-figure);
+  stroke: var(--peak-figure-edge);
+  stroke-width: 1.4px;
+}
+
+.peak .figure .sleeve {
+  stroke: var(--peak-figure-line);
+}
+
+.peak .figure .ribbons,
+.peak .figure .staff {
+  fill: none;
+  stroke: var(--peak-ribbon);
+  stroke-width: 1.8px;
+  stroke-linecap: round;
+}
+
+.peak .figure .staff {
+  stroke-width: 2.4px;
+}
+
+.peak .figure .crown {
+  fill: var(--gold);
+}
+
+.peak .figure .trim {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.8px;
+  stroke-linecap: round;
+}
+
+.peak .figure .aura {
+  fill: var(--gold);
+  opacity: var(--peak-aura-opacity);
+}

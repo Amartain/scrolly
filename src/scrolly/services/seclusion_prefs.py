@@ -58,9 +58,10 @@ def save_sound(store: Store, prefs: SoundPrefs, now: datetime) -> None:
 
 
 def load_sidebar_hidden(store: Store) -> bool:
-    """Whether the Parallel sidebar is folded to a strip in the focus room. Shown until hidden."""
+    """Whether the Parallel sidebar is folded to a tab in the focus room. Folded until opened, so
+    the peak is seen (owner, 2026-10-23)."""
     saved = store.settings.get(SIDEBAR_KEY) or {}
-    return bool(saved.get("hidden", False))
+    return bool(saved.get("hidden", True))
 
 
 def save_sidebar_hidden(store: Store, hidden: bool, now: datetime) -> None:

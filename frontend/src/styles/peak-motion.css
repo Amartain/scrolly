@@ -1,0 +1,179 @@
+/* The peak behind Seclusion, moving (art-direction › Motion: the owner waived the limits for this
+   scene, 2026-10-23). The painting runs once per visit or theme switch; the drift, sway and bob go on.
+   Nothing moves under reduced motion. */
+
+@keyframes peak-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes peak-wash {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@keyframes peak-rise {
+  from {
+    opacity: 0;
+    transform: translateY(90px);
+  }
+}
+
+@keyframes peak-draw {
+  from {
+    stroke-dashoffset: 1200;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes peak-grow {
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+}
+
+@keyframes peak-stamp {
+  0% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.94);
+  }
+}
+
+@keyframes peak-drift {
+  from {
+    transform: translateX(-40px);
+  }
+  to {
+    transform: translateX(40px);
+  }
+}
+
+@keyframes peak-sway {
+  from {
+    transform: rotate(-4deg);
+  }
+  to {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes peak-bob {
+  to {
+    transform: translateY(-2px);
+  }
+}
+
+.peak .paint-pine,
+.peak .paint-seal,
+.peak .sway {
+  transform-box: fill-box;
+}
+
+.peak .paint-pine {
+  transform-origin: 50% 100%;
+}
+
+.peak .paint-seal {
+  transform-origin: center;
+}
+
+.peak .sway {
+  transform-origin: 100% 0%;
+  animation: peak-sway 5s ease-in-out infinite alternate;
+}
+
+.peak .drift {
+  animation: peak-drift 22s ease-in-out infinite alternate;
+}
+
+.peak .drift.slow {
+  animation-duration: 30s;
+  animation-delay: -9s;
+}
+
+.peak .bob {
+  animation: peak-bob 450ms ease-in-out infinite alternate;
+}
+
+.peak .sit-in {
+  animation: peak-fade 1.2s ease-out both;
+}
+
+/* The painting: each part comes in on its own beat, into the last frame. */
+.peak.painting .paint-sky {
+  animation: peak-fade 900ms ease-out both;
+}
+
+.peak.painting .paint-sun {
+  animation: peak-rise 1800ms 400ms ease-out both;
+}
+
+.peak.painting .paint-far-1 {
+  animation: peak-wash 1100ms 300ms ease-out both;
+}
+
+.peak.painting .paint-far-2 {
+  animation: peak-wash 1100ms 600ms ease-out both;
+}
+
+.peak.painting .paint-far-3 {
+  animation: peak-wash 1100ms 900ms ease-out both;
+}
+
+.peak.painting .paint-mist {
+  animation: peak-fade 1400ms 1200ms ease-out both;
+}
+
+.peak.painting .paint-contour,
+.peak.painting .paint-trail {
+  stroke-dasharray: 1200;
+}
+
+.peak.painting .paint-contour {
+  animation: peak-draw 1000ms 1100ms ease-in-out both;
+}
+
+.peak.painting .paint-cliff {
+  animation: peak-fade 700ms 1700ms ease-out both;
+}
+
+.peak.painting .paint-trail {
+  animation: peak-draw 800ms 1900ms ease-in-out both;
+}
+
+.peak.painting .paint-pine {
+  animation: peak-grow 900ms 2300ms ease-out both;
+}
+
+.peak.painting .paint-birds {
+  animation: peak-fade 1000ms 2600ms ease-out both;
+}
+
+.peak.painting .paint-figure {
+  animation: peak-fade 600ms 2700ms ease-out both;
+}
+
+.peak.painting .paint-verse {
+  animation: peak-fade 1000ms 2800ms ease-out both;
+}
+
+.peak.painting .paint-seal {
+  animation: peak-stamp 500ms 3100ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .peak,
+  .peak * {
+    animation: none !important;
+  }
+}

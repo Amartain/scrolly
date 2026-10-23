@@ -55,7 +55,7 @@
   --size-field: 2.5rem;
   --size-estimate: 4.5rem;
   --size-immediate: 16.25rem;
-  --size-ring: 26rem;
+  --size-ring: 22rem;
   --size-stepper-number: 4rem;
   --size-popover: 14rem;
   --size-timer-row: 3.75rem;
@@ -77,9 +77,11 @@
   --canvas-fill: var(--surface-canvas);
   /* Seclusion's own backdrop: the canvas, but a deeper blue after dark in Serene (art-direction.md). */
   --seclusion-canvas: var(--surface-canvas);
-  /* The morning painting behind Seclusion, very faint (art-direction › Illustration, exception). */
-  --seclusion-scene-opacity: 0.12;
-  --size-sky-arc: 7.5rem;
+  /* Seclusion's frosted paper over the peak (phase 9, owner 2026-10-23: blur welcome here). */
+  --seclusion-frost: color-mix(in srgb, var(--surface-panel) 84%, transparent);
+  --seclusion-blur: blur(0.625rem);
+  --size-seclusion-card: 34rem;
+  --size-seclusion-side: 21rem;
   --icon-highlight: rgba(255, 255, 255, 0.6);
 
   --shadow-panel:

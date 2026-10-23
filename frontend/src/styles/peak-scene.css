@@ -1,0 +1,174 @@
+/* The peak behind Seclusion (components/peak/). The plain rules are the last frame. While `.painting`
+   the scene is painted into it (about 3.5 s); any key or click ends that (lib/peak.svelte.ts).
+   Mist and clouds drift, the ribbons sway, the walker bobs: all still under reduced motion.
+
+   0–0.9 s sky · 0.3–1.4 s far ranges · 1.1–2.1 s cliff stroke · 1.7–2.4 s cliff · 1.9–2.7 s path
+   2.3–3.2 s pine or pavilion · 2.6 s birds, clouds · 2.7 s the cultivator · 2.8 s 閉關 · 3.1 s seal */
+
+.peak {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--peak-sky-low);
+  pointer-events: none;
+}
+
+.peak-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.peak .sky-top {
+  stop-color: var(--peak-sky-top);
+}
+
+.peak .sky-low {
+  stop-color: var(--peak-sky-low);
+}
+
+.peak .stars {
+  opacity: var(--peak-stars-opacity);
+}
+
+.peak .stars circle,
+.peak .sun {
+  fill: var(--peak-sun);
+}
+
+.peak .sun {
+  r: var(--peak-sun-r);
+}
+
+.peak .halo {
+  fill: var(--peak-sun);
+  opacity: 0.16;
+  r: calc(var(--peak-sun-r) * 1.6);
+}
+
+.peak[data-scene='pavilion'] .sun,
+.peak .outlined {
+  stroke: var(--peak-outline);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.peak .far-1 {
+  fill: var(--peak-far-1);
+}
+
+.peak .far-2 {
+  fill: var(--peak-far-2);
+}
+
+.peak .far-3 {
+  fill: var(--peak-far-3);
+}
+
+.peak .mist {
+  opacity: var(--peak-mist-opacity);
+}
+
+.peak .mist rect {
+  fill: url(#peak-mist);
+}
+
+.peak .mist-core {
+  stop-color: var(--peak-mist);
+}
+
+.peak .mist-edge {
+  stop-color: var(--peak-mist);
+  stop-opacity: 0;
+}
+
+.peak .birds {
+  opacity: var(--peak-birds-opacity);
+}
+
+.peak .birds path {
+  fill: none;
+  stroke: var(--peak-contour);
+  stroke-width: 3px;
+  stroke-linecap: round;
+}
+
+.peak .clouds {
+  opacity: var(--peak-cloud-opacity);
+}
+
+.peak .clouds path {
+  fill: var(--peak-cloud);
+  stroke: var(--peak-outline);
+  stroke-width: 3px;
+}
+
+.peak .cliff {
+  fill: var(--peak-near);
+}
+
+.peak .contour {
+  fill: none;
+  stroke: var(--peak-contour);
+  stroke-width: 6px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.peak .trail {
+  fill: none;
+  stroke: var(--peak-trail);
+  stroke-width: 4px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.peak .trail.steps {
+  stroke-width: 7px;
+}
+
+.peak .guide {
+  fill: none;
+  stroke: none;
+}
+
+.peak .trunk,
+.peak .branch {
+  fill: none;
+  stroke: var(--peak-pine);
+  stroke-linecap: round;
+}
+
+.peak .trunk {
+  stroke-width: 10px;
+}
+
+.peak .branch {
+  stroke-width: 6px;
+}
+
+.peak .pine ellipse {
+  fill: var(--peak-pine);
+}
+
+.peak .verse {
+  fill: var(--peak-verse);
+  opacity: 0.72;
+  font-family: serif;
+  font-size: 52px;
+  letter-spacing: 8px;
+  writing-mode: vertical-rl;
+}
+
+.peak .seal rect {
+  fill: var(--morning-seal);
+}
+
+.peak .seal text {
+  fill: var(--morning-seal-ink);
+  font-family: serif;
+  font-size: 28px;
+  text-anchor: middle;
+}

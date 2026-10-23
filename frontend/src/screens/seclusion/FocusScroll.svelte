@@ -21,7 +21,7 @@
   );
 </script>
 
-<section class="scroll" aria-label="Focus Scroll">
+<section class="scroll lacquer-frame" aria-label="Focus Scroll">
   <Tabs {room} />
   <TrialHeader {trial} note={room.note} />
   <div class="stage">
@@ -45,18 +45,23 @@
 </section>
 
 <style>
+  /* One card of frosted paper over the peak (phase 9): the peak shows through, softened. */
   .scroll {
     display: flex;
     flex-direction: column;
+    width: var(--size-seclusion-card);
+    max-width: 100%;
+    max-height: 100%;
     min-height: 0;
-    background: var(--surface-panel);
-    background-image: var(--gloss-faint);
+    padding-bottom: var(--space-2);
+    background: var(--seclusion-frost);
+    backdrop-filter: var(--seclusion-blur);
     border: var(--border-width) solid var(--line);
     box-shadow: var(--shadow-panel);
   }
 
   .stage {
-    flex: 1;
+    flex: none;
     min-height: 0;
     display: flex;
     align-items: center;

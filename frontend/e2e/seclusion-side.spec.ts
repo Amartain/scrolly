@@ -39,7 +39,7 @@ test('the whole sidebar folds to a strip, stays folded after a reload, and keeps
   await enter(page);
   await pad(page).fill('ask Sam about the invoice');
   await expect(page.getByRole('status').filter({ hasText: 'Saved' })).toBeVisible();
-  const scrollWidth = (await section(page, 'Focus Scroll').boundingBox())!.width;
+  const card = (await section(page, 'Focus Scroll').boundingBox())!;
 
   const hide = page.getByRole('button', { name: /Hide the Parallel sidebar/ });
   await expect(hide).toHaveAttribute('aria-expanded', 'true');
@@ -49,8 +49,8 @@ test('the whole sidebar folds to a strip, stays folded after a reload, and keeps
     await expect(section(page, name)).toHaveCount(0);
   }
   await expect(strip(page)).toBeVisible();
-  // The focus scroll takes the width that was freed.
-  expect((await section(page, 'Focus Scroll').boundingBox())!.width).toBeGreaterThan(scrollWidth);
+  // The card stays where it was: the sidebar floats beside it, so folding moves nothing.
+  expect(await section(page, 'Focus Scroll').boundingBox()).toEqual(card);
 
   await page.reload();
   await expect(strip(page)).toBeVisible();

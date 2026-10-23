@@ -12,6 +12,8 @@ export const SECLUSION = {
   volume: 'Volume',
   mute: 'Mute',
   tabs: { incense: 'Trial of the Incense', cycles: 'Harmonious Cycles', flow: 'River Flow' },
+  /** What the chips on the card show; the full names above are their accessible names. */
+  chips: { incense: 'Incense', cycles: 'Cycles', flow: 'River Flow' },
   atHand: 'Trial at hand',
   start: 'Start',
   conquered: 'Conquered!',

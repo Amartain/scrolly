@@ -7,8 +7,17 @@
   import { planning } from '../lib/api';
   import { view } from '../lib/view.svelte';
 
-  let still = $state(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let still = $state(reduced);
   let message = $state<HTMLElement>();
+
+  // Another theme paints its own morning in (owner, 2026-10-23), even after a skip.
+  let shownTheme = '';
+  $effect(() => {
+    const theme = view.current?.appearance.theme ?? '';
+    if (shownTheme && theme !== shownTheme) still = reduced;
+    shownTheme = theme;
+  });
 
   function skip(event: KeyboardEvent | PointerEvent) {
     if (still) return;

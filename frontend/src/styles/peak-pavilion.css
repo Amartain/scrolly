@@ -1,0 +1,39 @@
+/* The Hidden Pavilion's own pieces of the peak (components/peak/PavilionPeak.svelte): lacquered wood,
+   lanterns that glow brighter towards dusk, and the gold-on-ink plaque. */
+
+.peak .wood {
+  fill: var(--peak-wood);
+  stroke: var(--peak-outline);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.peak .lantern {
+  fill: var(--peak-lantern);
+  stroke: var(--peak-outline);
+  stroke-width: 2.5px;
+}
+
+.peak .lantern-glow {
+  fill: var(--peak-lantern);
+  opacity: var(--peak-lantern-glow);
+}
+
+.peak .string {
+  stroke: var(--peak-outline);
+  stroke-width: 2px;
+}
+
+.peak .plaque rect {
+  fill: var(--peak-plaque);
+  stroke: var(--gold);
+  stroke-width: 3px;
+}
+
+.peak .plaque text {
+  fill: var(--gold);
+  font-family: serif;
+  font-size: 44px;
+  letter-spacing: 6px;
+  writing-mode: vertical-rl;
+}

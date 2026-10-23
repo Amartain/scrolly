@@ -18,7 +18,11 @@ import './styles/flourish.css';
 import './styles/morning-serene.css';
 import './styles/morning-pavilion.css';
 import './styles/morning-keyframes.css';
-import './styles/morning-backdrop.css';
+import './styles/peak-tokens.css';
+import './styles/peak-scene.css';
+import './styles/peak-pavilion.css';
+import './styles/peak-figure.css';
+import './styles/peak-motion.css';
 import './styles/lacquer.css';
 
 mount(App, { target: document.getElementById('app')! });

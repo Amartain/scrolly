@@ -3,8 +3,8 @@
   import GlyphButton from '../../components/GlyphButton.svelte';
   import GuidanceButton from '../../components/GuidanceButton.svelte';
   import GlyphIcon from '../../icons/GlyphIcon.svelte';
+  import ThemeOrbs from '../../components/ThemeOrbs.svelte';
   import { SECLUSION } from '../../lib/copy-seclusion';
-  import SkyArc from './SkyArc.svelte';
 
   let { onleave }: { onleave: () => void } = $props();
 
@@ -28,12 +28,14 @@
   }
 </script>
 
+<!-- A slim strip of frosted paper over the peak: Step out, the plaque, the orbs (another theme paints
+     its own peak), the clock and full screen. The sun itself is in the painting now. -->
 <header class="bar gold-foot">
   <Button label={SECLUSION.stepOut} description="Step out of Seclusion" onclick={onleave} />
-  <h1 class="title display">{SECLUSION.title}</h1>
+  <h1 class="title display plaque">{SECLUSION.title}</h1>
   <GuidanceButton topic="seclusion" />
   <span class="tagline">{SECLUSION.tagline}</span>
-  <SkyArc />
+  <ThemeOrbs placement="header" />
   <span class="clock display digits">{time}</span>
   <GlyphButton label={SECLUSION.fullScreen} onclick={toggleFullScreen}>
     <GlyphIcon name="fullscreen" />
@@ -47,14 +49,20 @@
     align-items: center;
     gap: var(--space-4);
     height: var(--size-seclusion-bar);
-    padding-inline: var(--size-gutter);
-    background: var(--surface-panel);
-    border-bottom: var(--border-width) solid var(--line);
+    margin: var(--space-3) var(--size-gutter) 0;
+    padding-inline: var(--space-3);
+    background: var(--seclusion-frost);
+    backdrop-filter: var(--seclusion-blur);
+    border: var(--border-width) solid var(--line);
+    box-shadow: var(--shadow-panel);
   }
 
+  /* A dark plaque on the light strip, as the dashboard's panel titles sit on their bands. */
   .title {
     margin: 0;
-    font-size: var(--text-display-lg);
+    background: var(--head-bg);
+    color: var(--head-ink);
+    font-size: var(--text-display-md);
     letter-spacing: 0.3em;
   }
 

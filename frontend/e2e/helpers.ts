@@ -23,6 +23,9 @@ export async function sealDay(page: Page, ...titles: string[]) {
       method === 'put' ? await page.request.put(url, { data }) : await page.request.post(url);
     expect(reply.ok(), `${method} ${url}`).toBeTruthy();
   }
+  // Seclusion's side column is folded until opened (phase 9); the specs of its valves find it open.
+  const side = await page.request.put('/api/seclusion/sidebar-hidden', { data: { hidden: false } });
+  expect(side.ok(), 'open the Parallel sidebar').toBeTruthy();
 }
 
 export const section = (page: Page, name: string) => page.locator(`section[aria-label="${name}"]`);

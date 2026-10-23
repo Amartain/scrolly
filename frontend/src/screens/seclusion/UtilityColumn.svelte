@@ -1,6 +1,7 @@
 <!-- The Parallel sidebar: Parallel Flow, Scribe Trial and Bamboo Scraps on one scroll, each its own card,
      so nothing pulls the user out of the trial. It folds as a whole to a slim strip (its button or
-     Ctrl+B, as in VS Code); the strip's marks open it on that section. The server keeps the choice. -->
+     Ctrl+B, as in VS Code); the strip's marks open it on that section. The server keeps the choice;
+     a new room starts folded, so the peak is seen. -->
 <script lang="ts">
   import { tick } from 'svelte';
   import GlyphButton from '../../components/GlyphButton.svelte';
@@ -72,15 +73,43 @@
 {/if}
 
 <style>
+  /* It floats at the right over the peak, frosted like the card, so folding it moves nothing. */
   .sidebar,
   .strip {
+    position: absolute;
+    right: var(--size-gutter);
     display: flex;
     flex-direction: column;
     min-height: 0;
-    background: var(--surface-panel);
-    background-image: var(--gloss-faint);
+    background: var(--seclusion-frost);
+    backdrop-filter: var(--seclusion-blur);
     border: var(--border-width) solid var(--line);
     box-shadow: var(--shadow-panel);
+  }
+
+  .sidebar {
+    top: calc(var(--size-seclusion-bar) + var(--space-3) + var(--space-4));
+    bottom: var(--space-8);
+    width: var(--size-seclusion-side);
+  }
+
+  .strip {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  @media (max-width: 60rem) {
+    .sidebar,
+    .strip {
+      position: static;
+      width: auto;
+      margin: var(--space-4) var(--size-gutter);
+      transform: none;
+    }
+
+    .strip {
+      flex-direction: row;
+    }
   }
 
   /* The scroll's roller: a dark band with gold ends, holding the `?` and the fold. */

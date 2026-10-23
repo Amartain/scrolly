@@ -107,12 +107,12 @@
     margin: 0;
   }
 
-  /* The numerals take the ring's own colour. */
+  /* The numerals are ink, so they read on the frosted card; the colour lives on the arc (phase 9). */
   .inner :global(.big) {
-    color: var(--ring-words, var(--ring-fill));
+    color: var(--ring-words, var(--ink));
     font-size: var(--text-numeral-ring);
     line-height: 1;
-    text-shadow: var(--space-1) var(--space-1) 0 var(--num-shadow);
+    text-shadow: var(--space-1) var(--space-1) 0 color-mix(in srgb, var(--line) 25%, transparent);
     text-transform: none;
     white-space: nowrap;
   }
