@@ -1,23 +1,42 @@
-/* The way up to Seclusion and back down (lib/travel.ts), as view transitions. While travelling, the
-   peak in the header and the peak behind the room share one name, so the browser grows the header's
-   window into the room (or folds it back). Each side is shown cropped to the moving window. Only set
-   during travel: the dusk crossfade (global.css) stays one whole-screen picture.
+/* The way up to Seclusion and back down (lib/travel.ts), as view transitions of the whole screen. The
+   room sits above the dashboard: going up, the dashboard moves down out of sight and the room comes
+   down from above, already live, so whatever it is painting goes on as it arrives.
 
-   rise  (the full way up, ~2 s here, then the painting goes on in the room: styles/peak-rise.css)
-         the dashboard sinks and dissolves like ink in water; the window grows from the header strip to
-         the whole screen, slowly; the room's painting, painted upward, takes over from the header's.
-   open  (seen lately, or already meditating) the window opens in under half a second.
-   down  the window folds back into the header; the dashboard comes up under it. */
+   climb   ~2 s, slow at both ends; the room's painting washes in from the foot (styles/peak-rise.css),
+           and the foot is the first of it to come into view.
+   summon  the dashboard dissolves like ink in water while the room's paper comes; the scene is then
+           painted in place (styles/peak-motion.css).
+   slide   0.6 s, as smooth as the scroll between the dashboard's two screens; down is the same back. */
 
-:root[data-travel] .peak {
-  view-transition-name: peak;
+@keyframes travel-out-below {
+  to {
+    transform: translateY(100%);
+  }
 }
 
-@keyframes travel-settle {
+@keyframes travel-in-above {
+  from {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes travel-out-above {
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes travel-in-below {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes travel-dissolve {
   to {
     opacity: 0;
-    transform: translateY(3rem);
-    filter: blur(0.4rem);
+    filter: blur(0.6rem);
+    transform: scale(1.02);
   }
 }
 
@@ -27,91 +46,44 @@
   }
 }
 
-@keyframes travel-out {
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes travel-lift {
-  from {
-    opacity: 0;
-    transform: translateY(1.5rem);
-  }
-}
-
-::view-transition-old(peak),
-::view-transition-new(peak) {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* About where the cultivator sits, so both crops show the same part of the mountain. */
-  object-position: 50% 57%;
-}
-
-/* The full way up. */
-html[data-travel='rise']::view-transition-old(root) {
-  animation: travel-settle 1000ms ease-in both;
-}
-
-html[data-travel='rise']::view-transition-new(root) {
-  animation: travel-in 1200ms 300ms ease-out both;
-}
-
-html[data-travel='rise']::view-transition-group(peak) {
-  animation-duration: 1800ms;
-  animation-delay: 200ms;
-  animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
-}
-
-html[data-travel='rise']::view-transition-old(peak),
-html[data-travel='rise']::view-transition-new(peak) {
-  object-position: 50% 100%; /* the foot of the path, where the cultivator waits */
-}
-
-html[data-travel='rise']::view-transition-old(peak) {
-  animation: travel-out 900ms 200ms ease-in-out both;
-}
-
-html[data-travel='rise']::view-transition-new(peak) {
-  animation: travel-in 900ms 200ms ease-in-out both;
-}
-
-/* The window opens: a quick way back up. */
-html[data-travel='open']::view-transition-group(peak),
-html[data-travel='down']::view-transition-group(peak) {
-  animation-duration: 450ms;
-  animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
-}
-
-/* Each crop is shown while the window is nearest its own size: the room's as soon as the window
-   opens, and until late as it folds; the header's only at the end of the fold. */
-html[data-travel='open']::view-transition-old(peak) {
-  animation: travel-out 150ms ease-out both;
-}
-
-html[data-travel='open']::view-transition-new(peak) {
-  animation: travel-in 150ms ease-out both;
-}
-
-html[data-travel='down']::view-transition-old(peak) {
-  animation: travel-out 180ms 270ms ease-in both;
-}
-
-html[data-travel='down']::view-transition-new(peak) {
-  animation: travel-in 180ms 270ms ease-in both;
-}
-
-html[data-travel='open']::view-transition-old(root),
-html[data-travel='down']::view-transition-old(root) {
-  animation: travel-out 220ms ease-out both;
-}
-
-html[data-travel='open']::view-transition-new(root) {
-  animation: travel-in 350ms 100ms ease-out both;
-}
-
-/* Back down: the dashboard comes up under the folding window. */
+/* Slides keep both pictures whole: no crossfade, one moves off as the other moves on. */
+html[data-travel='climb']::view-transition-old(root),
+html[data-travel='climb']::view-transition-new(root),
+html[data-travel='slide']::view-transition-old(root),
+html[data-travel='slide']::view-transition-new(root),
+html[data-travel='down']::view-transition-old(root),
 html[data-travel='down']::view-transition-new(root) {
-  animation: travel-lift 450ms 120ms ease-out both;
+  mix-blend-mode: normal;
+}
+
+html[data-travel='climb']::view-transition-old(root) {
+  animation: travel-out-below 2000ms cubic-bezier(0.6, 0, 0.3, 1) both;
+}
+
+html[data-travel='climb']::view-transition-new(root) {
+  animation: travel-in-above 2000ms cubic-bezier(0.6, 0, 0.3, 1) both;
+}
+
+html[data-travel='summon']::view-transition-old(root) {
+  animation: travel-dissolve 1100ms ease-in both;
+}
+
+html[data-travel='summon']::view-transition-new(root) {
+  animation: travel-in 700ms 300ms ease-out both;
+}
+
+html[data-travel='slide']::view-transition-old(root) {
+  animation: travel-out-below 600ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+html[data-travel='slide']::view-transition-new(root) {
+  animation: travel-in-above 600ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+html[data-travel='down']::view-transition-old(root) {
+  animation: travel-out-above 600ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+html[data-travel='down']::view-transition-new(root) {
+  animation: travel-in-below 600ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }

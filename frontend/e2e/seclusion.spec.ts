@@ -98,9 +98,13 @@ test('the drawn arc is exactly the time left: its round ends stay inside it', as
         drawn: dash + (width / length) * 100,
       };
     });
-  await expect.poll(async () => (await shape()).fill).toBeLessThan(100);
-  const { fill, drawn } = await shape();
-  expect(drawn).toBeCloseTo(fill, 1);
+  // One reading of the running ring (under load a re-render can fall between two reads): the old
+  // round ends drew about 2.9 units more than the time left.
+  const gap = async () => {
+    const { fill, drawn } = await shape();
+    return fill < 100 && Number.isFinite(drawn) ? Math.abs(drawn - fill) : Infinity;
+  };
+  await expect.poll(gap).toBeLessThan(0.05);
 });
 
 test('the icon row: Incense has restart, start and sound; Cycles adds zero out, break and stop', async ({

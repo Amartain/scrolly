@@ -1,11 +1,12 @@
-/* The peak painted upward: the full way up from the dashboard (lib/travel.ts, styles/travel.css). The
-   painting is unveiled from the foot of the path to the sky by a soft wash rising up the screen; the
-   mist climbs through the ranges; the sun or moon rises last; then 閉關 and the seal, as on a visit.
-   About 4.5 s; any key or click shows the last frame. Never under reduced motion (lib/peak.svelte.ts). */
+/* The peak washed in from the foot: the climb from the dashboard (lib/travel.ts, styles/travel.css).
+   While the room comes down into view, the painting is unveiled from the foot of the path to the sky
+   by a soft wash rising up the screen; the mist climbs through the ranges; the sun or moon rises
+   last; then 閉關 and the seal. About 5 s; any key or click shows the last frame. Never under reduced
+   motion (lib/peak.svelte.ts). */
 
 @keyframes peak-unveil {
   from {
-    mask-position: 0 20%;
+    mask-position: 0 15%;
   }
   to {
     mask-position: 0 100%;
@@ -24,25 +25,25 @@
   mask-image: linear-gradient(to top, black 45%, transparent 55%);
   mask-size: 100% 250%;
   mask-repeat: no-repeat;
-  animation: peak-unveil 2800ms 200ms cubic-bezier(0.4, 0, 0.3, 1) both;
+  animation: peak-unveil 3000ms 300ms cubic-bezier(0.45, 0, 0.3, 1) both;
 }
 
 .peak.rising .paint-mist {
-  animation: peak-mist-rise 2600ms 600ms ease-out both;
+  animation: peak-mist-rise 2800ms 800ms ease-out both;
 }
 
 .peak.rising .paint-sun {
-  animation: peak-rise 1600ms 1900ms ease-out both;
+  animation: peak-rise 1800ms 2000ms ease-out both;
 }
 
 .peak.rising .paint-verse {
-  animation: peak-fade 1000ms 2700ms ease-out both;
+  animation: peak-fade 1000ms 3000ms ease-out both;
 }
 
 .peak.rising .seal-hand {
-  animation: morning-stamp 1400ms 2900ms both;
+  animation: morning-stamp 1400ms 3200ms both;
 }
 
 .peak.rising .seal-bloom {
-  animation: morning-ink-bloom 800ms 3710ms ease-out both;
+  animation: morning-ink-bloom 800ms 4010ms ease-out both;
 }

@@ -1,32 +1,35 @@
 /**
- * The way up to Seclusion and back down (owner, 2026-10-23). The dashboard is the foot of the mountain;
- * ↑ (or F, or the moon gate) climbs to the room, ↓ or Esc comes back. Only how it looks.
+ * The way up to Seclusion and back down (owner, 2026-10-23). The room sits above the dashboard, as the
+ * peak above its foot. Only how it looks.
  *
- * The frequency rule (owner): a show seen recently is not shown again, since stepping out and back in
- * is often a quick check. The full rise, the scene painted upward, plays on the first way up of a visit
- * and again after FULL_AGAIN_MS without one; otherwise the window simply opens. Already meditating up
- * there: the window opens, nothing is painted. Under reduced motion, or without view transitions, the
- * screen just changes.
+ * - climb (↑): the screen scrolls slowly up into the room while its painting washes in from the foot.
+ * - summon (Enter Seclusion, F): "almost like a heavenly summon", the dashboard dissolves and the scene
+ *   is painted in place.
+ * - slide: like switching desktops, the room, already whole (card, timer, bars), scrolls into view.
+ *   ↓ and Esc slide back down.
+ *
+ * The frequency rule (owner): a show seen lately is not shown again. The climb and the summon play
+ * when the user's interval (Settings › Seclusion, 0 = every time) has passed since the last one, and
+ * never while a focus started in the room goes on (a timer started on the dashboard still gets one).
+ * Otherwise the slide. Under reduced motion, or without view transitions, the screen just changes.
  */
 
 import { tick } from 'svelte';
 
-export type Way = 'rise' | 'open' | 'down' | 'none';
+export type Way = 'climb' | 'summon' | 'slide' | 'down' | 'none';
 
-/** How long until the full rise is shown again. */
-const FULL_AGAIN_MS = 30 * 60_000;
-
-let lastRise = -Infinity;
+let lastFull = -Infinity;
 
 const still = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches || !document.startViewTransition;
 
-/** Which way up this one is: the full rise, the window opening, or no motion at all. */
-export function wayUp(meditating: boolean): Way {
+/** Which way up this one is. `by`: the ↑ key climbs, the gate (button or F) summons. */
+export function wayUp(by: 'key' | 'gate', intervalMin: number, roomFocus: boolean): Way {
   if (still()) return 'none';
-  if (meditating || performance.now() - lastRise < FULL_AGAIN_MS) return 'open';
-  lastRise = performance.now();
-  return 'rise';
+  const now = performance.now();
+  if (roomFocus || now - lastFull < intervalMin * 60_000) return 'slide';
+  lastFull = now;
+  return by === 'key' ? 'climb' : 'summon';
 }
 
 export function wayDown(): Way {

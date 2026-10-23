@@ -2,7 +2,7 @@ import pytest
 
 from scrolly.domain.cycles import CyclesRun, Phase
 from scrolly.domain.flow import FlowBank, FlowPhase
-from scrolly.domain.room_run import run_under_way
+from scrolly.domain.room_run import focus_began_in_room, run_under_way
 from scrolly.domain.segments import Discipline
 
 
@@ -28,6 +28,20 @@ def test_cycles_is_under_way_from_the_first_start_to_the_last_cycle(
 )
 def test_flow_is_under_way_once_started(phase: FlowPhase, under_way: bool) -> None:
     assert run_under_way(Discipline.FLOW, CyclesRun(), FlowBank(phase=phase)) is under_way
+
+
+def test_a_timer_started_on_the_dashboard_is_not_a_focus_of_the_room() -> None:
+    assert focus_began_in_room([Discipline.DASHBOARD], under_way=False) is False
+    assert focus_began_in_room([], under_way=False) is False
+
+
+@pytest.mark.parametrize("discipline", [Discipline.INCENSE, Discipline.PARALLEL])
+def test_a_timer_of_the_room_is(discipline: Discipline) -> None:
+    assert focus_began_in_room([Discipline.DASHBOARD, discipline], under_way=False) is True
+
+
+def test_a_run_under_way_is_even_in_its_break() -> None:
+    assert focus_began_in_room([], under_way=True) is True
 
 
 def test_incense_has_no_run_of_its_own() -> None:

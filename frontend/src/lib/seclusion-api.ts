@@ -1,4 +1,4 @@
-import { json, send } from './api';
+import { json, send, type View } from './api';
 import type { components } from './api-types';
 
 export type SeclusionState = components['schemas']['SeclusionOut'];
@@ -33,3 +33,7 @@ export const seclusion = {
   hideSidebar: (hidden: boolean) =>
     send<SeclusionState>('/api/seclusion/sidebar-hidden', json('PUT', { hidden })),
 };
+
+/** The way up: how soon its full animation shows again, and the welcome seen. Only what is given changes. */
+export const putTravel = (patch: { interval_min?: number; welcomed?: boolean }) =>
+  send<View>('/api/travel', json('PUT', patch));

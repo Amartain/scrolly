@@ -67,6 +67,23 @@ class SkyOut(BaseModel):
     progress: float
 
 
+class TravelOut(BaseModel):
+    """The way up to Seclusion. `interval_min`: minutes before the full animation shows again
+    (0 = every time); `welcomed`: the welcome scroll was shown; `room_focus`: a focus started in the
+    room goes on."""
+
+    interval_min: int
+    welcomed: bool
+    room_focus: bool
+
+
+class TravelIn(BaseModel):
+    """Only what is given changes."""
+
+    interval_min: int | None = None
+    welcomed: bool | None = None
+
+
 class ViewOut(BaseModel):
     now: datetime
     logical_day: date
@@ -82,6 +99,7 @@ class ViewOut(BaseModel):
     sky: SkyOut
     # The cultivator meditates on the peak (domain/cultivator.py): the header looks at the summit.
     on_peak: bool = False
+    travel: TravelOut
     # Present until the user says whether the time away counts.
     ghost: GhostOut | None = None
     # Only the response to the day's first seal carries one.
@@ -122,6 +140,11 @@ class ViewOut(BaseModel):
             sound=SoundOut(volume=data.sound.volume, muted=data.sound.muted),
             sky=SkyOut(body=data.sky.body, progress=round(data.sky.progress, 3)),
             on_peak=data.on_peak,
+            travel=TravelOut(
+                interval_min=data.travel.interval_min,
+                welcomed=data.travel.welcomed,
+                room_focus=data.travel.room_focus,
+            ),
             ghost=None
             if data.ghost is None
             else GhostOut(left_text=data.ghost.left_text, gap_text=data.ghost.gap_text),

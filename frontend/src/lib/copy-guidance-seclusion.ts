@@ -31,7 +31,27 @@ export const SECLUSION_GUIDES = {
       ['Enter', 'Conquered!'],
       ['N', 'write a sudden trial'],
       ['Ctrl+B', 'hide or show the Parallel sidebar'],
-      ['Esc', 'step out (the trial pauses)'],
+      ['↓ or Esc', 'step out (the timer keeps running)'],
+    ],
+  },
+  /** DRAFT, proposed 2026-10-23: shown once, after the first full way up (owner). */
+  welcome: {
+    name: 'Seclusion · 閉關',
+    tip: 'The peak, the trial at hand, and a side panel.',
+    dao: '閉關, closed-door seclusion: a cultivator leaves the world below to work on one thing. Here only the trial at hand is shown, on its card, over the peak. The world waits outside, and nothing you left there stops.',
+    art: 'Pick a timer on the card (Incense, Cycles or River Flow) and Start. Your cultivator climbs the path while you focus and meditates at the top; they come down when the session ends. The tab at the right edge opens the side panel: Parallel Flow for side work, Scribe Trial for a sudden trial, Bamboo Scraps for loose thoughts.',
+    terms: [
+      ['Step out', 'back to the dashboard. Nothing pauses: the dashboard shows the timer.'],
+      ['The side panel', 'folded at the right edge. It stays as you leave it.'],
+      ['The way up', 'shown in full now and then. Settings › Seclusion sets how often.'],
+    ],
+    keys: [
+      ['Space', 'start or pause'],
+      ['Enter', 'Conquered!'],
+      ['Ctrl+B', 'open or fold the side panel'],
+      ['N', 'write a sudden trial'],
+      ['↓ or Esc', 'step out'],
+      ['↑', 'from the top of the dashboard: back up here'],
     ],
   },
   sidebar: {

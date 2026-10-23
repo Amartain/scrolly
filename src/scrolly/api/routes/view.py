@@ -8,11 +8,13 @@ from scrolly.api.schemas.view import (
     HealthOut,
     ReadingFontIn,
     SoundIn,
+    TravelIn,
     ViewOut,
 )
 from scrolly.ports import Clock, Store
 from scrolly.services.appearance import AppearanceService
 from scrolly.services.seclusion_prefs import SoundPrefs, load_sound, save_sound
+from scrolly.services.travel import save_travel
 from scrolly.services.view import build_view
 
 router = APIRouter(prefix="/api")
@@ -43,6 +45,12 @@ def choose_sound(body: SoundIn, store: StoreDep, clock: ClockDep) -> ViewOut:
     volume = saved.volume if body.volume is None else body.volume
     muted = saved.muted if body.muted is None else body.muted
     save_sound(store, SoundPrefs(volume, muted), clock.now())
+    return ViewOut.from_data(build_view(store, clock))
+
+
+@router.put("/travel")
+def choose_travel(body: TravelIn, store: StoreDep, clock: ClockDep) -> ViewOut:
+    save_travel(store, clock.now(), interval_min=body.interval_min, welcomed=body.welcomed)
     return ViewOut.from_data(build_view(store, clock))
 
 

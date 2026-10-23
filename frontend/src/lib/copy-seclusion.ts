@@ -109,3 +109,12 @@ export const SECLUSION = {
     trials: 'Trials worked',
   },
 };
+
+/** DRAFT, proposed 2026-10-23: Settings › Seclusion, how soon the full way up shows again. */
+export const TRAVEL = {
+  title: 'Seclusion',
+  label: 'Show the way up in full again after',
+  unit: 'minutes',
+  hint: 'In between, Seclusion opens at once. 0 shows it in full every time.',
+  whole: 'A whole number of minutes, from 0 to 120.',
+};

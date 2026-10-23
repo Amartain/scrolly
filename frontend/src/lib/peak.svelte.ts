@@ -50,14 +50,12 @@ class Peak {
   }
 
   /**
-   * A visit to the room begins: painted in (`paint`, as on a reload), painted upward (`rise`), or
-   * shown as it is (`open`, a quick way back up). Nothing is painted while the cultivator is on the
-   * way or up there.
+   * A visit to the room begins: painted in (`paint`: the summon, or a reload), washed in from the foot
+   * (`rise`: the climb), or shown as it is (`open`: a quick way up). lib/travel.ts decides which.
    */
   arrive(how: 'paint' | 'rise' | 'open') {
-    const shown = how === 'open' || this.stage !== 'foot' || reduced();
-    this.painting = !shown && how === 'paint';
-    this.rising = !shown && how === 'rise';
+    this.painting = how === 'paint' && !reduced();
+    this.rising = how === 'rise' && !reduced();
   }
 
   /** Another theme: its scene is painted in. */

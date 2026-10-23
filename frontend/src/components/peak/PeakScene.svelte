@@ -11,7 +11,7 @@
   let { frame = 'room' }: { frame?: Frame } = $props();
 
   /** How long the painting takes, after which the room's cards are fully there. */
-  const PAINT_MS = 4800;
+  const PAINT_MS = 5000;
 
   const theme = $derived(view.current?.appearance.theme ?? 'serene');
 

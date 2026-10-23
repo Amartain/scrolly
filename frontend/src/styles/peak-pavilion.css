@@ -24,6 +24,35 @@
   stroke-width: 2px;
 }
 
+/* The city beside the mountain and the gate at the path's foot (components/peak/PavilionCity.svelte). */
+.peak .city .tower {
+  fill: var(--peak-city);
+  stroke: var(--peak-outline);
+  stroke-width: 3px;
+}
+
+.peak .city .window {
+  fill: var(--gold);
+  opacity: 0.08;
+}
+
+.peak .city .window.lit {
+  opacity: var(--peak-window-opacity);
+}
+
+.peak .gate-plaque {
+  fill: var(--gold);
+  stroke: var(--peak-outline);
+  stroke-width: 2px;
+}
+
+.peak .gate-word {
+  fill: var(--peak-outline);
+  font-family: serif;
+  font-size: 18px;
+  text-anchor: middle;
+}
+
 .peak .plaque rect {
   fill: var(--peak-plaque);
   stroke: var(--gold);

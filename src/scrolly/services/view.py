@@ -25,6 +25,7 @@ from scrolly.services.seclusion_prefs import SoundPrefs, load_sound
 from scrolly.services.seclusion_runs import RunControl
 from scrolly.services.sunset import load_prefs
 from scrolly.services.today import TodayService
+from scrolly.services.travel import TravelView, build_travel
 
 
 @dataclass(frozen=True)
@@ -45,6 +46,7 @@ class ViewData:
     ghost: GhostView | None
     sky: Sky
     on_peak: bool  # the cultivator meditates on the peak (the header's scene)
+    travel: TravelView  # the way up to Seclusion
 
 
 def build_view(store: Store, clock: Clock) -> ViewData:
@@ -74,4 +76,5 @@ def build_view(store: Store, clock: Clock) -> ViewData:
         ghost=build_ghost_view(store),
         sky=sky_at(now, sunset),
         on_peak=on_peak(store, now),
+        travel=build_travel(store),
     )

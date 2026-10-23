@@ -1166,6 +1166,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/travel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Choose Travel */
+        put: operations["choose_travel_api_travel_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/trials": {
         parameters: {
             query?: never;
@@ -2512,6 +2529,30 @@ export interface components {
             /** Running */
             running: boolean;
         };
+        /**
+         * TravelIn
+         * @description Only what is given changes.
+         */
+        TravelIn: {
+            /** Interval Min */
+            interval_min?: number | null;
+            /** Welcomed */
+            welcomed?: boolean | null;
+        };
+        /**
+         * TravelOut
+         * @description The way up to Seclusion. `interval_min`: minutes before the full animation shows again
+         *     (0 = every time); `welcomed`: the welcome scroll was shown; `room_focus`: a focus started in the
+         *     room goes on.
+         */
+        TravelOut: {
+            /** Interval Min */
+            interval_min: number;
+            /** Room Focus */
+            room_focus: boolean;
+            /** Welcomed */
+            welcomed: boolean;
+        };
         /** TrialIn */
         TrialIn: {
             /** Title */
@@ -2585,6 +2626,7 @@ export interface components {
             sky: components["schemas"]["SkyOut"];
             sound: components["schemas"]["SoundOut"];
             sunset: components["schemas"]["SunsetOut"];
+            travel: components["schemas"]["TravelOut"];
         };
         /**
          * WaitingOut
@@ -4506,6 +4548,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+        };
+    };
+    choose_travel_api_travel_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TravelIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

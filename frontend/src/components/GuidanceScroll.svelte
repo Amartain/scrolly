@@ -14,38 +14,42 @@
 {#if guide}
   <Modal title={GUIDANCE.title(guide.name)} onclose={guidance.close}>
     <div class="sheet">
-      <section class="part dao">
-        <h3 class="chip display">{GUIDANCE.dao}</h3>
-        <p class="read">{guide.dao}</p>
-      </section>
-      <section class="part art">
-        <h3 class="chip display">{GUIDANCE.art}</h3>
-        <p class="read">{guide.art}</p>
-      </section>
-      <section class="part terms">
-        <h3 class="chip display">{GUIDANCE.terms}</h3>
-        <dl class="read">
-          {#each guide.terms as [term, meaning] (term)}
-            <div class="pair">
-              <dt>{term}</dt>
-              <dd>{meaning}</dd>
-            </div>
-          {/each}
-        </dl>
-      </section>
-      {#if keys.length > 0}
-        <section class="part keys">
-          <h3 class="chip display">{GUIDANCE.keys}</h3>
+      <div class="column">
+        <section class="part dao">
+          <h3 class="chip display">{GUIDANCE.dao}</h3>
+          <p class="read">{guide.dao}</p>
+        </section>
+        <section class="part art">
+          <h3 class="chip display">{GUIDANCE.art}</h3>
+          <p class="read">{guide.art}</p>
+        </section>
+      </div>
+      <div class="column">
+        <section class="part terms">
+          <h3 class="chip display">{GUIDANCE.terms}</h3>
           <dl class="read">
-            {#each keys as [key, what] (key)}
-              <div class="pair key-pair">
-                <dt><kbd class="digits">{key}</kbd></dt>
-                <dd>{what}</dd>
+            {#each guide.terms as [term, meaning] (term)}
+              <div class="pair">
+                <dt>{term}</dt>
+                <dd>{meaning}</dd>
               </div>
             {/each}
           </dl>
         </section>
-      {/if}
+        {#if keys.length > 0}
+          <section class="part keys">
+            <h3 class="chip display">{GUIDANCE.keys}</h3>
+            <dl class="read">
+              {#each keys as [key, what] (key)}
+                <div class="pair key-pair">
+                  <dt><kbd class="digits">{key}</kbd></dt>
+                  <dd>{what}</dd>
+                </div>
+              {/each}
+            </dl>
+          </section>
+        {/if}
+      </div>
       <div class="close">
         <Button label={GUIDANCE.close} tone="primary" onclick={guidance.close} />
       </div>
@@ -54,12 +58,26 @@
 {/if}
 
 <style>
+  /* Wide and airy: why and how on the left, the words and keys on the right; one column on a narrow
+     screen. Never taller than the screen: the sheet scrolls inside instead. */
   .sheet {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-5) var(--space-6);
+    width: min(64rem, calc(100vw - 4rem));
+    max-height: calc(100dvh - 9rem);
+    overflow-y: auto;
+    padding: var(--space-5) var(--space-6);
+  }
+
+  .column {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
-    max-width: 36rem;
-    padding: var(--space-5) var(--space-6);
+    gap: var(--space-5);
+  }
+
+  .read {
+    line-height: 1.6;
   }
 
   .part {
@@ -134,7 +152,14 @@
   }
 
   .close {
+    grid-column: 1 / -1;
     display: flex;
     justify-content: flex-end;
+  }
+
+  @media (max-width: 48rem) {
+    .sheet {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 </style>

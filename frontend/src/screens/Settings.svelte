@@ -4,6 +4,7 @@
   import GoldenCorePanel from './GoldenCorePanel.svelte';
   import HeaderPanel from './HeaderPanel.svelte';
   import SealPanel from './SealPanel.svelte';
+  import SeclusionPanel from './SeclusionPanel.svelte';
   import SunsetPanel from './SunsetPanel.svelte';
   import SymbolsPanel from './SymbolsPanel.svelte';
   import ThemePanel from './ThemePanel.svelte';
@@ -21,6 +22,7 @@
   </div>
   <div class="column">
     <SunsetPanel />
+    <SeclusionPanel />
     <GoldenCorePanel />
     <DataPanel />
     <SealPanel ondone={onback} />

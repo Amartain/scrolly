@@ -26,6 +26,9 @@ export async function sealDay(page: Page, ...titles: string[]) {
   // Seclusion's side column is folded until opened (phase 9); the specs of its valves find it open.
   const side = await page.request.put('/api/seclusion/sidebar-hidden', { data: { hidden: false } });
   expect(side.ok(), 'open the Parallel sidebar').toBeTruthy();
+  // The welcome scroll after the first way up (phase 11) would cover the room: seen already.
+  const seen = await page.request.put('/api/travel', { data: { welcomed: true } });
+  expect(seen.ok(), 'welcome seen').toBeTruthy();
 }
 
 export const section = (page: Page, name: string) => page.locator(`section[aria-label="${name}"]`);

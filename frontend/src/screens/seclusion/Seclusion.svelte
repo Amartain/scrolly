@@ -4,6 +4,8 @@
   import { tick } from 'svelte';
   import PeakScene from '../../components/peak/PeakScene.svelte';
   import { playGong } from '../../lib/chime';
+  import { putTravel } from '../../lib/seclusion-api';
+  import { guidance } from '../../lib/guidance.svelte';
   import { onControl, typing } from '../../lib/keys';
   import { peak } from '../../lib/peak.svelte';
   import { seclusion } from '../../lib/seclusion.svelte';
@@ -18,6 +20,15 @@
   const room = $derived(seclusion.state);
   const trial = $derived(room?.trial ?? null);
   const folded = $derived(room?.sidebar_hidden ?? false);
+
+  // After the first full way up ever, once the scene is there: the welcome scroll, once.
+  let welcome = peak.arriving && view.current?.travel.welcomed === false;
+  $effect(() => {
+    if (!welcome || peak.arriving) return;
+    welcome = false;
+    guidance.open('welcome');
+    void view.act(() => putTravel({ welcomed: true }));
+  });
 
   // The server says when the next gong is due; the browser only rings it, then asks again.
   $effect(() => {

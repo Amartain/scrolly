@@ -42,7 +42,7 @@
     seclusionAsked = true;
     void seclusion.load().then(() => {
       if (!seclusion.state?.active) return;
-      peak.arrive('paint');
+      peak.arrive(view.current?.travel.room_focus ? 'open' : 'paint');
       mode = 'seclusion';
     });
   });
@@ -58,12 +58,21 @@
     peak.running = mode === 'seclusion' ? seclusion.running : dashboard;
   });
 
-  /** Up the mountain (↑, F or the moon gate): the scene is painted upward, or opens if seen lately. */
-  async function enterSeclusion() {
+  const ARRIVAL = {
+    climb: 'rise',
+    summon: 'paint',
+    slide: 'open',
+    down: 'open',
+    none: 'paint',
+  } as const;
+
+  /** Up the mountain: ↑ climbs, the gate (button or F) summons; a quick slide if seen lately. */
+  async function enterSeclusion(by: 'key' | 'gate' = 'gate') {
+    const travelling = view.current?.travel; // as it was before the room takes a running timer over
     if (!(await seclusion.enter())) return;
-    const way = wayUp(peak.stage !== 'foot');
+    const way = wayUp(by, travelling?.interval_min ?? 15, travelling?.room_focus ?? false);
     await travel(way, () => {
-      peak.arrive(way === 'none' ? 'paint' : way === 'rise' ? 'rise' : 'open');
+      peak.arrive(way === 'none' && travelling?.room_focus ? 'open' : ARRIVAL[way]);
       mode = 'seclusion';
     });
   }
@@ -104,7 +113,7 @@
     const up = event.key === 'ArrowUp' && !onScreenTwo();
     if ((event.key === 'f' || event.key === 'F' || up) && view.current?.dashboard.immediate) {
       event.preventDefault();
-      void enterSeclusion();
+      void enterSeclusion(up ? 'key' : 'gate');
       return;
     }
     const down = event.key === 'ArrowDown' && !onScreenTwo();
@@ -144,7 +153,7 @@
     <Phase3 />
   {:else if status === 'active'}
     <Header settingsOpen={false} onsettings={toggleSettings} />
-    <Screen1 onseclusion={enterSeclusion} />
+    <Screen1 onseclusion={() => enterSeclusion('gate')} />
   {/if}
 </div>
 <Flourish />

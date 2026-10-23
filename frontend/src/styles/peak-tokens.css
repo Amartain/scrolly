@@ -89,6 +89,8 @@
   --peak-mist: #bfe0da;
   --peak-mist-opacity: 0.3;
   --peak-birds-opacity: 1;
+  --peak-city: #002823;
+  --peak-window-opacity: 0.35;
   --peak-figure: #141414;
   --peak-figure-edge: #e1c227;
   --peak-figure-line: #e1c227;
@@ -103,6 +105,7 @@
   --peak-far-2: #4e0012;
   --peak-far-3: #33000b;
   --peak-near: #1f0007;
+  --peak-city: #29000b;
   --peak-wood: #006b61;
   --peak-mist: #f0c9cd;
 }
@@ -113,6 +116,7 @@
   --peak-sun: #ffb347;
   --peak-sun-r: 74px;
   --peak-lantern-glow: 0.5;
+  --peak-window-opacity: 0.7;
   --peak-cloud: #ffd9a8;
   --peak-cloud-opacity: 0.85;
   --peak-aura-opacity: 0.15;
@@ -131,6 +135,8 @@
   --peak-far-2: #33264a;
   --peak-far-3: #251b37;
   --peak-near: #170f24;
+  --peak-city: #1c1330;
+  --peak-window-opacity: 0.95;
   --peak-contour: #120c1c;
   --peak-outline: #120c1c;
   --peak-wood: #8e001d;

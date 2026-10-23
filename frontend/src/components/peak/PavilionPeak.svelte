@@ -6,6 +6,7 @@
 <script lang="ts">
   import { viewBoxFor, type Frame } from '../../lib/peak.svelte';
   import Climber from './Climber.svelte';
+  import PavilionCity from './PavilionCity.svelte';
   import PeakSky from './PeakSky.svelte';
 
   let { frame }: { frame: Frame } = $props();
@@ -15,6 +16,8 @@
   const CLIFF =
     'M0,440 L78,410 L167,440 L189,455 L383,455 L411,470 L466,540 L505,640 L533,760 L578,900';
   const PATH = 'M200,866 L255,830 L189,770 L278,700 L211,640 L294,575 L250,525 L289,447';
+  // The steps drawn end under the pavilion's floor; the cultivator's way ends on top of it.
+  const STEPS = 'M200,900 L200,866 L255,830 L189,770 L278,700 L211,640 L294,575 L250,525 L289,460';
   const LANTERNS = [229, 349];
 
   let at: DOMPoint | undefined = $state();
@@ -57,10 +60,12 @@
     class="far-3 outlined paint-far-3"
     d="M-700,760 L-460,720 L-220,770 L0,790 L244,720 L466,760 L711,700 L955,770 L1200,710 L1422,760 L1600,730 L1600,900 L-700,900 Z"
   />
+  <PavilionCity part="city" />
   <path class="cliff paint-cliff" d="{LEFT} L{CLIFF.slice(1)} L-700,900 Z" />
   <path class="contour paint-cliff" d={LEFT} />
   <path class="contour paint-contour" d={CLIFF} />
-  <path class="trail steps paint-trail" d={PATH} />
+  <path class="trail steps paint-trail" d={STEPS} />
+  <PavilionCity part="gate" />
   <g class="pavilion paint-pine">
     <rect class="wood" x="178" y="447" width="222" height="10" />
     <rect class="wood" x="198" y="386" width="10" height="61" />
