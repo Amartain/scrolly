@@ -3,6 +3,7 @@
   import TypeMark from '../../components/TypeMark.svelte';
   import GlyphIcon from '../../icons/GlyphIcon.svelte';
   import { planning, type PlanTrial } from '../../lib/api';
+  import { knowledge } from '../../lib/knowledge.svelte';
   import { view } from '../../lib/view.svelte';
 
   let { trial }: { trial: PlanTrial } = $props();
@@ -12,6 +13,7 @@
     if (input.value.trim() === trial.expected_text) return;
     const accepted = await view.act(() => planning.update(trial.id, { estimate: input.value }));
     if (!accepted) input.value = trial.expected_text;
+    else knowledge.learn('estimate', input);
   }
 
   // The type mark is the control: the white circle becomes a lotus and back. Python decides what is allowed.
@@ -26,9 +28,13 @@
   value={trial.expected_text}
   placeholder="45m"
   aria-label="Estimate for {trial.title}"
+  data-tour="estimate"
+  data-tour-on="commit"
   onchange={commit}
 />
-<TypeMark type={trial.type} title={trial.title} onToggle={toggleMandate} />
+<span class="mark" data-tour="mandate"
+  ><TypeMark type={trial.type} title={trial.title} onToggle={toggleMandate} /></span
+>
 <GlyphButton
   label={trial.is_mandate ? `Postpone ${trial.title} to the Horizon` : `Let go of ${trial.title}`}
   onclick={dismiss}
@@ -43,6 +49,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  /* A box of its own, so the tour's card can point at the mark. */
+  .mark {
+    flex: none;
+    display: flex;
   }
 
   .estimate {

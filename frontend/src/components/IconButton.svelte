@@ -5,11 +5,19 @@
     label,
     pressed,
     onclick,
+    tour,
     children,
-  }: { label: string; pressed?: boolean; onclick: () => void; children: Snippet } = $props();
+  }: {
+    label: string;
+    pressed?: boolean;
+    onclick: () => void;
+    /** The tour's lesson this button teaches (lib/knowledge.svelte.ts). */
+    tour?: string;
+    children: Snippet;
+  } = $props();
 </script>
 
-<button class="icon-button" aria-label={label} aria-pressed={pressed} {onclick}>
+<button class="icon-button" aria-label={label} aria-pressed={pressed} data-tour={tour} {onclick}>
   {@render children()}
 </button>
 

@@ -39,6 +39,7 @@
           label="Cultivate Your Focus"
           tone="primary"
           size="large"
+          tour="cultivate"
           onclick={() => view.act(planning.start)}
         />
       </div>

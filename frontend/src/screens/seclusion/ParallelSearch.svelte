@@ -57,6 +57,8 @@
   <input
     id="parallel-search"
     class="field"
+    data-tour="parallel"
+    data-tour-on="input"
     bind:value={query}
     oninput={search}
     onkeydown={enter}

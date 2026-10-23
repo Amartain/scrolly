@@ -33,7 +33,9 @@
   class:live
   type="button"
   aria-label="{live ? SECLUSION.returnTo : SECLUSION.enterNamed}: {title}"
-  aria-keyshortcuts="F"
+  aria-keyshortcuts="F ArrowUp"
+  data-tour="seclusion"
+  data-tour-on="commit"
   title="{live ? SECLUSION.returnTo : SECLUSION.enterNamed}: {title}"
   {onclick}
 >

@@ -17,6 +17,7 @@ from scrolly.services.day import DayService
 from scrolly.services.day_budget import build_budget
 from scrolly.services.ghost import GhostView, build_ghost_view
 from scrolly.services.golden_core import QiView, build_qi_view
+from scrolly.services.knowledge import KnowledgeView, build_knowledge
 from scrolly.services.legend import load_legend
 from scrolly.services.planning_timer import PlanningTimerView, build_planning_timer
 from scrolly.services.planning_view import PlanningView, build_planning_view
@@ -47,6 +48,7 @@ class ViewData:
     sky: Sky
     on_peak: bool  # the cultivator meditates on the peak (the header's scene)
     travel: TravelView  # the way up to Seclusion
+    knowledge: KnowledgeView  # the tour: Knowledge of the Dao
 
 
 def build_view(store: Store, clock: Clock) -> ViewData:
@@ -77,4 +79,5 @@ def build_view(store: Store, clock: Clock) -> ViewData:
         sky=sky_at(now, sunset),
         on_peak=on_peak(store, now),
         travel=build_travel(store),
+        knowledge=build_knowledge(store),
     )

@@ -36,7 +36,7 @@
         aria-label={SECLUSION.scribeLabel}
         autocomplete="off"
       />
-      <Button label={SECLUSION.inscribe} tone="primary" onclick={inscribe} />
+      <Button label={SECLUSION.inscribe} tone="primary" tour="scribe" onclick={inscribe} />
     </div>
     <!-- One reserved line, so the confirmation never moves anything. -->
     <p class="toast" role="status">{saved ? SECLUSION.inscribed : ''}</p>

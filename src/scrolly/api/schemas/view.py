@@ -3,6 +3,7 @@ from datetime import date, datetime
 from pydantic import BaseModel
 
 from scrolly.api.schemas.dashboard import DashboardOut
+from scrolly.api.schemas.knowledge import KnowledgeOut
 from scrolly.api.schemas.legend import LegendOut
 from scrolly.api.schemas.milestone import MilestoneOut
 from scrolly.api.schemas.planning import PlanningOut
@@ -100,6 +101,7 @@ class ViewOut(BaseModel):
     # The cultivator meditates on the peak (domain/cultivator.py): the header looks at the summit.
     on_peak: bool = False
     travel: TravelOut
+    knowledge: KnowledgeOut
     # Present until the user says whether the time away counts.
     ghost: GhostOut | None = None
     # Only the response to the day's first seal carries one.
@@ -145,6 +147,7 @@ class ViewOut(BaseModel):
                 welcomed=data.travel.welcomed,
                 room_focus=data.travel.room_focus,
             ),
+            knowledge=KnowledgeOut.from_view(data.knowledge),
             ghost=None
             if data.ghost is None
             else GhostOut(left_text=data.ghost.left_text, gap_text=data.ghost.gap_text),

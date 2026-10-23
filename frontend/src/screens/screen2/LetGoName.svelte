@@ -3,11 +3,16 @@
 <script lang="ts">
   import { today, type LetGo } from '../../lib/api';
   import { LET_GO } from '../../lib/copy-dashboard';
+  import { knowledge } from '../../lib/knowledge.svelte';
   import { view } from '../../lib/view.svelte';
 
   let { item }: { item: LetGo } = $props();
 
-  const back = () => view.act(() => today.resummon(item.id));
+  // The tour learns it first: once summoned back, the name is gone from here.
+  function back(event: Event) {
+    void knowledge.learn('resummon', event.currentTarget as Element);
+    return view.act(() => today.resummon(item.id));
+  }
 </script>
 
 <span
@@ -20,7 +25,7 @@
   onkeydown={(event) => {
     if (event.key !== 'Enter') return;
     event.preventDefault();
-    void back();
+    void back(event);
   }}>{item.title}</span
 >
 

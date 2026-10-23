@@ -35,6 +35,7 @@
   data-scene={theme}
   data-frame={frame}
   data-stage={peak.stage}
+  data-enlightened={view.current?.knowledge.enlightened ?? false}
   aria-hidden="true"
 >
   {#key theme}

@@ -33,10 +33,17 @@ async function waitUntilHealthy(url: string, timeoutMs = 30_000): Promise<void> 
  * Every test gets its own server, database and clock-day, so no test depends on another.
  * After a conquest the qi card asks how much qi it took: unless a test is about that card
  * (`test.use({ autoQi: false })`), it is answered with Done, which keeps the estimate.
+ * The tour's step cards would stand beside the buttons a test clicks: off, unless a test is about
+ * the tour (`test.use({ tour: true })`). Learning goes on either way.
  */
-export const test = base.extend<{ server: string; autoQi: boolean }>({
+export const test = base.extend<{ server: string; autoQi: boolean; tour: boolean }>({
   autoQi: [true, { option: true }],
-  page: async ({ page, autoQi }, use) => {
+  tour: [false, { option: true }],
+  page: async ({ page, autoQi, tour }, use) => {
+    if (!tour) {
+      const off = await page.request.put('/api/knowledge', { data: { tour: false } });
+      expect(off.ok(), 'tour off').toBeTruthy();
+    }
     if (autoQi) {
       await page.addLocatorHandler(
         page.getByRole('dialog', { name: 'How much qi did this take?' }),

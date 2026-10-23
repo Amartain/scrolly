@@ -16,7 +16,7 @@
 
 <StateMark state="done" />
 <span class="title read">{trial.title}</span>
-<span class="figure digits">
+<span class="figure digits" data-tour="correct-time" data-tour-on="dblclick">
   <ActualTime
     value={trial.actual_text || '—'}
     title={trial.title}
@@ -29,6 +29,7 @@
 <TypeMark type={trial.type} title={trial.title} />
 <Button
   label="Revive"
+  tour="revive"
   description="Revive {trial.title}"
   onclick={() => view.act(() => today.revive(trial.id))}
 />

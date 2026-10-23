@@ -48,12 +48,14 @@
   label="Promote"
   tone="gold"
   chip
+  tour="promote"
   description="Promote {trial.title}"
   onclick={() => view.act(() => today.promote(trial.id))}
 />
 {#if trial.is_mandate}
   <span class="postpone">
     <GlyphButton
+      tour="postpone"
       label="Postpone {trial.title} to the Horizon"
       onclick={() => view.act(() => today.postpone(trial.id))}
     >
@@ -62,6 +64,7 @@
   </span>
 {:else}
   <GlyphButton
+    tour="abandon"
     label="Abandon {trial.title}"
     onclick={() => view.act(() => today.abandon(trial.id))}
   >

@@ -17,6 +17,7 @@ from scrolly.api.routes import (
     header,
     horizon,
     imports,
+    knowledge,
     planning,
     planning_timer,
     scraps,
@@ -33,6 +34,7 @@ from scrolly.domain.day_flow import TrialError
 from scrolly.domain.duration import DurationError
 from scrolly.domain.header_image import HeaderImageError
 from scrolly.domain.horizon import HorizonError
+from scrolly.domain.knowledge import KnowledgeError
 from scrolly.domain.legend import LegendError
 from scrolly.domain.ordering import OrderError
 from scrolly.domain.planning import PlanningError
@@ -83,6 +85,7 @@ def create_app(
     app.add_exception_handler(HeaderImageError, _refuse(422))
     app.add_exception_handler(QiError, _refuse(422))
     app.add_exception_handler(RunError, _refuse(422))
+    app.add_exception_handler(KnowledgeError, _refuse(422))
 
     @app.middleware("http")
     async def watch_for_ghosts(
@@ -113,6 +116,7 @@ def create_app(
     app.include_router(archives.router)
     app.include_router(horizon.router)
     app.include_router(arts.router)
+    app.include_router(knowledge.router)
     if static_dir is not None and static_dir.is_dir():
         app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
     return app

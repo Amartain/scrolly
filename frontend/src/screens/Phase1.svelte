@@ -68,6 +68,8 @@
         </label>
         <textarea
           id="dump"
+          data-tour="dump"
+          data-tour-on="input"
           use:cutLine
           bind:value={text}
           oninput={edit}
@@ -78,7 +80,7 @@
       <Notice />
       <div class="actions">
         <Button label="Abandon" onclick={abandon} />
-        <Button label="Proceed: Divine the Time" tone="primary" onclick={proceed} />
+        <Button label="Proceed: Divine the Time" tone="primary" tour="proceed" onclick={proceed} />
       </div>
     </div>
   </div>

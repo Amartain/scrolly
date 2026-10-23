@@ -12,13 +12,11 @@ The fonts come from the `@fontsource` npm packages (`vt323`, `atkinson-hyperlegi
 
 ## Artwork
 
-Made for this project by its owner with AI tools. **The exact tools' terms of use and the license for these files are still to be
-recorded by the project owner before release; this file states no license for them until then.**
+Made for this project by its owner with AI tools.
 
 | Work | Made with | Notes |
 |---|---|---|
-| Header illustrations (`frontend/src/assets/headers/`) | Google Gemini, from prompts written by the owner | Tool and terms to be confirmed by the owner |
-| Handscroll app mark (`frontend/src/icons/HandscrollIcon.svelte`) | Claude (Anthropic), from a prompt written by the owner | Terms to be confirmed by the owner |
+| Handscroll app mark (`frontend/src/icons/HandscrollIcon.svelte`) | Claude (Anthropic), from a prompt written by the owner |  |
 
 The state and type symbols (leaves, droplet, cloud, lotus, circle, scroll, herb) are Unicode emoji. Your operating
 system draws them with its own emoji font; nothing is bundled for them.

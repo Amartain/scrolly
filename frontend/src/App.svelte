@@ -19,7 +19,9 @@
   import GhostCard from './components/GhostCard.svelte';
   import GuidanceScroll from './components/GuidanceScroll.svelte';
   import QiCard from './components/QiCard.svelte';
-  import PlanningTimer from './components/PlanningTimer.svelte';
+  import PlanningCorner from './components/PlanningCorner.svelte';
+  import TourHost from './components/tour/TourHost.svelte';
+  import { knowledge } from './lib/knowledge.svelte';
   import SunsetAdvisor from './components/SunsetAdvisor.svelte';
   import SunsetPoem from './components/SunsetPoem.svelte';
   import ThemeOrbs from './components/ThemeOrbs.svelte';
@@ -70,6 +72,7 @@
   async function enterSeclusion(by: 'key' | 'gate' = 'gate') {
     const travelling = view.current?.travel; // as it was before the room takes a running timer over
     if (!(await seclusion.enter())) return;
+    knowledge.learn('seclusion');
     const way = wayUp(by, travelling?.interval_min ?? 15, travelling?.room_focus ?? false);
     await travel(way, () => {
       peak.arrive(way === 'none' && travelling?.room_focus ? 'open' : ARRIVAL[way]);
@@ -81,6 +84,7 @@
   async function leaveSeclusion() {
     await seclusion.leave();
     await view.refresh();
+    knowledge.learn('step-out');
     await travel(wayDown(), () => (mode = 'dashboard'));
   }
 
@@ -175,8 +179,9 @@
   <ThemeOrbs />
 {/if}
 {#if onboarding && status !== 'zero'}
-  <PlanningTimer />
+  <PlanningCorner clock={status !== 'inscribe'} />
 {/if}
+<TourHost />
 
 <style>
   .screen {

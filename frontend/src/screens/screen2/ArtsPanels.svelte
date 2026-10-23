@@ -34,7 +34,11 @@
 <div class="pair">
   <Panel title="Foundational Arts" tone="foundational" guide="foundational" scroll striped>
     {#snippet actions()}
-      <GlyphButton label="Add a Foundational Art" onclick={() => (expanded = 'foundational')}>
+      <GlyphButton
+        tour="arts"
+        label="Add a Foundational Art"
+        onclick={() => (expanded = 'foundational')}
+      >
         <GlyphIcon name="plus" />
       </GlyphButton>
     {/snippet}
@@ -51,7 +55,11 @@
   </Panel>
   <Panel title="Restorative Arts" tone="restorative" guide="restorative" scroll striped>
     {#snippet actions()}
-      <GlyphButton label="Add a Restorative Art" onclick={() => (expanded = 'restorative')}>
+      <GlyphButton
+        tour="arts"
+        label="Add a Restorative Art"
+        onclick={() => (expanded = 'restorative')}
+      >
         <GlyphIcon name="plus" />
       </GlyphButton>
     {/snippet}

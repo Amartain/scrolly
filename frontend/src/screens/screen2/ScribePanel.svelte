@@ -34,7 +34,7 @@
     {#if qiOn}
       <input class="small digits" bind:value={qi} placeholder="Qi" aria-label="Qi expected" />
     {/if}
-    <Button label="Inscribe" tone="primary" onclick={() => inscribe()} />
+    <Button label="Inscribe" tone="primary" tour="scribe" onclick={() => inscribe()} />
     <!-- Several fields: a hidden submit lets Enter inscribe from any of them. -->
     <button type="submit" hidden tabindex="-1" aria-hidden="true"></button>
   </form>

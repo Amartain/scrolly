@@ -17,8 +17,8 @@
   aria-label="Sunset time"
   onkeydown={(event) => event.key === 'Enter' && set()}
 />
-<Button label={SUNSET.set} onclick={set} />
-<Button label={SUNSET.later} onclick={() => view.setSunset({ enabled: false })} />
+<Button label={SUNSET.set} tour="sunset" onclick={set} />
+<Button label={SUNSET.later} tour="sunset" onclick={() => view.setSunset({ enabled: false })} />
 
 <style>
   .ask {

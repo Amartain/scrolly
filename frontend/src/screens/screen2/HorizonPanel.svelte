@@ -4,6 +4,7 @@
   import Panel from '../../components/Panel.svelte';
   import ReorderList from '../../components/ReorderList.svelte';
   import { horizon, today, type HorizonItem } from '../../lib/api';
+  import { knowledge } from '../../lib/knowledge.svelte';
   import { EMPTY } from '../../lib/copy';
   import { useOrder } from '../../lib/order.svelte';
   import { view } from '../../lib/view.svelte';
@@ -24,19 +25,24 @@
     if (await view.act(() => horizon.add(title, estimate))) {
       title = '';
       estimate = '';
+      knowledge.learn('horizon');
     }
+  }
+
+  async function summon(item: HorizonItem) {
+    if (await view.act(() => today.summon('horizon', item.id))) knowledge.learn('horizon');
   }
 </script>
 
 {#snippet row(item: HorizonItem)}
-  <HorizonRow {item} onsummon={() => view.act(() => today.summon('horizon', item.id))} />
+  <HorizonRow {item} onsummon={() => summon(item)} />
 {/snippet}
 
 <Panel title="The Horizon" tone="horizon" guide="horizon" count={order.shown.length} scroll striped>
   {#snippet actions()}
     <ExpandButton label="Expand The Horizon" onclick={() => (expanded = true)} />
   {/snippet}
-  <form class="add" onsubmit={add}>
+  <form class="add" data-tour="horizon" data-tour-on="commit" onsubmit={add}>
     <input bind:value={title} placeholder="Scribe a future trial…" aria-label="A future trial" />
     <input
       class="estimate digits"

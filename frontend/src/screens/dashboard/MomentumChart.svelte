@@ -84,6 +84,8 @@
       role="group"
       aria-label={CHART.hint('Momentum')}
       tabindex={live ? 0 : undefined}
+      data-tour={live ? 'charts' : undefined}
+      data-tour-on="hover"
       onpointermove={near}
       onpointerleave={reader.clear}
       onkeydown={reader.onkeydown}

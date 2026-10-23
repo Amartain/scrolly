@@ -16,6 +16,7 @@
     type="button"
     aria-label={GUIDANCE.button(guide.name)}
     aria-describedby={tipId}
+    data-tour="guidance"
     onclick={() => guidance.open(topic)}>?</button
   >
   <span class="tip" id={tipId} role="tooltip">{guide.tip}</span>

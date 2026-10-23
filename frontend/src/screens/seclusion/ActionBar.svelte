@@ -62,19 +62,23 @@
     {/if}
   </div>
   {#if showStart}
-    <Button label={SECLUSION.start} tone="primary" onclick={seclusion.start} />
+    <Button label={SECLUSION.start} tone="primary" tour="timer" onclick={seclusion.start} />
   {:else}
-    <ConquerButton label={SECLUSION.conquered} title={trial.title} onclick={conquer} />
+    <span class="conquer" data-tour="conquer"
+      ><ConquerButton label={SECLUSION.conquered} title={trial.title} onclick={conquer} /></span
+    >
   {/if}
   <div class="side end">
     {#if trial.is_mandate}
       <span class="postpone">
-        <GlyphButton label="Postpone {trial.title} to the Horizon" onclick={postpone}
-          ><GlyphIcon name="arrow" /></GlyphButton
+        <GlyphButton
+          tour="postpone"
+          label="Postpone {trial.title} to the Horizon"
+          onclick={postpone}><GlyphIcon name="arrow" /></GlyphButton
         >
       </span>
     {:else}
-      <GlyphButton label="Abandon {trial.title}" onclick={abandon}
+      <GlyphButton tour="abandon" label="Abandon {trial.title}" onclick={abandon}
         ><GlyphIcon name="x" /></GlyphButton
       >
     {/if}
@@ -121,6 +125,11 @@
 
   .postpone {
     --glyph-ink: var(--postponed);
+  }
+
+  .conquer {
+    display: flex;
+    justify-content: center;
   }
 
   /* The waiting trials open above the bar, over the ring, so nothing below them moves. */

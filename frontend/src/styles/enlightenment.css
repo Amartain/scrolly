@@ -1,0 +1,152 @@
+/* Enlightenment (components/tour/Enlightenment.svelte): about 4 s, once (art-direction › Motion, the
+   owner's exception for the tour's end, 2026-10-23). The screen dims; a ring of golden light opens;
+   eight petals unfold one after another; 悟 is stamped as the landing page's seal is; the card's
+   words come in; the button last. `.still` shows the last frame (a key, or reduced motion). */
+
+.enlightenment {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--space-4);
+  background: color-mix(in srgb, var(--scene-ink) 72%, transparent);
+  animation: enlighten-fade 700ms ease-out both;
+}
+
+.enlightenment .light {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60vmin;
+  height: 60vmin;
+  margin: -30vmin 0 0 -30vmin;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--gold) 0%, transparent 65%);
+  opacity: 0.35;
+  pointer-events: none;
+  animation: enlighten-light 2200ms 300ms ease-out both;
+}
+
+.enlightenment .lotus {
+  position: relative;
+  width: 14rem;
+  height: 14rem;
+}
+
+.enlightenment .petal {
+  fill: var(--gold);
+  stroke: var(--scene-ink);
+  stroke-width: 2px;
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: enlighten-petal 700ms calc(800ms + var(--i) * 140ms) cubic-bezier(0.3, 1.4, 0.5, 1)
+    both;
+}
+
+.enlightenment .heart {
+  fill: var(--morning-seal);
+  animation: enlighten-fade 600ms 1900ms ease-out both;
+}
+
+.enlightenment .card {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  max-width: 28rem;
+  padding: var(--space-5) var(--space-6);
+  background: var(--surface-panel);
+  background-image: var(--gloss-faint);
+  color: var(--ink);
+  border: var(--border-width) solid var(--line);
+  border-top: var(--space-1) solid var(--gold);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+  animation: enlighten-rise 900ms 2000ms ease-out both;
+}
+
+.enlightenment .seal {
+  padding: var(--space-1) var(--space-3);
+  background: var(--morning-seal);
+  color: var(--morning-seal-ink);
+  font-size: var(--text-display-xl);
+  transform-box: fill-box;
+  animation: morning-stamp 1400ms 2200ms both;
+}
+
+.enlightenment .title {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-display-lg);
+}
+
+.enlightenment .line,
+.enlightenment .reward {
+  margin: 0;
+  font-size: var(--text-body-lg);
+}
+
+.enlightenment .reward {
+  color: var(--ink-muted);
+  font-size: var(--text-body-md);
+}
+
+.enlightenment .title,
+.enlightenment .line,
+.enlightenment .reward {
+  animation: enlighten-fade 800ms 3000ms ease-out both;
+}
+
+.enlightenment .close {
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  background: var(--gold);
+  color: var(--on-gold);
+  border: var(--border-width) solid var(--line);
+  box-shadow: var(--shadow-button);
+  cursor: pointer;
+  animation: enlighten-fade 600ms 3600ms ease-out both;
+}
+
+.enlightenment.still,
+.enlightenment.still * {
+  animation: none !important;
+}
+
+@keyframes enlighten-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes enlighten-light {
+  from {
+    opacity: 0;
+    transform: scale(0.15);
+  }
+  40% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes enlighten-petal {
+  from {
+    opacity: 0;
+    transform: scale(0.1, 0);
+  }
+}
+
+@keyframes enlighten-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enlightenment,
+  .enlightenment * {
+    animation: none !important;
+  }
+}

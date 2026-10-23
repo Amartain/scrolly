@@ -15,6 +15,8 @@
 <Valve id="valve-scraps" title={SECLUSION.scrapsTitle} icon="bamboo" accent="growth" grow>
   <div class="pad">
     <textarea
+      data-tour="scraps"
+      data-tour-on="input"
       use:cutLine
       value={scrapPad.text}
       placeholder={SECLUSION.scrapsLine}

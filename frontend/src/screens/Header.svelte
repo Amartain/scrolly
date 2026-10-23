@@ -5,6 +5,7 @@
   import IconButton from '../components/IconButton.svelte';
   import ThemeOrbs from '../components/ThemeOrbs.svelte';
   import PeakScene from '../components/peak/PeakScene.svelte';
+  import KnowledgeBar from '../components/KnowledgeBar.svelte';
 
   let { settingsOpen, onsettings }: { settingsOpen: boolean; onsettings: () => void } = $props();
 
@@ -36,6 +37,7 @@
     <div class="titles">
       <div class="name display">Scrolly</div>
       <div class="tagline display">Path of Cultivation</div>
+      <KnowledgeBar place="plate" />
     </div>
   </div>
   <div class="tools">
@@ -45,7 +47,7 @@
         <div class="date">{date}</div>
       </div>
       <span class="settings lacquer-frame">
-        <IconButton label="Settings" pressed={settingsOpen} onclick={onsettings}>
+        <IconButton label="Settings" tour="settings" pressed={settingsOpen} onclick={onsettings}>
           <SlidersIcon />
         </IconButton>
       </span>

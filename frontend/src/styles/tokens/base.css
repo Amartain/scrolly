@@ -69,6 +69,9 @@
   --size-tile-label: 6.5rem;
   --size-stat: 7rem;
   --size-orb: 2rem;
+  /* The tour (phase 12): the Knowledge of the Dao bar in the planning corner, a step card. */
+  --size-knowledge: 19rem;
+  --size-tour-card: 19rem;
   --shadow-room: var(--space-3);
 
   --scrollbar-thumb: var(--line);
@@ -91,6 +94,8 @@
   --shadow-button: var(--shadow-offset) var(--shadow-offset) 0 var(--shadow);
   --icon-drop: drop-shadow(0.0625rem 0.0625rem 0 var(--icon-shadow));
   --shadow-sunken: inset var(--space-1) var(--space-1) 0 var(--inset);
+  /* The Knowledge bar while it moves. */
+  --shadow-glow-gold: 0 0 var(--space-2) var(--gold);
 
   --motion-fast: 150ms;
 

@@ -5,6 +5,7 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import { QI_CARD } from '../lib/copy-qi';
+  import { knowledge } from '../lib/knowledge.svelte';
   import { qiAsk } from '../lib/qi-ask.svelte';
   import { getQiCard, type QiCard } from '../lib/qi-api';
   import { view } from '../lib/view.svelte';
@@ -41,6 +42,7 @@
   function onkeydown(event: KeyboardEvent) {
     if (event.key !== 'Enter' || event.target instanceof HTMLButtonElement) return;
     event.preventDefault();
+    void knowledge.learn('qi-card');
     void qiAsk.confirm(shown);
   }
 </script>
@@ -66,7 +68,12 @@
           aria-label={QI_CARD.backDescription}
           onclick={qiAsk.back}>{QI_CARD.back}</button
         >
-        <Button label={QI_CARD.confirm} tone="primary" onclick={() => qiAsk.confirm(shown)} />
+        <Button
+          label={QI_CARD.confirm}
+          tone="primary"
+          tour="qi-card"
+          onclick={() => qiAsk.confirm(shown)}
+        />
       </div>
     </div>
   </Modal>

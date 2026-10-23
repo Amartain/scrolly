@@ -15,8 +15,13 @@
       Qi, your inner energy, as well as your time?
     </p>
     <div class="actions">
-      <Button label="Perhaps later" onclick={() => answer(false)} />
-      <Button label="Awaken the Golden Core" tone="primary" onclick={() => answer(true)} />
+      <Button label="Perhaps later" tour="golden-core" onclick={() => answer(false)} />
+      <Button
+        label="Awaken the Golden Core"
+        tone="primary"
+        tour="golden-core"
+        onclick={() => answer(true)}
+      />
     </div>
   </div>
 </Panel>

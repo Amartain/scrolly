@@ -30,6 +30,8 @@
     style:--series="var(--chart-{series.metric})"
     aria-label={CHART.hint('Rhythm, the last seven days')}
     tabindex={live ? 0 : undefined}
+    data-tour={live ? 'charts' : undefined}
+    data-tour-on="hover"
     onkeydown={reader.onkeydown}
     onfocus={reader.onfocus}
     onblur={reader.clear}

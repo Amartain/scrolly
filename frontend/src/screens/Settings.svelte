@@ -8,6 +8,7 @@
   import SunsetPanel from './SunsetPanel.svelte';
   import SymbolsPanel from './SymbolsPanel.svelte';
   import ThemePanel from './ThemePanel.svelte';
+  import TourPanel from './TourPanel.svelte';
 
   let { onback }: { onback: () => void } = $props();
 </script>
@@ -18,6 +19,7 @@
   <div class="column">
     <ThemePanel />
     <HeaderPanel />
+    <TourPanel />
     <SymbolsPanel />
   </div>
   <div class="column">

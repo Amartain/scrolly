@@ -49,7 +49,7 @@
     orb.theme === 'serene' ? `Serene Peak, ${orb.variant === 'green' ? 'green' : 'scroll'}` : '';
 </script>
 
-<div class="orbs" data-placement={placement}>
+<div class="orbs" data-placement={placement} data-tour="orbs">
   {#each orbs as orb (orb.label)}
     <button
       class="orb"

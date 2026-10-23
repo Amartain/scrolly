@@ -8,6 +8,8 @@
   let { room }: { room: SeclusionState } = $props();
 
   const TABS = ['incense', 'cycles', 'flow'] as const;
+  /** The tour's lesson each chip teaches; Incense is the room itself. */
+  const LESSON = { incense: undefined, cycles: 'cycles', flow: 'river-flow' } as const;
 </script>
 
 <div class="tabs" role="tablist" aria-label="Discipline">
@@ -17,6 +19,7 @@
       role="tab"
       type="button"
       data-tab={tab}
+      data-tour={LESSON[tab]}
       aria-label={SECLUSION.tabs[tab]}
       title={SECLUSION.tabs[tab]}
       aria-selected={tab === room.discipline}

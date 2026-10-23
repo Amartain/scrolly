@@ -1,5 +1,6 @@
 import { today, type Immediate } from './api';
 import { flourish } from './flourish.svelte';
+import { knowledge } from './knowledge.svelte';
 import { qiAsk } from './qi-ask.svelte';
 import { seclusion } from './seclusion.svelte';
 import { view } from './view.svelte';
@@ -19,8 +20,10 @@ export async function toggleTimer(trial: Immediate): Promise<boolean> {
   if (trial.timer.running) return view.act(() => today.pauseTimer(trial.id));
   const button = document.querySelector(`${CARD} [aria-label="Start timer"]`);
   const done = await view.act(() => today.startTimer(trial.id));
-  if (done)
+  if (done) {
     flourish.begin(button, document.querySelector(`${CARD} .clock`), trial.timer.elapsed_s === 0);
+    knowledge.learn('timer', button);
+  }
   return done;
 }
 
@@ -36,6 +39,7 @@ async function revive(trial: Immediate) {
 export async function conquer(trial: Immediate): Promise<boolean> {
   const card = document.querySelector(CARD)?.getBoundingClientRect() ?? null;
   if (!(await view.act(() => today.conquer(trial.id)))) return false;
+  knowledge.learn('conquer');
   const dashboard = view.current?.dashboard;
   // The day's last conquest has the ceremony instead, which waits for the Qi card itself.
   const won = !!dashboard?.victory?.due;

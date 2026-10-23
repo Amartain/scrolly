@@ -17,6 +17,7 @@
     description,
     size = 'normal',
     chip = false,
+    tour,
   }: {
     label: string;
     onclick: () => void;
@@ -27,6 +28,8 @@
     size?: 'normal' | 'large';
     /** A lacquer chip: a row's own action (Promote, Summon), with a gold rule inside its edge. */
     chip?: boolean;
+    /** The tour's lesson this button teaches (lib/knowledge.svelte.ts). */
+    tour?: string;
   } = $props();
 </script>
 
@@ -35,6 +38,7 @@
   class:lacquer-frame={chip}
   class:chip
   type="button"
+  data-tour={tour}
   data-tone={tone}
   data-size={size}
   aria-label={description}

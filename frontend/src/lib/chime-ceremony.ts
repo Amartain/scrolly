@@ -105,6 +105,40 @@ const PENTATONIC = [
 const TOP_STEP = 7;
 
 /**
+ * Enlightenment (the tour complete): a warm bowl underneath, the pentatonic scale rising over it
+ * slowly, and a last high bell that rings long.
+ */
+export function playEnlightenment(): void {
+  play([
+    {
+      at: 0,
+      seconds: 7,
+      attack: 0.3,
+      tones: [
+        [130.81, 0.12],
+        [196, 0.08],
+        [261.63, 0.05],
+      ],
+    },
+    ...PENTATONIC.slice(0, 10).map((hz, i) => ({
+      at: 0.4 + i * 0.18,
+      seconds: 1.4,
+      attack: 0.01,
+      tones: [[hz, 0.04] as [number, number]],
+    })),
+    {
+      at: 2.4,
+      seconds: 4.5,
+      attack: 0.005,
+      tones: [
+        [2093, 0.05],
+        [4186, 0.015],
+      ],
+    },
+  ]);
+}
+
+/**
  * A trial conquered: a rising three-note phrase. `count` is how many trials are conquered today;
  * each conquest starts a step higher than the last, so the day builds like a melody (from the 8th
  * the top phrase repeats). It begins again each morning and never steps down.

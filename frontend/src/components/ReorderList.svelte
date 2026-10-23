@@ -1,5 +1,6 @@
 <script lang="ts" generics="T extends { id: string }">
   import { tick, type Snippet } from 'svelte';
+  import { knowledge } from '../lib/knowledge.svelte';
 
   let {
     items,
@@ -15,6 +16,12 @@
   let indicatorY = $state(0);
 
   const ids = () => items.map((item) => item.id);
+
+  /** A new order: and the tour learns reordering (lib/knowledge.svelte.ts). */
+  function reorder(order: string[]) {
+    knowledge.learn('reorder', list);
+    onreorder(order);
+  }
 
   /** The order after taking `id` out and putting it back at index `to`. */
   function moved(id: string, to: number): string[] {
@@ -63,7 +70,7 @@
     const from = ids().indexOf(id);
     const to = slot > from ? slot - 1 : slot;
     dragging = null;
-    if (to !== from) onreorder(moved(id, to));
+    if (to !== from) reorder(moved(id, to));
   }
 
   async function key(event: KeyboardEvent, id: string) {
@@ -75,7 +82,7 @@
     event.preventDefault();
     const to = Math.max(0, Math.min(last, wanted));
     if (to === from) return;
-    onreorder(moved(id, to));
+    reorder(moved(id, to));
     await tick();
     list.querySelector<HTMLElement>(`[data-id="${CSS.escape(id)}"]`)?.focus();
   }

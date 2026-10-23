@@ -1,5 +1,6 @@
-<!-- A quiet count-up of the time spent planning, bottom-left in Phases 1 to 3. It never nags: no
-     target, no alarm. The time is kept for each day and survives a reload, a sleep or a crash. -->
+<!-- A quiet count-up of the time spent planning, bottom-left in Phases 2 and 3 (Phase 1 has Knowledge
+     of the Dao there instead, owner 2026-10-23). It never nags: no target, no alarm. The time is kept
+     for each day and survives a reload, a sleep or a crash. -->
 <script lang="ts">
   import GlyphIcon from '../icons/GlyphIcon.svelte';
   import { planningTimer } from '../lib/api';
@@ -15,6 +16,7 @@
 
 <div class="timer" role="group" aria-label={PLANNING_TIME.label}>
   <GlyphButton
+    tour="planning-clock"
     label={running ? PLANNING_TIME.pause : PLANNING_TIME.start}
     onclick={() => view.act(running ? planningTimer.pause : planningTimer.start)}
   >
@@ -29,12 +31,8 @@
 </div>
 
 <style>
-  /* Fixed in the corner, like the theme orbs on the other side, so nothing moves when it ticks. */
+  /* In the planning corner (PlanningCorner.svelte), so nothing moves when it ticks. */
   .timer {
-    position: fixed;
-    left: var(--size-gutter);
-    bottom: var(--space-2);
-    z-index: 10;
     display: flex;
     align-items: center;
     gap: var(--space-3);

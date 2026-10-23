@@ -24,6 +24,7 @@ import './styles/peak-pavilion.css';
 import './styles/peak-figure.css';
 import './styles/peak-rise.css';
 import './styles/travel.css';
+import './styles/enlightenment.css';
 import './styles/peak-motion.css';
 import './styles/lacquer.css';
 

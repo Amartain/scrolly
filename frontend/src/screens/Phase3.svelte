@@ -35,6 +35,7 @@
         <Button
           label="Seal Scroll and Commence"
           tone="primary"
+          tour="seal"
           onclick={() => view.act(planning.seal)}
         />
       </div>

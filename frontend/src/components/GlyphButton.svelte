@@ -9,6 +9,7 @@
     disabled = false,
     id,
     expanded,
+    tour,
     children,
   }: {
     label: string;
@@ -17,6 +18,8 @@
     id?: string;
     /** For a button that shows or hides something. */
     expanded?: boolean;
+    /** The tour's lesson this button teaches (lib/knowledge.svelte.ts). */
+    tour?: string;
     children: Snippet;
   } = $props();
 </script>
@@ -25,6 +28,7 @@
   class="glyph-button"
   type="button"
   {id}
+  data-tour={tour}
   aria-label={label}
   aria-expanded={expanded}
   aria-disabled={disabled || undefined}

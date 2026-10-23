@@ -90,7 +90,13 @@
     {/if}
   </div>
 </div>
-<button class="fold display" type="button" onclick={() => showScreen('two')}>
+<button
+  class="fold display"
+  type="button"
+  data-tour="screen-two"
+  data-tour-on="commit"
+  onclick={() => showScreen('two')}
+>
   The planning peak <kbd>↓</kbd>
 </button>
 

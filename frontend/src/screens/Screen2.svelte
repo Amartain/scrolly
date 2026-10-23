@@ -27,9 +27,9 @@
   <div class="column right">
     <HorizonPanel />
     <div class="tools">
-      <Button label={ARCHIVES.open} tone="archives" onclick={onarchives} />
-      <Button label={SECLUSION.scrapsTitle} onclick={onscraps} />
-      <Button label={DISPATCH.open} onclick={ondispatch} />
+      <Button label={ARCHIVES.open} tone="archives" tour="archives" onclick={onarchives} />
+      <Button label={SECLUSION.scrapsTitle} tour="scraps-page" onclick={onscraps} />
+      <Button label={DISPATCH.open} tour="dispatch" onclick={ondispatch} />
     </div>
   </div>
 </div>

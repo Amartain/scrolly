@@ -53,3 +53,13 @@
   fill: var(--gold);
   opacity: var(--peak-aura-opacity);
 }
+
+/* Enlightened (the tour complete, owner 2026-10-23): a gold-trimmed robe and an aura, always. */
+.peak[data-enlightened='true'] .figure .body {
+  stroke: var(--gold);
+  stroke-width: 1.8px;
+}
+
+.peak[data-enlightened='true'] .figure .aura {
+  opacity: max(var(--peak-aura-opacity), 0.32);
+}

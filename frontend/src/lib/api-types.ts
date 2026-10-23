@@ -352,6 +352,106 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/knowledge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Choose */
+        put: operations["choose_api_knowledge_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/knowledge/enlightened": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Enlightened
+         * @description The Enlightenment ceremony was seen.
+         */
+        post: operations["enlightened_api_knowledge_enlightened_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/knowledge/learn": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Learn
+         * @description A lesson was tried: a step done, or a feature used for the first time.
+         *
+         *     Only the knowledge comes back: the click that taught it also did something else, and that
+         *     answer must not be overtaken by an older picture of the whole view.
+         */
+        post: operations["learn_api_knowledge_learn_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/knowledge/pass": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Pass Step
+         * @description Got it, on a step card: the card goes; doing the thing later still counts.
+         */
+        post: operations["pass_step_api_knowledge_pass_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/knowledge/walk-again": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Walk Again
+         * @description The step cards show again; nothing learned is lost.
+         */
+        post: operations["walk_again_api_knowledge_walk_again_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/legend": {
         parameters: {
             query?: never;
@@ -1991,12 +2091,50 @@ export interface components {
          * @enum {string}
          */
         IncenseState: "remaining" | "overfilled";
+        /**
+         * KnowledgeIn
+         * @description Only what is given changes.
+         */
+        KnowledgeIn: {
+            /** Bar Hidden */
+            bar_hidden?: boolean | null;
+            /** Tour */
+            tour?: boolean | null;
+        };
+        /**
+         * KnowledgeOut
+         * @description Knowledge of the Dao. `pending_steps`: the walkthrough's cards still to show, in order (none
+         *     while the tour is off); `complete`: all learned; `enlightened`: and the ceremony was seen.
+         */
+        KnowledgeOut: {
+            /** Bar Hidden */
+            bar_hidden: boolean;
+            /** Complete */
+            complete: boolean;
+            /** Count */
+            count: number;
+            /** Enlightened */
+            enlightened: boolean;
+            /** Learned */
+            learned: string[];
+            /** Pending Steps */
+            pending_steps: string[];
+            /** Total */
+            total: number;
+            /** Tour */
+            tour: boolean;
+        };
         /** LaneOut */
         LaneOut: {
             /** Spans */
             spans: components["schemas"]["SpanOut"][];
             /** Title */
             title: string;
+        };
+        /** LearnIn */
+        LearnIn: {
+            /** Key */
+            key: string;
         };
         /**
          * LegendOut
@@ -2625,6 +2763,7 @@ export interface components {
             appearance: components["schemas"]["AppearanceOut"];
             dashboard: components["schemas"]["DashboardOut"];
             ghost?: components["schemas"]["GhostOut"] | null;
+            knowledge: components["schemas"]["KnowledgeOut"];
             legend: components["schemas"]["LegendOut"];
             /**
              * Logical Day
@@ -3367,6 +3506,145 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    choose_api_knowledge_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["KnowledgeIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    enlightened_api_knowledge_enlightened_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
+                };
+            };
+        };
+    };
+    learn_api_knowledge_learn_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LearnIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KnowledgeOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    pass_step_api_knowledge_pass_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LearnIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KnowledgeOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    walk_again_api_knowledge_walk_again_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewOut"];
                 };
             };
         };

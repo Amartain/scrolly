@@ -36,6 +36,8 @@
     class="play"
     type="button"
     aria-label={running ? 'Pause timer' : 'Start timer'}
+    data-tour="timer"
+    data-tour-on="commit"
     onclick={() => toggleTimer(trial)}
   >
     <span class="big-glyph"><GlyphIcon name={running ? 'pause' : 'play'} /></span>
@@ -60,9 +62,12 @@
     {#if flow}<span class="of">{flow}</span>{/if}
   {/if}
   <span class="spacer"></span>
-  <ConquerButton label="Conquered!" title={trial.title} onclick={() => conquer(trial)} />
+  <span class="conquer" data-tour="conquer" data-tour-on="commit"
+    ><ConquerButton label="Conquered!" title={trial.title} onclick={() => conquer(trial)} /></span
+  >
   <span class="postpone">
     <GlyphButton
+      tour="postpone"
       label="Postpone {trial.title} to the Horizon"
       onclick={() => view.act(() => today.postpone(trial.id))}
     >
@@ -71,6 +76,7 @@
   </span>
   {#if !trial.is_mandate}
     <GlyphButton
+      tour="abandon"
       label="Abandon {trial.title}"
       onclick={() => view.act(() => today.abandon(trial.id))}
     >
@@ -147,6 +153,10 @@
 
   .postpone {
     --glyph-ink: var(--postponed);
+    display: flex;
+  }
+
+  .conquer {
     display: flex;
   }
 </style>

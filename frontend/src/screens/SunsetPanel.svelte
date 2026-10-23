@@ -36,7 +36,7 @@
       disabled={!sunset?.enabled}
       onkeydown={(event) => event.key === 'Enter' && save()}
     />
-    <Button label="Set" onclick={save} disabled={!sunset?.enabled} />
+    <Button label="Set" tour="sunset" onclick={save} disabled={!sunset?.enabled} />
     <ToggleChoice
       label="Chime at sunset"
       checked={sunset?.chime ?? false}
