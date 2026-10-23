@@ -1,5 +1,6 @@
 <script lang="ts">
   import { typing } from './lib/keys';
+  import { peak } from './lib/peak.svelte';
   import { focusScribe, onScreenTwo, showScreen } from './lib/screens';
   import { seclusion } from './lib/seclusion.svelte';
   import { view } from './lib/view.svelte';
@@ -41,6 +42,17 @@
     void seclusion.load().then(() => {
       if (seclusion.state?.active) mode = 'seclusion';
     });
+  });
+
+  // The cultivator of the peak, in the room and in the header: up or down is Python's word (the
+  // room's while it is open), and the climb goes on while a timer runs.
+  $effect(() => {
+    const up = mode === 'seclusion' ? seclusion.state?.on_peak : view.current?.on_peak;
+    if (up !== undefined) peak.sync(up);
+  });
+  $effect(() => {
+    const dashboard = view.current?.dashboard.immediate?.timer.running ?? false;
+    peak.running = mode === 'seclusion' ? seclusion.running : dashboard;
   });
 
   async function enterSeclusion() {

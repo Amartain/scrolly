@@ -14,6 +14,9 @@
     [1530, 270, 2.2],
     [330, 240, 1.5],
     [820, 260, 1.4],
+    [-420, 120, 1.8],
+    [-200, 60, 1.6],
+    [-60, 210, 2],
   ] as const;
 
   const sky = $derived(view.current?.sky);
@@ -31,7 +34,7 @@
     <stop class="sky-low" offset="1" />
   </linearGradient>
 </defs>
-<rect class="sky paint-sky" width="1600" height="900" fill="url(#peak-sky)" />
+<rect class="sky paint-sky" x="-700" width="2300" height="900" fill="url(#peak-sky)" />
 <g class="stars paint-sky">
   {#each STARS as [cx, cy, r] (`${cx},${cy}`)}<circle {cx} {cy} {r} />{/each}
 </g>

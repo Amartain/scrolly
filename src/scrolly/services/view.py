@@ -11,6 +11,7 @@ from scrolly.domain.sunset import SunsetPrefs, phase_at
 from scrolly.ports import Clock, Store
 from scrolly.services.advisor import AdvisorView, build_advisor
 from scrolly.services.appearance import AppearanceService
+from scrolly.services.cultivator import on_peak
 from scrolly.services.dashboard_view import DashboardView, build_dashboard_view
 from scrolly.services.day import DayService
 from scrolly.services.day_budget import build_budget
@@ -43,6 +44,7 @@ class ViewData:
     sound: SoundPrefs
     ghost: GhostView | None
     sky: Sky
+    on_peak: bool  # the cultivator meditates on the peak (the header's scene)
 
 
 def build_view(store: Store, clock: Clock) -> ViewData:
@@ -71,4 +73,5 @@ def build_view(store: Store, clock: Clock) -> ViewData:
         sound=load_sound(store),
         ghost=build_ghost_view(store),
         sky=sky_at(now, sunset),
+        on_peak=on_peak(store, now),
     )

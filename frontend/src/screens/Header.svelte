@@ -7,6 +7,7 @@
   import SlidersIcon from '../icons/SlidersIcon.svelte';
   import IconButton from '../components/IconButton.svelte';
   import ThemeOrbs from '../components/ThemeOrbs.svelte';
+  import PeakScene from '../components/peak/PeakScene.svelte';
 
   let { settingsOpen, onsettings }: { settingsOpen: boolean; onsettings: () => void } = $props();
 
@@ -16,7 +17,7 @@
     return () => clearInterval(timer);
   });
 
-  /** The user's choice of picture. Left undefined ("match the theme"), the theme's own token shows. */
+  /** The user's choice of picture. Left undefined ("match the theme"), the live peak shows. */
   const picture = $derived.by(() => {
     const a = view.current?.appearance;
     if (a?.header === 'serene-day') return `url(${sereneDay})`;
@@ -35,6 +36,7 @@
 </script>
 
 <header class="header" style:background-image={picture}>
+  {#if !picture}<PeakScene frame="header" />{/if}
   <div class="plate lacquer-frame">
     <HandscrollIcon />
     <div class="titles">
@@ -43,27 +45,29 @@
     </div>
   </div>
   <div class="tools">
-    <ThemeOrbs placement="header" />
-    <div class="clock lacquer-frame">
-      <div class="time display digits">{time}</div>
-      <div class="date">{date}</div>
+    <div class="bar">
+      <div class="clock lacquer-frame">
+        <div class="time display digits">{time}</div>
+        <div class="date">{date}</div>
+      </div>
+      <span class="settings lacquer-frame">
+        <IconButton label="Settings" pressed={settingsOpen} onclick={onsettings}>
+          <SlidersIcon />
+        </IconButton>
+      </span>
     </div>
-    <span class="settings lacquer-frame">
-      <IconButton label="Settings" pressed={settingsOpen} onclick={onsettings}>
-        <SlidersIcon />
-      </IconButton>
-    </span>
+    <ThemeOrbs placement="header" />
   </div>
 </header>
 
 <style>
   .header {
     position: relative;
+    isolation: isolate;
     flex: none;
     height: var(--size-header);
     overflow: hidden;
     background-color: var(--surface-panel);
-    background-image: var(--header-image);
     background-size: cover;
     background-position: center 40%;
     border-bottom: var(--border-width) solid var(--line);
@@ -104,10 +108,18 @@
     color: var(--ink-muted);
   }
 
+  /* The clock and Settings, the theme orbs under them. */
   .tools {
     position: absolute;
     right: var(--size-gutter);
     top: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-2);
+  }
+
+  .bar {
     display: flex;
     align-items: stretch;
     gap: var(--space-3);

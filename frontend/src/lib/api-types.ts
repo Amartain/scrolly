@@ -2336,6 +2336,11 @@ export interface components {
             limits: components["schemas"]["LimitsOut"];
             /** Note */
             note: string;
+            /**
+             * On Peak
+             * @default false
+             */
+            on_peak: boolean;
             parallel?: components["schemas"]["ImmediateOut"] | null;
             plan: components["schemas"]["CyclesPlanIn"];
             /** Remaining */
@@ -2570,6 +2575,11 @@ export interface components {
              * Format: date-time
              */
             now: string;
+            /**
+             * On Peak
+             * @default false
+             */
+            on_peak: boolean;
             planning: components["schemas"]["PlanningOut"];
             poem: components["schemas"]["PoemOut"] | null;
             sky: components["schemas"]["SkyOut"];

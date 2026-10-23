@@ -33,17 +33,45 @@ test('the cultivator waits at the foot, climbs once Start is pressed, then sits'
   await expect(figure(page)).toHaveAttribute('data-pose', 'sit');
 });
 
-test('stepping out and back while the timer runs finds them seated, with nothing painted', async ({
+test('stepping out and back finds them seated, in the header too, with nothing painted', async ({
   page,
 }) => {
+  await page.clock.install();
   await sealDay(page, 'Write report');
   await page.goto('/');
   await enter(page);
   await page.getByRole('button', { name: 'Start', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Pause timer' })).toBeVisible();
+  await page.clock.runFor(16_000);
+  await page.getByRole('button', { name: 'Pause timer' }).click();
   await page.getByRole('button', { name: 'Step out' }).click();
+  await expect(page.locator('.peak[data-frame="header"] .figure')).toHaveAttribute(
+    'data-pose',
+    'sit',
+  );
   await enter(page);
   await expect(figure(page)).toHaveAttribute('data-pose', 'sit');
   await expect(scene(page)).not.toHaveClass(/painting/);
+});
+
+test('in the header the dashboard timer sends them up, and the last conquest walks them down', async ({
+  page,
+}) => {
+  const header = page.locator('.peak[data-frame="header"]');
+  await page.clock.install();
+  await sealDay(page, 'Write report');
+  await page.goto('/');
+  await expect(header).toHaveAttribute('data-stage', 'foot');
+  await page.locator('body').click({ position: { x: 5, y: 5 } });
+  await page.keyboard.press('Space');
+  await expect(header).toHaveAttribute('data-stage', 'climbing');
+  await page.clock.runFor(16_000);
+  await expect(header).toHaveAttribute('data-stage', 'seated');
+  await page.keyboard.press('Space');
+  await page.keyboard.press('Enter');
+  await expect(header).toHaveAttribute('data-stage', 'descending');
+  await page.clock.runFor(11_000);
+  await expect(header).toHaveAttribute('data-stage', 'foot');
 });
 
 test('a key shows the painting at once; another theme paints its own peak', async ({ page }) => {

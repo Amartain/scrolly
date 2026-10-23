@@ -12,6 +12,7 @@ from scrolly.domain.seclusion import IncenseView, incense_view, ring_elapsed, se
 from scrolly.domain.segments import Discipline
 from scrolly.domain.timer import elapsed_seconds
 from scrolly.ports import Clock, Store
+from scrolly.services.cultivator import on_peak
 from scrolly.services.dashboard_view import TimerView
 from scrolly.services.day import run_rollover
 from scrolly.services.scraps import ScrapService
@@ -41,6 +42,7 @@ class SeclusionView:
     restart_scrap_s: int = 0  # what Restart would take off the trial now
     zero_scrap_s: int = 0  # what Zero out would take off the trial now
     run_under_way: bool = False  # a Cycles run or Flow bank goes on, also with the room closed
+    on_peak: bool = False  # the cultivator meditates on the peak
 
 
 class SeclusionService:
@@ -137,7 +139,11 @@ class SeclusionService:
         state = read_state(self._store)
         live = run_under_way(state.discipline, state.cycles, state.flow)
         return replace(
-            room, parallel=self.parallel.view(), sidebar_hidden=hidden, run_under_way=live
+            room,
+            parallel=self.parallel.view(),
+            sidebar_hidden=hidden,
+            run_under_way=live,
+            on_peak=on_peak(self._store, self._now),
         )
 
     def _room_view(self) -> SeclusionView:

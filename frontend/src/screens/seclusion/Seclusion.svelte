@@ -19,16 +19,8 @@
   const trial = $derived(room?.trial ?? null);
   const folded = $derived(room?.sidebar_hidden ?? false);
 
-  // Coming back while the run goes on finds the cultivator seated: nothing is painted again.
-  onMount(() => {
-    const beside = room?.parallel?.timer.running ?? false;
-    peak.arrive(seclusion.running || !!room?.run_under_way || beside);
-  });
-
-  // The first Start of the visit sends the cultivator up the path.
-  $effect(() => {
-    if (seclusion.running) peak.begin();
-  });
+  // Coming back while the cultivator is up there (or on the way): nothing is painted again.
+  onMount(() => peak.arrive());
 
   // The server says when the next gong is due; the browser only rings it, then asks again.
   $effect(() => {

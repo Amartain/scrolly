@@ -116,6 +116,8 @@ class SeclusionOut(BaseModel):
     zero_scrap_s: int = 0
     # A Cycles run or Flow bank goes on, also after stepping out: the dashboard shows its clock.
     run_under_way: bool = False
+    # The cultivator meditates on the peak (domain/cultivator.py).
+    on_peak: bool = False
 
     @classmethod
     def from_view(cls, view: SeclusionView) -> "SeclusionOut":
@@ -142,6 +144,7 @@ class SeclusionOut(BaseModel):
             restart_scrap_s=view.restart_scrap_s,
             zero_scrap_s=view.zero_scrap_s,
             run_under_way=view.run_under_way,
+            on_peak=view.on_peak,
         )
 
 

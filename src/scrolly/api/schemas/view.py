@@ -80,6 +80,8 @@ class ViewOut(BaseModel):
     dashboard: DashboardOut
     sound: SoundOut
     sky: SkyOut
+    # The cultivator meditates on the peak (domain/cultivator.py): the header looks at the summit.
+    on_peak: bool = False
     # Present until the user says whether the time away counts.
     ghost: GhostOut | None = None
     # Only the response to the day's first seal carries one.
@@ -119,6 +121,7 @@ class ViewOut(BaseModel):
             dashboard=DashboardOut.from_data(data.dashboard),
             sound=SoundOut(volume=data.sound.volume, muted=data.sound.muted),
             sky=SkyOut(body=data.sky.body, progress=round(data.sky.progress, 3)),
+            on_peak=data.on_peak,
             ghost=None
             if data.ghost is None
             else GhostOut(left_text=data.ghost.left_text, gap_text=data.ghost.gap_text),
