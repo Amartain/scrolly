@@ -48,9 +48,8 @@
     ];
     const at = stops.indexOf(document.activeElement as HTMLElement);
     const next = stops[at + (event.key === 'ArrowDown' ? 1 : -1)];
-    if (!next) return;
-    event.preventDefault();
-    next.focus();
+    event.preventDefault(); // at either end too: ↓ is not the way down the mountain here
+    next?.focus();
   }
 </script>
 

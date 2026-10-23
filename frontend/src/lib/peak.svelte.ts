@@ -22,6 +22,8 @@ class Peak {
   running = $state(false);
   /** The scene is being painted in: the room's cards wait for it. Any key or click ends it. */
   painting = $state(false);
+  /** The same, painted upward from the header's window: the way up by ↑ (lib/travel.ts). */
+  rising = $state(false);
   private placed = false;
 
   /** Python says whether they are up. The first word places them; later ones send them on the path. */
@@ -47,18 +49,31 @@ class Peak {
     }
   }
 
-  /** A visit to the room begins: painted in, unless the cultivator is already on the way or up. */
-  arrive() {
-    this.painting = this.stage === 'foot' && !reduced();
+  /**
+   * A visit to the room begins: painted in (`paint`, as on a reload), painted upward (`rise`), or
+   * shown as it is (`open`, a quick way back up). Nothing is painted while the cultivator is on the
+   * way or up there.
+   */
+  arrive(how: 'paint' | 'rise' | 'open') {
+    const shown = how === 'open' || this.stage !== 'foot' || reduced();
+    this.painting = !shown && how === 'paint';
+    this.rising = !shown && how === 'rise';
   }
 
   /** Another theme: its scene is painted in. */
   repaint() {
     this.painting = !reduced();
+    this.rising = false;
+  }
+
+  /** The scene is still coming in: the room's cards wait for it. */
+  get arriving() {
+    return this.painting || this.rising;
   }
 
   skip = () => {
     this.painting = false;
+    this.rising = false;
   };
 
   private place(up: boolean) {

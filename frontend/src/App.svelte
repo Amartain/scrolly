@@ -1,6 +1,7 @@
 <script lang="ts">
   import { typing } from './lib/keys';
   import { peak } from './lib/peak.svelte';
+  import { travel, wayDown, wayUp } from './lib/travel';
   import { focusScribe, onScreenTwo, showScreen } from './lib/screens';
   import { seclusion } from './lib/seclusion.svelte';
   import { view } from './lib/view.svelte';
@@ -40,7 +41,9 @@
     if (!view.current || seclusionAsked) return;
     seclusionAsked = true;
     void seclusion.load().then(() => {
-      if (seclusion.state?.active) mode = 'seclusion';
+      if (!seclusion.state?.active) return;
+      peak.arrive('paint');
+      mode = 'seclusion';
     });
   });
 
@@ -55,15 +58,21 @@
     peak.running = mode === 'seclusion' ? seclusion.running : dashboard;
   });
 
+  /** Up the mountain (↑, F or the moon gate): the scene is painted upward, or opens if seen lately. */
   async function enterSeclusion() {
-    if (await seclusion.enter()) mode = 'seclusion';
+    if (!(await seclusion.enter())) return;
+    const way = wayUp(peak.stage !== 'foot');
+    await travel(way, () => {
+      peak.arrive(way === 'none' ? 'paint' : way === 'rise' ? 'rise' : 'open');
+      mode = 'seclusion';
+    });
   }
 
-  /** Stepping out pauses the trial; a scroll held open past 04:00 then rolls over. */
+  /** Stepping out leaves the run going; a scroll held open past 04:00 then rolls over. */
   async function leaveSeclusion() {
     await seclusion.leave();
     await view.refresh();
-    mode = 'dashboard';
+    await travel(wayDown(), () => (mode = 'dashboard'));
   }
 
   const status = $derived(view.planning?.status);
@@ -76,23 +85,31 @@
   const toggleSettings = () => (mode = mode === 'settings' ? 'dashboard' : 'settings');
 
   function onkeydown(event: KeyboardEvent) {
+    const modified = event.altKey || event.ctrlKey || event.metaKey;
+    // A key a focused widget already used (a list, the search) is not a way up or down.
+    const free = !modified && !typing(event.target) && !event.defaultPrevented;
     if (event.key === 'Escape' && mode === 'seclusion') void leaveSeclusion();
     else if (event.key === 'Escape' && mode !== 'dashboard') mode = 'dashboard';
-    if (!onDashboard || typing(event.target) || event.altKey || event.ctrlKey || event.metaKey)
-      return;
+    else if (event.key === 'ArrowDown' && mode === 'seclusion' && free) {
+      event.preventDefault();
+      void leaveSeclusion();
+    }
+    if (!onDashboard || !free) return;
     if (event.key === 'n' || event.key === 'N') {
       event.preventDefault();
       focusScribe();
       return;
     }
-    if ((event.key === 'f' || event.key === 'F') && view.current?.dashboard.immediate) {
+    // F, or ↑ from the top of the dashboard: up the mountain to Seclusion.
+    const up = event.key === 'ArrowUp' && !onScreenTwo();
+    if ((event.key === 'f' || event.key === 'F' || up) && view.current?.dashboard.immediate) {
       event.preventDefault();
       void enterSeclusion();
       return;
     }
     const down = event.key === 'ArrowDown' && !onScreenTwo();
-    const up = event.key === 'ArrowUp' && onScreenTwo();
-    if (down || up) {
+    const back = event.key === 'ArrowUp' && onScreenTwo();
+    if (down || back) {
       event.preventDefault();
       showScreen(down ? 'two' : 'one');
     }

@@ -11,7 +11,7 @@
   let { frame = 'room' }: { frame?: Frame } = $props();
 
   /** How long the painting takes, after which the room's cards are fully there. */
-  const PAINT_MS = 4500;
+  const PAINT_MS = 4800;
 
   const theme = $derived(view.current?.appearance.theme ?? 'serene');
 
@@ -22,7 +22,7 @@
   });
 
   $effect(() => {
-    if (!peak.painting) return;
+    if (!peak.arriving) return;
     const id = setTimeout(peak.skip, PAINT_MS);
     return () => clearTimeout(id);
   });
@@ -31,6 +31,7 @@
 <div
   class="peak"
   class:painting={peak.painting}
+  class:rising={peak.rising}
   data-scene={theme}
   data-frame={frame}
   data-stage={peak.stage}

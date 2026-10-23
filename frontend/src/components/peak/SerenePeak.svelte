@@ -2,7 +2,8 @@
      mist between them, two cranes, and the near cliff where a pine leans over a ledge. The path climbs
      the cliff to that ledge, where the cultivator sits facing the peaks. 閉關, closed-door seclusion,
      and a seal on the right. Colours are the scene's tokens (styles/peak-tokens.css), by phase. The
-     ranges and the cliff go on left of the painting's edge, for the header's window. -->
+     ranges and the cliff go on left of the painting's edge, for the header's window, and below its
+     foot, so the brush never frays the bottom edge. -->
 <script lang="ts">
   import { viewBoxFor, type Frame } from '../../lib/peak.svelte';
   import Climber from './Climber.svelte';
@@ -46,18 +47,18 @@
   <path
     class="far-1 paint-far-1"
     filter="url(#peak-brush)"
-    d="M-700,430 C-560,380 -440,300 -300,330 C-180,356 -90,470 0,520 C130,470 220,380 330,300 C400,250 440,300 500,340 C580,400 620,330 710,262 C780,212 845,252 910,320 C1000,400 1065,330 1155,272 C1220,232 1280,282 1345,330 C1430,392 1510,352 1600,312 L1600,900 L-700,900 Z"
+    d="M-700,430 C-560,380 -440,300 -300,330 C-180,356 -90,470 0,520 C130,470 220,380 330,300 C400,250 440,300 500,340 C580,400 620,330 710,262 C780,212 845,252 910,320 C1000,400 1065,330 1155,272 C1220,232 1280,282 1345,330 C1430,392 1510,352 1600,312 L1600,940 L-700,940 Z"
   />
   <g class="mist paint-mist"><rect class="drift" x="-820" y="470" width="2540" height="130" /></g>
   <path
     class="far-2 paint-far-2"
     filter="url(#peak-brush)"
-    d="M-700,560 C-540,520 -400,580 -260,560 C-150,545 -60,590 0,600 C155,560 290,500 420,520 C530,536 620,470 755,432 C865,402 955,460 1065,470 C1200,482 1290,420 1420,440 C1510,452 1555,480 1600,470 L1600,900 L-700,900 Z"
+    d="M-700,560 C-540,520 -400,580 -260,560 C-150,545 -60,590 0,600 C155,560 290,500 420,520 C530,536 620,470 755,432 C865,402 955,460 1065,470 C1200,482 1290,420 1420,440 C1510,452 1555,480 1600,470 L1600,940 L-700,940 Z"
   />
   <path
     class="far-3 paint-far-3"
     filter="url(#peak-brush)"
-    d="M-700,700 C-500,680 -300,730 -120,712 C-60,708 -20,716 0,720 C220,660 400,640 580,680 C735,714 865,640 1045,622 C1200,606 1330,660 1465,650 C1530,645 1575,660 1600,660 L1600,900 L-700,900 Z"
+    d="M-700,700 C-500,680 -300,730 -120,712 C-60,708 -20,716 0,720 C220,660 400,640 580,680 C735,714 865,640 1045,622 C1200,606 1330,660 1465,650 C1530,645 1575,660 1600,660 L1600,940 L-700,940 Z"
   />
   <g class="mist paint-mist"
     ><rect class="drift slow" x="-820" y="690" width="2540" height="120" /></g
@@ -69,7 +70,7 @@
   <path
     class="cliff paint-cliff"
     filter="url(#peak-brush)"
-    d="{LEFT} L{CLIFF.slice(1)} L-700,900 Z"
+    d="{LEFT} L{CLIFF.slice(1)} L640,940 L-700,940 Z"
   />
   <path class="contour paint-cliff" d={LEFT} />
   <path class="contour paint-contour" d={CLIFF} />

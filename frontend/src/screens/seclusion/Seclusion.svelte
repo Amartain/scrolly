@@ -1,7 +1,7 @@
 <!-- The focus room, 閉關: the theme's peak fills it, and one frosted card holds the Immediate Trial and its
      timer. The three release valves float at the right, folded by default. Nothing else is shown. -->
 <script lang="ts">
-  import { onMount, tick } from 'svelte';
+  import { tick } from 'svelte';
   import PeakScene from '../../components/peak/PeakScene.svelte';
   import { playGong } from '../../lib/chime';
   import { onControl, typing } from '../../lib/keys';
@@ -18,9 +18,6 @@
   const room = $derived(seclusion.state);
   const trial = $derived(room?.trial ?? null);
   const folded = $derived(room?.sidebar_hidden ?? false);
-
-  // Coming back while the cultivator is up there (or on the way): nothing is painted again.
-  onMount(() => peak.arrive());
 
   // The server says when the next gong is due; the browser only rings it, then asks again.
   $effect(() => {
@@ -65,7 +62,7 @@
 
 <svelte:window {onkeydown} onkeydowncapture={onkeycapture} onpointerdown={peak.skip} />
 
-<div class="room" class:painting={peak.painting}>
+<div class="room" class:painting={peak.arriving}>
   <PeakScene />
   <div class="ui">
     <TopBar {onleave} />

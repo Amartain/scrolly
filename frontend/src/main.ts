@@ -22,6 +22,8 @@ import './styles/peak-tokens.css';
 import './styles/peak-scene.css';
 import './styles/peak-pavilion.css';
 import './styles/peak-figure.css';
+import './styles/peak-rise.css';
+import './styles/travel.css';
 import './styles/peak-motion.css';
 import './styles/lacquer.css';
 

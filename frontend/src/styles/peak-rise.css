@@ -1,0 +1,48 @@
+/* The peak painted upward: the full way up from the dashboard (lib/travel.ts, styles/travel.css). The
+   painting is unveiled from the foot of the path to the sky by a soft wash rising up the screen; the
+   mist climbs through the ranges; the sun or moon rises last; then 閉關 and the seal, as on a visit.
+   About 4.5 s; any key or click shows the last frame. Never under reduced motion (lib/peak.svelte.ts). */
+
+@keyframes peak-unveil {
+  from {
+    mask-position: 0 20%;
+  }
+  to {
+    mask-position: 0 100%;
+  }
+}
+
+@keyframes peak-mist-rise {
+  from {
+    opacity: 0;
+    transform: translateY(140px);
+  }
+}
+
+/* The wash: opaque below, clear above, with a soft edge a quarter of the screen tall. */
+.peak.rising .peak-art {
+  mask-image: linear-gradient(to top, black 45%, transparent 55%);
+  mask-size: 100% 250%;
+  mask-repeat: no-repeat;
+  animation: peak-unveil 2800ms 200ms cubic-bezier(0.4, 0, 0.3, 1) both;
+}
+
+.peak.rising .paint-mist {
+  animation: peak-mist-rise 2600ms 600ms ease-out both;
+}
+
+.peak.rising .paint-sun {
+  animation: peak-rise 1600ms 1900ms ease-out both;
+}
+
+.peak.rising .paint-verse {
+  animation: peak-fade 1000ms 2700ms ease-out both;
+}
+
+.peak.rising .seal-hand {
+  animation: morning-stamp 1400ms 2900ms both;
+}
+
+.peak.rising .seal-bloom {
+  animation: morning-ink-bloom 800ms 3710ms ease-out both;
+}
