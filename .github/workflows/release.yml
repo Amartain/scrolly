@@ -2,6 +2,7 @@ name: release
 
 # Push a tag like v0.2.0: GitHub builds Scrolly on Windows and macOS (Apple Silicon), starts each
 # build once to check it serves, and opens a DRAFT release with the zips and the wheel attached.
+# Its text is RELEASE_NOTES.md (written by hand: commit lines could spoil the secrets).
 # Nothing is public until the draft is published by hand. Run it from the Actions tab
 # (workflow_dispatch) to get the builds as downloadable artifacts without a release.
 
@@ -45,6 +46,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           path: dist
@@ -54,5 +56,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: >
           gh release create "${{ github.ref_name }}" dist/*
-          --repo "${{ github.repository }}" --draft --generate-notes
+          --repo "${{ github.repository }}" --draft --notes-file RELEASE_NOTES.md
           --title "Scrolly ${{ github.ref_name }}"
