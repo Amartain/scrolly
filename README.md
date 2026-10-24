@@ -1,23 +1,30 @@
-# 📜Scrolly
+**📜 Scrolly is out, and this time you don't need Python**
 
-A free, offline, brain-friendly task manager, themed as a cultivation sanctuary. You plan each day as a scroll, work one trial at a time, and a small cultivator climbs the mountain to meditate while your timer runs.
+I've poured my soul into this build. I tried to write something eloquent about it, got as far as "life and... love", cringed, and handed the pen to an AI. So here we are.
 
-It runs on your own computer and opens in your browser. No account, no cloud: nothing leaves your machine. 🔒
+**What it is:** a free, open-source task manager for brains that don't get along with normal to-do apps. It runs offline on your own computer: no account, no cloud, nothing leaves your machine. The old prototype needed Python and a terminal; this is a full rebuild you just double-click.
 
-## ✨ What it's like
+**What it's like:**
+🌅 You plan the day like a ritual: brain-dump, estimate, seal the scroll.
+💧 One task at a time. The rest waits quietly.
+⛰️ Start a timer and a tiny cultivator climbs the mountain to meditate while you work.
+🧘 Seclusion: a focus room with an incense timer, pomodoro-style cycles, or a flow mode that saves up rest as you work.
+🪷 Important tasks are never lost. Ordinary ones just drift away at 4 AM. No guilt.
+⚡ An optional energy tracker for those of us who overcommit and crash.
+📋 Your day as Discord markdown, ready to post right here.
 
-- **Plan the day as a ritual.** Write down everything on your mind, estimate how long each trial takes, mark the ones that truly matter as Heavenly Mandates, then seal the scroll.
-- **One thing at a time.** The Immediate Trial sits in front of you; the rest waits quietly below.
-- **Nothing punishes you.** No streaks, no "overdue", no red badges, no numbers that go down. Ordinary trials you didn't reach simply fade away at 4 AM. Heavenly Mandates are never lost; they return to the Horizon.
-- **Seclusion, a focus room.** Three ways to focus: a single incense stick, Harmonious Cycles (pomodoro-style), or River Flow, which banks rest while you work. Closing the tab or sleeping the laptop loses no time. ⏳
-- **The Golden Core (optional).** A hand-estimated energy ledger for people who burn out by overcommitting. It reminds you that rest comes first. 🍂
-- **Momentum, not analytics.** Charts that only ever rise, and the Grand Archives of every past day. 🎋
-- **Ceremonies.** Finishing a day plays a small scene. Sunset brings dusk, a poem and an optional chime. 🌅
-- **Discord Dispatch.** Your day as Discord markdown, ready to paste.
-- **Learn by playing.** A short tour, "Knowledge of the Dao", teaches the app as you use it. 🧭
-- **🤫 Secrets.** There are a few. You'll know them when you find them.
+**What it won't do:** no streaks, no "overdue", no red badges, no numbers going down. You can't fail at it. You can only rest.
 
-Two themes, Serene Peak and Hidden Pavilion, each with day and dusk palettes. Keyboard shortcuts for everything, reduced-motion support, and an OpenDyslexic reading font. 🎨
+**And...** there are secrets. Some you find by doing, some you type. One waits on day 100. More are coming. 🤫
+
+**Download (Windows & Mac):** <LINK>
+It's unsigned (signing costs money, Scrolly is free), so the first launch shows a warning:
+• Windows: "Windows protected your PC" → *More info* → *Run anyway*
+• Mac: *System Settings → Privacy & Security* → *Open Anyway*
+
+Tell me what you love, what broke, and what you wish it did: use the feedback links in Settings, or just reply here. I'll build what people ask for most (picture-in-picture timers are already on the list 👀).
+
+Check out and :star: the project it would help this little unemployed fresh graduate a lot :sparkles:
 
 ## 🚀 Download and run
 
