@@ -1,6 +1,6 @@
 # **📜 Scrolly is out, and this time you don't need Python**
 
-I've poured my soul into this build. I tried to write something eloquent about it, got as far as "life and... love", cringed, and handed the pen to an AI. So here we are.
+I've poured my soul into this build. I tried to write something eloquent about it, got as far as "life and... passion", cringed, and handed the pen to an AI. So here we are.
 
 ## **What it is**
 A free, open-source task manager for brains that don't get along with normal to-do apps. It runs offline on your own computer: no account, no cloud, nothing leaves your machine. The old prototype needed Python and a terminal; this is a full rebuild you just double-click.
