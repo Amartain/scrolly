@@ -1,28 +1,30 @@
-**📜 Scrolly is out, and this time you don't need Python**
+# **📜 Scrolly is out, and this time you don't need Python**
 
 I've poured my soul into this build. I tried to write something eloquent about it, got as far as "life and... love", cringed, and handed the pen to an AI. So here we are.
 
-**What it is:** a free, open-source task manager for brains that don't get along with normal to-do apps. It runs offline on your own computer: no account, no cloud, nothing leaves your machine. The old prototype needed Python and a terminal; this is a full rebuild you just double-click.
+## **What it is**
+A free, open-source task manager for brains that don't get along with normal to-do apps. It runs offline on your own computer: no account, no cloud, nothing leaves your machine. The old prototype needed Python and a terminal; this is a full rebuild you just double-click.
 
-**What it's like:**
+## **What it's like:**
 🌅 You plan the day like a ritual: brain-dump, estimate, seal the scroll.
+
 💧 One task at a time. The rest waits quietly.
+
 ⛰️ Start a timer and a tiny cultivator climbs the mountain to meditate while you work.
+
 🧘 Seclusion: a focus room with an incense timer, pomodoro-style cycles, or a flow mode that saves up rest as you work.
+
 🪷 Important tasks are never lost. Ordinary ones just drift away at 4 AM. No guilt.
+
 ⚡ An optional energy tracker for those of us who overcommit and crash.
+
 📋 Your day as Discord markdown, ready to post right here.
 
-**What it won't do:** no streaks, no "overdue", no red badges, no numbers going down. You can't fail at it. You can only rest.
+## **What it won't do**
+no streaks, no "overdue", no red badges, no numbers going down. You can't fail at it. You can only rest.
 
-**And...** there are secrets. Some you find by doing, some you type. One waits on day 100. More are coming. 🤫
-
-**Download (Windows & Mac):** <LINK>
-It's unsigned (signing costs money, Scrolly is free), so the first launch shows a warning:
-• Windows: "Windows protected your PC" → *More info* → *Run anyway*
-• Mac: *System Settings → Privacy & Security* → *Open Anyway*
-
-Tell me what you love, what broke, and what you wish it did: use the feedback links in Settings, or just reply here. I'll build what people ask for most (picture-in-picture timers are already on the list 👀).
+## **And...** 
+there are secrets. Some you find by doing, some you type. One waits on day 100. More are coming. 🤫
 
 Check out and :star: the project it would help this little unemployed fresh graduate a lot :sparkles:
 
