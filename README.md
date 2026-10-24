@@ -1,4 +1,4 @@
-# Scrolly 📜🌿
+# 📜Scrolly
 
 A free, offline, neurodivergent-friendly task manager, themed as a cultivation sanctuary. 🏔️ You plan each day as a scroll, work one trial at a time, and a small cultivator climbs the mountain to meditate while your timer runs. 🧘
 
