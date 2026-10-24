@@ -6,7 +6,7 @@ It runs on your own computer and opens in your browser. No account, no cloud: no
 
 ## ✨ What it's like
 
-- ** Plan the day as a ritual.** Write down everything on your mind, estimate how long each trial takes, mark the ones that truly matter as Heavenly Mandates, then seal the scroll.
+- **Plan the day as a ritual.** Write down everything on your mind, estimate how long each trial takes, mark the ones that truly matter as Heavenly Mandates, then seal the scroll.
 - **One thing at a time.** The Immediate Trial sits in front of you; the rest waits quietly below.
 - **Nothing punishes you.** No streaks, no "overdue", no red badges, no numbers that go down. Ordinary trials you didn't reach simply fade away at 4 AM. Heavenly Mandates are never lost; they return to the Horizon.
 - **Seclusion, a focus room.** Three ways to focus: a single incense stick, Harmonious Cycles (pomodoro-style), or River Flow, which banks rest while you work. Closing the tab or sleeping the laptop loses no time. ⏳
