@@ -6,15 +6,15 @@ It runs on your own computer and opens in your browser. No account, no cloud: no
 
 ## ✨ What it's like
 
-- **🖋️ Plan the day as a ritual.** Write down everything on your mind, estimate how long each trial takes, mark the ones that truly matter as Heavenly Mandates, then seal the scroll.
-- **🎯 One thing at a time.** The Immediate Trial sits in front of you; the rest waits quietly below.
-- **🌙 Nothing punishes you.** No streaks, no "overdue", no red badges, no numbers that go down. Ordinary trials you didn't reach simply fade away at 4 AM. Heavenly Mandates are never lost; they return to the Horizon.
-- **🧘 Seclusion, a focus room.** Three ways to focus: a single incense stick, Harmonious Cycles (pomodoro-style), or River Flow, which banks rest while you work. Closing the tab or sleeping the laptop loses no time. ⏳
-- **📒 The Golden Core (optional).** A hand-estimated energy ledger for people who burn out by overcommitting. It reminds you that rest comes first. 🍂
-- **📈 Momentum, not analytics.** Charts that only ever rise, and the Grand Archives of every past day. 🎋
-- **🏮 Ceremonies.** Finishing a day plays a small scene. Sunset brings dusk, a poem and an optional chime. 🌅
-- **💬 Discord Dispatch.** Your day as Discord markdown, ready to paste.
-- **🎓 Learn by playing.** A short tour, "Knowledge of the Dao", teaches the app as you use it. 🧭
+- ** Plan the day as a ritual.** Write down everything on your mind, estimate how long each trial takes, mark the ones that truly matter as Heavenly Mandates, then seal the scroll.
+- **One thing at a time.** The Immediate Trial sits in front of you; the rest waits quietly below.
+- **Nothing punishes you.** No streaks, no "overdue", no red badges, no numbers that go down. Ordinary trials you didn't reach simply fade away at 4 AM. Heavenly Mandates are never lost; they return to the Horizon.
+- **Seclusion, a focus room.** Three ways to focus: a single incense stick, Harmonious Cycles (pomodoro-style), or River Flow, which banks rest while you work. Closing the tab or sleeping the laptop loses no time. ⏳
+- **The Golden Core (optional).** A hand-estimated energy ledger for people who burn out by overcommitting. It reminds you that rest comes first. 🍂
+- **Momentum, not analytics.** Charts that only ever rise, and the Grand Archives of every past day. 🎋
+- **Ceremonies.** Finishing a day plays a small scene. Sunset brings dusk, a poem and an optional chime. 🌅
+- **Discord Dispatch.** Your day as Discord markdown, ready to paste.
+- **Learn by playing.** A short tour, "Knowledge of the Dao", teaches the app as you use it. 🧭
 - **🤫 Secrets.** There are a few. You'll know them when you find them.
 
 Two themes, Serene Peak and Hidden Pavilion, each with day and dusk palettes. Keyboard shortcuts for everything, reduced-motion support, and an OpenDyslexic reading font. 🎨
