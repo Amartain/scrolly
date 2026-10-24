@@ -1,6 +1,6 @@
 # 📜Scrolly
 
-A free, offline, neurodivergent-friendly task manager, themed as a cultivation sanctuary. 🏔️ You plan each day as a scroll, work one trial at a time, and a small cultivator climbs the mountain to meditate while your timer runs. 🧘
+A free, offline, brain-friendly task manager, themed as a cultivation sanctuary. You plan each day as a scroll, work one trial at a time, and a small cultivator climbs the mountain to meditate while your timer runs.
 
 It runs on your own computer and opens in your browser. No account, no cloud: nothing leaves your machine. 🔒
 
